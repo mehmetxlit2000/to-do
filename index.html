@@ -145,7 +145,7 @@
     .rank-badge-slot{flex:none; position:relative; z-index:1;}
     .rank-info{flex:1; min-width:0; position:relative; z-index:1;}
     .rank-title-row{display:flex; align-items:baseline; gap:9px; margin-bottom:2px; flex-wrap:wrap;}
-    .rank-name{font-family:'Orbitron',sans-serif; font-weight:800; font-size:18px; letter-spacing:.03em; text-transform:uppercase; text-shadow:0 0 14px var(--glow-mid);}
+    .rank-name{font-family:'Orbitron',sans-serif; font-size:18px; margin:0; font-weight:800; letter-spacing:.03em; text-transform:uppercase; text-shadow:0 0 14px var(--glow-mid);}
     .rank-tier-label{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); letter-spacing:.08em;}
     .streak-pill{
       display:inline-flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:11px;
@@ -236,6 +236,31 @@
     .cat-bar-track{flex:1; height:8px; background:var(--panel-alt); border:1px solid var(--line); border-radius:5px; overflow:hidden;}
     .cat-bar-fill{height:100%; background:var(--ink); border-radius:5px; transition:width .5s ease;}
     .cat-bar-count{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); width:18px; text-align:right; flex:none;}
+
+    .split-2{display:grid; grid-template-columns:1fr 1fr; gap:22px;}
+    .split-col{min-width:0;}
+    @media (max-width:640px){ .split-2{grid-template-columns:1fr;} .split-col + .split-col{margin-top:18px; padding-top:18px; border-top:1px solid var(--line);} }
+    .cal-legend{display:flex; align-items:center; gap:6px; font-size:9px; letter-spacing:.04em; color:var(--ink-soft); text-transform:none; font-weight:500;}
+    .cal-dot{width:8px; height:8px; border-radius:2px; background:var(--ink); box-shadow:0 0 6px var(--glow-mid); flex:none;}
+    .month-cal{display:flex; flex-direction:column; gap:5px; max-width:250px; margin:0 auto;}
+    .month-cal-dow{display:grid; grid-template-columns:repeat(7,1fr); gap:3px; margin-bottom:1px;}
+    .month-cal-dow span{font-family:'JetBrains Mono',monospace; font-size:8px; color:var(--ink-soft); text-align:center; letter-spacing:.03em;}
+    .month-cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:3px;}
+    .cal-day{
+      position:relative; aspect-ratio:1; border-radius:5px; display:flex; align-items:center; justify-content:center;
+      font-family:'JetBrains Mono',monospace; font-size:8px; color:var(--ink-soft); background:var(--panel-alt);
+      border:1px solid var(--line); overflow:hidden;
+    }
+    .cal-day.empty{background:transparent; border-color:transparent;}
+    .cal-day.future{opacity:.45;}
+    .cal-day.today{border-color:var(--ink); box-shadow:0 0 0 1px var(--ink) inset;}
+    .cal-day.hit{color:#fff; border-color:transparent;}
+    .cal-day.hit .cal-day-num{position:relative; z-index:1; text-shadow:0 1px 2px rgba(0,0,0,.5);}
+    .cal-day.hit::before{
+      content:''; position:absolute; inset:0; background:var(--brand-gradient); opacity:var(--cal-heat,.35);
+    }
+    .cal-day.hit.today::before{ opacity:1; box-shadow:0 0 10px var(--glow-mid) inset; }
+    .cal-day.miss{ background:repeating-linear-gradient(135deg, var(--panel-alt) 0 4px, var(--panel) 4px 8px); border-style:dashed; border-color:var(--ink-faint); }
 
     .add-card{
       position:relative; background:var(--panel); border:1px solid var(--line);
@@ -406,6 +431,7 @@
     .modal-card{
       background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:32px 28px; text-align:center; max-width:320px; width:100%;
       box-shadow:0 30px 70px rgba(0,0,0,.7), 0 0 40px var(--glow-soft); animation:modalPop .4s cubic-bezier(.34,1.56,.64,1);
+      display: flex; flex-direction: column; justify-content: center; align-items: center
     }
     @keyframes modalPop{ 0%{transform:scale(.7); opacity:0;} 100%{transform:scale(1); opacity:1;} }
     .modal-eyebrow{font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.16em; color:var(--ink-soft); margin:0 0 10px; text-transform:uppercase;}
@@ -578,9 +604,18 @@
     </div>
   </div>
 
-  <div class="panel" style="margin-bottom:14px;">
-    <h3>Kategori Grafiği</h3>
-    <div class="cat-chart" id="categoryChart"></div>
+  <div class="grid-2">
+    <div class="panel">
+      <h3>Kategori Grafiği</h3>
+      <div class="cat-chart" id="categoryChart"></div>
+    </div>
+    <div class="panel">
+      <h3 style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+        <span id="calMonthLabel">Bu Ay</span>
+        <span class="cal-legend"><span class="cal-dot"></span> Başarılı gün</span>
+      </h3>
+      <div class="month-cal" id="monthCalendar"></div>
+    </div>
   </div>
 
   <div class="panel" id="portfolioPanel" style="margin-bottom:14px;">
@@ -803,7 +838,7 @@
   const CATEGORY_ICON = { 'İş':'briefcase', 'Kişisel':'compass', 'Sağlık':'cross', 'Eğitim':'book', 'Diğer':'grid' };
   const PRIORITY_ICON = { 'Düşük':'circleEmpty', 'Orta':'circleHalf', 'Yüksek':'chevUp2' };
   const PRIORITY_COLOR = { 'Düşük':'#8f4646', 'Orta':'#d65b5b', 'Yüksek':'#ff2b2b' };
-  const XP_VALUE = { 'Düşük':10, 'Orta':20, 'Yüksek':35 };
+  const XP_VALUE = { 'Düşük':10, 'Orta':20, 'Yüksek':35000 };
   const PRIORITY_ORDER = { 'Yüksek':3, 'Orta':2, 'Düşük':1 };
   const DURATION_PRESETS = [ {label:'Yok', hours:0}, {label:'1s', hours:1}, {label:'3s', hours:3}, {label:'6s', hours:6}, {label:'12s', hours:12}, {label:'24s', hours:24}, {label:'Özel', hours:'custom'} ];
 
@@ -813,18 +848,40 @@
     const legendary = i === GROUP_NAMES.length - 1;
     return { name, rayCount: 3 + i, rings: i >= 8 ? (i >= 10 ? 2 : 1) : 0, legendary };
   });
+  /* ---- her klan için özel bir tema: her rütbe grubu kendine has bir renk kimliğine sahip ---- */
+  const GROUP_THEME = [
+    { lightHue:30,  lightSat:20, darkHueShift:-6  }, // Thrall — toprak/kahve, alçakgönüllü köle rütbesi
+    { lightHue:32,  lightSat:55, darkHueShift:-3  }, // Karl — bronz, hür köylü
+    { lightHue:142, lightSat:40, darkHueShift:9   }, // Þegn — yeşil, toprak sahibi
+    { lightHue:212, lightSat:50, darkHueShift:-10 }, // Skald — mavi, ozan/bilgelik
+    { lightHue:178, lightSat:40, darkHueShift:6   }, // Húskarl — çamurlu teal, ev muhafızı
+    { lightHue:0,   lightSat:70, darkHueShift:0, forceDarkRed:true }, // Berserker — koyu kırmızı (öfke/savaş)
+    { lightHue:24,  lightSat:68, darkHueShift:-4  }, // Hersir — turuncu, savaş lideri
+    { lightHue:44,  lightSat:65, darkHueShift:7   }, // Jarl — altın, asilzade
+    { lightHue:268, lightSat:46, darkHueShift:-9  }, // Konung — mor, kral
+    { lightHue:220, lightSat:12, darkHueShift:11  }, // Einherjar — gümüş, seçilmiş savaşçı
+    { lightHue:322, lightSat:52, darkHueShift:-5  }, // Valkyrie — pembe/menekşe, ilahi savaşçı
+    { lightHue:0,   lightSat:0,  darkHueShift:0, forceDark:true } // Allfather — kapkara/kızıl, tanrısal zirve
+  ];
   function currentTheme(){ return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark'; }
   function getGroupPalette(gi){
     const t = gi/(GROUP_NAMES.length-1);
+    const theme = GROUP_THEME[gi] || GROUP_THEME[0];
     if(currentTheme()==='light'){
-      const hue = Math.round(gi*(320/(GROUP_NAMES.length-1)));
-      const L1 = 40 + t*10;
-      const L2 = Math.min(72, L1+16);
-      const S = 58+t*24;
-      return { c1:`hsl(${hue}, ${S}%, ${L1}%)`, c2:`hsl(${hue}, ${S}%, ${L2}%)`, text: L1>48 ? '#241033' : '#ffffff' };
+      if(theme.forceDarkRed){
+        return { c1:'#9c1a1a', c2:'#3f0505', text:'#ffffff' };
+      }
+      if(theme.forceDark){
+        return { c1:'#3a1010', c2:'#0a0202', text:'#ff6b6b' };
+      }
+      const L1 = 34 + t*8;
+      const L2 = Math.min(72, L1+18);
+      const text = L1 > 46 ? '#20101c' : '#ffffff';
+      return { c1:`hsl(${theme.lightHue}, ${theme.lightSat}%, ${L2}%)`, c2:`hsl(${theme.lightHue}, ${theme.lightSat}%, ${L1}%)`, text };
     }
     const L1 = 12 + t*42, L2 = Math.min(64, L1+15), S = 55+t*45;
-    return { c1:`hsl(0, ${S}%, ${L1}%)`, c2:`hsl(0, ${S}%, ${L2}%)`, text: L1>38 ? '#2b0808' : '#ffbcbc' };
+    const hue = ((theme.darkHueShift||0) + 360) % 360;
+    return { c1:`hsl(${hue}, ${S}%, ${L1}%)`, c2:`hsl(${hue}, ${S}%, ${L2}%)`, text: L1>38 ? '#2b0808' : '#ffbcbc' };
   }
   const SUB_LABEL = ['I','II','III'];
   const RANKS = [];
@@ -845,21 +902,33 @@
     { id:'streak3',  name:'Ateşlendi',       ic:'flame',    target:3,   get:s=>s.streak,                test:s=>s.streak>=3,  desc:'3 gün üst üste en az bir görev tamamla.' },
     { id:'streak7',  name:'Kararlılık',      ic:'flame',    target:7,   get:s=>s.streak,                test:s=>s.streak>=7,  desc:'7 günlük kesintisiz seri yap.' },
     { id:'streak30', name:'Söndürülemez',    ic:'flame',    target:30,  get:s=>s.streak,                test:s=>s.streak>=30, desc:'30 günlük kesintisiz seri yap.' },
+    { id:'streak60', name:'Kırılmaz Zincir', ic:'flame',    target:60,  get:s=>s.streak,                test:s=>s.streak>=60, desc:'60 günlük kesintisiz seri yap.' },
     { id:'dayhero',  name:'Gün Kahramanı',   ic:'bolt',     target:5,   get:s=>s.maxDay,                test:s=>s.maxDay>=5,  desc:'Tek bir günde 5 görev tamamla.' },
     { id:'routine',  name:'Rutin Ustası',    ic:'refresh',  target:1,   get:s=>s.recurringCount,        test:s=>s.recurringCount>=1, desc:'En az bir sonsuz rutin görev oluştur.' },
+    { id:'grinder',  name:'Rutin Bağımlısı', ic:'refresh',  target:3,   get:s=>s.recurringCount,        test:s=>s.recurringCount>=3, desc:'Aynı anda 3 sonsuz rutin görevin olsun.' },
     { id:'timeAtk',  name:'Zamana Karşı',    ic:'stopwatch',target:5,   get:s=>s.timedCompleted,        test:s=>s.timedCompleted>=5, desc:'Süre sınırı olan 5 görevi zamanında tamamla.' },
     { id:'perfect',  name:'Mükemmeliyetçi',  ic:'gem',      target:10,  get:s=>s.highPriorityCompleted, test:s=>s.highPriorityCompleted>=10, desc:'10 adet Yüksek öncelikli görev tamamla.' },
+    { id:'perfect2', name:'Mükemmeliyetçi II', ic:'crown',  target:25,  get:s=>s.highPriorityCompleted, test:s=>s.highPriorityCompleted>=25, desc:'25 adet Yüksek öncelikli görev tamamla.' },
     { id:'legend',   name:'Zirve Fatihi',    ic:'crown',    target:RANKS.length, get:s=>getRankIndex(s.xp)+1, test:s=>getRankIndex(s.xp)>=RANKS.length-1, desc:'En üst rütbeye — Allfather III\'e ulaş.' },
     { id:'dracula',  name:'Kont Drakula',    ic:'moon',     target:5,   get:s=>s.nightOwl,              test:s=>s.nightOwl>=5,   desc:'Gece 00:00–05:00 arası 5 görev tamamla.' },
+    { id:'vampireLord', name:'Vampir Lordu', ic:'moon',     target:15,  get:s=>s.nightOwl,              test:s=>s.nightOwl>=15,  desc:'Gece 00:00–05:00 arası 15 görev tamamla.' },
     { id:'ragnar',   name:'Ragnar Lodbrok',  ic:'flag',     target:14,  get:s=>s.streak,                test:s=>s.streak>=14,    desc:'14 gün kesintisiz seri yap — fetih zamanı.' },
     { id:'suntzu',   name:'Sun Tzu',         ic:'compass',  target:5,   get:s=>s.categoriesTouched,     test:s=>s.categoriesTouched>=5, desc:'Tüm 5 kategoriden en az bir görev tamamla.' },
     { id:'midas',    name:'Kral Midas',      ic:'coins',    target:50000, get:s=>Math.round(s.portfolioValue), test:s=>s.portfolioValue>=50000, desc:'Portföy değerin 50.000₺ üzerine çıksın.' },
+    { id:'micromogul',name:'Küçük Yatırımcı',ic:'wallet',   target:10000, get:s=>Math.round(s.portfolioValue), test:s=>s.portfolioValue>=10000, desc:'Portföy değerin 10.000₺ üzerine çıksın.' },
     { id:'spartacus',name:'Spartaküs',       ic:'hammer',   target:5,   get:s=>s.streak,                test:s=>s.totalFailed>=3 && s.streak>=5, desc:'En az 3 başarısızlıktan sonra 5 günlük seriyle toparlan.' },
     { id:'earlybird',name:'Erkenci Kuş',     ic:'sun',      target:5,   get:s=>s.morningCompletions,     test:s=>s.morningCompletions>=5, desc:'Sabah 06:00–09:00 arası 5 görev tamamla.' },
     { id:'weekend',  name:'Hafta Sonu Savaşçısı', ic:'shield', target:10, get:s=>s.weekendCompletions,   test:s=>s.weekendCompletions>=10, desc:'Cumartesi/Pazar günleri toplam 10 görev tamamla.' },
+    { id:'weekendLegend', name:'Hafta Sonu Efsanesi', ic:'shield', target:25, get:s=>s.weekendCompletions, test:s=>s.weekendCompletions>=25, desc:'Hafta sonları toplam 25 görev tamamla.' },
     { id:'collector',name:'Koleksiyoncu',    ic:'wallet',   target:5,   get:s=>s.portfolioAssetCount,    test:s=>s.portfolioAssetCount>=5, desc:'Portföyüne 5 farklı varlık türü ekle.' },
     { id:'whale',    name:'Balina',          ic:'briefcase',target:100000, get:s=>Math.round(s.portfolioValue), test:s=>s.portfolioValue>=100000, desc:'Portföy değerin 100.000₺ üzerine çıksın.' },
     { id:'balanced', name:'Dengeli Yaşam',   ic:'grid',     target:5,   get:s=>s.minCategoryCompletions, test:s=>s.minCategoryCompletions>=5, desc:'5 kategorinin her birinden en az 5\'er görev tamamla.' },
+    { id:'balanced2',name:'Çok Yönlü',       ic:'grid',     target:10,  get:s=>s.minCategoryCompletions, test:s=>s.minCategoryCompletions>=10, desc:'5 kategorinin her birinden en az 10\'ar görev tamamla.' },
+    { id:'creator10',name:'Planlayıcı',      ic:'edit',     target:10,  get:s=>s.totalCreated,           test:s=>s.totalCreated>=10, desc:'Toplam 10 görev oluştur.' },
+    { id:'creator50',name:'Arşivci',         ic:'layers',   target:50,  get:s=>s.totalCreated,           test:s=>s.totalCreated>=50, desc:'Toplam 50 görev oluştur.' },
+    { id:'active30', name:'İstikrar Simgesi',ic:'compass',  target:30,  get:s=>s.daysActive,             test:s=>s.daysActive>=30, desc:'30 farklı günde en az bir görev tamamla.' },
+    { id:'active90', name:'Kadim Alışkanlık',ic:'shield',   target:90,  get:s=>s.daysActive,             test:s=>s.daysActive>=90, desc:'90 farklı günde en az bir görev tamamla.' },
+    { id:'flawless', name:'Kusursuz',        ic:'gem',      target:50,  get:s=>s.totalCompleted,         test:s=>s.totalCompleted>=50 && s.totalFailed===0, desc:'Hiç başarısız olmadan 50 görev tamamla.' }
   ];
 
   /* ===================== SAHTE SIRALAMA (rakip listesi) ===================== */
@@ -968,7 +1037,7 @@
   let tasks = [];
   let xp = 0, streak = 0, lastActiveDate = null, totalCompleted = 0, completionsByDate = {};
   let totalFailed = 0, highPriorityCompleted = 0, timedCompleted = 0, categoryCompletions = {};
-  let nightOwlCompletions = 0, morningCompletions = 0, weekendCompletions = 0;
+  let nightOwlCompletions = 0, morningCompletions = 0, weekendCompletions = 0, totalCreated = 0;
   let filter = 'all';
   let draggedId = null;
   let lastRemoved = null;
@@ -1219,6 +1288,7 @@
         nightOwlCompletions = p?.nightOwlCompletions || 0;
         morningCompletions = p?.morningCompletions || 0;
         weekendCompletions = p?.weekendCompletions || 0;
+        totalCreated = p?.totalCreated || 0;
         portfolio = p?.portfolio || {};
         renderPortfolio();
         tasks.forEach(t=>{
@@ -1247,7 +1317,7 @@
       await userRef.set({
         tasks, xp, streak, lastActiveDate, totalCompleted, completionsByDate,
         totalFailed, highPriorityCompleted, timedCompleted, categoryCompletions,
-        nightOwlCompletions, morningCompletions, weekendCompletions, portfolio
+        nightOwlCompletions, morningCompletions, weekendCompletions, totalCreated, portfolio
       });
     }catch(e){ console.error('Kaydetme hatası', e); }
   }
@@ -1325,37 +1395,111 @@
 
   function badgeSVG(tierIndex, size, locked){
     const r = RANKS[tierIndex];
+    const isFinal = !locked && r.legendary && r.sub === 2;
     const uid = 'grad'+tierIndex+'_'+size+'_'+currentTheme();
+    const uidCore = uid+'_core';
+    const uidVein = uid+'_vein';
     const pal = getGroupPalette(r.gi);
-    const c1 = locked ? 'var(--line)' : pal.c1;
-    const c2 = locked ? 'var(--line)' : pal.c2;
-    const text = locked ? 'var(--ink-soft)' : pal.text;
-    const rayColor = currentTheme()==='light' ? pal.c2 : '#ff8a8a';
-    const rayCount = locked ? 0 : r.rayCount;
+
+    let c1 = locked ? 'var(--line)' : pal.c1;
+    let c2 = locked ? 'var(--line)' : pal.c2;
+    let text = locked ? 'var(--ink-soft)' : pal.text;
+    let rayColor = currentTheme()==='light' ? pal.c2 : '#ff8a8a';
+    let borderColor = 'rgba(255,60,60,0.28)';
+    let veinColor = '#ff2b2b';
+
+    if(isFinal){
+      // son rütbe: kapkara zırh, kızıl damarlar — ayrı bir "kara" tema
+      c1 = '#000000'; c2 = '#1c0000'; text = '#ff3b3b'; rayColor = '#ff2b2b'; borderColor = '#ff2b2b'; veinColor = '#ff0000';
+    }
+
+    const rayCount = locked ? 0 : (isFinal ? Math.max(r.rayCount, 16) : r.rayCount);
     const rays = rayCount ? Array.from({length:rayCount}).map((_,i)=>{
       const angle = i*(360/rayCount);
-      const op = 0.14 + Math.min(rayCount,14)*0.018;
-      return `<line x1="32" y1="40" x2="32" y2="-8" stroke="${rayColor}" stroke-width="2" opacity="${op.toFixed(2)}" transform="rotate(${angle} 32 40)"></line>`;
+      const op = (isFinal ? 0.22 : 0.14) + Math.min(rayCount,14)*0.018;
+      return `<line x1="32" y1="40" x2="32" y2="-8" stroke="${rayColor}" stroke-width="${isFinal?2.4:2}" opacity="${op.toFixed(2)}" transform="rotate(${angle} 32 40)"></line>`;
     }).join('') : '';
+
     const total = r.sub+1, spacing=8, startX=32-((total-1)*spacing)/2;
     const pips = Array.from({length:total}).map((_,i)=>
-            `<circle cx="${startX+i*spacing}" cy="67" r="2.2" fill="${text}" opacity="0.9"></circle>`
+            `<circle cx="${startX+i*spacing}" cy="67" r="2.4" fill="${isFinal?'#ff2b2b':text}" opacity="0.95"></circle>
+             <circle cx="${startX+i*spacing}" cy="67" r="2.4" fill="none" stroke="${locked?'transparent':(isFinal?'#ff8a8a':'rgba(0,0,0,.25)')}" stroke-width="0.6" opacity="0.6"></circle>`
     ).join('');
-    const shine = (r.sub>=1 && !locked) ? `<path d="M32 5 L55 14 L55 40 C55 58 45 69 32 75" fill="none" stroke="${currentTheme()==='light'?'#ffffff':'#ff9c9c'}" stroke-width="1.4" opacity="0.4"/>` : '';
+
+    // ---- gövde/kalkan çift katmanlı çerçeve (daha detaylı zırh hissi) ----
+    const outerShield = `M32 3 L57 13 L57 40 C57 59 46 71 32 77 C18 71 7 59 7 40 L7 13 Z`;
+    const innerShield = `M32 7.5 L52.5 15.8 L52.5 39.5 C52.5 55.5 43.5 65.8 32 71 C20.5 65.8 11.5 55.5 11.5 39.5 L11.5 15.8 Z`;
+
     const rings = (!locked && r.rings) ? Array.from({length:r.rings}).map((_,i)=>
-            `<path d="M32 3 L57 13 L57 40 C57 59 46 71 32 77 C18 71 7 59 7 40 L7 13 Z" fill="none" stroke="${rayColor}" stroke-width="1" opacity="${0.5-i*0.15}" transform="scale(${1+ (i+1)*0.09})" transform-origin="32 40"/>`
+            `<path d="${outerShield}" fill="none" stroke="${rayColor}" stroke-width="1" opacity="${0.5-i*0.15}" transform="scale(${1+ (i+1)*0.09})" transform-origin="32 40"/>`
     ).join('') : '';
-    const crown = (!locked && r.legendary && r.sub===2) ? `<path d="M20 20 L26 28 L32 16 L38 28 L44 20 L41 32 L23 32 Z" fill="${rayColor}" stroke="#ffffff" stroke-width="1" opacity="0.95"/>` : '';
+
+    // ---- zırh üzerindeki kazınmış çizgiler (tier arttıkça daha yoğun) ----
+    const etchCount = locked ? 0 : Math.min(2 + r.gi, 9);
+    const etchLines = !locked ? Array.from({length:etchCount}).map((_,i)=>{
+      const y = 16 + i*((58-16)/Math.max(1,etchCount-1||1));
+      const sway = (i%2===0) ? 3 : -3;
+      return `<path d="M${11.5} ${y} L${52.5} ${y+sway}" stroke="${isFinal?'#3a0000':'rgba(0,0,0,.16)'}" stroke-width="0.7" opacity="0.5"/>`;
+    }).join('') : '';
+
+    // ---- damarlar (yalnızca son/kara rütbe için — kırık cam gibi kızıl çatlaklar) ----
+    const veins = isFinal ? `
+      <path d="M32 10 L27 24 L34 30 L24 42 L30 46 L20 58 L26 62" fill="none" stroke="url(#${uidVein})" stroke-width="1.3" opacity="0.85" stroke-linejoin="round"/>
+      <path d="M32 12 L38 22 L31 28 L40 38 L33 44 L42 54 L36 60" fill="none" stroke="url(#${uidVein})" stroke-width="1" opacity="0.65" stroke-linejoin="round"/>
+    ` : '';
+
+    const shine = (r.sub>=1 && !locked) ? `<path d="M32 5 L55 14 L55 40 C55 58 45 69 32 75" fill="none" stroke="${isFinal ? '#ff5a5a' : (currentTheme()==='light'?'#ffffff':'#ff9c9c')}" stroke-width="1.4" opacity="${isFinal?0.55:0.4}"/>` : '';
+
+    // ---- omuz perçinleri (rivet) — üst köşelerde küçük detay ----
+    const rivets = !locked ? `
+      <circle cx="16.5" cy="17.5" r="1.6" fill="${isFinal?'#ff2b2b':text}" opacity="0.5"/>
+      <circle cx="47.5" cy="17.5" r="1.6" fill="${isFinal?'#ff2b2b':text}" opacity="0.5"/>
+    ` : '';
+
+    // ---- merkez amblemi: kilitliyse boş kalkan; kilitsizse çok yönlü rün elması; son rütbede kesişen kılıç/balta ruhu ----
+    let emblem;
+    if(locked){
+      emblem = `<polygon points="32,25 44,40 32,57 20,40" fill="var(--panel)" opacity="0.5"/>`;
+    } else if(isFinal){
+      emblem = `
+        <polygon points="32,22 46,40 32,60 18,40" fill="url(#${uidCore})" stroke="#ff2b2b" stroke-width="1.1"/>
+        <polygon points="32,22 46,40 32,40" fill="#ff5a5a" opacity="0.22"/>
+        <path d="M32 26 L32 56 M23 40 L41 40" stroke="#ff8a8a" stroke-width="1.3" opacity="0.85"/>
+        <path d="M25 33 L39 47 M39 33 L25 47" stroke="#ff2b2b" stroke-width="0.8" opacity="0.55"/>
+      `;
+    } else {
+      emblem = `
+        <polygon points="32,25 44,40 32,57 20,40" fill="${text}" opacity="0.92"/>
+        <polygon points="32,25 44,40 32,40" fill="#ff9c9c" opacity="0.18"/>
+        <polygon points="32,31 38,40 32,49 26,40" fill="none" stroke="${currentTheme()==='light'?'#ffffff':'#2b0808'}" stroke-width="0.8" opacity="0.35"/>
+      `;
+    }
+
+    const crown = (!locked && r.legendary && r.sub===2) ? `<path d="M18 19 L25 27 L32 15 L39 27 L46 19 L42 32 L22 32 Z" fill="${rayColor}" stroke="#ffffff" stroke-width="1" opacity="0.95"/><path d="M18 19 L25 27 L32 15 L39 27 L46 19 L42 32 L22 32 Z" fill="none" stroke="#ff2b2b" stroke-width="0.6" opacity="0.7"/>` : '';
+
     return `<svg width="${size}" height="${size*1.25}" viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
-      <defs><linearGradient id="${uid}" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="${c2}"/><stop offset="100%" stop-color="${c1}"/>
-      </linearGradient></defs>
+      <defs>
+        <linearGradient id="${uid}" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="${c2}"/><stop offset="100%" stop-color="${c1}"/>
+        </linearGradient>
+        <radialGradient id="${uidCore}" cx="50%" cy="35%" r="70%">
+          <stop offset="0%" stop-color="${isFinal?'#ff5a5a':'#ffffff'}"/>
+          <stop offset="100%" stop-color="${isFinal?'#4a0000':text}"/>
+        </radialGradient>
+        <linearGradient id="${uidVein}" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="${veinColor}" stop-opacity="0.95"/>
+          <stop offset="100%" stop-color="${veinColor}" stop-opacity="0.25"/>
+        </linearGradient>
+      </defs>
       ${rays}
       ${rings}
-      <path d="M32 3 L57 13 L57 40 C57 59 46 71 32 77 C18 71 7 59 7 40 L7 13 Z" fill="url(#${uid})" stroke="rgba(255,60,60,0.22)" stroke-width="1.5"/>
+      <path d="${outerShield}" fill="url(#${uid})" stroke="${locked?'var(--line)':borderColor}" stroke-width="1.6"/>
+      <path d="${innerShield}" fill="none" stroke="${locked?'transparent':borderColor}" stroke-width="0.8" opacity="${locked?0:0.55}"/>
+      ${etchLines}
+      ${veins}
       ${shine}
-      <polygon points="32,25 44,40 32,57 20,40" fill="${locked?'var(--panel)':text}" opacity="${locked?0.5:0.92}"/>
-      <polygon points="32,25 44,40 32,40" fill="#ff9c9c" opacity="0.16"/>
+      ${rivets}
+      ${emblem}
       ${crown}
       ${pips}
     </svg>`;
@@ -1429,7 +1573,9 @@
       categoriesTouched: Object.keys(categoryCompletions).filter(k=>categoryCompletions[k]>0).length,
       minCategoryCompletions: minCat,
       portfolioAssetCount: Object.keys(portfolio).filter(k=>portfolio[k]>0).length,
-      portfolioValue: computePortfolioTotal()
+      portfolioValue: computePortfolioTotal(),
+      totalCreated,
+      daysActive: Object.keys(completionsByDate).length
     };
   }
 
@@ -1487,6 +1633,48 @@
         <span class="cat-bar-count">${counts[i]}</span>
       </div>`;
     }).join('');
+  }
+
+  const MONTH_NAMES_TR = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  function pad2(n){ return n.toString().padStart(2,'0'); }
+
+  function buildMonthCalendar(){
+    const el = document.getElementById('monthCalendar');
+    const labelEl = document.getElementById('calMonthLabel');
+    if(!el) return;
+    const now = new Date();
+    const year = now.getFullYear(), month = now.getMonth();
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+    const firstDow = (new Date(year, month, 1).getDay() + 6) % 7; // 0=Pt
+    const todayKey = todayStr();
+    if(labelEl) labelEl.textContent = `${MONTH_NAMES_TR[month]} ${year}`;
+
+    const dowLabels = ['Pt','Sa','Ça','Pe','Cu','Ct','Pz'];
+    let html = `<div class="month-cal-dow">${dowLabels.map(d=>`<span>${d}</span>`).join('')}</div><div class="month-cal-grid">`;
+
+    for(let i=0;i<firstDow;i++) html += `<div class="cal-day empty"></div>`;
+    for(let d=1; d<=daysInMonth; d++){
+      const dateKey = `${year}-${pad2(month+1)}-${pad2(d)}`;
+      const count = completionsByDate[dateKey] || 0;
+      const isToday = dateKey === todayKey;
+      const isFuture = dateKey > todayKey;
+      let cls = 'cal-day';
+      let styleAttr = '';
+      if(isToday) cls += ' today';
+      if(count > 0){
+        cls += ' hit';
+        const heat = Math.min(1, 0.4 + count*0.15);
+        styleAttr = `style="--cal-heat:${heat.toFixed(2)}"`;
+      } else if(isFuture){
+        cls += ' future';
+      } else if(!isToday){
+        cls += ' miss';
+      }
+      const tip = `${dateKey}${count>0 ? ' · '+count+' görev' : ''}`;
+      html += `<div class="${cls}" ${styleAttr} title="${tip}"><span class="cal-day-num">${d}</span></div>`;
+    }
+    html += `</div>`;
+    el.innerHTML = html;
   }
 
   function showRankModal(newIndex, dropped){
@@ -1661,6 +1849,7 @@
       lastDate: isRecurring ? todayStr() : null,
       createdAt
     });
+    totalCreated += 1;
     input.value = '';
     document.getElementById('dueHours').value = '';
     document.getElementById('isRecurring').checked = false;
@@ -1882,6 +2071,7 @@
     renderHero();
     renderWeekChart();
     buildCategoryChart();
+    buildMonthCalendar();
     if(document.getElementById('rankGalleryPanel').classList.contains('open')) buildRankGallery();
     if(document.getElementById('achvPanel').classList.contains('open')) buildAchvGallery();
     if(document.getElementById('lbPanel').classList.contains('open')) buildLeaderboard();

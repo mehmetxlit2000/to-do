@@ -15,6 +15,8 @@
       --pos:#2fae66; --neg:#e0463f;
       --grad-1:#ff2b2b; --grad-2:#ff2b2b; --grad-3:#ff2b2b;
       --brand-gradient: linear-gradient(120deg, var(--grad-1), var(--grad-2) 55%, var(--grad-3));
+      --hero-blob: radial-gradient(circle at 72% 20%, var(--ink) 0%, rgba(120,10,10,.55) 32%, rgba(20,2,2,.15) 62%, transparent 78%);
+      --hero-blob-opacity: .55;
     }
     html[data-theme="light"]{
       --bg:#f6f5fb; --panel:#ffffff; --panel-alt:#f1eefb; --line:#e4e0f5; --line-soft:#ece8fa;
@@ -24,6 +26,8 @@
       --pos:#1f9d58; --neg:#d1315a;
       --grad-1:#7c3aed; --grad-2:#3b82f6; --grad-3:#e11d5e;
       --brand-gradient: linear-gradient(120deg, var(--grad-1), var(--grad-2) 55%, var(--grad-3));
+      --hero-blob: conic-gradient(from 200deg, var(--grad-1), var(--grad-2), var(--grad-3), var(--grad-1));
+      --hero-blob-opacity: .16;
     }
     body{ transition:background-color .25s ease, color .25s ease; }
     *{box-sizing:border-box;}
@@ -91,6 +95,20 @@
     #profileCorner .p-name{font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--ink); font-weight:700; letter-spacing:.05em;}
     #profileCorner .p-sub{display:block; font-size:8.5px; color:var(--ink-soft); letter-spacing:.1em; margin-top:-1px;}
 
+    .profile-menu{
+      display:none; position:fixed; top:58px; right:14px; z-index:71; background:var(--panel); border:1px solid var(--line);
+      border-radius:12px; box-shadow:var(--shadow), 0 0 20px var(--glow-mid); overflow:hidden; min-width:190px;
+    }
+    .profile-menu.open{display:flex; flex-direction:column;}
+    .profile-menu-item{
+      display:flex; align-items:center; gap:10px; padding:13px 16px; background:none; border:none; color:var(--ink);
+      font-family:'Inter',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; width:100%;
+    }
+    .profile-menu-item svg{flex:none;}
+    .profile-menu-item:hover{background:var(--panel-alt);}
+    .profile-menu-item.danger{color:#e0463f;}
+    .profile-menu-sep{height:1px; background:var(--line); margin:0;}
+
     /* ---- top mini toasts ---- */
     #topToastStack{
       position:fixed; top:14px; left:50%; transform:translateX(-50%); z-index:95;
@@ -121,8 +139,8 @@
     }
     .rank-hero::before{
       content:''; position:absolute; top:-70px; right:-60px; width:260px; height:260px; border-radius:50%;
-      background:conic-gradient(from 200deg, var(--grad-1), var(--grad-2), var(--grad-3), var(--grad-1));
-      opacity:.16; filter:blur(6px); pointer-events:none;
+      background:var(--hero-blob);
+      opacity:var(--hero-blob-opacity); filter:blur(6px); pointer-events:none;
     }
     .rank-badge-slot{flex:none; position:relative; z-index:1;}
     .rank-info{flex:1; min-width:0; position:relative; z-index:1;}
@@ -179,7 +197,7 @@
     .achv-summary-fill{height:100%; background:var(--ink); border-radius:5px; transition:width .5s ease;}
     .achv-summary-label{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); white-space:nowrap;}
 
-    .achv-item{flex:none; width:82px; text-align:center;}
+    .achv-item{flex:none; width:82px; text-align:center; cursor:pointer;}
     .achv-item.locked .achv-circle{opacity:.3; filter:grayscale(1);}
     .achv-circle{
       width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center;
@@ -250,6 +268,7 @@
       box-shadow:0 0 0 rgba(255,40,40,0);
     }
     html[data-theme="light"] .btn{ color:#fff; }
+    html[data-theme="light"] .btn.btn-ghost{ color:var(--ink); }
     .btn svg{width:14px; height:14px;}
     .btn:hover{opacity:.9; box-shadow:0 0 18px var(--glow-mid);}
     .btn:active{transform:scale(.97);}
@@ -413,17 +432,32 @@
     .lb-controls{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; flex-wrap:wrap;}
     .lb-list{display:flex; flex-direction:column; gap:7px; max-height:520px; overflow-y:auto; scrollbar-width:thin; cursor:grab;}
     .lb-list.dragging-scroll{cursor:grabbing; user-select:none;}
-    .lb-row{display:flex; align-items:center; gap:11px; padding:9px 12px; border-radius:11px; background:var(--panel-alt); border:1px solid var(--line);}
-    .lb-row.me{border-color:var(--ink); background:var(--glow-soft); box-shadow:0 0 14px var(--glow-mid);}
-    .lb-rank-num{font-family:'Orbitron',sans-serif; font-weight:800; font-size:12.5px; width:30px; flex:none; text-align:center; color:var(--ink-soft);}
-    .lb-row:nth-child(1) .lb-rank-num, .lb-row:nth-child(2) .lb-rank-num, .lb-row:nth-child(3) .lb-rank-num{color:var(--ink);}
-    .lb-avatar{width:34px; height:34px; border-radius:50%; flex:none; object-fit:cover; border:1.5px solid var(--line); background:var(--panel);}
-    .lb-row.me .lb-avatar{border-color:var(--ink);}
+    .lb-row{display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:11px; background:var(--panel-alt); border:1px solid var(--line); transition:transform .1s ease;}
+    .lb-row.lb-top10{
+      background:linear-gradient(120deg,#3a1470,#7c3aed 55%,#a855f7); border-color:rgba(168,85,247,.55); box-shadow:0 0 14px rgba(124,58,237,.35);
+    }
+    .lb-row.lb-top10 .lb-name, .lb-row.lb-top10 .lb-rankname, .lb-row.lb-top10 .lb-rank-num, .lb-row.lb-top10 .lb-xp{ color:#fff; }
+    .lb-row.lb-rest{ background:#0a0a0a; border-color:#1c1c1c; }
+    html[data-theme="light"] .lb-row.lb-rest{ background:#111114; border-color:#000; }
+    .lb-row.lb-rest .lb-name, .lb-row.lb-rest .lb-xp{ color:#e6e6e6; }
+    .lb-row.lb-rest .lb-rankname, .lb-row.lb-rest .lb-rank-num{ color:#8a8a8a; }
+    .lb-row.me{
+      background:linear-gradient(120deg,#7a0f0f,#ff2b2b 55%,#ff8a8a); border-color:transparent; box-shadow:0 0 18px rgba(255,40,40,.45);
+    }
+    .lb-row.me .lb-name, .lb-row.me .lb-rankname, .lb-row.me .lb-rank-num, .lb-row.me .lb-xp{ color:#fff; }
+    .lb-rank-num{font-family:'Orbitron',sans-serif; font-weight:800; font-size:12.5px; width:26px; flex:none; text-align:center; color:var(--ink-soft);}
+    .lb-badge{flex:none; width:22px; display:flex; align-items:center; justify-content:center;}
+    .lb-avatar-wrap{position:relative; flex:none;}
+    .lb-avatar{width:34px; height:34px; border-radius:50%; display:block; object-fit:cover; border:1.5px solid var(--line); background:var(--panel);}
+    .lb-row.me .lb-avatar{border-color:#fff;}
+    .lb-flag{position:absolute; right:-3px; bottom:-3px; width:15px; height:11px; border-radius:2px; border:1px solid rgba(0,0,0,.4); object-fit:cover; box-shadow:0 0 3px rgba(0,0,0,.6);}
     .lb-info{flex:1; min-width:0;}
+    .lb-name-row{display:flex; align-items:center; gap:5px;}
     .lb-name{font-size:12.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .lb-gender{flex:none; opacity:.85;}
     .lb-rankname{font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
     .lb-xp{font-family:'Orbitron',sans-serif; font-weight:800; font-size:12.5px; flex:none; text-align:right;}
-    .lb-rarity{flex:none; font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.06em; padding:2px 7px; border-radius:100px; border:1px solid var(--line); color:var(--ink-soft); text-transform:uppercase;}
+    .lb-rarity{flex:none; font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.06em; padding:2px 7px; border-radius:100px; border:1px solid rgba(255,255,255,.3); color:inherit; text-transform:uppercase; opacity:.85;}
 
     @media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important;} }
     @media (max-width:600px){ .grid-2{grid-template-columns:1fr;} }
@@ -443,7 +477,7 @@
 
 <div id="topToastStack"></div>
 
-<div id="profileCorner" onclick="logout()" title="Oturumu kapatmak için tıkla">
+<div id="profileCorner" onclick="toggleProfileMenu(event)" title="Profil menüsü">
   <div class="avatar-wrap">
     <img id="avatarImg" src="https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif" alt="" onerror="this.style.display='none'; document.getElementById('avatarFallback').style.display='flex';">
     <div class="avatar-fallback" id="avatarFallback">R</div>
@@ -453,6 +487,7 @@
     <span class="p-sub">OTURUM AÇIK</span>
   </span>
 </div>
+<div id="profileMenu" class="profile-menu"></div>
 
 <div class="wrap">
   <div class="topbar">
@@ -462,6 +497,8 @@
     </div>
     <div class="top-actions">
       <span class="conn-pill"><span class="conn-dot" id="connDot"></span><span id="connLabel">Bağlantı bekleniyor…</span></span>
+      <button class="theme-toggle" id="accentPickerBtn" onclick="openAccentPicker()" title="Açık mod renk tonunu özelleştir" style="display:none;"></button>
+      <input type="color" id="accentColorInput" value="#5b2ec7" oninput="onAccentColorChange(this.value)" style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;">
       <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Temayı değiştir"></button>
     </div>
   </div>
@@ -649,6 +686,20 @@
   </div>
 </div>
 
+<div id="achvModal" class="modal-overlay">
+  <div class="modal-card">
+    <p class="modal-eyebrow" id="achvModalEyebrow">Başarım</p>
+    <div class="achv-circle" id="achvModalIcon" style="width:64px; height:64px; margin:4px auto 14px;"></div>
+    <p class="modal-rankname" id="achvModalName" style="font-size:16px;">Başarım Adı</p>
+    <p class="modal-sub" id="achvModalDesc">Açıklama.</p>
+    <div id="achvModalProgressWrap" style="margin:-10px 0 20px;">
+      <div class="achv-summary-track" style="height:8px;"><div class="achv-summary-fill" id="achvModalProgressFill" style="width:0%"></div></div>
+      <p class="modal-sub" id="achvModalProgressLabel" style="margin:8px 0 0; font-family:'JetBrains Mono',monospace;"></p>
+    </div>
+    <button class="btn" onclick="closeAchvModal()">Kapat</button>
+  </div>
+</div>
+
 <div id="confirmModal" class="modal-overlay">
   <div class="modal-card">
     <p class="modal-eyebrow">Onay Gerekiyor</p>
@@ -672,6 +723,28 @@
     </div>
     <p class="auth-error" id="authError">Hatalı kullanıcı adı veya şifre.</p>
     <button class="btn" style="width:100%;" onclick="tryLogin()" id="authBtn"></button>
+  </div>
+</div>
+
+<div id="profileModal" class="modal-overlay">
+  <div class="modal-card" style="max-width:360px;">
+    <p class="modal-eyebrow">Profil Ayarları</p>
+    <div class="avatar-wrap" style="width:64px; height:64px; margin:4px auto 16px;">
+      <img id="profileAvatarPreview" style="width:64px; height:64px;" src="" alt="" onerror="this.style.display='none';">
+    </div>
+    <div class="auth-fields" style="text-align:left;">
+      <span class="seg-label">Profil resmi URL</span>
+      <input type="text" id="profileAvatarInput" placeholder="https://…">
+      <span class="seg-label" style="margin-top:4px;">Kullanıcı adı</span>
+      <input type="text" id="profileUsernameInput" placeholder="Kullanıcı adı">
+      <span class="seg-label" style="margin-top:4px;">Yeni şifre <span style="text-transform:none; letter-spacing:0;">(boş bırakırsan değişmez)</span></span>
+      <input type="password" id="profilePasswordInput" placeholder="Yeni şifre" autocomplete="new-password">
+    </div>
+    <p class="auth-error" id="profileError" style="margin-top:10px;">Kullanıcı adı boş olamaz.</p>
+    <div class="modal-actions" style="margin-top:16px;">
+      <button class="btn btn-ghost" onclick="closeProfileModal()">Kapat</button>
+      <button class="btn" id="profileSaveBtn" onclick="saveProfileSettings()"></button>
+    </div>
   </div>
 </div>
 
@@ -715,7 +788,12 @@
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
     moon: '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>',
     coins: '<circle cx="9" cy="9" r="6"/><path d="M14.5 8a6 6 0 1 1 0 9.9"/>',
-    wallet: '<path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v3"/><path d="M3 7v10a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1h-4a2 2 0 0 0 0 4h5"/>'
+    wallet: '<path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v3"/><path d="M3 7v10a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1h-4a2 2 0 0 0 0 4h5"/>',
+    palette: '<circle cx="12" cy="12" r="9"/><circle cx="8.5" cy="10" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="8" r="1.3" fill="currentColor" stroke="none"/><circle cx="15.5" cy="10" r="1.3" fill="currentColor" stroke="none"/><circle cx="10" cy="14" r="1.3" fill="currentColor" stroke="none"/><path d="M12 3a9 9 0 0 0 0 18c1.2 0 1.8-.9 1.3-1.9-.3-.6-.1-1.3.5-1.6.4-.2.9-.2 1.3 0 1.4.7 2.9-.4 2.9-2 0-6.9-2.8-12.5-6-12.5z"/>',
+    user: '<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/>',
+    male: '<circle cx="10" cy="14" r="6"/><path d="M14.5 9.5 20 4M14 4h6v6"/>',
+    female: '<circle cx="12" cy="9" r="6"/><path d="M12 15v7M8.5 19h7"/>',
+    logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>'
   };
   function icon(name, size){
     size = size || 14;
@@ -729,64 +807,92 @@
   const PRIORITY_ORDER = { 'Yüksek':3, 'Orta':2, 'Düşük':1 };
   const DURATION_PRESETS = [ {label:'Yok', hours:0}, {label:'1s', hours:1}, {label:'3s', hours:3}, {label:'6s', hours:6}, {label:'12s', hours:12}, {label:'24s', hours:24}, {label:'Özel', hours:'custom'} ];
 
-  /* ---- rütbe sistemi: 12 klan x 3 alt rütbe = 36 rütbe, kızıl-ateş tonlarında, rütbe arttıkça daha görkemli ---- */
+  /* ---- rütbe sistemi: 12 klan x 3 alt rütbe = 36 rütbe ---- */
   const GROUP_NAMES = ['Thrall','Karl','Þegn','Skald','Húskarl','Berserker','Hersir','Jarl','Konung','Einherjar','Valkyrie','Allfather'];
   const GROUPS = GROUP_NAMES.map((name, i) => {
-    const t = i/(GROUP_NAMES.length-1);
-    const L1 = 12 + t*42;
-    const L2 = Math.min(64, L1 + 15);
-    const S = 55 + t*45;
     const legendary = i === GROUP_NAMES.length - 1;
-    return {
-      name,
-      c1: `hsl(0, ${S}%, ${L1}%)`,
-      c2: `hsl(0, ${S}%, ${L2}%)`,
-      text: L1 > 38 ? '#2b0808' : '#ffbcbc',
-      rayCount: 3 + i,
-      rings: i >= 8 ? (i >= 10 ? 2 : 1) : 0,
-      legendary
-    };
+    return { name, rayCount: 3 + i, rings: i >= 8 ? (i >= 10 ? 2 : 1) : 0, legendary };
   });
+  function currentTheme(){ return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark'; }
+  function getGroupPalette(gi){
+    const t = gi/(GROUP_NAMES.length-1);
+    if(currentTheme()==='light'){
+      const hue = Math.round(gi*(320/(GROUP_NAMES.length-1)));
+      const L1 = 40 + t*10;
+      const L2 = Math.min(72, L1+16);
+      const S = 58+t*24;
+      return { c1:`hsl(${hue}, ${S}%, ${L1}%)`, c2:`hsl(${hue}, ${S}%, ${L2}%)`, text: L1>48 ? '#241033' : '#ffffff' };
+    }
+    const L1 = 12 + t*42, L2 = Math.min(64, L1+15), S = 55+t*45;
+    return { c1:`hsl(0, ${S}%, ${L1}%)`, c2:`hsl(0, ${S}%, ${L2}%)`, text: L1>38 ? '#2b0808' : '#ffbcbc' };
+  }
   const SUB_LABEL = ['I','II','III'];
   const RANKS = [];
   GROUPS.forEach((g, gi) => {
     for(let sub=0; sub<SUB_LABEL.length; sub++){
       const idx = gi*SUB_LABEL.length + sub;
       const min = idx===0 ? 0 : Math.round(55*Math.pow(idx,1.6));
-      RANKS.push({
-        name: g.name+' '+SUB_LABEL[sub],
-        group:g.name, sub, gi, c1:g.c1,
-        c2: sub===SUB_LABEL.length-1 ? g.c2 : g.c1,
-        text:g.text, legendary: !!g.legendary, rayCount:g.rayCount, rings:g.rings,
-        min
-      });
+      RANKS.push({ name: g.name+' '+SUB_LABEL[sub], group:g.name, sub, gi, legendary: !!g.legendary, rayCount:g.rayCount, rings:g.rings, min });
     }
   });
 
   const ACHIEVEMENTS = [
-    { id:'first',    name:'İlk Adım',        ic:'flag',     target:1,   get:s=>s.totalCompleted,        test:s=>s.totalCompleted>=1 },
-    { id:'10',       name:'Isınma Turu',     ic:'shield',   target:10,  get:s=>s.totalCompleted,        test:s=>s.totalCompleted>=10 },
-    { id:'25',       name:'Sıkı Çalışan',    ic:'hammer',   target:25,  get:s=>s.totalCompleted,        test:s=>s.totalCompleted>=25 },
-    { id:'100',      name:'Yüzler Kulübü',   ic:'trophy',   target:100, get:s=>s.totalCompleted,        test:s=>s.totalCompleted>=100 },
-    { id:'streak3',  name:'Ateşlendi',       ic:'flame',    target:3,   get:s=>s.streak,                test:s=>s.streak>=3 },
-    { id:'streak7',  name:'Kararlılık',      ic:'flame',    target:7,   get:s=>s.streak,                test:s=>s.streak>=7 },
-    { id:'streak30', name:'Söndürülemez',    ic:'flame',    target:30,  get:s=>s.streak,                test:s=>s.streak>=30 },
-    { id:'dayhero',  name:'Gün Kahramanı',   ic:'bolt',     target:5,   get:s=>s.maxDay,                test:s=>s.maxDay>=5 },
-    { id:'routine',  name:'Rutin Ustası',    ic:'refresh',  target:1,   get:s=>s.recurringCount,        test:s=>s.recurringCount>=1 },
-    { id:'timeAtk',  name:'Zamana Karşı',    ic:'stopwatch',target:5,   get:s=>s.timedCompleted,        test:s=>s.timedCompleted>=5 },
-    { id:'perfect',  name:'Mükemmeliyetçi',  ic:'gem',      target:10,  get:s=>s.highPriorityCompleted, test:s=>s.highPriorityCompleted>=10 },
-    { id:'legend',   name:'Zirve Fatihi',    ic:'crown',    target:RANKS.length, get:s=>getRankIndex(s.xp)+1, test:s=>getRankIndex(s.xp)>=RANKS.length-1 },
-    { id:'dracula',  name:'Kont Drakula',    ic:'moon',     target:5,   get:s=>s.nightOwl,              test:s=>s.nightOwl>=5,   desc:'Gece 00:00–05:00 arası 5 görev tamamla' },
-    { id:'ragnar',   name:'Ragnar Lodbrok',  ic:'flag',     target:14,  get:s=>s.streak,                test:s=>s.streak>=14,    desc:'14 gün kesintisiz seri yap — fetih zamanı' },
-    { id:'suntzu',   name:'Sun Tzu',         ic:'compass',  target:5,   get:s=>s.categoriesTouched,     test:s=>s.categoriesTouched>=5, desc:'Tüm 5 kategoriden en az bir görev tamamla' },
-    { id:'midas',    name:'Kral Midas',      ic:'coins',    target:50000, get:s=>Math.round(s.portfolioValue), test:s=>s.portfolioValue>=50000, desc:'Portföy değerin 50.000₺ üzerine çıksın' },
-    { id:'spartacus',name:'Spartaküs',       ic:'hammer',   target:5,   get:s=>s.resilience,            test:s=>s.totalFailed>=3 && s.streak>=5, desc:'En az 3 başarısızlıktan sonra 5 günlük seriyle toparlan' },
+    { id:'first',    name:'İlk Adım',        ic:'flag',     target:1,   get:s=>s.totalCompleted,        test:s=>s.totalCompleted>=1,  desc:'İlk görevini tamamla.' },
+    { id:'10',       name:'Isınma Turu',     ic:'shield',   target:10,  get:s=>s.totalCompleted,        test:s=>s.totalCompleted>=10, desc:'Toplamda 10 görev tamamla.' },
+    { id:'25',       name:'Sıkı Çalışan',    ic:'hammer',   target:25,  get:s=>s.totalCompleted,        test:s=>s.totalCompleted>=25, desc:'Toplamda 25 görev tamamla.' },
+    { id:'100',      name:'Yüzler Kulübü',   ic:'trophy',   target:100, get:s=>s.totalCompleted,        test:s=>s.totalCompleted>=100, desc:'Toplamda 100 görev tamamla.' },
+    { id:'centurion',name:'Yüzbaşı',         ic:'layers',   target:200, get:s=>s.totalCompleted,        test:s=>s.totalCompleted>=200, desc:'Toplamda 200 görev tamamla — gerçek bir efsane.' },
+    { id:'streak3',  name:'Ateşlendi',       ic:'flame',    target:3,   get:s=>s.streak,                test:s=>s.streak>=3,  desc:'3 gün üst üste en az bir görev tamamla.' },
+    { id:'streak7',  name:'Kararlılık',      ic:'flame',    target:7,   get:s=>s.streak,                test:s=>s.streak>=7,  desc:'7 günlük kesintisiz seri yap.' },
+    { id:'streak30', name:'Söndürülemez',    ic:'flame',    target:30,  get:s=>s.streak,                test:s=>s.streak>=30, desc:'30 günlük kesintisiz seri yap.' },
+    { id:'dayhero',  name:'Gün Kahramanı',   ic:'bolt',     target:5,   get:s=>s.maxDay,                test:s=>s.maxDay>=5,  desc:'Tek bir günde 5 görev tamamla.' },
+    { id:'routine',  name:'Rutin Ustası',    ic:'refresh',  target:1,   get:s=>s.recurringCount,        test:s=>s.recurringCount>=1, desc:'En az bir sonsuz rutin görev oluştur.' },
+    { id:'timeAtk',  name:'Zamana Karşı',    ic:'stopwatch',target:5,   get:s=>s.timedCompleted,        test:s=>s.timedCompleted>=5, desc:'Süre sınırı olan 5 görevi zamanında tamamla.' },
+    { id:'perfect',  name:'Mükemmeliyetçi',  ic:'gem',      target:10,  get:s=>s.highPriorityCompleted, test:s=>s.highPriorityCompleted>=10, desc:'10 adet Yüksek öncelikli görev tamamla.' },
+    { id:'legend',   name:'Zirve Fatihi',    ic:'crown',    target:RANKS.length, get:s=>getRankIndex(s.xp)+1, test:s=>getRankIndex(s.xp)>=RANKS.length-1, desc:'En üst rütbeye — Allfather III\'e ulaş.' },
+    { id:'dracula',  name:'Kont Drakula',    ic:'moon',     target:5,   get:s=>s.nightOwl,              test:s=>s.nightOwl>=5,   desc:'Gece 00:00–05:00 arası 5 görev tamamla.' },
+    { id:'ragnar',   name:'Ragnar Lodbrok',  ic:'flag',     target:14,  get:s=>s.streak,                test:s=>s.streak>=14,    desc:'14 gün kesintisiz seri yap — fetih zamanı.' },
+    { id:'suntzu',   name:'Sun Tzu',         ic:'compass',  target:5,   get:s=>s.categoriesTouched,     test:s=>s.categoriesTouched>=5, desc:'Tüm 5 kategoriden en az bir görev tamamla.' },
+    { id:'midas',    name:'Kral Midas',      ic:'coins',    target:50000, get:s=>Math.round(s.portfolioValue), test:s=>s.portfolioValue>=50000, desc:'Portföy değerin 50.000₺ üzerine çıksın.' },
+    { id:'spartacus',name:'Spartaküs',       ic:'hammer',   target:5,   get:s=>s.streak,                test:s=>s.totalFailed>=3 && s.streak>=5, desc:'En az 3 başarısızlıktan sonra 5 günlük seriyle toparlan.' },
+    { id:'earlybird',name:'Erkenci Kuş',     ic:'sun',      target:5,   get:s=>s.morningCompletions,     test:s=>s.morningCompletions>=5, desc:'Sabah 06:00–09:00 arası 5 görev tamamla.' },
+    { id:'weekend',  name:'Hafta Sonu Savaşçısı', ic:'shield', target:10, get:s=>s.weekendCompletions,   test:s=>s.weekendCompletions>=10, desc:'Cumartesi/Pazar günleri toplam 10 görev tamamla.' },
+    { id:'collector',name:'Koleksiyoncu',    ic:'wallet',   target:5,   get:s=>s.portfolioAssetCount,    test:s=>s.portfolioAssetCount>=5, desc:'Portföyüne 5 farklı varlık türü ekle.' },
+    { id:'whale',    name:'Balina',          ic:'briefcase',target:100000, get:s=>Math.round(s.portfolioValue), test:s=>s.portfolioValue>=100000, desc:'Portföy değerin 100.000₺ üzerine çıksın.' },
+    { id:'balanced', name:'Dengeli Yaşam',   ic:'grid',     target:5,   get:s=>s.minCategoryCompletions, test:s=>s.minCategoryCompletions>=5, desc:'5 kategorinin her birinden en az 5\'er görev tamamla.' },
   ];
 
   /* ===================== SAHTE SIRALAMA (rakip listesi) ===================== */
-  const LB_ADJ = ['Kızıl','Kara','Demir','Gölge','Ejder','Fırtına','Kurt','Kartal','Çelik','Yıldız','Ateş','Buz','Gece','Şafak','Kanlı','Sessiz','Vahşi','Altın','Gümüş','Zümrüt','Kutup','Çöl','Taş','Rüzgâr','Keskin'];
-  const LB_NOUN = ['Kurt','Şahin','Avcı','Savaşçı','Kral','Reis','Fatih','Gezgin','Ozan','Kâhin','Muhafız','Yolcu','Efendi','Bilge','Kaptan','Derviş','Aslan','Tilki','Baykuş','Yılan','Boğa','Kartal','Ejderha','Şövalye','Korsan'];
-  const LB_LEGENDS = ['Kont Drakula','Ragnar Lodbrok','Sun Tzu','Cengiz Han','Attila','Spartaküs','Hannibal Barca','Aleksandros','Nostradamus','Aşil','Beowulf','Leonidas'];
+  const LB_COUNTRIES = [
+    { code:'us', name:'ABD', male:['James','Michael','Robert','William'], female:['Emma','Olivia','Ava','Sophia'], sur:['Smith','Johnson','Miller','Brown'] },
+    { code:'jp', name:'Japonya', male:['Haruto','Ren','Sota','Yuto'], female:['Yui','Sakura','Hina','Mei'], sur:['Sato','Suzuki','Takahashi','Tanaka'] },
+    { code:'de', name:'Almanya', male:['Lukas','Finn','Jonas','Felix'], female:['Mia','Emma','Lena','Anna'], sur:['Müller','Schmidt','Fischer','Weber'] },
+    { code:'fr', name:'Fransa', male:['Léo','Gabriel','Louis','Hugo'], female:['Chloé','Léa','Manon','Camille'], sur:['Dubois','Moreau','Lambert','Girard'] },
+    { code:'br', name:'Brezilya', male:['João','Miguel','Gabriel','Pedro'], female:['Maria','Ana','Julia','Beatriz'], sur:['Silva','Souza','Costa','Pereira'] },
+    { code:'ng', name:'Nijerya', male:['Chidi','Emeka','Tunde','Ade'], female:['Amara','Ngozi','Zainab','Folake'], sur:['Okafor','Adeyemi','Balogun','Eze'] },
+    { code:'in', name:'Hindistan', male:['Arjun','Vikram','Rohan','Aarav'], female:['Priya','Ananya','Kavya','Diya'], sur:['Sharma','Patel','Gupta','Reddy'] },
+    { code:'kr', name:'Güney Kore', male:['Jiho','Minjun','Doyoon','Siwoo'], female:['Seoyeon','Jiwoo','Haeun','Yuna'], sur:['Kim','Lee','Park','Choi'] },
+    { code:'mx', name:'Meksika', male:['Santiago','Mateo','Diego','Emiliano'], female:['Sofía','Valentina','Ximena','Renata'], sur:['García','Hernández','López','Ramírez'] },
+    { code:'ru', name:'Rusya', male:['Ivan','Dmitri','Alexei','Mikhail'], female:['Anastasia','Ekaterina','Sofia','Polina'], sur:['Ivanov','Petrov','Sokolov','Volkov'] },
+    { code:'it', name:'İtalya', male:['Leonardo','Francesco','Alessandro','Matteo'], female:['Giulia','Sofia','Aurora','Alice'], sur:['Rossi','Russo','Ferrari','Romano'] },
+    { code:'se', name:'İsveç', male:['Erik','Oscar','William','Lucas'], female:['Alice','Maja','Elsa','Wilma'], sur:['Andersson','Johansson','Karlsson','Nilsson'] },
+    { code:'eg', name:'Mısır', male:['Omar','Ahmed','Youssef','Karim'], female:['Nour','Malak','Yasmin','Salma'], sur:['Hassan','Mahmoud','Ibrahim','Ali'] },
+    { code:'cn', name:'Çin', male:['Wei','Jun','Hao','Yang'], female:['Mei','Ling','Xin','Yan'], sur:['Wang','Li','Zhang','Chen'] },
+    { code:'gb', name:'İngiltere', male:['Oliver','George','Harry','Jack'], female:['Amelia','Isla','Freya','Ivy'], sur:['Taylor','Evans','Wilson','Clarke'] },
+    { code:'es', name:'İspanya', male:['Hugo','Martín','Lucas','Daniel'], female:['Lucía','Martina','Paula','Vega'], sur:['González','Fernández','Martínez','Díaz'] },
+    { code:'pl', name:'Polonya', male:['Jakub','Antoni','Filip','Wojciech'], female:['Zofia','Julia','Maja','Zuzanna'], sur:['Nowak','Kowalski','Wiśniewski','Wójcik'] },
+    { code:'ar', name:'Arjantin', male:['Benjamín','Thiago','Bautista','Joaquín'], female:['Emma','Isabella','Catalina','Mora'], sur:['Fernández','Rodríguez','Gómez','Díaz'] },
+    { code:'za', name:'Güney Afrika', male:['Sipho','Thabo','Kagiso','Lwazi'], female:['Naledi','Thandiwe','Amahle','Zanele'], sur:['Dlamini','Nkosi','Khumalo','Mokoena'] },
+    { code:'tr', name:'Türkiye', male:['Emre','Kaan','Baran','Mert'], female:['Elif','Zeynep','Defne','Ece'], sur:['Yılmaz','Demir','Şahin','Çelik'] }
+  ];
+  const LB_LEGENDS = [
+    { name:'Kont Drakula', code:'ro', gender:'male' }, { name:'Ragnar Lodbrok', code:'no', gender:'male' },
+    { name:'Sun Tzu', code:'cn', gender:'male' }, { name:'Cengiz Han', code:'mn', gender:'male' },
+    { name:'Attila', code:'hu', gender:'male' }, { name:'Spartaküs', code:'it', gender:'male' },
+    { name:'Hannibal Barca', code:'tn', gender:'male' }, { name:'Aleksandros', code:'gr', gender:'male' },
+    { name:'Nostradamus', code:'fr', gender:'male' }, { name:'Aşil', code:'gr', gender:'male' },
+    { name:'Beowulf', code:'dk', gender:'male' }, { name:'Leonidas', code:'gr', gender:'male' }
+  ];
   function rarityForRankIndex(idx){
     const gi = RANKS[idx].gi;
     if(gi<=2) return 'Sıradan';
@@ -795,27 +901,34 @@
     if(gi<=10) return 'Efsanevi';
     return 'Mitik';
   }
-  function seededName(i){
-    if(i < LB_LEGENDS.length) return LB_LEGENDS[i];
-    const a = LB_ADJ[Math.floor(Math.random()*LB_ADJ.length)];
-    const n = LB_NOUN[Math.floor(Math.random()*LB_NOUN.length)];
-    const num = Math.floor(Math.random()*89)+10;
-    return `${a} ${n} ${num}`;
+  const AVATAR_STYLES = ['lorelei','micah','adventurer','personas','bottts','notionists'];
+  function botAvatarUrl(seed, i){
+    const style = AVATAR_STYLES[i % AVATAR_STYLES.length];
+    const gothic = i % 6 === 0;
+    let url = `https://api.dicebear.com/7.x/${style}/svg?seed=${encodeURIComponent(seed)}`;
+    if(gothic) url += `&backgroundColor=1a1a1a,2b0808,000000`;
+    return url;
   }
-  let leaderboardBots = [];
   function generateLeaderboardBots(){
     const maxXp = Math.round(RANKS[RANKS.length-1].min * 1.25);
-    const used = new Set();
     const bots = [];
-    for(let i=0;i<100;i++){
-      let nm = seededName(i);
-      while(used.has(nm)){ nm = seededName(Math.floor(Math.random()*LB_ADJ.length)+LB_LEGENDS.length); }
-      used.add(nm);
+    LB_LEGENDS.forEach((leg,i) => {
+      const botXp = Math.round((0.55+Math.random()*0.45) * maxXp);
+      bots.push({ name:leg.name, code:leg.code, gender:leg.gender, xp:botXp, seed:leg.name+i, avatarIdx:i });
+    });
+    for(let i=0;i<88;i++){
+      const country = LB_COUNTRIES[Math.floor(Math.random()*LB_COUNTRIES.length)];
+      const gender = Math.random() < 0.5 ? 'male' : 'female';
+      const pool = gender==='male' ? country.male : country.female;
+      const first = pool[Math.floor(Math.random()*pool.length)];
+      const sur = country.sur[Math.floor(Math.random()*country.sur.length)];
+      const name = `${first} ${sur}`;
       const botXp = Math.round(Math.pow(Math.random(), 2.1) * maxXp);
-      bots.push({ name: nm, xp: botXp, seed: nm + i + Math.random().toString(36).slice(2,6) });
+      bots.push({ name, code:country.code, gender, xp:botXp, seed:name+i+Math.random().toString(36).slice(2,6), avatarIdx:i+LB_LEGENDS.length });
     }
     return bots;
   }
+  let leaderboardBots = [];
   function regenerateLeaderboard(){
     leaderboardBots = generateLeaderboardBots();
     buildLeaderboard();
@@ -825,20 +938,26 @@
     const el = document.getElementById('lbList');
     if(!el) return;
     if(leaderboardBots.length === 0) leaderboardBots = generateLeaderboardBots();
-    const entries = leaderboardBots.map(b => ({ name:b.name, xp:b.xp, seed:b.seed, isMe:false }));
-    entries.push({ name:'Sen (Root)', xp: xp, seed:'root-user-me', isMe:true });
+    const myAvatar = localStorage.getItem(AVATAR_KEY) || document.getElementById('avatarImg').src;
+    const entries = leaderboardBots.map(b => ({ name:b.name, xp:b.xp, code:b.code, gender:b.gender, avatarIdx:b.avatarIdx, seed:b.seed, isMe:false }));
+    entries.push({ name:getAuthUser(), xp: xp, code:'tr', gender:'male', avatarIdx:-1, seed:'me', isMe:true });
     entries.sort((a,b) => b.xp - a.xp);
     el.innerHTML = entries.map((e,i) => {
       const rIdx = getRankIndex(e.xp);
-      const rank = RANKS[rIdx];
       const rarity = rarityForRankIndex(rIdx);
-      const avatarUrl = `https://api.dicebear.com/7.x/${e.isMe ? 'shapes' : 'bottts'}/svg?seed=${encodeURIComponent(e.seed)}`;
-      return `<div class="lb-row${e.isMe?' me':''}">
+      const avatarUrl = e.isMe ? myAvatar : botAvatarUrl(e.seed, e.avatarIdx);
+      const rowClass = e.isMe ? 'me' : (i < 10 ? 'lb-top10' : 'lb-rest');
+      const genderIcon = e.gender === 'female' ? icon('female',12) : icon('male',12);
+      return `<div class="lb-row ${rowClass}">
         <span class="lb-rank-num">#${i+1}</span>
-        <img class="lb-avatar" src="${avatarUrl}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+        <span class="lb-badge">${badgeSVG(rIdx, 20, false)}</span>
+        <div class="lb-avatar-wrap">
+          <img class="lb-avatar" src="${avatarUrl}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+          <img class="lb-flag" src="https://flagcdn.com/w20/${e.code}.png" alt="" loading="lazy" onerror="this.style.display='none'">
+        </div>
         <div class="lb-info">
-          <div class="lb-name">${escapeHtml(e.name)}</div>
-          <div class="lb-rankname">${rank.name}</div>
+          <div class="lb-name-row"><span class="lb-name">${escapeHtml(e.name)}</span><span class="lb-gender">${genderIcon}</span></div>
+          <div class="lb-rankname">${RANKS[rIdx].name}</div>
         </div>
         <span class="lb-rarity">${rarity}</span>
         <span class="lb-xp">${e.xp} XP</span>
@@ -849,15 +968,16 @@
   let tasks = [];
   let xp = 0, streak = 0, lastActiveDate = null, totalCompleted = 0, completionsByDate = {};
   let totalFailed = 0, highPriorityCompleted = 0, timedCompleted = 0, categoryCompletions = {};
-  let nightOwlCompletions = 0;
+  let nightOwlCompletions = 0, morningCompletions = 0, weekendCompletions = 0;
   let filter = 'all';
   let draggedId = null;
   let lastRemoved = null;
 
-  /* ===================== PORTFÖY (döviz / altın-gümüş / kripto / BIST) ===================== */
+  /* ===================== PORTFÖY (döviz / altın-gümüş / kripto) ===================== */
   const TROY_OZ_GRAMS = 31.1034768;
   const CRYPTO_ICON_BASE = 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/';
   const ASSET_DEFS = {
+    try_:        { label:'Türk Lirası',     unit:'TL',   group:'Döviz',  ic:'coins', logo:'https://flagcdn.com/w40/tr.png' },
     usd:         { label:'Amerikan Doları', unit:'USD',  group:'Döviz',  ic:'coins', logo:'https://flagcdn.com/w40/us.png' },
     eur:         { label:'Euro',            unit:'EUR',  group:'Döviz',  ic:'coins', logo:'https://flagcdn.com/w40/eu.png' },
     gbp:         { label:'İngiliz Sterlini',unit:'GBP',  group:'Döviz',  ic:'coins', logo:'https://flagcdn.com/w40/gb.png' },
@@ -878,34 +998,13 @@
     tron:        { label:'Tron',            unit:'TRX',  group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'trx.png' },
     'matic-network':{label:'Polygon',       unit:'MATIC',group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'matic.png' },
     'shiba-inu': { label:'Shiba Inu',       unit:'SHIB', group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'shib.png' },
-    uniswap:     { label:'Uniswap',         unit:'UNI',  group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'uni.png' },
-    thyao:       { label:'Türk Hava Yolları', unit:'lot', group:'BIST', ic:'bolt', stockBadge:'THYAO' },
-    asels:       { label:'Aselsan',           unit:'lot', group:'BIST', ic:'bolt', stockBadge:'ASELS' },
-    garan:       { label:'Garanti BBVA',      unit:'lot', group:'BIST', ic:'bolt', stockBadge:'GARAN' },
-    akbnk:       { label:'Akbank',            unit:'lot', group:'BIST', ic:'bolt', stockBadge:'AKBNK' },
-    sasa:        { label:'Sasa Polyester',    unit:'lot', group:'BIST', ic:'bolt', stockBadge:'SASA' },
-    kchol:       { label:'Koç Holding',       unit:'lot', group:'BIST', ic:'bolt', stockBadge:'KCHOL' },
-    bimas:       { label:'BİM',               unit:'lot', group:'BIST', ic:'bolt', stockBadge:'BIMAS' },
-    eregl:       { label:'Ereğli Demir Çelik', unit:'lot', group:'BIST', ic:'bolt', stockBadge:'EREGL' },
-    tuprs:       { label:'Tüpraş',            unit:'lot', group:'BIST', ic:'bolt', stockBadge:'TUPRS' },
-    sise:        { label:'Şişecam',           unit:'lot', group:'BIST', ic:'bolt', stockBadge:'SISE' }
+    uniswap:     { label:'Uniswap',         unit:'UNI',  group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'uni.png' }
   };
-  const STOCK_TICKERS = { thyao:'THYAO', asels:'ASELS', garan:'GARAN', akbnk:'AKBNK', sasa:'SASA', kchol:'KCHOL', bimas:'BIMAS', eregl:'EREGL', tuprs:'TUPRS', sise:'SISE' };
   let portfolio = {};
-  let marketPrices = {};
+  let marketPrices = { try_: 1 };
   let marketLoading = true;
   let marketError = false;
   let marketLastUpdated = null;
-
-  async function fetchStockPrice(assetId, ticker){
-    try{
-      const res = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}.IS?interval=1d&range=1d`);
-      if(!res.ok) return;
-      const data = await res.json();
-      const price = data?.chart?.result?.[0]?.meta?.regularMarketPrice;
-      if(price) marketPrices[assetId] = price;
-    }catch(e){ /* tek bir hisse başarısız olursa diğerlerini etkilemesin */ }
-  }
 
   async function fetchMarketPrices(){
     marketLoading = true;
@@ -913,7 +1012,7 @@
     try{
       const cgIds = 'bitcoin,ethereum,tether,binancecoin,ripple,solana,dogecoin,cardano,polkadot,litecoin,avalanche-2,chainlink,tron,matic-network,shiba-inu,uniswap,pax-gold,kinesis-silver';
       const [cgRes, usdRes, eurRes, gbpRes] = await Promise.all([
-        fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${cgIds}&vs_currencies=try`),
+        fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${cgIds}&vs_currencies=try,usd`),
         fetch('https://api.frankfurter.dev/v1/latest?base=USD&symbols=TRY'),
         fetch('https://api.frankfurter.dev/v1/latest?base=EUR&symbols=TRY'),
         fetch('https://api.frankfurter.dev/v1/latest?base=GBP&symbols=TRY')
@@ -923,35 +1022,45 @@
       const usdData = await usdRes.json();
       const eurData = await eurRes.json();
       const gbpData = gbpRes.ok ? await gbpRes.json() : null;
+      const usdToTry = usdData?.rates?.TRY;
+      // Bazı kripto paralar CoinGecko'dan doğrudan TRY dönmeyebilir — bu durumda USD fiyatını TRY kuruyla çeviriyoruz.
+      const cgTry = (id) => {
+        const entry = cg?.[id];
+        if(!entry) return undefined;
+        if(entry.try) return entry.try;
+        if(entry.usd && usdToTry) return entry.usd * usdToTry;
+        return undefined;
+      };
       marketPrices = {
+        try_: 1,
         usd: usdData?.rates?.TRY,
         eur: eurData?.rates?.TRY,
         gbp: gbpData?.rates?.TRY,
-        gold: cg?.['pax-gold']?.try ? cg['pax-gold'].try / TROY_OZ_GRAMS : undefined,
-        silver: cg?.['kinesis-silver']?.try ? cg['kinesis-silver'].try / TROY_OZ_GRAMS : undefined,
-        bitcoin: cg?.bitcoin?.try,
-        ethereum: cg?.ethereum?.try,
-        tether: cg?.tether?.try,
-        binancecoin: cg?.binancecoin?.try,
-        ripple: cg?.ripple?.try,
-        solana: cg?.solana?.try,
-        dogecoin: cg?.dogecoin?.try,
-        cardano: cg?.cardano?.try,
-        polkadot: cg?.polkadot?.try,
-        litecoin: cg?.litecoin?.try,
-        'avalanche-2': cg?.['avalanche-2']?.try,
-        chainlink: cg?.chainlink?.try,
-        tron: cg?.tron?.try,
-        'matic-network': cg?.['matic-network']?.try,
-        'shiba-inu': cg?.['shiba-inu']?.try,
-        uniswap: cg?.uniswap?.try
+        gold: cgTry('pax-gold') ? cgTry('pax-gold') / TROY_OZ_GRAMS : undefined,
+        silver: cgTry('kinesis-silver') ? cgTry('kinesis-silver') / TROY_OZ_GRAMS : undefined,
+        bitcoin: cgTry('bitcoin'),
+        ethereum: cgTry('ethereum'),
+        tether: cgTry('tether'),
+        binancecoin: cgTry('binancecoin'),
+        ripple: cgTry('ripple'),
+        solana: cgTry('solana'),
+        dogecoin: cgTry('dogecoin'),
+        cardano: cgTry('cardano'),
+        polkadot: cgTry('polkadot'),
+        litecoin: cgTry('litecoin'),
+        'avalanche-2': cgTry('avalanche-2'),
+        chainlink: cgTry('chainlink'),
+        tron: cgTry('tron'),
+        'matic-network': cgTry('matic-network'),
+        'shiba-inu': cgTry('shiba-inu'),
+        uniswap: cgTry('uniswap')
       };
       marketError = false;
       marketLastUpdated = Date.now();
-      await Promise.all(Object.keys(STOCK_TICKERS).map(id => fetchStockPrice(id, STOCK_TICKERS[id])));
     }catch(e){
       console.error('Piyasa verisi çekilemedi', e);
       marketError = true;
+      marketPrices.try_ = 1;
     }
     marketLoading = false;
     renderPortfolio();
@@ -1018,7 +1127,7 @@
   }
 
   function formatTRY(n){
-    return (n||0).toLocaleString('tr-TR', { style:'currency', currency:'TRY', maximumFractionDigits: 2 });
+    return (n||0).toLocaleString('tr-TR', { style:'currency', currency:'TRY', maximumFractionDigits: 2 }) + ' TL';
   }
 
   function renderPortfolio(){
@@ -1040,12 +1149,12 @@
         const price = marketPrices[id];
         const value = price ? qty * price : null;
         total += value || 0;
-        const priceLabel = marketLoading ? 'yükleniyor…' : (price ? formatTRY(price) + ' / ' + def.unit : 'alınamadı');
+        const priceLabel = id==='try_' ? '1,00 TL sabit' : (marketLoading ? 'yükleniyor…' : (price ? formatTRY(price) + ' / ' + def.unit : 'alınamadı'));
         const logoInner = def.logo
                 ? `<img src="${def.logo}" alt="" onerror="assetLogoFallback(this,'${id}')">`
-                : (def.stockBadge ? def.stockBadge : icon(def.ic,17));
+                : icon(def.ic,17);
         return `<div class="task-item" style="border-left-color:var(--line);">
-          <div class="asset-logo${def.stockBadge?' stock':''}">${logoInner}</div>
+          <div class="asset-logo">${logoInner}</div>
           <div class="task-body">
             <div class="task-text">${def.label} <span class="qty-display" id="qtydisp-${id}" style="color:var(--ink-soft); font-weight:400; cursor:pointer;" title="Miktarı düzenlemek için tıkla" onclick="editHoldingQty('${id}')">· ${qty} ${def.unit} ${icon('edit',10)}</span></div>
             <div class="task-meta">
@@ -1068,7 +1177,7 @@
     } else if(marketLoading && !marketLastUpdated){
       metaEl.innerHTML = `${icon('refresh',10)} Fiyatlar yükleniyor…`;
     } else if(marketLastUpdated){
-      metaEl.innerHTML = `${icon('refresh',10)} Son güncelleme: ${new Date(marketLastUpdated).toLocaleTimeString('tr-TR')} · TRY cinsinden`;
+      metaEl.innerHTML = `${icon('refresh',10)} Son güncelleme: ${new Date(marketLastUpdated).toLocaleTimeString('tr-TR')} · TL cinsinden`;
     }
   }
 
@@ -1108,6 +1217,8 @@
         timedCompleted = p?.timedCompleted || 0;
         categoryCompletions = p?.categoryCompletions || {};
         nightOwlCompletions = p?.nightOwlCompletions || 0;
+        morningCompletions = p?.morningCompletions || 0;
+        weekendCompletions = p?.weekendCompletions || 0;
         portfolio = p?.portfolio || {};
         renderPortfolio();
         tasks.forEach(t=>{
@@ -1135,7 +1246,8 @@
     try{
       await userRef.set({
         tasks, xp, streak, lastActiveDate, totalCompleted, completionsByDate,
-        totalFailed, highPriorityCompleted, timedCompleted, categoryCompletions, nightOwlCompletions, portfolio
+        totalFailed, highPriorityCompleted, timedCompleted, categoryCompletions,
+        nightOwlCompletions, morningCompletions, weekendCompletions, portfolio
       });
     }catch(e){ console.error('Kaydetme hatası', e); }
   }
@@ -1191,6 +1303,12 @@
     document.getElementById('lbRefreshBtn').innerHTML = `${icon('refresh',11)} Listeyi yenile`;
     document.getElementById('authShield').innerHTML = icon('lock',26);
     document.getElementById('authBtn').innerHTML = `${icon('shield',14)} Giriş Yap`;
+    document.getElementById('profileSaveBtn').innerHTML = `${icon('check',14)} Kaydet`;
+    document.getElementById('profileMenu').innerHTML = `
+      <button class="profile-menu-item" onclick="event.stopPropagation(); closeProfileMenu(); openProfilePanel();">${icon('edit',15)} Profil Ayarları</button>
+      <div class="profile-menu-sep"></div>
+      <button class="profile-menu-item danger" onclick="event.stopPropagation(); closeProfileMenu(); logout();">${icon('logout',15)} Çıkış Yap</button>
+    `;
   }
 
   function onRecurringToggle(){
@@ -1207,11 +1325,12 @@
 
   function badgeSVG(tierIndex, size, locked){
     const r = RANKS[tierIndex];
-    const uid = 'grad'+tierIndex+'_'+size;
-    const c1 = locked ? 'var(--line)' : r.c1;
-    const c2 = locked ? 'var(--line)' : r.c2;
-    const text = locked ? 'var(--ink-soft)' : r.text;
-    const rayColor = '#ff8a8a';
+    const uid = 'grad'+tierIndex+'_'+size+'_'+currentTheme();
+    const pal = getGroupPalette(r.gi);
+    const c1 = locked ? 'var(--line)' : pal.c1;
+    const c2 = locked ? 'var(--line)' : pal.c2;
+    const text = locked ? 'var(--ink-soft)' : pal.text;
+    const rayColor = currentTheme()==='light' ? pal.c2 : '#ff8a8a';
     const rayCount = locked ? 0 : r.rayCount;
     const rays = rayCount ? Array.from({length:rayCount}).map((_,i)=>{
       const angle = i*(360/rayCount);
@@ -1222,11 +1341,11 @@
     const pips = Array.from({length:total}).map((_,i)=>
             `<circle cx="${startX+i*spacing}" cy="67" r="2.2" fill="${text}" opacity="0.9"></circle>`
     ).join('');
-    const shine = (r.sub>=1 && !locked) ? `<path d="M32 5 L55 14 L55 40 C55 58 45 69 32 75" fill="none" stroke="#ff9c9c" stroke-width="1.4" opacity="0.4"/>` : '';
+    const shine = (r.sub>=1 && !locked) ? `<path d="M32 5 L55 14 L55 40 C55 58 45 69 32 75" fill="none" stroke="${currentTheme()==='light'?'#ffffff':'#ff9c9c'}" stroke-width="1.4" opacity="0.4"/>` : '';
     const rings = (!locked && r.rings) ? Array.from({length:r.rings}).map((_,i)=>
-            `<path d="M32 3 L57 13 L57 40 C57 59 46 71 32 77 C18 71 7 59 7 40 L7 13 Z" fill="none" stroke="#ff5050" stroke-width="1" opacity="${0.5-i*0.15}" transform="scale(${1+ (i+1)*0.09})" transform-origin="32 40"/>`
+            `<path d="M32 3 L57 13 L57 40 C57 59 46 71 32 77 C18 71 7 59 7 40 L7 13 Z" fill="none" stroke="${rayColor}" stroke-width="1" opacity="${0.5-i*0.15}" transform="scale(${1+ (i+1)*0.09})" transform-origin="32 40"/>`
     ).join('') : '';
-    const crown = (!locked && r.legendary && r.sub===2) ? `<path d="M20 20 L26 28 L32 16 L38 28 L44 20 L41 32 L23 32 Z" fill="#ff4d4d" stroke="#ffb3b3" stroke-width="1" opacity="0.95"/>` : '';
+    const crown = (!locked && r.legendary && r.sub===2) ? `<path d="M20 20 L26 28 L32 16 L38 28 L44 20 L41 32 L23 32 Z" fill="${rayColor}" stroke="#ffffff" stroke-width="1" opacity="0.95"/>` : '';
     return `<svg width="${size}" height="${size*1.25}" viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
       <defs><linearGradient id="${uid}" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0%" stop-color="${c2}"/><stop offset="100%" stop-color="${c1}"/>
@@ -1298,13 +1417,18 @@
   }
 
   function computeStats(){
+    const cats = Object.keys(CATEGORY_ICON);
+    const minCat = Math.min(...cats.map(c => categoryCompletions[c] || 0));
     return {
       totalCompleted, streak, xp, totalFailed,
       maxDay: Math.max(0, ...Object.values(completionsByDate), 0),
       recurringCount: tasks.filter(t=>t.type==='recurring').length,
       timedCompleted, highPriorityCompleted,
       nightOwl: nightOwlCompletions,
+      morningCompletions, weekendCompletions,
       categoriesTouched: Object.keys(categoryCompletions).filter(k=>categoryCompletions[k]>0).length,
+      minCategoryCompletions: minCat,
+      portfolioAssetCount: Object.keys(portfolio).filter(k=>portfolio[k]>0).length,
       portfolioValue: computePortfolioTotal()
     };
   }
@@ -1321,7 +1445,7 @@
       const progressHtml = unlocked ? '' : `
         <div class="achv-progress"><div class="achv-progress-fill" style="width:${pct}%"></div></div>
         <div class="achv-progress-label">${cur}/${a.target}</div>`;
-      return `<div class="achv-item ${unlocked?'':'locked'}" title="${a.name}">
+      return `<div class="achv-item ${unlocked?'':'locked'}" title="${a.name}" onclick="openAchvModal('${a.id}')">
         <div class="achv-circle">${icon(a.ic,20)}</div>
         <div class="g-name">${a.name}</div>
         ${progressHtml}
@@ -1330,6 +1454,25 @@
     document.getElementById('achvSummaryLabel').textContent = `${unlockedCount} / ${ACHIEVEMENTS.length} açıldı`;
     document.getElementById('achvSummaryFill').style.width = Math.round((unlockedCount/ACHIEVEMENTS.length)*100) + '%';
   }
+
+  function openAchvModal(id){
+    const a = ACHIEVEMENTS.find(x => x.id === id);
+    if(!a) return;
+    const stats = computeStats();
+    const unlocked = a.test(stats);
+    const cur = Math.min(a.target, a.get(stats));
+    const pct = Math.round((cur/a.target)*100);
+    document.getElementById('achvModalEyebrow').textContent = unlocked ? 'Başarım Açıldı' : 'Başarım — Kilitli';
+    document.getElementById('achvModalIcon').innerHTML = icon(a.ic, 26);
+    document.getElementById('achvModalIcon').style.opacity = unlocked ? '1' : '.4';
+    document.getElementById('achvModalIcon').style.filter = unlocked ? 'none' : 'grayscale(1)';
+    document.getElementById('achvModalName').textContent = a.name;
+    document.getElementById('achvModalDesc').textContent = a.desc || 'Nasıl kazanılacağına dair bilgi yok.';
+    document.getElementById('achvModalProgressFill').style.width = pct + '%';
+    document.getElementById('achvModalProgressLabel').textContent = unlocked ? 'Tamamlandı!' : `İlerleme: ${cur} / ${a.target}`;
+    document.getElementById('achvModal').classList.add('show');
+  }
+  function closeAchvModal(){ document.getElementById('achvModal').classList.remove('show'); }
 
   function buildCategoryChart(){
     const el = document.getElementById('categoryChart');
@@ -1354,7 +1497,7 @@
             ? 'Kaçırılan görevler yüzünden bir alt rütbeye düştün. Toparlanma vakti!'
             : 'Tebrikler, panelde bir üst rütbeye yükseldin!';
     document.getElementById('rankModal').classList.add('show');
-    if(!dropped) burstConfettiTop();
+    if(!dropped){ burstConfettiTop(); playChime(true); } else { playChime(false); }
   }
   function closeRankModal(){ document.getElementById('rankModal').classList.remove('show'); }
 
@@ -1406,6 +1549,46 @@
     }
   }
 
+  /* ===================== SES EFEKTLERİ (Web Audio, dosya gerektirmez) ===================== */
+  let audioCtx = null;
+  function ensureAudio(){
+    if(!audioCtx){
+      try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return null; }
+    }
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+  function playTone(freq, dur, type, vol, delay){
+    const ctx = ensureAudio();
+    if(!ctx) return;
+    const t0 = ctx.currentTime + (delay||0);
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.setValueAtTime(freq, t0);
+    gain.gain.setValueAtTime(0.0001, t0);
+    gain.gain.exponentialRampToValueAtTime(vol||0.05, t0+0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(t0);
+    osc.stop(t0+dur+0.02);
+  }
+  function playClickSound(){ playTone(720, 0.05, 'sine', 0.035); }
+  function playSuccessSound(){ playTone(660, 0.09, 'sine', 0.05); playTone(990, 0.12, 'sine', 0.045, 0.06); }
+  function playDeleteSound(){ playTone(220, 0.12, 'square', 0.03); }
+  function playChime(good){
+    if(good){ playTone(523, 0.12, 'sine', 0.05); playTone(659, 0.12, 'sine', 0.05, 0.1); playTone(784, 0.22, 'sine', 0.05, 0.2); }
+    else { playTone(300, 0.18, 'sawtooth', 0.03); playTone(220, 0.25, 'sawtooth', 0.03, 0.12); }
+  }
+  document.addEventListener('click', function(e){
+    const check = e.target.closest('.check-hit');
+    const del = e.target.closest('.icon-btn[title="Sil"], .icon-btn[title="Kaldır"]');
+    const generic = e.target.closest('button, .chip, .seg-btn, .link-btn, .theme-toggle, #profileCorner, .achv-item, .gallery-item, .task-text[ondblclick]');
+    if(check){ /* toggle() zaten başarı sesi çalıyor */ return; }
+    if(del){ playDeleteSound(); return; }
+    if(generic){ playClickSound(); }
+  }, true);
+
   /* ---- mini bildirimler (üstte gelip gider) ---- */
   function showTopToast(message, kind, ic){
     const stack = document.getElementById('topToastStack');
@@ -1429,8 +1612,12 @@
     if(cat) categoryCompletions[cat] = (categoryCompletions[cat]||0) + 1;
     if(priority==='Yüksek') highPriorityCompleted += 1;
     if(isTimed) timedCompleted += 1;
-    const hourNow = new Date().getHours();
+    const now = new Date();
+    const hourNow = now.getHours();
+    const dayNow = now.getDay();
     if(hourNow>=0 && hourNow<5) nightOwlCompletions += 1;
+    if(hourNow>=6 && hourNow<9) morningCompletions += 1;
+    if(dayNow===0 || dayNow===6) weekendCompletions += 1;
     const today = todayStr();
     completionsByDate[today] = (completionsByDate[today]||0) + 1;
     if(lastActiveDate === today){ /* streak unchanged */ }
@@ -1506,6 +1693,7 @@
           const parent = evt.currentTarget.closest('.task-item');
           if(parent){ parent.style.position = 'relative'; parent.appendChild(xpSpan); setTimeout(()=>xpSpan.remove(), 1000); }
         }
+        playSuccessSound();
         showTopToast(`Görev tamamlandı · +${XP_VALUE[t.priority]||10} XP`, 'info', 'check');
         if(after > before) setTimeout(() => showRankModal(after, false), 300);
       }
@@ -1843,46 +2031,162 @@
 
   /* ===================== TEMA (koyu / açık) ===================== */
   const THEME_KEY = 'tc_theme_v1';
+  const ACCENT_KEY = 'tc_light_accent_v1';
+
+  function hexToHsl(hex){
+    let r=0,g=0,b=0;
+    hex = hex.replace('#','');
+    if(hex.length===3){ r=parseInt(hex[0]+hex[0],16); g=parseInt(hex[1]+hex[1],16); b=parseInt(hex[2]+hex[2],16); }
+    else { r=parseInt(hex.substring(0,2),16); g=parseInt(hex.substring(2,4),16); b=parseInt(hex.substring(4,6),16); }
+    r/=255; g/=255; b/=255;
+    const max=Math.max(r,g,b), min=Math.min(r,g,b);
+    let h=0,s=0,l=(max+min)/2;
+    if(max!==min){
+      const d = max-min;
+      s = l>0.5 ? d/(2-max-min) : d/(max+min);
+      switch(max){
+        case r: h=(g-b)/d + (g<b?6:0); break;
+        case g: h=(b-r)/d + 2; break;
+        case b: h=(r-g)/d + 4; break;
+      }
+      h*=60;
+    }
+    return { h, s:s*100, l:l*100 };
+  }
+  function hslToHex(h,s,l){
+    h=((h%360)+360)%360; s/=100; l/=100;
+    const c=(1-Math.abs(2*l-1))*s;
+    const x=c*(1-Math.abs((h/60)%2-1));
+    const m=l-c/2;
+    let r=0,g=0,b=0;
+    if(h<60){r=c;g=x;b=0;} else if(h<120){r=x;g=c;b=0;} else if(h<180){r=0;g=c;b=x;}
+    else if(h<240){r=0;g=x;b=c;} else if(h<300){r=x;g=0;b=c;} else {r=c;g=0;b=x;}
+    const toHex = v => Math.round((v+m)*255).toString(16).padStart(2,'0');
+    return '#'+toHex(r)+toHex(g)+toHex(b);
+  }
+
+  function applyLightGradient(hex){
+    if(!hex) return;
+    const hsl = hexToHsl(hex);
+    const c1 = hslToHex((hsl.h+320)%360, Math.min(90,hsl.s+8), Math.min(72,hsl.l+10));
+    const c2 = hslToHex(hsl.h, hsl.s, hsl.l);
+    const c3 = hslToHex((hsl.h+45)%360, Math.min(90,hsl.s+5), Math.max(38,hsl.l-8));
+    const root = document.documentElement;
+    root.style.setProperty('--grad-1', c1);
+    root.style.setProperty('--grad-2', c2);
+    root.style.setProperty('--grad-3', c3);
+    root.style.setProperty('--glow', c2);
+    root.style.setProperty('--ink', c2);
+    root.style.setProperty('--glow-soft', hexToRgba(c2, .07));
+    root.style.setProperty('--glow-mid', hexToRgba(c2, .12));
+    const input = document.getElementById('accentColorInput');
+    if(input) input.value = hex;
+  }
+  function hexToRgba(hex, alpha){
+    const hsl = hexToHsl(hex);
+    const r0 = hslToHex(hsl.h,hsl.s,hsl.l);
+    const r = parseInt(r0.substring(1,3),16), g = parseInt(r0.substring(3,5),16), b = parseInt(r0.substring(5,7),16);
+    return `rgba(${r},${g},${b},${alpha})`;
+  }
+  function clearLightGradientOverride(){
+    const root = document.documentElement;
+    ['--grad-1','--grad-2','--grad-3','--glow','--ink','--glow-soft','--glow-mid'].forEach(p => root.style.removeProperty(p));
+  }
+  function openAccentPicker(){
+    document.getElementById('accentColorInput').click();
+  }
+  function onAccentColorChange(hex){
+    localStorage.setItem(ACCENT_KEY, hex);
+    applyLightGradient(hex);
+  }
+
   function applyTheme(theme){
     document.documentElement.setAttribute('data-theme', theme);
     const btn = document.getElementById('themeToggleBtn');
     if(btn) btn.innerHTML = theme === 'light' ? icon('moon',15) : icon('sun',15);
+    const accentBtn = document.getElementById('accentPickerBtn');
+    if(accentBtn){
+      accentBtn.style.display = theme === 'light' ? 'flex' : 'none';
+      accentBtn.innerHTML = icon('palette',15);
+    }
+    if(theme === 'light'){
+      const saved = localStorage.getItem(ACCENT_KEY);
+      if(saved) applyLightGradient(saved);
+      else clearLightGradientOverride();
+    } else {
+      clearLightGradientOverride();
+    }
   }
   function toggleTheme(){
     const current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
     const next = current === 'light' ? 'dark' : 'light';
     localStorage.setItem(THEME_KEY, next);
     applyTheme(next);
+    render();
+    if(document.getElementById('rankGalleryPanel').classList.contains('open')) buildRankGallery();
+    if(document.getElementById('lbPanel').classList.contains('open')) buildLeaderboard();
   }
   function initTheme(){
     const saved = localStorage.getItem(THEME_KEY);
     applyTheme(saved === 'light' ? 'light' : 'dark');
   }
 
-  /* ===================== OTURUM / GİRİŞ KAPISI =====================
-     Not: Bu yine de tarayıcı tarafında çalışan bir kapıdır — sayfa kaynağını
-     görüp bu dosyaya erişebilen biri kullanıcı adı/şifreyi teorik olarak
-     görebilir. Bunu önceki sürümden farklı kılan şey: artık görev verisi
-     login başarılı olmadan Firebase'den hiç çekilmiyor (aşağıda initFirebase()
-     yalnızca girişten sonra çağrılıyor) — yani biri sadece "authGate"
-     kutusunu geliştirici araçlarından silerek arkadaki verileri göremez,
-     çünkü veri zaten yüklenmemiş olur. Tam sunucu taraflı güvenlik için
-     Firebase Authentication + Realtime Database güvenlik kuralları
-     (".read": "auth != null") eklemeni öneririm. */
-  const AUTH_USER = 'root';
-  const AUTH_PASS = 'tarumar';
+  /* ===================== OTURUM / GİRİŞ KAPISI ===================== */
+  const AUTH_USER_DEFAULT = 'root';
+  const AUTH_PASS_DEFAULT = 'tarumar';
   const AUTH_KEY = 'tc_session_v1';
+  const AUTH_USER_KEY = 'tc_auth_user_v1';
+  const AUTH_PASS_KEY = 'tc_auth_pass_v1';
+  const AVATAR_KEY = 'tc_avatar_v1';
+
+  function getAuthUser(){ return localStorage.getItem(AUTH_USER_KEY) || AUTH_USER_DEFAULT; }
+  function getAuthPass(){ return localStorage.getItem(AUTH_PASS_KEY) || AUTH_PASS_DEFAULT; }
+
+  function applyAvatar(url){
+    const img = document.getElementById('avatarImg');
+    const fallback = document.getElementById('avatarFallback');
+    if(!img) return;
+    if(url){
+      img.style.display = '';
+      img.src = url;
+      if(fallback) fallback.style.display = 'none';
+    }
+  }
+
+  function applyStoredProfile(){
+    const avatar = localStorage.getItem(AVATAR_KEY);
+    if(avatar) applyAvatar(avatar);
+    const uname = getAuthUser();
+    const nameEl = document.querySelector('#profileCorner .p-name');
+    if(nameEl) nameEl.textContent = uname;
+    const fallback = document.getElementById('avatarFallback');
+    if(fallback) fallback.textContent = uname.charAt(0).toUpperCase() || 'R';
+  }
+
+  function toggleProfileMenu(e){
+    if(e) e.stopPropagation();
+    document.getElementById('profileMenu').classList.toggle('open');
+  }
+  function closeProfileMenu(){ document.getElementById('profileMenu').classList.remove('open'); }
+  document.addEventListener('click', function(e){
+    const menu = document.getElementById('profileMenu');
+    const corner = document.getElementById('profileCorner');
+    if(menu && menu.classList.contains('open') && !menu.contains(e.target) && corner && !corner.contains(e.target)){
+      menu.classList.remove('open');
+    }
+  });
 
   function tryLogin(){
     const u = document.getElementById('authUser').value.trim();
     const p = document.getElementById('authPass').value;
     const errEl = document.getElementById('authError');
-    if(u === AUTH_USER && p === AUTH_PASS){
+    if(u === getAuthUser() && p === getAuthPass()){
       localStorage.setItem(AUTH_KEY, 'granted');
       errEl.style.display = 'none';
       document.getElementById('authGate').classList.remove('show');
       document.getElementById('profileCorner').style.display = 'flex';
-      showTopToast('Giriş başarılı — hoş geldin, Root', 'info', 'shield');
+      applyStoredProfile();
+      showTopToast(`Giriş başarılı — hoş geldin, ${getAuthUser()}`, 'info', 'shield');
       initFirebase();
       fetchMarketPrices();
     } else {
@@ -1890,9 +2194,36 @@
     }
   }
 
+  function openProfilePanel(){
+    document.getElementById('profileAvatarInput').value = localStorage.getItem(AVATAR_KEY) || document.getElementById('avatarImg').src || '';
+    document.getElementById('profileUsernameInput').value = getAuthUser();
+    document.getElementById('profilePasswordInput').value = '';
+    document.getElementById('profileAvatarPreview').src = localStorage.getItem(AVATAR_KEY) || document.getElementById('avatarImg').src || '';
+    document.getElementById('profileError').style.display = 'none';
+    document.getElementById('profileModal').classList.add('show');
+  }
+  function closeProfileModal(){
+    document.getElementById('profileModal').classList.remove('show');
+  }
+  function saveProfileSettings(){
+    const avatarUrl = document.getElementById('profileAvatarInput').value.trim();
+    const username = document.getElementById('profileUsernameInput').value.trim();
+    const newPass = document.getElementById('profilePasswordInput').value;
+    const errEl = document.getElementById('profileError');
+    if(!username){ errEl.style.display = 'block'; return; }
+    errEl.style.display = 'none';
+    if(avatarUrl){ localStorage.setItem(AVATAR_KEY, avatarUrl); applyAvatar(avatarUrl); }
+    localStorage.setItem(AUTH_USER_KEY, username);
+    if(newPass) localStorage.setItem(AUTH_PASS_KEY, newPass);
+    applyStoredProfile();
+    closeProfileModal();
+    showTopToast('Profil güncellendi', 'info', 'check');
+  }
+
   async function logout(){
     const ok = await showConfirm('Oturumu kapatmak istediğine emin misin?');
     if(!ok) return;
+    closeProfileModal();
     localStorage.removeItem(AUTH_KEY);
     document.getElementById('profileCorner').style.display = 'none';
     document.getElementById('authUser').value = '';
@@ -1905,6 +2236,7 @@
     if(localStorage.getItem(AUTH_KEY) === 'granted'){
       document.getElementById('authGate').classList.remove('show');
       document.getElementById('profileCorner').style.display = 'flex';
+      applyStoredProfile();
       initFirebase();
       fetchMarketPrices();
     } else {

@@ -1,0 +1,1941 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>SYS // Görev Paneli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#020203; --panel:#000000; --panel-alt:#0a0a0c; --line:#1c1c20; --line-soft:#141416;
+      --ink:#ff2b2b; --ink-soft:#b23636; --ink-faint:#5c2020;
+      --glow:#ff2b2b; --glow-soft:rgba(255,40,40,.07); --glow-mid:rgba(255,40,40,.14);
+      --shadow: 0 1px 2px rgba(0,0,0,.85), 0 18px 44px rgba(0,0,0,.7);
+      --pos:#2fae66; --neg:#e0463f;
+      --grad-1:#ff2b2b; --grad-2:#ff2b2b; --grad-3:#ff2b2b;
+      --brand-gradient: linear-gradient(120deg, var(--grad-1), var(--grad-2) 55%, var(--grad-3));
+    }
+    html[data-theme="light"]{
+      --bg:#f6f5fb; --panel:#ffffff; --panel-alt:#f1eefb; --line:#e4e0f5; --line-soft:#ece8fa;
+      --ink:#5b2ec7; --ink-soft:#7d6aa8; --ink-faint:#c9bfe8;
+      --glow:#5b2ec7; --glow-soft:rgba(91,46,199,.07); --glow-mid:rgba(91,46,199,.12);
+      --shadow: 0 1px 2px rgba(40,20,80,.05), 0 10px 26px rgba(40,20,80,.08);
+      --pos:#1f9d58; --neg:#d1315a;
+      --grad-1:#7c3aed; --grad-2:#3b82f6; --grad-3:#e11d5e;
+      --brand-gradient: linear-gradient(120deg, var(--grad-1), var(--grad-2) 55%, var(--grad-3));
+    }
+    body{ transition:background-color .25s ease, color .25s ease; }
+    *{box-sizing:border-box;}
+    html{scrollbar-width:none;}
+    html::-webkit-scrollbar{display:none;}
+    *::-webkit-scrollbar{display:none;}
+    *{scrollbar-width:none; -ms-overflow-style:none;}
+
+    body{
+      margin:0; min-height:100vh; color:var(--ink); font-family:'Inter',system-ui,sans-serif;
+      padding:26px 14px 90px; background:var(--bg); position:relative; overflow-x:hidden;
+    }
+    body::before{
+      content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+      background-image:
+              radial-gradient(ellipse 900px 460px at 50% -12%, var(--glow-soft), transparent 60%),
+              radial-gradient(circle, var(--glow-soft) 1px, transparent 1px);
+      background-size: 100% 100%, 22px 22px;
+    }
+    body::after{
+      content:''; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.4;
+      background:repeating-linear-gradient(180deg, var(--glow-soft) 0 1px, transparent 1px 3px);
+    }
+    html[data-theme="light"] body::after{ display:none; }
+    .wrap{max-width:780px; margin:0 auto; position:relative; z-index:1;}
+
+    .topbar{display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:20px; gap:10px; flex-wrap:wrap; padding-right:52px;}
+    .brand-eyebrow{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.18em; color:var(--ink-soft); text-transform:uppercase; margin:0 0 6px; display:flex; align-items:center; gap:8px;}
+    .brand-eyebrow .caret{display:inline-block; width:7px; height:13px; background:var(--ink); animation:blink 1.1s steps(1) infinite; box-shadow:0 0 6px var(--glow);}
+    @keyframes blink{ 50%{opacity:0;} }
+    h1{font-family:'Orbitron',sans-serif; font-size:24px; margin:0; font-weight:800; letter-spacing:.05em; text-transform:uppercase; text-shadow:0 0 18px var(--glow-mid);}
+    html[data-theme="light"] h1{ background:var(--brand-gradient); -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:none; }
+    .top-actions{display:flex; gap:8px; align-items:center;}
+    .conn-pill{
+      display:flex; align-items:center; gap:7px; font-family:'JetBrains Mono',monospace; font-size:10.5px;
+      color:var(--ink-soft); background:var(--panel); border:1px solid var(--line); padding:7px 12px;
+      border-radius:3px; box-shadow:var(--shadow); letter-spacing:.03em;
+    }
+    .conn-dot{width:6px; height:6px; border-radius:50%; background:var(--ink-faint); flex:none; transition:all .3s ease;}
+    .conn-dot.online{background:var(--ink); box-shadow:0 0 8px var(--glow);}
+    button:focus-visible, input:focus-visible, select:focus-visible{outline:2px solid var(--ink); outline-offset:2px;}
+    .theme-toggle{
+      display:flex; align-items:center; justify-content:center; width:34px; height:34px; flex:none;
+      background:var(--panel); border:1px solid var(--line); border-radius:3px; color:var(--ink-soft);
+      cursor:pointer; box-shadow:var(--shadow); transition:color .15s ease, border-color .15s ease;
+    }
+    .theme-toggle:hover{color:var(--ink); border-color:var(--ink);}
+    .theme-toggle svg{width:15px; height:15px;}
+
+    /* ---- profile corner ---- */
+    #profileCorner{
+      display:none; position:fixed; top:14px; right:14px; z-index:70; align-items:center; gap:9px;
+      background:var(--panel); border:1px solid var(--line); padding:6px 14px 6px 6px; border-radius:100px;
+      box-shadow:var(--shadow), 0 0 0 1px rgba(255,40,40,.05); cursor:pointer; user-select:none;
+      transition:box-shadow .2s ease, border-color .2s ease;
+    }
+    #profileCorner:hover{border-color:var(--ink); box-shadow:var(--shadow), 0 0 16px var(--glow-mid);}
+    .avatar-wrap{position:relative; width:32px; height:32px; flex:none;}
+    .avatar-wrap img{width:32px; height:32px; border-radius:50%; object-fit:cover; border:1.5px solid var(--ink); box-shadow:0 0 10px var(--glow-mid); display:block;}
+    .avatar-fallback{
+      display:none; width:32px; height:32px; border-radius:50%; border:1.5px solid var(--ink); background:var(--panel-alt);
+      align-items:center; justify-content:center; font-family:'Orbitron',sans-serif; font-weight:800; font-size:13px; color:var(--ink);
+      box-shadow:0 0 10px var(--glow-mid);
+    }
+    #profileCorner .p-name{font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--ink); font-weight:700; letter-spacing:.05em;}
+    #profileCorner .p-sub{display:block; font-size:8.5px; color:var(--ink-soft); letter-spacing:.1em; margin-top:-1px;}
+
+    /* ---- top mini toasts ---- */
+    #topToastStack{
+      position:fixed; top:14px; left:50%; transform:translateX(-50%); z-index:95;
+      display:flex; flex-direction:column; gap:8px; align-items:center; pointer-events:none; width:max-content; max-width:88vw;
+    }
+    .top-toast{
+      font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.02em; color:var(--ink);
+      background:var(--panel); border:1px solid var(--ink-faint); padding:9px 16px; border-radius:100px;
+      box-shadow:var(--shadow), 0 0 14px var(--glow-mid); display:flex; align-items:center; gap:7px;
+      opacity:0; transform:translateY(-14px) scale(.96); transition:opacity .28s ease, transform .28s cubic-bezier(.34,1.4,.64,1);
+      white-space:nowrap;
+    }
+    .top-toast.in{opacity:1; transform:translateY(0) scale(1);}
+    .top-toast svg{width:13px; height:13px; flex:none;}
+    .top-toast.warn{border-color:var(--ink); color:var(--ink);}
+
+    .celebrate-banner{
+      display:none; align-items:center; gap:10px; background:var(--panel-alt); border:1px solid var(--ink);
+      color:var(--ink); padding:12px 16px; border-radius:10px; font-size:13px; font-weight:600; margin-bottom:16px;
+      box-shadow:0 0 20px var(--glow-mid);
+    }
+    .celebrate-banner.show{display:flex;}
+
+    /* ---- rank hero ---- */
+    .rank-hero{
+      position:relative; overflow:hidden; background:var(--panel); border:1px solid var(--line); border-radius:16px;
+      padding:22px; box-shadow:var(--shadow); margin-bottom:14px; display:flex; gap:22px; align-items:center;
+    }
+    .rank-hero::before{
+      content:''; position:absolute; top:-70px; right:-60px; width:260px; height:260px; border-radius:50%;
+      background:conic-gradient(from 200deg, var(--grad-1), var(--grad-2), var(--grad-3), var(--grad-1));
+      opacity:.16; filter:blur(6px); pointer-events:none;
+    }
+    .rank-badge-slot{flex:none; position:relative; z-index:1;}
+    .rank-info{flex:1; min-width:0; position:relative; z-index:1;}
+    .rank-title-row{display:flex; align-items:baseline; gap:9px; margin-bottom:2px; flex-wrap:wrap;}
+    .rank-name{font-family:'Orbitron',sans-serif; font-weight:800; font-size:18px; letter-spacing:.03em; text-transform:uppercase; text-shadow:0 0 14px var(--glow-mid);}
+    .rank-tier-label{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); letter-spacing:.08em;}
+    .streak-pill{
+      display:inline-flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:11px;
+      background:var(--panel-alt); color:var(--ink); padding:3px 10px; border-radius:100px; font-weight:500; border:1px solid var(--line);
+    }
+    .streak-pill svg{width:11px; height:11px;}
+    .xp-track{height:8px; background:var(--panel-alt); border:1px solid var(--line); border-radius:5px; overflow:hidden; margin:11px 0 5px;}
+    .xp-fill{height:100%; background:var(--brand-gradient); border-radius:5px; transition:width .7s cubic-bezier(.4,0,.2,1); box-shadow:0 0 10px var(--glow-mid);}
+    .xp-caption{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); display:flex; justify-content:space-between;}
+    .hero-links{display:flex; gap:16px; margin-top:9px; flex-wrap:wrap;}
+    .link-btn{
+      font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink); background:none; border:none;
+      cursor:pointer; padding:6px 0; text-decoration:underline; text-underline-offset:3px; display:flex; align-items:center; gap:5px;
+      min-height:32px;
+    }
+    .link-btn svg{width:11px; height:11px;}
+
+    .badge-wrap{position:relative; display:inline-block; line-height:0;}
+    .badge-wrap.glow{animation:badgeEmber 2.6s ease-in-out infinite;}
+    @keyframes badgeEmber{
+      0%,100%{ filter:drop-shadow(0 0 7px var(--glow-mid)); }
+      50%{ filter:drop-shadow(0 0 20px rgba(255,40,40,.9)); }
+    }
+    .badge-wrap.glow2{animation:badgeEmber2 1.8s ease-in-out infinite;}
+    @keyframes badgeEmber2{
+      0%,100%{ filter:drop-shadow(0 0 8px rgba(255,40,40,.55)) drop-shadow(0 0 2px rgba(255,120,120,.5)); }
+      50%{ filter:drop-shadow(0 0 26px rgba(255,40,40,.95)) drop-shadow(0 0 8px rgba(255,140,140,.7)); }
+    }
+
+    .gallery-panel{display:none; margin-bottom:14px;}
+    .gallery-panel.open{display:block;}
+    .gallery-card{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:16px; box-shadow:var(--shadow);}
+    .gallery-card h3{font-family:'Orbitron',sans-serif; font-size:13px; margin:0 0 10px; letter-spacing:.05em; text-transform:uppercase;}
+    .gallery-row{display:flex; gap:14px; overflow-x:auto; padding:6px 2px 8px; cursor:grab; scroll-behavior:smooth;}
+    .gallery-row.dragging-scroll{cursor:grabbing; scroll-behavior:auto; user-select:none;}
+    .gallery-item{flex:none; width:78px; text-align:center;}
+    .gallery-item.locked{opacity:.35;}
+    .gallery-item .g-name{font-size:9.5px; margin-top:6px; line-height:1.25; color:var(--ink-soft); font-weight:500;}
+    .gallery-item.current .g-name{color:var(--ink); font-weight:700;}
+    .gallery-item .g-xp{font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-soft);}
+    .gallery-item.current{position:relative;}
+    .gallery-item.current::after{
+      content:'ŞİMDİ'; display:block; font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.1em;
+      color:var(--ink); margin-top:2px;
+    }
+
+    .achv-summary{display:flex; align-items:center; gap:10px; margin-bottom:12px;}
+    .achv-summary-track{flex:1; height:6px; background:var(--panel-alt); border:1px solid var(--line); border-radius:5px; overflow:hidden;}
+    .achv-summary-fill{height:100%; background:var(--ink); border-radius:5px; transition:width .5s ease;}
+    .achv-summary-label{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); white-space:nowrap;}
+
+    .achv-item{flex:none; width:82px; text-align:center;}
+    .achv-item.locked .achv-circle{opacity:.3; filter:grayscale(1);}
+    .achv-circle{
+      width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+      margin:0 auto; background:var(--panel-alt); border:1px solid var(--line); color:var(--ink);
+    }
+    .achv-circle svg{width:20px; height:20px;}
+    .achv-item .g-name{font-size:9px; margin-top:6px; color:var(--ink-soft); line-height:1.2;}
+    .achv-progress{height:3px; background:var(--panel-alt); border-radius:3px; overflow:hidden; margin-top:5px;}
+    .achv-progress-fill{height:100%; background:var(--ink); border-radius:3px;}
+    .achv-progress-label{font-family:'JetBrains Mono',monospace; font-size:8.5px; color:var(--ink-soft); margin-top:2px;}
+
+    .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;}
+    .panel{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:20px; box-shadow:var(--shadow);}
+    .panel h3{font-family:'JetBrains Mono',monospace; font-size:11px; margin:0 0 12px; color:var(--ink-soft); font-weight:600; text-transform:uppercase; letter-spacing:.12em;}
+    .dial-stats{display:flex; align-items:center; gap:16px;}
+    .dial-wrap{position:relative; width:82px; height:82px; flex:none;}
+    .dial-wrap svg{transform:rotate(-90deg);}
+    .dial-track{fill:none; stroke:var(--line); stroke-width:8;}
+    .dial-fill{fill:none; stroke:var(--ink); stroke-width:8; stroke-linecap:round; transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1); filter:drop-shadow(0 0 6px var(--glow-mid));}
+    .dial-label{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+    .dial-pct{font-family:'Orbitron',sans-serif; font-size:16px; font-weight:800;}
+    .stat-mini-row{display:flex; flex-direction:column; gap:6px;}
+    .stat-mini{font-size:12px; color:var(--ink-soft);}
+    .stat-mini b{color:var(--ink); font-family:'Orbitron',sans-serif; font-size:14px;}
+
+    .week-chart{display:flex; align-items:flex-end; gap:7px; height:70px;}
+    .week-bar-col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;}
+    .week-bar{width:100%; max-width:22px; background:var(--panel-alt); border:1px solid var(--line); border-radius:4px 4px 2px 2px; transition:height .5s ease; position:relative;}
+    .week-bar.has-data{background:var(--ink); border-color:var(--ink); box-shadow:0 0 9px var(--glow-mid);}
+    .week-bar-label{font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-soft); margin-top:5px;}
+
+    .cat-chart{display:flex; flex-direction:column; gap:9px;}
+    .cat-bar-row{display:flex; align-items:center; gap:10px;}
+    .cat-bar-label{display:flex; align-items:center; gap:6px; font-size:11px; color:var(--ink-soft); width:70px; flex:none;}
+    .cat-bar-label svg{width:12px; height:12px; flex:none;}
+    .cat-bar-track{flex:1; height:8px; background:var(--panel-alt); border:1px solid var(--line); border-radius:5px; overflow:hidden;}
+    .cat-bar-fill{height:100%; background:var(--ink); border-radius:5px; transition:width .5s ease;}
+    .cat-bar-count{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); width:18px; text-align:right; flex:none;}
+
+    .add-card{
+      position:relative; background:var(--panel); border:1px solid var(--line);
+      border-top:2px solid var(--ink); border-radius:16px; padding:22px; box-shadow:var(--shadow); margin-bottom:14px;
+    }
+    .add-card-head{display:flex; align-items:center; gap:14px; margin-bottom:16px;}
+    .add-card-icon{
+      flex:none; width:46px; height:46px; border-radius:10px; background:var(--panel-alt); border:1px solid var(--line);
+      color:var(--ink); display:flex; align-items:center; justify-content:center;
+    }
+    .add-card-icon svg{width:22px; height:22px;}
+    .add-card-title{font-family:'Orbitron',sans-serif; font-size:14.5px; margin:0 0 3px; letter-spacing:.03em; text-transform:uppercase;}
+    .add-card-sub{font-size:12px; color:var(--ink-soft); margin:0;}
+    .add-row{display:flex; gap:8px; margin-bottom:10px; align-items:center; flex-wrap:wrap;}
+    .add-row:last-child{margin-bottom:0;}
+    input[type=text], input[type=number], input[type=password], select{
+      font-family:'Inter',sans-serif; font-size:14px; padding:12px 13px; border-radius:8px;
+      border:1px solid var(--line); background:var(--bg); color:var(--ink); flex:1; min-width:0;
+    }
+    input[type=text]:focus, input[type=number]:focus, input[type=password]:focus{border-color:var(--ink); box-shadow:0 0 0 3px var(--glow-soft);}
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button{ -webkit-appearance:none; margin:0; }
+    input[type=number]{ -moz-appearance:textfield; }
+    input::placeholder{color:var(--ink-faint);}
+    select{flex:none; width:auto;}
+    .btn{
+      font-family:'JetBrains Mono',monospace; font-weight:700; font-size:13px; padding:13px 18px; border-radius:8px;
+      border:1px solid transparent; cursor:pointer; color:#fff; background:var(--brand-gradient);
+      transition:opacity .15s, transform .15s, box-shadow .2s; letter-spacing:.04em; text-transform:uppercase;
+      display:flex; align-items:center; justify-content:center; gap:8px; min-height:46px;
+      box-shadow:0 0 0 rgba(255,40,40,0);
+    }
+    html[data-theme="light"] .btn{ color:#fff; }
+    .btn svg{width:14px; height:14px;}
+    .btn:hover{opacity:.9; box-shadow:0 0 18px var(--glow-mid);}
+    .btn:active{transform:scale(.97);}
+    .btn-add{width:100%; font-size:13.5px;}
+    .btn-ghost{background:var(--panel); color:var(--ink); border:1px solid var(--line);}
+    .btn-text{background:none; color:var(--ink-soft); font-weight:500; font-size:12px; border:none; cursor:pointer; padding:8px 4px; font-family:'JetBrains Mono',monospace; min-height:36px;}
+    .btn-text:hover{color:var(--ink);}
+
+    .seg-block{flex:1; min-width:190px;}
+    .seg-label{font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft); display:block; margin-bottom:7px;}
+    .seg-group{display:flex; flex-wrap:wrap; gap:6px;}
+    .seg-btn{
+      font-family:'Inter',sans-serif; font-size:12px; font-weight:500; padding:9px 12px; border-radius:8px;
+      border:1px solid var(--line); background:var(--bg); color:var(--ink-soft); cursor:pointer; transition:all .15s ease;
+      display:flex; align-items:center; gap:6px; min-height:38px;
+    }
+    .seg-btn svg{width:13px; height:13px;}
+    .seg-btn:hover{border-color:var(--ink); color:var(--ink);}
+    .seg-btn.active{background:var(--brand-gradient); border-color:transparent; color:#fff; box-shadow:0 0 12px var(--glow-mid);}
+    .seg-btn.small{padding:7px 10px; font-size:11.5px; min-height:32px;}
+
+    .field-icon-input{
+      display:flex; align-items:center; gap:8px; flex:none; width:150px; background:var(--bg); border:1px solid var(--line);
+      border-radius:8px; padding:0 12px; min-width:0;
+    }
+    .field-icon-input svg{flex:none; width:14px; height:14px; opacity:.75;}
+    .field-icon-input input{border:none; background:none; padding:10px 0; flex:1; min-width:0; width:100%; font-size:13px;}
+    .field-icon-input span.suffix{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); flex:none;}
+
+    .rune-switch{
+      position:relative; display:flex; align-items:center; gap:10px; font-size:12.5px; color:var(--ink-soft); cursor:pointer;
+      background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px 14px; flex:1; min-height:44px;
+    }
+    .rune-switch svg{width:14px; height:14px; flex:none;}
+    .rune-switch input{position:absolute; opacity:0; width:1px; height:1px;}
+    .switch-track{
+      flex:none; width:36px; height:20px; border-radius:100px; background:var(--line); position:relative; transition:background .2s ease;
+    }
+    .switch-thumb{
+      position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:var(--ink-soft);
+      transition:transform .2s ease, background .2s ease;
+    }
+    .rune-switch input:checked ~ .switch-track{background:var(--ink); box-shadow:0 0 8px var(--glow-mid);}
+    .rune-switch input:checked ~ .switch-track .switch-thumb{transform:translateX(16px); background:var(--bg);}
+    .rune-switch.active{color:var(--ink); border-color:var(--ink); background:var(--panel-alt);}
+
+    .filter-row{display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; align-items:center;}
+    .chip{
+      font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.04em; padding:8px 13px;
+      border-radius:100px; border:1px solid var(--line); background:var(--panel); color:var(--ink-soft); cursor:pointer; min-height:36px;
+    }
+    .chip.active{background:var(--brand-gradient); color:#fff; border-color:transparent; box-shadow:0 0 10px var(--glow-mid);}
+    .row-right{margin-left:auto; display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+    .search{max-width:150px;}
+    select.sort-select{font-size:11.5px; padding:9px 10px;}
+
+    #taskList{display:flex; flex-direction:column; gap:9px;}
+    .task-item{
+      position:relative; display:flex; align-items:center; gap:10px; padding:10px 14px 10px 8px;
+      background:var(--panel); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow);
+      border-left:3px solid var(--pri-color, var(--line));
+    }
+    .task-item[draggable="true"]{cursor:grab;}
+    .task-item.dragging{opacity:.4;}
+    .task-item.done{opacity:.5;}
+    .task-item.done .task-text{text-decoration:line-through;}
+    .task-item.failed{border-left-color:var(--ink); background:var(--panel-alt); outline:1px dashed var(--ink-faint); outline-offset:-1px;}
+    .check-hit{
+      width:44px; height:44px; flex:none; display:flex; align-items:center; justify-content:center; cursor:pointer;
+      border:none; background:none; padding:0; -webkit-tap-highlight-color:transparent;
+    }
+    .checkbox{
+      width:22px; height:22px; border-radius:5px; border:1.5px solid var(--line); flex:none;
+      display:flex; align-items:center; justify-content:center; background:var(--bg); color:var(--bg); font-size:12px;
+      pointer-events:none;
+    }
+    .checkbox svg{width:13px; height:13px;}
+    .checkbox.checked{background:var(--brand-gradient); border-color:transparent; box-shadow:0 0 8px var(--glow-mid);}
+    .checkbox.disabled{background:var(--panel-alt); border-color:var(--ink-faint); color:var(--ink-faint); opacity:.7;}
+    .task-body{flex:1; min-width:0;}
+    .task-text{font-size:14px; font-weight:500; word-break:break-word; cursor:text;}
+    .task-text-input{
+      font-family:'Inter',sans-serif; font-size:14px; font-weight:500; width:100%; border:1px solid var(--ink);
+      border-radius:6px; padding:5px 8px; background:var(--bg); color:var(--ink);
+    }
+    .task-meta{display:flex; gap:6px; align-items:center; margin-top:6px; flex-wrap:wrap;}
+    .tag{
+      display:inline-flex; align-items:center; gap:4px; font-family:'JetBrains Mono',monospace; font-size:9.5px;
+      letter-spacing:.03em; padding:4px 8px; border-radius:5px; border:1px solid var(--line); color:var(--ink-soft);
+      background:var(--panel-alt);
+    }
+    .tag svg{width:10px; height:10px;}
+    .tag-pri{border-color:var(--tag-color, var(--line)); color:var(--tag-color, var(--ink-soft));}
+    .tag-xp{border-color:var(--ink); color:var(--ink);}
+    .tag-recurring{border-color:var(--ink-soft); color:var(--ink-soft);}
+    .due{font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); display:inline-flex; align-items:center; gap:4px;}
+    .due svg{width:10px; height:10px;}
+    .due.overdue{color:var(--ink); font-weight:700;}
+    .penalty-btn{
+      font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--bg); background:var(--ink); border:none;
+      border-radius:5px; padding:5px 9px; cursor:pointer; width:auto; height:auto; min-height:30px;
+    }
+    .icon-btn{
+      border:none; background:transparent; cursor:pointer; color:var(--ink-soft);
+      padding:11px; border-radius:8px; flex:none; width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+    }
+    .icon-btn svg{width:15px; height:15px;}
+    .icon-btn:hover{background:var(--panel-alt); color:var(--ink);}
+
+    .empty-state{text-align:center; padding:50px 20px; color:var(--ink-soft); border:1px dashed var(--line); border-radius:14px;}
+    .empty-state svg{width:26px; height:26px; margin-bottom:8px; opacity:.6;}
+    .empty-state p{margin:2px 0; font-size:13px;}
+
+    .xp-float{
+      position:absolute; left:50px; top:8px; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:12px;
+      color:var(--ink); pointer-events:none; animation:xpFloat 1s ease forwards; text-shadow:0 0 9px var(--glow-mid);
+    }
+    .xp-float.neg{color:var(--ink-soft);}
+    @keyframes xpFloat{ 0%{opacity:0; transform:translateY(0);} 15%{opacity:1;} 100%{opacity:0; transform:translateY(-26px);} }
+
+    #snackbar{
+      position:fixed; left:50%; bottom:24px; transform:translate(-50%,20px); opacity:0; pointer-events:none;
+      background:var(--ink); color:var(--bg); padding:12px 12px 12px 16px; border-radius:10px; display:flex; align-items:center; gap:14px;
+      box-shadow:0 10px 30px rgba(0,0,0,.5), 0 0 20px var(--glow-mid); transition:all .3s ease; z-index:60; font-size:13px; max-width:88vw;
+      font-family:'JetBrains Mono',monospace;
+    }
+    #snackbar.show{opacity:1; transform:translate(-50%,0); pointer-events:auto;}
+    #snackbar button{background:none; border:none; color:var(--bg); font-weight:700; font-family:'JetBrains Mono',monospace; font-size:12px; cursor:pointer; flex:none; text-decoration:underline;}
+
+    .modal-overlay{
+      position:fixed; inset:0; background:rgba(5,2,3,.82); backdrop-filter:blur(3px); display:none;
+      align-items:center; justify-content:center; z-index:80; padding:20px;
+    }
+    .modal-overlay.show{display:flex;}
+    .modal-card{
+      background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:32px 28px; text-align:center; max-width:320px; width:100%;
+      box-shadow:0 30px 70px rgba(0,0,0,.7), 0 0 40px var(--glow-soft); animation:modalPop .4s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes modalPop{ 0%{transform:scale(.7); opacity:0;} 100%{transform:scale(1); opacity:1;} }
+    .modal-eyebrow{font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.16em; color:var(--ink-soft); margin:0 0 10px; text-transform:uppercase;}
+    .modal-rankname{font-family:'Orbitron',sans-serif; font-size:20px; font-weight:800; margin:14px 0 6px; letter-spacing:.02em; text-transform:uppercase; text-shadow:0 0 16px var(--glow-mid);}
+    .modal-sub{font-size:13px; color:var(--ink-soft); margin:0 0 20px; line-height:1.5;}
+    .modal-actions{display:flex; gap:10px;}
+    .modal-actions .btn{flex:1;}
+
+    #authGate .modal-card{max-width:340px;}
+    .auth-shield{margin:4px auto 16px; width:52px; height:52px; border-radius:50%; background:var(--panel-alt); border:1px solid var(--ink-faint); display:flex; align-items:center; justify-content:center; box-shadow:0 0 22px var(--glow-mid);}
+    .auth-shield svg{width:26px; height:26px; color:var(--ink);}
+    .auth-fields{display:flex; flex-direction:column; gap:10px; margin-bottom:6px;}
+    .auth-error{display:none; color:var(--ink); font-size:11.5px; font-family:'JetBrains Mono',monospace; margin:2px 0 14px; letter-spacing:.02em;}
+
+    .confetti-piece{position:fixed; top:0; left:0; width:7px; height:11px; z-index:90; pointer-events:none; border-radius:1px;}
+
+    /* ---- asset logos ---- */
+    .asset-logo{width:38px; height:38px; border-radius:10px; flex:none; display:flex; align-items:center; justify-content:center; background:var(--panel-alt); border:1px solid var(--line); overflow:hidden;}
+    .asset-logo img{width:100%; height:100%; object-fit:contain; padding:6px;}
+    .asset-logo.stock{font-family:'JetBrains Mono',monospace; font-weight:800; font-size:10px; color:var(--ink); letter-spacing:.02em;}
+    .qty-edit-input{width:78px; font-size:12.5px; padding:6px 8px; border-radius:6px; border:1px solid var(--ink); background:var(--bg); color:var(--ink); font-family:'JetBrains Mono',monospace;}
+
+    /* ---- leaderboard ---- */
+    .lb-controls{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; flex-wrap:wrap;}
+    .lb-list{display:flex; flex-direction:column; gap:7px; max-height:520px; overflow-y:auto; scrollbar-width:thin; cursor:grab;}
+    .lb-list.dragging-scroll{cursor:grabbing; user-select:none;}
+    .lb-row{display:flex; align-items:center; gap:11px; padding:9px 12px; border-radius:11px; background:var(--panel-alt); border:1px solid var(--line);}
+    .lb-row.me{border-color:var(--ink); background:var(--glow-soft); box-shadow:0 0 14px var(--glow-mid);}
+    .lb-rank-num{font-family:'Orbitron',sans-serif; font-weight:800; font-size:12.5px; width:30px; flex:none; text-align:center; color:var(--ink-soft);}
+    .lb-row:nth-child(1) .lb-rank-num, .lb-row:nth-child(2) .lb-rank-num, .lb-row:nth-child(3) .lb-rank-num{color:var(--ink);}
+    .lb-avatar{width:34px; height:34px; border-radius:50%; flex:none; object-fit:cover; border:1.5px solid var(--line); background:var(--panel);}
+    .lb-row.me .lb-avatar{border-color:var(--ink);}
+    .lb-info{flex:1; min-width:0;}
+    .lb-name{font-size:12.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .lb-rankname{font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .lb-xp{font-family:'Orbitron',sans-serif; font-weight:800; font-size:12.5px; flex:none; text-align:right;}
+    .lb-rarity{flex:none; font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.06em; padding:2px 7px; border-radius:100px; border:1px solid var(--line); color:var(--ink-soft); text-transform:uppercase;}
+
+    @media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important;} }
+    @media (max-width:600px){ .grid-2{grid-template-columns:1fr;} }
+    @media (max-width:480px){
+      .rank-hero{flex-direction:column; align-items:flex-start; text-align:left;}
+      select{flex:1;}
+      .row-right{width:100%; margin-left:0;}
+      h1{font-size:20px;}
+      .topbar{padding-right:56px;}
+      .top-actions{width:100%;}
+      #profileCorner .p-name{display:none;}
+      #profileCorner{padding:6px;}
+    }
+  </style>
+</head>
+<body>
+
+<div id="topToastStack"></div>
+
+<div id="profileCorner" onclick="logout()" title="Oturumu kapatmak için tıkla">
+  <div class="avatar-wrap">
+    <img id="avatarImg" src="https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif" alt="" onerror="this.style.display='none'; document.getElementById('avatarFallback').style.display='flex';">
+    <div class="avatar-fallback" id="avatarFallback">R</div>
+  </div>
+  <span>
+    <span class="p-name">Root</span>
+    <span class="p-sub">OTURUM AÇIK</span>
+  </span>
+</div>
+
+<div class="wrap">
+  <div class="topbar">
+    <div>
+      <p class="brand-eyebrow"><span class="caret"></span> SYS.TASKCHAIN // v3</p>
+      <h1>Görev Paneli</h1>
+    </div>
+    <div class="top-actions">
+      <span class="conn-pill"><span class="conn-dot" id="connDot"></span><span id="connLabel">Bağlantı bekleniyor…</span></span>
+      <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Temayı değiştir"></button>
+    </div>
+  </div>
+
+  <div class="celebrate-banner" id="celebrateBanner"><span id="celebrateIcon"></span><span>Bugünkü tüm görevler tamam — harikasın!</span></div>
+
+  <div class="rank-hero">
+    <div class="rank-badge-slot" id="rankBadgeSlot"></div>
+    <div class="rank-info">
+      <div class="rank-title-row">
+        <span class="rank-name" id="rankName">Thrall I</span>
+        <span class="rank-tier-label" id="rankTierLabel">RÜTBE 1 / 36</span>
+        <span class="streak-pill" id="streakPill"></span>
+      </div>
+      <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+      <div class="xp-caption">
+        <span id="xpNow">0 XP</span>
+        <span id="xpNext">55 XP'de Thrall II</span>
+      </div>
+      <div class="hero-links">
+        <button class="link-btn" id="galleryToggle" onclick="togglePanel('rankGalleryPanel','galleryToggle','Rütbe haritasını')"></button>
+        <button class="link-btn" id="achvToggle" onclick="togglePanel('achvPanel','achvToggle','Başarımları')"></button>
+        <button class="link-btn" id="lbToggle" onclick="togglePanel('lbPanel','lbToggle','Sıralamayı')"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-panel" id="rankGalleryPanel">
+    <div class="gallery-card">
+      <h3>Rütbe Haritası</h3>
+      <div class="gallery-row" id="rankGallery"></div>
+    </div>
+  </div>
+
+  <div class="gallery-panel" id="achvPanel">
+    <div class="gallery-card">
+      <h3>Başarımlar</h3>
+      <div class="achv-summary">
+        <span class="achv-summary-label" id="achvSummaryLabel">0 / 0 açıldı</span>
+        <div class="achv-summary-track"><div class="achv-summary-fill" id="achvSummaryFill" style="width:0%"></div></div>
+      </div>
+      <div class="gallery-row" id="achvGallery"></div>
+    </div>
+  </div>
+
+  <div class="gallery-panel" id="lbPanel">
+    <div class="gallery-card">
+      <div class="lb-controls">
+        <h3 style="margin:0;">Sıralama Tablosu</h3>
+        <button class="btn-text" id="lbRefreshBtn" onclick="regenerateLeaderboard()" style="display:flex; align-items:center; gap:5px;"></button>
+      </div>
+      <div class="lb-list" id="lbList"></div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <h3>İlerleme</h3>
+      <div class="dial-stats">
+        <div class="dial-wrap">
+          <svg width="82" height="82" viewBox="0 0 104 104">
+            <circle class="dial-track" cx="52" cy="52" r="44"></circle>
+            <circle class="dial-fill" id="dialFill" cx="52" cy="52" r="44" stroke-dasharray="276.5" stroke-dashoffset="276.5"></circle>
+          </svg>
+          <div class="dial-label"><span class="dial-pct" id="dialPct">0%</span></div>
+        </div>
+        <div class="stat-mini-row">
+          <div class="stat-mini"><b id="statTotal">0</b> toplam görev</div>
+          <div class="stat-mini"><b id="statDone">0</b> tamamlandı</div>
+          <div class="stat-mini"><b id="statLeft">0</b> kalan</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Bu Hafta</h3>
+      <div class="week-chart" id="weekChart"></div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:14px;">
+    <h3>Kategori Grafiği</h3>
+    <div class="cat-chart" id="categoryChart"></div>
+  </div>
+
+  <div class="panel" id="portfolioPanel" style="margin-bottom:14px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:4px; flex-wrap:wrap;">
+      <h3 style="margin:0;">Portföyüm</h3>
+      <button class="btn-text" id="portfolioRefreshBtn" onclick="fetchMarketPrices()" style="display:flex; align-items:center; gap:5px;"></button>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div id="portfolioTotal" style="font-family:'Orbitron',sans-serif; font-size:26px; font-weight:800; text-shadow:0 0 14px var(--glow-mid);">₺0,00</div>
+      <div id="portfolioMeta" style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); margin-top:3px;"></div>
+    </div>
+    <div id="portfolioHoldings" style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;"></div>
+    <div class="add-row" style="margin-bottom:0;">
+      <select id="portfolioAssetSelect" style="flex:1;"></select>
+      <label class="field-icon-input" style="width:120px;">
+        <span id="portfolioQtyIcon"></span>
+        <input type="number" id="portfolioQtyInput" min="0" step="any" placeholder="Miktar">
+      </label>
+      <button class="btn" id="portfolioAddBtn" onclick="addPortfolioQty()" style="min-width:110px;"></button>
+    </div>
+  </div>
+
+  <div class="add-card">
+    <div class="add-card-head">
+      <span class="add-card-icon" id="addCardIcon"></span>
+      <div>
+        <p class="add-card-title">Yeni Görev</p>
+        <p class="add-card-sub">Panele bir görev daha ekle — XP ve rütbe seni bekliyor.</p>
+      </div>
+    </div>
+    <div class="add-row">
+      <input type="text" id="taskInput" placeholder="Görevin adını yaz…" onkeydown="if(event.key==='Enter')addTask()">
+    </div>
+    <div class="add-row">
+      <div class="seg-block">
+        <span class="seg-label">Kategori</span>
+        <div class="seg-group" id="categoryGroup"></div>
+      </div>
+    </div>
+    <div class="add-row">
+      <div class="seg-block">
+        <span class="seg-label">Öncelik</span>
+        <div class="seg-group" id="priorityGroup"></div>
+      </div>
+    </div>
+    <div class="add-row">
+      <label class="rune-switch" id="recurringLabel">
+        <input type="checkbox" id="isRecurring" onchange="onRecurringToggle()">
+        <span class="switch-track"><span class="switch-thumb"></span></span>
+        <span id="recurringLabelText"></span>
+      </label>
+    </div>
+    <div class="add-row" id="dueRow">
+      <div class="seg-block">
+        <span class="seg-label">Süre Sınırı (opsiyonel)</span>
+        <div class="seg-group" id="durationGroup"></div>
+        <div id="customDurationWrap" style="display:none; margin-top:8px;">
+          <label class="field-icon-input" style="width:150px;">
+            <span id="customDurationIcon"></span>
+            <input type="number" id="dueHours" min="1" max="999" step="1" placeholder="Saat">
+            <span class="suffix">SAAT</span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="add-row">
+      <button class="btn btn-add" onclick="addTask()" id="addTaskBtn"></button>
+    </div>
+  </div>
+
+  <div class="filter-row">
+    <button class="chip active" data-filter="all" onclick="setFilter('all')">Tümü</button>
+    <button class="chip" data-filter="active" onclick="setFilter('active')">Aktif</button>
+    <button class="chip" data-filter="done" onclick="setFilter('done')">Tamamlanan</button>
+    <div class="row-right">
+      <select class="sort-select" id="sortSelect" onchange="render()">
+        <option value="manual">Manuel sıra</option>
+        <option value="priority">Önceliğe göre</option>
+        <option value="due">Süreye göre</option>
+        <option value="newest">En yeni</option>
+      </select>
+      <input type="text" class="search" id="searchInput" placeholder="Ara…" oninput="render()">
+    </div>
+  </div>
+
+  <div style="display:flex; justify-content:flex-end; gap:14px; margin-bottom:8px;">
+    <button class="btn-text" onclick="clearCompleted()">Tamamlananları temizle</button>
+    <button class="btn-text" onclick="clearAll()">Tümünü sil</button>
+  </div>
+
+  <div id="taskList"></div>
+</div>
+
+<div id="snackbar"></div>
+
+<div id="rankModal" class="modal-overlay">
+  <div class="modal-card">
+    <p class="modal-eyebrow" id="modalEyebrow">Yeni Rütbe</p>
+    <div id="modalBadgeSlot"></div>
+    <p class="modal-rankname" id="modalRankName">Bronz II</p>
+    <p class="modal-sub" id="modalSub">Tebrikler, panelde bir üst rütbeye yükseldin!</p>
+    <button class="btn" onclick="closeRankModal()">Devam Et</button>
+  </div>
+</div>
+
+<div id="confirmModal" class="modal-overlay">
+  <div class="modal-card">
+    <p class="modal-eyebrow">Onay Gerekiyor</p>
+    <p class="modal-sub" id="confirmMsg" style="margin-top:14px;"></p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="confirmNoBtn">Vazgeç</button>
+      <button class="btn" id="confirmYesBtn">Onayla</button>
+    </div>
+  </div>
+</div>
+
+<div id="authGate" class="modal-overlay">
+  <div class="modal-card">
+    <p class="modal-eyebrow">GÜVENLİ ERİŞİM</p>
+    <div class="auth-shield" id="authShield"></div>
+    <p class="modal-rankname" style="font-size:16px;">SYS.TASKCHAIN</p>
+    <p class="modal-sub">Bu panele yalnızca yetkili kullanıcılar erişebilir. Devam etmek için giriş yap.</p>
+    <div class="auth-fields">
+      <input type="text" id="authUser" placeholder="Kullanıcı adı" autocomplete="username">
+      <input type="password" id="authPass" placeholder="Şifre" autocomplete="current-password" onkeydown="if(event.key==='Enter')tryLogin()">
+    </div>
+    <p class="auth-error" id="authError">Hatalı kullanıcı adı veya şifre.</p>
+    <button class="btn" style="width:100%;" onclick="tryLogin()" id="authBtn"></button>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+  /* ===================== SVG ICON SET (no emoji anywhere) ===================== */
+  const ICONS = {
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    x: '<path d="M18 6 6 18M6 6l12 12"/>',
+    flame: '<path d="M12 2c1.2 3.4-2.4 4.6-3.2 7.4-.7 2.4.5 5.3 3.2 6.6 2.7-1.3 3.9-4.2 3.2-6.6C14.4 6.6 10.8 5.4 12 2z"/><path d="M12 21a4 4 0 0 0 4-4c0-1.6-1-2.6-2-3.4.1 1.3-.6 2.1-1.4 2.4-1-1.6-.4-3.2.4-4.6C10.2 12.5 8 14.4 8 17a4 4 0 0 0 4 4z" fill="currentColor" stroke="none" opacity=".18"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
+    hourglass: '<path d="M6 3h12M6 21h12M7 3c0 5 5 6 5 9s-5 4-5 9M17 3c0 5-5 6-5 9s5 4 5 9"/>',
+    refresh: '<path d="M4 12a8 8 0 0 1 14-5.3M20 4v5h-5"/><path d="M20 12a8 8 0 0 1-14 5.3M4 20v-5h5"/>',
+    warn: '<path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4"/><circle cx="12" cy="17" r=".9" fill="currentColor" stroke="none"/>',
+    trash: '<path d="M4 7h16"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13"/><path d="M10 11v6M14 11v6"/>',
+    edit: '<path d="M4 20h4L18 10l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
+    briefcase: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+    compass: '<circle cx="12" cy="12" r="9"/><path d="M15 9l-2 5-5 2 2-5z"/>',
+    cross: '<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
+    book: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v16H6.5A2.5 2.5 0 0 0 4 21z"/><path d="M19 3v16"/>',
+    grid: '<path d="M12 4v16M4.5 7l15 10M19.5 7l-15 10"/>',
+    circleEmpty: '<circle cx="12" cy="12" r="8"/>',
+    circleHalf: '<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"/>',
+    chevUp2: '<path d="M6 16l6-6 6 6"/><path d="M6 10l6-6 6 6"/>',
+    flag: '<path d="M5 3v18"/><path d="M5 4h11l-3 4 3 4H5"/>',
+    shield: '<path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6z"/>',
+    hammer: '<path d="M9 15 3 21"/><path d="M13 8l5-5 3 3-5 5z"/><path d="M9 12l3 3-2 2-4-1-1-4 2-2z"/>',
+    trophy: '<path d="M8 4h8v4a4 4 0 0 1-8 0z"/><path d="M8 5H4v2a4 4 0 0 0 4 4"/><path d="M16 5h4v2a4 4 0 0 1-4 4"/><path d="M12 13v4M9 21h6M10 17h4v4h-4z"/>',
+    bolt: '<path d="M13 2 4 14h6l-1 8 9-12h-6z"/>',
+    gem: '<path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M8 3l4 6-2 12M16 3l-4 6 2 12"/>',
+    crown: '<path d="M4 8l4 4 4-7 4 7 4-4-2 10H6z"/>',
+    stopwatch: '<circle cx="12" cy="13" r="8"/><path d="M12 13V9"/><path d="M9 2h6"/>',
+    terminal: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3"/><path d="M13 15h4"/>',
+    sparkle: '<path d="M12 2v5M12 17v5M2 12h5M17 12h5M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/>',
+    layers: '<path d="M12 3 2 8l10 5 10-5z"/><path d="M2 14l10 5 10-5"/>',
+    inbox: '<path d="M4 12h5l1.5 3h3L15 12h5"/><path d="M4 12l2-7h12l2 7v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    ban: '<circle cx="12" cy="12" r="9"/><path d="M12 2 2 12"/>',
+    lock: '<rect x="4" y="10" width="16" height="10" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    moon: '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>',
+    coins: '<circle cx="9" cy="9" r="6"/><path d="M14.5 8a6 6 0 1 1 0 9.9"/>',
+    wallet: '<path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v3"/><path d="M3 7v10a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1h-4a2 2 0 0 0 0 4h5"/>'
+  };
+  function icon(name, size){
+    size = size || 14;
+    return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]||''}</svg>`;
+  }
+
+  const CATEGORY_ICON = { 'İş':'briefcase', 'Kişisel':'compass', 'Sağlık':'cross', 'Eğitim':'book', 'Diğer':'grid' };
+  const PRIORITY_ICON = { 'Düşük':'circleEmpty', 'Orta':'circleHalf', 'Yüksek':'chevUp2' };
+  const PRIORITY_COLOR = { 'Düşük':'#8f4646', 'Orta':'#d65b5b', 'Yüksek':'#ff2b2b' };
+  const XP_VALUE = { 'Düşük':10, 'Orta':20, 'Yüksek':35 };
+  const PRIORITY_ORDER = { 'Yüksek':3, 'Orta':2, 'Düşük':1 };
+  const DURATION_PRESETS = [ {label:'Yok', hours:0}, {label:'1s', hours:1}, {label:'3s', hours:3}, {label:'6s', hours:6}, {label:'12s', hours:12}, {label:'24s', hours:24}, {label:'Özel', hours:'custom'} ];
+
+  /* ---- rütbe sistemi: 12 klan x 3 alt rütbe = 36 rütbe, kızıl-ateş tonlarında, rütbe arttıkça daha görkemli ---- */
+  const GROUP_NAMES = ['Thrall','Karl','Þegn','Skald','Húskarl','Berserker','Hersir','Jarl','Konung','Einherjar','Valkyrie','Allfather'];
+  const GROUPS = GROUP_NAMES.map((name, i) => {
+    const t = i/(GROUP_NAMES.length-1);
+    const L1 = 12 + t*42;
+    const L2 = Math.min(64, L1 + 15);
+    const S = 55 + t*45;
+    const legendary = i === GROUP_NAMES.length - 1;
+    return {
+      name,
+      c1: `hsl(0, ${S}%, ${L1}%)`,
+      c2: `hsl(0, ${S}%, ${L2}%)`,
+      text: L1 > 38 ? '#2b0808' : '#ffbcbc',
+      rayCount: 3 + i,
+      rings: i >= 8 ? (i >= 10 ? 2 : 1) : 0,
+      legendary
+    };
+  });
+  const SUB_LABEL = ['I','II','III'];
+  const RANKS = [];
+  GROUPS.forEach((g, gi) => {
+    for(let sub=0; sub<SUB_LABEL.length; sub++){
+      const idx = gi*SUB_LABEL.length + sub;
+      const min = idx===0 ? 0 : Math.round(55*Math.pow(idx,1.6));
+      RANKS.push({
+        name: g.name+' '+SUB_LABEL[sub],
+        group:g.name, sub, gi, c1:g.c1,
+        c2: sub===SUB_LABEL.length-1 ? g.c2 : g.c1,
+        text:g.text, legendary: !!g.legendary, rayCount:g.rayCount, rings:g.rings,
+        min
+      });
+    }
+  });
+
+  const ACHIEVEMENTS = [
+    { id:'first',    name:'İlk Adım',        ic:'flag',     target:1,   get:s=>s.totalCompleted,        test:s=>s.totalCompleted>=1 },
+    { id:'10',       name:'Isınma Turu',     ic:'shield',   target:10,  get:s=>s.totalCompleted,        test:s=>s.totalCompleted>=10 },
+    { id:'25',       name:'Sıkı Çalışan',    ic:'hammer',   target:25,  get:s=>s.totalCompleted,        test:s=>s.totalCompleted>=25 },
+    { id:'100',      name:'Yüzler Kulübü',   ic:'trophy',   target:100, get:s=>s.totalCompleted,        test:s=>s.totalCompleted>=100 },
+    { id:'streak3',  name:'Ateşlendi',       ic:'flame',    target:3,   get:s=>s.streak,                test:s=>s.streak>=3 },
+    { id:'streak7',  name:'Kararlılık',      ic:'flame',    target:7,   get:s=>s.streak,                test:s=>s.streak>=7 },
+    { id:'streak30', name:'Söndürülemez',    ic:'flame',    target:30,  get:s=>s.streak,                test:s=>s.streak>=30 },
+    { id:'dayhero',  name:'Gün Kahramanı',   ic:'bolt',     target:5,   get:s=>s.maxDay,                test:s=>s.maxDay>=5 },
+    { id:'routine',  name:'Rutin Ustası',    ic:'refresh',  target:1,   get:s=>s.recurringCount,        test:s=>s.recurringCount>=1 },
+    { id:'timeAtk',  name:'Zamana Karşı',    ic:'stopwatch',target:5,   get:s=>s.timedCompleted,        test:s=>s.timedCompleted>=5 },
+    { id:'perfect',  name:'Mükemmeliyetçi',  ic:'gem',      target:10,  get:s=>s.highPriorityCompleted, test:s=>s.highPriorityCompleted>=10 },
+    { id:'legend',   name:'Zirve Fatihi',    ic:'crown',    target:RANKS.length, get:s=>getRankIndex(s.xp)+1, test:s=>getRankIndex(s.xp)>=RANKS.length-1 },
+    { id:'dracula',  name:'Kont Drakula',    ic:'moon',     target:5,   get:s=>s.nightOwl,              test:s=>s.nightOwl>=5,   desc:'Gece 00:00–05:00 arası 5 görev tamamla' },
+    { id:'ragnar',   name:'Ragnar Lodbrok',  ic:'flag',     target:14,  get:s=>s.streak,                test:s=>s.streak>=14,    desc:'14 gün kesintisiz seri yap — fetih zamanı' },
+    { id:'suntzu',   name:'Sun Tzu',         ic:'compass',  target:5,   get:s=>s.categoriesTouched,     test:s=>s.categoriesTouched>=5, desc:'Tüm 5 kategoriden en az bir görev tamamla' },
+    { id:'midas',    name:'Kral Midas',      ic:'coins',    target:50000, get:s=>Math.round(s.portfolioValue), test:s=>s.portfolioValue>=50000, desc:'Portföy değerin 50.000₺ üzerine çıksın' },
+    { id:'spartacus',name:'Spartaküs',       ic:'hammer',   target:5,   get:s=>s.resilience,            test:s=>s.totalFailed>=3 && s.streak>=5, desc:'En az 3 başarısızlıktan sonra 5 günlük seriyle toparlan' },
+  ];
+
+  /* ===================== SAHTE SIRALAMA (rakip listesi) ===================== */
+  const LB_ADJ = ['Kızıl','Kara','Demir','Gölge','Ejder','Fırtına','Kurt','Kartal','Çelik','Yıldız','Ateş','Buz','Gece','Şafak','Kanlı','Sessiz','Vahşi','Altın','Gümüş','Zümrüt','Kutup','Çöl','Taş','Rüzgâr','Keskin'];
+  const LB_NOUN = ['Kurt','Şahin','Avcı','Savaşçı','Kral','Reis','Fatih','Gezgin','Ozan','Kâhin','Muhafız','Yolcu','Efendi','Bilge','Kaptan','Derviş','Aslan','Tilki','Baykuş','Yılan','Boğa','Kartal','Ejderha','Şövalye','Korsan'];
+  const LB_LEGENDS = ['Kont Drakula','Ragnar Lodbrok','Sun Tzu','Cengiz Han','Attila','Spartaküs','Hannibal Barca','Aleksandros','Nostradamus','Aşil','Beowulf','Leonidas'];
+  function rarityForRankIndex(idx){
+    const gi = RANKS[idx].gi;
+    if(gi<=2) return 'Sıradan';
+    if(gi<=5) return 'Nadir';
+    if(gi<=8) return 'Destansı';
+    if(gi<=10) return 'Efsanevi';
+    return 'Mitik';
+  }
+  function seededName(i){
+    if(i < LB_LEGENDS.length) return LB_LEGENDS[i];
+    const a = LB_ADJ[Math.floor(Math.random()*LB_ADJ.length)];
+    const n = LB_NOUN[Math.floor(Math.random()*LB_NOUN.length)];
+    const num = Math.floor(Math.random()*89)+10;
+    return `${a} ${n} ${num}`;
+  }
+  let leaderboardBots = [];
+  function generateLeaderboardBots(){
+    const maxXp = Math.round(RANKS[RANKS.length-1].min * 1.25);
+    const used = new Set();
+    const bots = [];
+    for(let i=0;i<100;i++){
+      let nm = seededName(i);
+      while(used.has(nm)){ nm = seededName(Math.floor(Math.random()*LB_ADJ.length)+LB_LEGENDS.length); }
+      used.add(nm);
+      const botXp = Math.round(Math.pow(Math.random(), 2.1) * maxXp);
+      bots.push({ name: nm, xp: botXp, seed: nm + i + Math.random().toString(36).slice(2,6) });
+    }
+    return bots;
+  }
+  function regenerateLeaderboard(){
+    leaderboardBots = generateLeaderboardBots();
+    buildLeaderboard();
+    showTopToast('Sıralama listesi yenilendi', 'info', 'refresh');
+  }
+  function buildLeaderboard(){
+    const el = document.getElementById('lbList');
+    if(!el) return;
+    if(leaderboardBots.length === 0) leaderboardBots = generateLeaderboardBots();
+    const entries = leaderboardBots.map(b => ({ name:b.name, xp:b.xp, seed:b.seed, isMe:false }));
+    entries.push({ name:'Sen (Root)', xp: xp, seed:'root-user-me', isMe:true });
+    entries.sort((a,b) => b.xp - a.xp);
+    el.innerHTML = entries.map((e,i) => {
+      const rIdx = getRankIndex(e.xp);
+      const rank = RANKS[rIdx];
+      const rarity = rarityForRankIndex(rIdx);
+      const avatarUrl = `https://api.dicebear.com/7.x/${e.isMe ? 'shapes' : 'bottts'}/svg?seed=${encodeURIComponent(e.seed)}`;
+      return `<div class="lb-row${e.isMe?' me':''}">
+        <span class="lb-rank-num">#${i+1}</span>
+        <img class="lb-avatar" src="${avatarUrl}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+        <div class="lb-info">
+          <div class="lb-name">${escapeHtml(e.name)}</div>
+          <div class="lb-rankname">${rank.name}</div>
+        </div>
+        <span class="lb-rarity">${rarity}</span>
+        <span class="lb-xp">${e.xp} XP</span>
+      </div>`;
+    }).join('');
+  }
+
+  let tasks = [];
+  let xp = 0, streak = 0, lastActiveDate = null, totalCompleted = 0, completionsByDate = {};
+  let totalFailed = 0, highPriorityCompleted = 0, timedCompleted = 0, categoryCompletions = {};
+  let nightOwlCompletions = 0;
+  let filter = 'all';
+  let draggedId = null;
+  let lastRemoved = null;
+
+  /* ===================== PORTFÖY (döviz / altın-gümüş / kripto / BIST) ===================== */
+  const TROY_OZ_GRAMS = 31.1034768;
+  const CRYPTO_ICON_BASE = 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/';
+  const ASSET_DEFS = {
+    usd:         { label:'Amerikan Doları', unit:'USD',  group:'Döviz',  ic:'coins', logo:'https://flagcdn.com/w40/us.png' },
+    eur:         { label:'Euro',            unit:'EUR',  group:'Döviz',  ic:'coins', logo:'https://flagcdn.com/w40/eu.png' },
+    gbp:         { label:'İngiliz Sterlini',unit:'GBP',  group:'Döviz',  ic:'coins', logo:'https://flagcdn.com/w40/gb.png' },
+    gold:        { label:'Altın',           unit:'gram', group:'Kıymetli Maden', ic:'gem' },
+    silver:      { label:'Gümüş',           unit:'gram', group:'Kıymetli Maden', ic:'gem' },
+    bitcoin:     { label:'Bitcoin',         unit:'BTC',  group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'btc.png' },
+    ethereum:    { label:'Ethereum',        unit:'ETH',  group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'eth.png' },
+    tether:      { label:'Tether',          unit:'USDT', group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'usdt.png' },
+    binancecoin: { label:'BNB',             unit:'BNB',  group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'bnb.png' },
+    ripple:      { label:'XRP',             unit:'XRP',  group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'xrp.png' },
+    solana:      { label:'Solana',          unit:'SOL',  group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'sol.png' },
+    dogecoin:    { label:'Dogecoin',        unit:'DOGE', group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'doge.png' },
+    cardano:     { label:'Cardano',         unit:'ADA',  group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'ada.png' },
+    polkadot:    { label:'Polkadot',        unit:'DOT',  group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'dot.png' },
+    litecoin:    { label:'Litecoin',        unit:'LTC',  group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'ltc.png' },
+    'avalanche-2':{label:'Avalanche',       unit:'AVAX', group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'avax.png' },
+    chainlink:   { label:'Chainlink',       unit:'LINK', group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'link.png' },
+    tron:        { label:'Tron',            unit:'TRX',  group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'trx.png' },
+    'matic-network':{label:'Polygon',       unit:'MATIC',group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'matic.png' },
+    'shiba-inu': { label:'Shiba Inu',       unit:'SHIB', group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'shib.png' },
+    uniswap:     { label:'Uniswap',         unit:'UNI',  group:'Kripto', ic:'bolt', logo:CRYPTO_ICON_BASE+'uni.png' },
+    thyao:       { label:'Türk Hava Yolları', unit:'lot', group:'BIST', ic:'bolt', stockBadge:'THYAO' },
+    asels:       { label:'Aselsan',           unit:'lot', group:'BIST', ic:'bolt', stockBadge:'ASELS' },
+    garan:       { label:'Garanti BBVA',      unit:'lot', group:'BIST', ic:'bolt', stockBadge:'GARAN' },
+    akbnk:       { label:'Akbank',            unit:'lot', group:'BIST', ic:'bolt', stockBadge:'AKBNK' },
+    sasa:        { label:'Sasa Polyester',    unit:'lot', group:'BIST', ic:'bolt', stockBadge:'SASA' },
+    kchol:       { label:'Koç Holding',       unit:'lot', group:'BIST', ic:'bolt', stockBadge:'KCHOL' },
+    bimas:       { label:'BİM',               unit:'lot', group:'BIST', ic:'bolt', stockBadge:'BIMAS' },
+    eregl:       { label:'Ereğli Demir Çelik', unit:'lot', group:'BIST', ic:'bolt', stockBadge:'EREGL' },
+    tuprs:       { label:'Tüpraş',            unit:'lot', group:'BIST', ic:'bolt', stockBadge:'TUPRS' },
+    sise:        { label:'Şişecam',           unit:'lot', group:'BIST', ic:'bolt', stockBadge:'SISE' }
+  };
+  const STOCK_TICKERS = { thyao:'THYAO', asels:'ASELS', garan:'GARAN', akbnk:'AKBNK', sasa:'SASA', kchol:'KCHOL', bimas:'BIMAS', eregl:'EREGL', tuprs:'TUPRS', sise:'SISE' };
+  let portfolio = {};
+  let marketPrices = {};
+  let marketLoading = true;
+  let marketError = false;
+  let marketLastUpdated = null;
+
+  async function fetchStockPrice(assetId, ticker){
+    try{
+      const res = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}.IS?interval=1d&range=1d`);
+      if(!res.ok) return;
+      const data = await res.json();
+      const price = data?.chart?.result?.[0]?.meta?.regularMarketPrice;
+      if(price) marketPrices[assetId] = price;
+    }catch(e){ /* tek bir hisse başarısız olursa diğerlerini etkilemesin */ }
+  }
+
+  async function fetchMarketPrices(){
+    marketLoading = true;
+    renderPortfolio();
+    try{
+      const cgIds = 'bitcoin,ethereum,tether,binancecoin,ripple,solana,dogecoin,cardano,polkadot,litecoin,avalanche-2,chainlink,tron,matic-network,shiba-inu,uniswap,pax-gold,kinesis-silver';
+      const [cgRes, usdRes, eurRes, gbpRes] = await Promise.all([
+        fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${cgIds}&vs_currencies=try`),
+        fetch('https://api.frankfurter.dev/v1/latest?base=USD&symbols=TRY'),
+        fetch('https://api.frankfurter.dev/v1/latest?base=EUR&symbols=TRY'),
+        fetch('https://api.frankfurter.dev/v1/latest?base=GBP&symbols=TRY')
+      ]);
+      if(!cgRes.ok || !usdRes.ok || !eurRes.ok) throw new Error('Fiyat servisi yanıt vermedi');
+      const cg = await cgRes.json();
+      const usdData = await usdRes.json();
+      const eurData = await eurRes.json();
+      const gbpData = gbpRes.ok ? await gbpRes.json() : null;
+      marketPrices = {
+        usd: usdData?.rates?.TRY,
+        eur: eurData?.rates?.TRY,
+        gbp: gbpData?.rates?.TRY,
+        gold: cg?.['pax-gold']?.try ? cg['pax-gold'].try / TROY_OZ_GRAMS : undefined,
+        silver: cg?.['kinesis-silver']?.try ? cg['kinesis-silver'].try / TROY_OZ_GRAMS : undefined,
+        bitcoin: cg?.bitcoin?.try,
+        ethereum: cg?.ethereum?.try,
+        tether: cg?.tether?.try,
+        binancecoin: cg?.binancecoin?.try,
+        ripple: cg?.ripple?.try,
+        solana: cg?.solana?.try,
+        dogecoin: cg?.dogecoin?.try,
+        cardano: cg?.cardano?.try,
+        polkadot: cg?.polkadot?.try,
+        litecoin: cg?.litecoin?.try,
+        'avalanche-2': cg?.['avalanche-2']?.try,
+        chainlink: cg?.chainlink?.try,
+        tron: cg?.tron?.try,
+        'matic-network': cg?.['matic-network']?.try,
+        'shiba-inu': cg?.['shiba-inu']?.try,
+        uniswap: cg?.uniswap?.try
+      };
+      marketError = false;
+      marketLastUpdated = Date.now();
+      await Promise.all(Object.keys(STOCK_TICKERS).map(id => fetchStockPrice(id, STOCK_TICKERS[id])));
+    }catch(e){
+      console.error('Piyasa verisi çekilemedi', e);
+      marketError = true;
+    }
+    marketLoading = false;
+    renderPortfolio();
+  }
+
+  function addPortfolioQty(){
+    const assetId = document.getElementById('portfolioAssetSelect').value;
+    const qtyInput = document.getElementById('portfolioQtyInput');
+    const qty = parseFloat(qtyInput.value);
+    if(!assetId || !qty || qty <= 0) return;
+    portfolio[assetId] = (portfolio[assetId] || 0) + qty;
+    qtyInput.value = '';
+    saveState();
+    renderPortfolio();
+    showTopToast(`${ASSET_DEFS[assetId].label} eklendi`, 'info', 'wallet');
+  }
+
+  function removePortfolioAsset(assetId){
+    delete portfolio[assetId];
+    saveState();
+    renderPortfolio();
+  }
+
+  function editHoldingQty(assetId){
+    const span = document.getElementById('qtydisp-'+assetId);
+    if(!span || span.querySelector('input')) return;
+    const def = ASSET_DEFS[assetId];
+    const current = portfolio[assetId];
+    span.innerHTML = `<input type="number" min="0" step="any" class="qty-edit-input" value="${current}"> ${def.unit}`;
+    const input = span.querySelector('input');
+    input.focus();
+    input.select();
+    const commit = () => {
+      const v = parseFloat(input.value);
+      if(!isNaN(v) && v > 0){ portfolio[assetId] = v; }
+      else if(!isNaN(v) && v === 0){ delete portfolio[assetId]; }
+      saveState();
+      renderPortfolio();
+    };
+    input.addEventListener('blur', commit);
+    input.addEventListener('keydown', e => { if(e.key==='Enter') input.blur(); if(e.key==='Escape'){ renderPortfolio(); } });
+    input.addEventListener('click', e => e.stopPropagation());
+  }
+
+  function buildPortfolioStaticUI(){
+    const groups = {};
+    Object.keys(ASSET_DEFS).forEach(id => {
+      const g = ASSET_DEFS[id].group || 'Diğer';
+      (groups[g] = groups[g] || []).push(id);
+    });
+    document.getElementById('portfolioAssetSelect').innerHTML = Object.keys(groups).map(g =>
+            `<optgroup label="${g}">${groups[g].map(id =>
+                    `<option value="${id}">${ASSET_DEFS[id].label} (${ASSET_DEFS[id].unit})</option>`
+            ).join('')}</optgroup>`
+    ).join('');
+    document.getElementById('portfolioQtyIcon').innerHTML = icon('coins',14);
+    document.getElementById('portfolioAddBtn').innerHTML = `${icon('plus',14)} Ekle`;
+    document.getElementById('portfolioRefreshBtn').innerHTML = `${icon('refresh',11)} Yenile`;
+  }
+
+  function assetLogoFallback(imgEl, assetId){
+    const def = ASSET_DEFS[assetId];
+    if(imgEl && imgEl.parentElement) imgEl.parentElement.innerHTML = icon(def.ic, 17);
+  }
+
+  function formatTRY(n){
+    return (n||0).toLocaleString('tr-TR', { style:'currency', currency:'TRY', maximumFractionDigits: 2 });
+  }
+
+  function renderPortfolio(){
+    const holdingsEl = document.getElementById('portfolioHoldings');
+    if(!holdingsEl) return;
+    const ids = Object.keys(portfolio).filter(id => portfolio[id] > 0);
+    let total = 0;
+
+    if(ids.length === 0){
+      holdingsEl.innerHTML = `<div class="empty-state" style="padding:26px 16px;">
+        ${icon('wallet',22)}
+        <p><strong>Henüz varlık eklenmedi.</strong></p>
+        <p>Aşağıdan birim seçip elindeki miktarı ekle.</p>
+      </div>`;
+    } else {
+      holdingsEl.innerHTML = ids.map(id => {
+        const def = ASSET_DEFS[id];
+        const qty = portfolio[id];
+        const price = marketPrices[id];
+        const value = price ? qty * price : null;
+        total += value || 0;
+        const priceLabel = marketLoading ? 'yükleniyor…' : (price ? formatTRY(price) + ' / ' + def.unit : 'alınamadı');
+        const logoInner = def.logo
+                ? `<img src="${def.logo}" alt="" onerror="assetLogoFallback(this,'${id}')">`
+                : (def.stockBadge ? def.stockBadge : icon(def.ic,17));
+        return `<div class="task-item" style="border-left-color:var(--line);">
+          <div class="asset-logo${def.stockBadge?' stock':''}">${logoInner}</div>
+          <div class="task-body">
+            <div class="task-text">${def.label} <span class="qty-display" id="qtydisp-${id}" style="color:var(--ink-soft); font-weight:400; cursor:pointer;" title="Miktarı düzenlemek için tıkla" onclick="editHoldingQty('${id}')">· ${qty} ${def.unit} ${icon('edit',10)}</span></div>
+            <div class="task-meta">
+              <span class="tag">${icon('coins',10)} ${priceLabel}</span>
+              <span class="tag tag-xp">${value!=null ? formatTRY(value) : '—'}</span>
+            </div>
+          </div>
+          <button class="icon-btn" title="Kaldır" onclick="removePortfolioAsset('${id}')">${icon('trash',15)}</button>
+        </div>`;
+      }).join('');
+    }
+
+    document.getElementById('portfolioTotal').textContent = formatTRY(total);
+
+    const metaEl = document.getElementById('portfolioMeta');
+    if(marketError && !marketLastUpdated){
+      metaEl.innerHTML = `${icon('warn',10)} Fiyatlar şu an çekilemedi — tekrar dene.`;
+    } else if(marketError){
+      metaEl.innerHTML = `${icon('warn',10)} Güncellenemedi, en son bilinen fiyatlar gösteriliyor · ${new Date(marketLastUpdated).toLocaleTimeString('tr-TR')}`;
+    } else if(marketLoading && !marketLastUpdated){
+      metaEl.innerHTML = `${icon('refresh',10)} Fiyatlar yükleniyor…`;
+    } else if(marketLastUpdated){
+      metaEl.innerHTML = `${icon('refresh',10)} Son güncelleme: ${new Date(marketLastUpdated).toLocaleTimeString('tr-TR')} · TRY cinsinden`;
+    }
+  }
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBV7jtoXPBcPdclcBseOK39wJsSXUxLpg4",
+    databaseURL: "https://atamossocket-default-rtdb.firebaseio.com",
+    projectId: "atamossocket"
+  };
+  let db = null, userRef = null;
+
+  function setConnStatus(ok){
+    const dot = document.getElementById('connDot');
+    const label = document.getElementById('connLabel');
+    if(!dot || !label) return;
+    dot.classList.toggle('online', ok);
+    label.textContent = ok ? 'Sunucuya bağlı · anlık' : 'Bağlantı bekleniyor…';
+  }
+
+  function initFirebase(){
+    try{
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.database();
+      userRef = db.ref('user');
+
+      db.ref('.info/connected').on('value', snap => setConnStatus(!!snap.val()));
+
+      userRef.on('value', snapshot => {
+        const p = snapshot.val();
+        tasks = p?.tasks || [];
+        xp = p?.xp || 0;
+        streak = p?.streak || 0;
+        lastActiveDate = p?.lastActiveDate || null;
+        totalCompleted = p?.totalCompleted || 0;
+        completionsByDate = p?.completionsByDate || {};
+        totalFailed = p?.totalFailed || 0;
+        highPriorityCompleted = p?.highPriorityCompleted || 0;
+        timedCompleted = p?.timedCompleted || 0;
+        categoryCompletions = p?.categoryCompletions || {};
+        nightOwlCompletions = p?.nightOwlCompletions || 0;
+        portfolio = p?.portfolio || {};
+        renderPortfolio();
+        tasks.forEach(t=>{
+          if(!t.type) t.type = 'once';
+          if(t.autoFailed===undefined) t.autoFailed=false;
+          if(t.missedPending===undefined) t.missedPending=false;
+          if(t.type==='recurring' && !t.lastDate) t.lastDate = todayStr();
+          if(t.deadlineAt===undefined) t.deadlineAt = null;
+        });
+        checkRecurringReset();
+        autoFailExpired(true);
+        render();
+      }, err => {
+        console.error('Firebase okuma hatası', err);
+        setConnStatus(false);
+      });
+    }catch(e){
+      console.error('Firebase başlatma hatası', e);
+      setConnStatus(false);
+    }
+  }
+
+  async function saveState(){
+    if(!userRef) return;
+    try{
+      await userRef.set({
+        tasks, xp, streak, lastActiveDate, totalCompleted, completionsByDate,
+        totalFailed, highPriorityCompleted, timedCompleted, categoryCompletions, nightOwlCompletions, portfolio
+      });
+    }catch(e){ console.error('Kaydetme hatası', e); }
+  }
+
+  function setFilter(f){
+    filter = f;
+    document.querySelectorAll('.chip[data-filter]').forEach(c => c.classList.toggle('active', c.dataset.filter === f));
+    render();
+  }
+
+  function togglePanel(panelId, btnId, label){
+    const panel = document.getElementById(panelId);
+    const btn = document.getElementById(btnId);
+    const open = panel.classList.toggle('open');
+    btn.innerHTML = `${icon('layers',11)} ${label} ${open ? 'gizle' : 'gör'}`;
+    if(open){ buildRankGallery(); buildAchvGallery(); buildLeaderboard(); }
+  }
+
+  const questDraft = { category:'İş', priority:'Orta', duration:0 };
+  function selectSeg(kind, value, el){
+    questDraft[kind] = value;
+    el.parentElement.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function selectDuration(hours, el){
+    questDraft.duration = hours;
+    el.parentElement.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    const customWrap = document.getElementById('customDurationWrap');
+    customWrap.style.display = (hours === 'custom') ? 'flex' : 'none';
+    if(hours !== 'custom') document.getElementById('dueHours').value = '';
+  }
+
+  function buildStaticUI(){
+    document.getElementById('categoryGroup').innerHTML = Object.keys(CATEGORY_ICON).map((c,i) =>
+            `<button type="button" class="seg-btn${i===0?' active':''}" data-value="${c}" onclick="selectSeg('category','${c}',this)">${icon(CATEGORY_ICON[c],13)} ${c}</button>`
+    ).join('');
+    document.getElementById('priorityGroup').innerHTML = Object.keys(PRIORITY_ICON).map((p,i) =>
+            `<button type="button" class="seg-btn${p==='Orta'?' active':''}" data-value="${p}" onclick="selectSeg('priority','${p}',this)">${icon(PRIORITY_ICON[p],13)} ${p} · ${XP_VALUE[p]} XP</button>`
+    ).join('');
+    document.getElementById('durationGroup').innerHTML = DURATION_PRESETS.map((d,i) =>
+            `<button type="button" class="seg-btn small${d.hours===0?' active':''}" onclick="selectDuration(${d.hours==='custom'?"'custom'":d.hours},this)">${d.label}</button>`
+    ).join('');
+    document.getElementById('customDurationIcon').innerHTML = icon('hourglass',14);
+    document.getElementById('recurringLabelText').innerHTML = `${icon('refresh',13)} Sonsuz rutin — süresiz, her gün otomatik tekrar eder`;
+    document.getElementById('addTaskBtn').innerHTML = `${icon('plus',14)} Göreve Başla`;
+    document.getElementById('addCardIcon').innerHTML = icon('terminal',22);
+    document.getElementById('celebrateIcon').innerHTML = icon('sparkle',16);
+    document.getElementById('galleryToggle').innerHTML = `${icon('layers',11)} Rütbe haritasını gör`;
+    document.getElementById('achvToggle').innerHTML = `${icon('trophy',11)} Başarımları gör`;
+    document.getElementById('lbToggle').innerHTML = `${icon('crown',11)} Sıralamayı gör`;
+    document.getElementById('lbRefreshBtn').innerHTML = `${icon('refresh',11)} Listeyi yenile`;
+    document.getElementById('authShield').innerHTML = icon('lock',26);
+    document.getElementById('authBtn').innerHTML = `${icon('shield',14)} Giriş Yap`;
+  }
+
+  function onRecurringToggle(){
+    const checked = document.getElementById('isRecurring').checked;
+    document.getElementById('dueRow').style.display = checked ? 'none' : 'flex';
+    document.getElementById('recurringLabel').classList.toggle('active', checked);
+  }
+
+  function getRankIndex(xpVal){
+    let idx = 0;
+    for(let i=0;i<RANKS.length;i++){ if(xpVal >= RANKS[i].min) idx = i; }
+    return idx;
+  }
+
+  function badgeSVG(tierIndex, size, locked){
+    const r = RANKS[tierIndex];
+    const uid = 'grad'+tierIndex+'_'+size;
+    const c1 = locked ? 'var(--line)' : r.c1;
+    const c2 = locked ? 'var(--line)' : r.c2;
+    const text = locked ? 'var(--ink-soft)' : r.text;
+    const rayColor = '#ff8a8a';
+    const rayCount = locked ? 0 : r.rayCount;
+    const rays = rayCount ? Array.from({length:rayCount}).map((_,i)=>{
+      const angle = i*(360/rayCount);
+      const op = 0.14 + Math.min(rayCount,14)*0.018;
+      return `<line x1="32" y1="40" x2="32" y2="-8" stroke="${rayColor}" stroke-width="2" opacity="${op.toFixed(2)}" transform="rotate(${angle} 32 40)"></line>`;
+    }).join('') : '';
+    const total = r.sub+1, spacing=8, startX=32-((total-1)*spacing)/2;
+    const pips = Array.from({length:total}).map((_,i)=>
+            `<circle cx="${startX+i*spacing}" cy="67" r="2.2" fill="${text}" opacity="0.9"></circle>`
+    ).join('');
+    const shine = (r.sub>=1 && !locked) ? `<path d="M32 5 L55 14 L55 40 C55 58 45 69 32 75" fill="none" stroke="#ff9c9c" stroke-width="1.4" opacity="0.4"/>` : '';
+    const rings = (!locked && r.rings) ? Array.from({length:r.rings}).map((_,i)=>
+            `<path d="M32 3 L57 13 L57 40 C57 59 46 71 32 77 C18 71 7 59 7 40 L7 13 Z" fill="none" stroke="#ff5050" stroke-width="1" opacity="${0.5-i*0.15}" transform="scale(${1+ (i+1)*0.09})" transform-origin="32 40"/>`
+    ).join('') : '';
+    const crown = (!locked && r.legendary && r.sub===2) ? `<path d="M20 20 L26 28 L32 16 L38 28 L44 20 L41 32 L23 32 Z" fill="#ff4d4d" stroke="#ffb3b3" stroke-width="1" opacity="0.95"/>` : '';
+    return `<svg width="${size}" height="${size*1.25}" viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="${uid}" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="${c2}"/><stop offset="100%" stop-color="${c1}"/>
+      </linearGradient></defs>
+      ${rays}
+      ${rings}
+      <path d="M32 3 L57 13 L57 40 C57 59 46 71 32 77 C18 71 7 59 7 40 L7 13 Z" fill="url(#${uid})" stroke="rgba(255,60,60,0.22)" stroke-width="1.5"/>
+      ${shine}
+      <polygon points="32,25 44,40 32,57 20,40" fill="${locked?'var(--panel)':text}" opacity="${locked?0.5:0.92}"/>
+      <polygon points="32,25 44,40 32,40" fill="#ff9c9c" opacity="0.16"/>
+      ${crown}
+      ${pips}
+    </svg>`;
+  }
+
+  function badgeHTML(tierIndex, size, locked){
+    const r = RANKS[tierIndex];
+    const svg = badgeSVG(tierIndex, size, locked);
+    let glowClass = '';
+    if(!locked && r.legendary) glowClass = r.sub===2 ? ' glow2' : ' glow';
+    return `<div class="badge-wrap${glowClass}" style="width:${size}px;">${svg}</div>`;
+  }
+
+  function renderHero(){
+    const idx = getRankIndex(xp);
+    const current = RANKS[idx];
+    const next = RANKS[idx+1];
+
+    document.getElementById('rankBadgeSlot').innerHTML = badgeHTML(idx, 72, false);
+    document.getElementById('rankName').textContent = current.name;
+    document.getElementById('rankTierLabel').textContent = `RÜTBE ${idx+1} / ${RANKS.length}`;
+    document.getElementById('streakPill').innerHTML = `${icon('flame',11)} ${streak} gün seri`;
+
+    const fillEl = document.getElementById('xpFill');
+    if(next){
+      const span = next.min - current.min;
+      const progressed = xp - current.min;
+      fillEl.style.width = Math.min(100, Math.max(0,(progressed/span*100))) + '%';
+      document.getElementById('xpNow').textContent = `${xp} XP`;
+      document.getElementById('xpNext').textContent = `${next.min} XP'de ${next.name}`;
+    } else {
+      fillEl.style.width = '100%';
+      document.getElementById('xpNow').textContent = `${xp} XP`;
+      document.getElementById('xpNext').textContent = 'Zirvedesin';
+    }
+  }
+
+  function buildRankGallery(){
+    const g = document.getElementById('rankGallery');
+    const idx = getRankIndex(xp);
+    g.innerHTML = RANKS.map((r,i) => {
+      const locked = i > idx;
+      return `<div class="gallery-item ${locked?'locked':''} ${i===idx?'current':''}">
+        ${badgeHTML(i, 56, locked)}
+        <div class="g-name">${r.name}</div>
+        <div class="g-xp">${r.min} XP</div>
+      </div>`;
+    }).join('');
+  }
+
+  function computePortfolioTotal(){
+    let total = 0;
+    Object.keys(portfolio).forEach(id => {
+      const qty = portfolio[id];
+      const price = marketPrices[id];
+      if(qty>0 && price) total += qty*price;
+    });
+    return total;
+  }
+
+  function computeStats(){
+    return {
+      totalCompleted, streak, xp, totalFailed,
+      maxDay: Math.max(0, ...Object.values(completionsByDate), 0),
+      recurringCount: tasks.filter(t=>t.type==='recurring').length,
+      timedCompleted, highPriorityCompleted,
+      nightOwl: nightOwlCompletions,
+      categoriesTouched: Object.keys(categoryCompletions).filter(k=>categoryCompletions[k]>0).length,
+      portfolioValue: computePortfolioTotal()
+    };
+  }
+
+  function buildAchvGallery(){
+    const g = document.getElementById('achvGallery');
+    const stats = computeStats();
+    let unlockedCount = 0;
+    g.innerHTML = ACHIEVEMENTS.map(a => {
+      const unlocked = a.test(stats);
+      if(unlocked) unlockedCount++;
+      const cur = Math.min(a.target, a.get(stats));
+      const pct = Math.round((cur/a.target)*100);
+      const progressHtml = unlocked ? '' : `
+        <div class="achv-progress"><div class="achv-progress-fill" style="width:${pct}%"></div></div>
+        <div class="achv-progress-label">${cur}/${a.target}</div>`;
+      return `<div class="achv-item ${unlocked?'':'locked'}" title="${a.name}">
+        <div class="achv-circle">${icon(a.ic,20)}</div>
+        <div class="g-name">${a.name}</div>
+        ${progressHtml}
+      </div>`;
+    }).join('');
+    document.getElementById('achvSummaryLabel').textContent = `${unlockedCount} / ${ACHIEVEMENTS.length} açıldı`;
+    document.getElementById('achvSummaryFill').style.width = Math.round((unlockedCount/ACHIEVEMENTS.length)*100) + '%';
+  }
+
+  function buildCategoryChart(){
+    const el = document.getElementById('categoryChart');
+    const cats = Object.keys(CATEGORY_ICON);
+    const counts = cats.map(c => categoryCompletions[c] || 0);
+    const max = Math.max(1, ...counts);
+    el.innerHTML = cats.map((c,i) => {
+      const w = counts[i]===0 ? 2 : Math.max(6, (counts[i]/max)*100);
+      return `<div class="cat-bar-row">
+        <span class="cat-bar-label">${icon(CATEGORY_ICON[c],12)} ${c}</span>
+        <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${w}%"></div></div>
+        <span class="cat-bar-count">${counts[i]}</span>
+      </div>`;
+    }).join('');
+  }
+
+  function showRankModal(newIndex, dropped){
+    document.getElementById('modalBadgeSlot').innerHTML = badgeHTML(newIndex, 84, false);
+    document.getElementById('modalRankName').textContent = RANKS[newIndex].name;
+    document.getElementById('modalEyebrow').textContent = dropped ? 'Rütbe Düştü' : 'Yeni Rütbe';
+    document.getElementById('modalSub').textContent = dropped
+            ? 'Kaçırılan görevler yüzünden bir alt rütbeye düştün. Toparlanma vakti!'
+            : 'Tebrikler, panelde bir üst rütbeye yükseldin!';
+    document.getElementById('rankModal').classList.add('show');
+    if(!dropped) burstConfettiTop();
+  }
+  function closeRankModal(){ document.getElementById('rankModal').classList.remove('show'); }
+
+  /* ---- confirm popup (native confirm() yerine) ---- */
+  function showConfirm(message){
+    return new Promise(resolve => {
+      const overlay = document.getElementById('confirmModal');
+      document.getElementById('confirmMsg').textContent = message;
+      overlay.classList.add('show');
+      const yesBtn = document.getElementById('confirmYesBtn');
+      const noBtn = document.getElementById('confirmNoBtn');
+      const cleanup = (result) => {
+        overlay.classList.remove('show');
+        yesBtn.onclick = null; noBtn.onclick = null;
+        resolve(result);
+      };
+      yesBtn.onclick = () => cleanup(true);
+      noBtn.onclick = () => cleanup(false);
+    });
+  }
+
+  function spawnConfetti(x, y, count){
+    const shades = ['#ff3b3b','#ff7a7a','#c81e1e','#7a0f0f'];
+    for(let i=0;i<count;i++){
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      const color = shades[Math.floor(Math.random()*shades.length)];
+      const dx = (Math.random()-0.5) * 160;
+      const dy = 100 + Math.random()*140;
+      const rot = Math.random()*720 - 360;
+      const dur = 900 + Math.random()*700;
+      el.style.background = color;
+      el.style.left = x+'px';
+      el.style.top = y+'px';
+      el.style.transform = 'translate(0,0) rotate(0deg)';
+      el.style.transition = `transform ${dur}ms cubic-bezier(.25,.46,.45,.94), opacity ${dur}ms ease`;
+      document.body.appendChild(el);
+      requestAnimationFrame(() => {
+        el.style.transform = `translate(${dx}px, ${dy}px) rotate(${rot}deg)`;
+        el.style.opacity = '0';
+      });
+      setTimeout(() => el.remove(), dur+80);
+    }
+  }
+  function burstConfettiTop(){
+    const w = window.innerWidth;
+    for(let i=0;i<50;i++){
+      setTimeout(() => spawnConfetti(Math.random()*w, -10, 1), i*8);
+    }
+  }
+
+  /* ---- mini bildirimler (üstte gelip gider) ---- */
+  function showTopToast(message, kind, ic){
+    const stack = document.getElementById('topToastStack');
+    const el = document.createElement('div');
+    el.className = 'top-toast' + (kind==='warn' ? ' warn' : '');
+    el.innerHTML = `${icon(ic || (kind==='warn'?'warn':'sparkle'),13)}<span>${message}</span>`;
+    stack.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('in'));
+    setTimeout(() => {
+      el.classList.remove('in');
+      setTimeout(() => el.remove(), 320);
+    }, 2400);
+  }
+
+  function todayStr(){ return new Date().toISOString().slice(0,10); }
+  function yesterdayStr(){ const d = new Date(); d.setDate(d.getDate()-1); return d.toISOString().slice(0,10); }
+
+  function registerCompletion(priority, cat, isTimed){
+    xp += XP_VALUE[priority] || 10;
+    totalCompleted += 1;
+    if(cat) categoryCompletions[cat] = (categoryCompletions[cat]||0) + 1;
+    if(priority==='Yüksek') highPriorityCompleted += 1;
+    if(isTimed) timedCompleted += 1;
+    const hourNow = new Date().getHours();
+    if(hourNow>=0 && hourNow<5) nightOwlCompletions += 1;
+    const today = todayStr();
+    completionsByDate[today] = (completionsByDate[today]||0) + 1;
+    if(lastActiveDate === today){ /* streak unchanged */ }
+    else if(lastActiveDate === yesterdayStr()){ streak += 1; }
+    else { streak = 1; }
+    lastActiveDate = today;
+  }
+
+  function registerFailure(priority){
+    const penalty = XP_VALUE[priority] || 10;
+    xp = Math.max(0, xp - penalty);
+    totalFailed += 1;
+    streak = 0;
+    return penalty;
+  }
+
+  function addTask(){
+    const input = document.getElementById('taskInput');
+    const text = input.value.trim();
+    if(!text) return;
+    const isRecurring = document.getElementById('isRecurring').checked;
+    let hours = null;
+    if(!isRecurring){
+      if(questDraft.duration === 'custom'){
+        const raw = document.getElementById('dueHours').value;
+        hours = raw ? parseFloat(raw) : null;
+      } else if(questDraft.duration > 0){
+        hours = questDraft.duration;
+      }
+    }
+    const createdAt = Date.now();
+    const deadlineAt = (!isRecurring && hours && hours > 0) ? createdAt + hours*3600000 : null;
+    tasks.unshift({
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+      text,
+      cat: questDraft.category,
+      priority: questDraft.priority,
+      deadlineAt,
+      type: isRecurring ? 'recurring' : 'once',
+      done:false, xpAwarded:false, autoFailed:false, missedPending:false,
+      lastDate: isRecurring ? todayStr() : null,
+      createdAt
+    });
+    input.value = '';
+    document.getElementById('dueHours').value = '';
+    document.getElementById('isRecurring').checked = false;
+    onRecurringToggle();
+    showTopToast('Yeni görev eklendi', 'info', 'plus');
+    saveState();
+    render();
+  }
+
+  function toggle(id, evt){
+    const t = tasks.find(t => t.id === id);
+    if(!t || t.autoFailed) return;
+
+    if(!t.done){
+      t.done = true;
+      if(!t.xpAwarded){
+        const before = getRankIndex(xp);
+        const isTimed = !!t.deadlineAt && t.type !== 'recurring';
+        registerCompletion(t.priority, t.cat, isTimed);
+        t.xpAwarded = true;
+        if(t.type==='recurring') t.missedPending = false;
+        const after = getRankIndex(xp);
+
+        if(evt && evt.currentTarget){
+          const rect = evt.currentTarget.getBoundingClientRect();
+          spawnConfetti(rect.left+10, rect.top+10, 14);
+          const xpSpan = document.createElement('span');
+          xpSpan.className = 'xp-float';
+          xpSpan.textContent = `+${XP_VALUE[t.priority]||10} XP`;
+          const parent = evt.currentTarget.closest('.task-item');
+          if(parent){ parent.style.position = 'relative'; parent.appendChild(xpSpan); setTimeout(()=>xpSpan.remove(), 1000); }
+        }
+        showTopToast(`Görev tamamlandı · +${XP_VALUE[t.priority]||10} XP`, 'info', 'check');
+        if(after > before) setTimeout(() => showRankModal(after, false), 300);
+      }
+    } else {
+      t.done = false;
+    }
+    saveState();
+    render();
+  }
+
+  function applyMissedPenalty(id){
+    const t = tasks.find(t => t.id === id);
+    if(!t || !t.missedPending) return;
+    const before = getRankIndex(xp);
+    const penalty = registerFailure(t.priority);
+    t.missedPending = false;
+    const after = getRankIndex(xp);
+    saveState();
+    render();
+    if(after < before) setTimeout(() => showRankModal(after, true), 200);
+    else showTopToast(`−${penalty} XP uygulandı`, 'warn', 'x');
+  }
+
+  function checkRecurringReset(){
+    const today = todayStr();
+    let changed = false;
+    tasks.forEach(t => {
+      if(t.type === 'recurring' && t.lastDate !== today){
+        if(t.lastDate && !t.done){ t.missedPending = true; }
+        t.done = false;
+        t.xpAwarded = false;
+        t.lastDate = today;
+        changed = true;
+      }
+    });
+    if(changed) saveState();
+  }
+
+  function autoFailExpired(silent){
+    const now = Date.now();
+    let changed = false;
+    const before = getRankIndex(xp);
+    tasks.forEach(t => {
+      if(t.type !== 'recurring' && t.deadlineAt && !t.done && !t.autoFailed){
+        if(now >= t.deadlineAt){
+          registerFailure(t.priority);
+          t.autoFailed = true;
+          changed = true;
+        }
+      }
+    });
+    if(changed){
+      const after = getRankIndex(xp);
+      saveState();
+      render();
+      if(!silent){
+        if(after < before) setTimeout(() => showRankModal(after, true), 200);
+        else showTopToast('Süresi geçen bir görev başarısız sayıldı', 'warn', 'warn');
+      }
+    }
+  }
+
+  async function del(id){
+    const idx = tasks.findIndex(t => t.id === id);
+    if(idx === -1) return;
+    const [removed] = tasks.splice(idx, 1);
+    lastRemoved = { items:[{ task: removed, index: idx }] };
+    saveState();
+    render();
+    showTopToast('Görev silindi', 'warn', 'trash');
+    showSnackbar('Görev silindi', undoDelete);
+  }
+
+  async function clearCompleted(){
+    const doneTasks = tasks.filter(t => t.done);
+    if(doneTasks.length === 0) return;
+    const ok = await showConfirm(`${doneTasks.length} tamamlanmış görev temizlensin mi?`);
+    if(!ok) return;
+    const items = [];
+    tasks.forEach((t, i) => { if(t.done) items.push({ task:t, index:i }); });
+    tasks = tasks.filter(t => !t.done);
+    lastRemoved = { items };
+    saveState();
+    render();
+    showTopToast(`${items.length} görev temizlendi`, 'warn', 'trash');
+    showSnackbar(`${items.length} görev temizlendi`, undoDelete);
+  }
+
+  async function clearAll(){
+    if(tasks.length === 0) return;
+    const ok = await showConfirm(`${tasks.length} görevin tamamı silinsin mi? Bu işlem geri alınabilir.`);
+    if(!ok) return;
+    const items = tasks.map((t,i) => ({ task:t, index:i }));
+    lastRemoved = { items };
+    tasks = [];
+    saveState();
+    render();
+    showTopToast(`${items.length} görev silindi`, 'warn', 'trash');
+    showSnackbar(`${items.length} görev silindi`, undoDelete);
+  }
+
+  function undoDelete(){
+    if(!lastRemoved) return;
+    lastRemoved.items.sort((a,b) => a.index - b.index).forEach(entry => {
+      tasks.splice(Math.min(entry.index, tasks.length), 0, entry.task);
+    });
+    lastRemoved = null;
+    saveState();
+    render();
+    hideSnackbar();
+    showTopToast('Geri alındı', 'info', 'refresh');
+  }
+
+  function showSnackbar(message, onUndo){
+    const bar = document.getElementById('snackbar');
+    bar.innerHTML = `<span>${message}</span>`;
+    if(onUndo){
+      const btn = document.createElement('button');
+      btn.textContent = 'Geri al';
+      btn.onclick = onUndo;
+      bar.appendChild(btn);
+    }
+    bar.classList.add('show');
+    clearTimeout(window._snackTimer);
+    window._snackTimer = setTimeout(hideSnackbar, 6000);
+  }
+  function hideSnackbar(){ document.getElementById('snackbar').classList.remove('show'); }
+
+  function startEdit(id, el){
+    const t = tasks.find(t => t.id === id);
+    if(!t) return;
+    const input = document.createElement('input');
+    input.className = 'task-text-input';
+    input.value = t.text;
+    el.replaceWith(input);
+    input.focus();
+    input.select();
+    const save = () => {
+      const v = input.value.trim();
+      t.text = v || t.text;
+      saveState();
+      render();
+    };
+    input.addEventListener('blur', save);
+    input.addEventListener('keydown', e => { if(e.key==='Enter') input.blur(); });
+  }
+
+  function formatCountdown(ms){
+    if(ms<=0) return 'Süre doldu';
+    const s = Math.floor(ms/1000);
+    const h = Math.floor(s/3600);
+    const m = Math.floor((s%3600)/60);
+    const sec = s%60;
+    if(h>0) return `${h}s ${m}dk kaldı`;
+    if(m>0) return `${m}dk ${sec}sn kaldı`;
+    return `${sec}sn kaldı`;
+  }
+
+  function sortedVisible(list){
+    const mode = document.getElementById('sortSelect').value;
+    const arr = [...list];
+    if(mode === 'priority') arr.sort((a,b) => (PRIORITY_ORDER[b.priority]||0) - (PRIORITY_ORDER[a.priority]||0));
+    else if(mode === 'due') arr.sort((a,b) => (a.deadlineAt||Infinity) - (b.deadlineAt||Infinity));
+    else if(mode === 'newest') arr.sort((a,b) => b.createdAt - a.createdAt);
+    return arr;
+  }
+
+  function renderWeekChart(){
+    const el = document.getElementById('weekChart');
+    const days = [];
+    for(let i=6;i>=0;i--){ const d = new Date(); d.setDate(d.getDate()-i); days.push(d); }
+    const counts = days.map(d => completionsByDate[d.toISOString().slice(0,10)] || 0);
+    const max = Math.max(1, ...counts);
+    const labels = ['Pt','Sa','Ça','Pe','Cu','Ct','Pz'];
+    el.innerHTML = days.map((d,i) => {
+      const c = counts[i];
+      const h = c === 0 ? 4 : Math.max(8, (c/max)*60);
+      return `<div class="week-bar-col">
+        <div class="week-bar ${c>0?'has-data':''}" style="height:${h}px" title="${c} görev"></div>
+        <div class="week-bar-label">${labels[d.getDay()===0?6:d.getDay()-1]}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function render(){
+    renderHero();
+    renderWeekChart();
+    buildCategoryChart();
+    if(document.getElementById('rankGalleryPanel').classList.contains('open')) buildRankGallery();
+    if(document.getElementById('achvPanel').classList.contains('open')) buildAchvGallery();
+    if(document.getElementById('lbPanel').classList.contains('open')) buildLeaderboard();
+
+    const list = document.getElementById('taskList');
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    const sortMode = document.getElementById('sortSelect').value;
+
+    let visible = tasks.filter(t => {
+      if(filter === 'active' && t.done) return false;
+      if(filter === 'done' && !t.done) return false;
+      if(q && !t.text.toLowerCase().includes(q)) return false;
+      return true;
+    });
+    visible = sortedVisible(visible);
+
+    list.innerHTML = '';
+
+    if(visible.length === 0){
+      list.innerHTML = `<div class="empty-state">
+        ${icon('inbox',26)}
+        <p><strong>Burada henüz bir şey yok.</strong></p>
+        <p>${tasks.length === 0 ? 'Yukarıdan ilk görevini ekle.' : 'Bu filtreye uyan görev bulunamadı.'}</p>
+      </div>`;
+    } else {
+      visible.forEach(t => {
+        const div = document.createElement('div');
+        div.className = 'task-item' + (t.done ? ' done' : '') + (t.autoFailed ? ' failed' : '');
+        div.draggable = (sortMode === 'manual');
+        div.dataset.id = t.id;
+        div.style.setProperty('--pri-color', t.autoFailed ? 'var(--ink-faint)' : (PRIORITY_COLOR[t.priority] || '#3a1113'));
+
+        let metaExtra = '';
+        if(t.type === 'recurring'){
+          metaExtra += `<span class="tag tag-recurring">${icon('refresh',10)} Günlük</span>`;
+          if(t.missedPending){
+            metaExtra += `<span class="due overdue">${icon('warn',10)} Dün yapılmadı</span>
+              <button class="penalty-btn" onclick="applyMissedPenalty('${t.id}')">Eksi puan uygula</button>`;
+          }
+        } else if(t.deadlineAt){
+          if(t.autoFailed){
+            metaExtra += `<span class="due overdue">${icon('x',10)} Süresi doldu — başarısız</span>`;
+          } else if(!t.done){
+            const rem = t.deadlineAt - Date.now();
+            metaExtra += `<span class="due countdown${rem<=0?' overdue':''}" data-deadline="${t.deadlineAt}">${icon('hourglass',10)} ${rem>0?formatCountdown(rem):'Süre doldu'}</span>`;
+          } else {
+            metaExtra += `<span class="due">${icon('check',10)} Tamamlandı</span>`;
+          }
+        }
+
+        const failed = t.autoFailed;
+        const checkInner = failed ? icon('x',13) : (t.done ? icon('check',13) : '');
+        const checkboxHtml = failed
+                ? `<div class="check-hit"><div class="checkbox disabled">${checkInner}</div></div>`
+                : `<button class="check-hit" onclick="toggle('${t.id}', event)"><div class="checkbox${t.done ? ' checked' : ''}">${checkInner}</div></button>`;
+
+        div.innerHTML = `
+          ${checkboxHtml}
+          <div class="task-body">
+            <div class="task-text" ondblclick="startEdit('${t.id}', this)">${escapeHtml(t.text)}</div>
+            <div class="task-meta">
+              <span class="tag">${icon(CATEGORY_ICON[t.cat] || 'grid',10)} ${t.cat}</span>
+              <span class="tag tag-pri" style="--tag-color:${PRIORITY_COLOR[t.priority] || '#8f8577'}">${icon(PRIORITY_ICON[t.priority] || 'circleEmpty',10)} ${t.priority}</span>
+              <span class="tag tag-xp">${icon('bolt',10)} ${XP_VALUE[t.priority] || 10} XP</span>
+              ${metaExtra}
+            </div>
+          </div>
+          <button class="icon-btn" title="Sil" onclick="del('${t.id}')">${icon('trash',15)}</button>
+        `;
+
+        if(sortMode === 'manual'){
+          div.addEventListener('dragstart', () => { draggedId = t.id; div.classList.add('dragging'); });
+          div.addEventListener('dragend', () => { div.classList.remove('dragging'); draggedId = null; reorderFromDOM(); });
+        }
+
+        list.appendChild(div);
+      });
+    }
+
+    list.ondragover = e => {
+      if(sortMode !== 'manual') return;
+      e.preventDefault();
+      const after = getDragAfterElement(list, e.clientY);
+      const dragging = list.querySelector('.dragging');
+      if(!dragging) return;
+      if(after == null) list.appendChild(dragging);
+      else list.insertBefore(dragging, after);
+    };
+
+    const total = tasks.length;
+    const done = tasks.filter(t => t.done).length;
+    const pct = total ? Math.round((done/total)*100) : 0;
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statDone').textContent = done;
+    document.getElementById('statLeft').textContent = total - done;
+    document.getElementById('dialPct').textContent = pct + '%';
+    document.getElementById('dialFill').style.strokeDashoffset = 276.5 - (276.5 * pct / 100);
+
+    const banner = document.getElementById('celebrateBanner');
+    banner.classList.toggle('show', total > 0 && done === total);
+  }
+
+  function reorderFromDOM(){
+    const ids = [...document.querySelectorAll('.task-item')].map(el => el.dataset.id);
+    const visibleSet = new Set(ids);
+    const reordered = ids.map(id => tasks.find(t => t.id === id));
+    const rest = tasks.filter(t => !visibleSet.has(t.id));
+    tasks = [...reordered, ...rest];
+    saveState();
+  }
+
+  function getDragAfterElement(container, y){
+    const els = [...container.querySelectorAll('.task-item:not(.dragging)')];
+    return els.reduce((closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if(offset < 0 && offset > closest.offset) return { offset, element: child };
+      return closest;
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+  }
+
+  function attachDragScroll(el){
+    if(!el || el._dragScrollAttached) return;
+    el._dragScrollAttached = true;
+    let isDown = false, startX = 0, startScroll = 0, moved = false;
+    el.addEventListener('mousedown', e => {
+      isDown = true; moved = false;
+      startX = e.pageX;
+      startScroll = el.scrollLeft;
+      el.classList.add('dragging-scroll');
+    });
+    window.addEventListener('mouseup', () => { isDown = false; el.classList.remove('dragging-scroll'); });
+    window.addEventListener('mousemove', e => {
+      if(!isDown) return;
+      const dx = e.pageX - startX;
+      if(Math.abs(dx) > 4) moved = true;
+      el.scrollLeft = startScroll - dx;
+    });
+    el.addEventListener('click', e => { if(moved){ e.preventDefault(); e.stopPropagation(); } }, true);
+  }
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  /* ===================== TEMA (koyu / açık) ===================== */
+  const THEME_KEY = 'tc_theme_v1';
+  function applyTheme(theme){
+    document.documentElement.setAttribute('data-theme', theme);
+    const btn = document.getElementById('themeToggleBtn');
+    if(btn) btn.innerHTML = theme === 'light' ? icon('moon',15) : icon('sun',15);
+  }
+  function toggleTheme(){
+    const current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    const next = current === 'light' ? 'dark' : 'light';
+    localStorage.setItem(THEME_KEY, next);
+    applyTheme(next);
+  }
+  function initTheme(){
+    const saved = localStorage.getItem(THEME_KEY);
+    applyTheme(saved === 'light' ? 'light' : 'dark');
+  }
+
+  /* ===================== OTURUM / GİRİŞ KAPISI =====================
+     Not: Bu yine de tarayıcı tarafında çalışan bir kapıdır — sayfa kaynağını
+     görüp bu dosyaya erişebilen biri kullanıcı adı/şifreyi teorik olarak
+     görebilir. Bunu önceki sürümden farklı kılan şey: artık görev verisi
+     login başarılı olmadan Firebase'den hiç çekilmiyor (aşağıda initFirebase()
+     yalnızca girişten sonra çağrılıyor) — yani biri sadece "authGate"
+     kutusunu geliştirici araçlarından silerek arkadaki verileri göremez,
+     çünkü veri zaten yüklenmemiş olur. Tam sunucu taraflı güvenlik için
+     Firebase Authentication + Realtime Database güvenlik kuralları
+     (".read": "auth != null") eklemeni öneririm. */
+  const AUTH_USER = 'root';
+  const AUTH_PASS = 'tarumar';
+  const AUTH_KEY = 'tc_session_v1';
+
+  function tryLogin(){
+    const u = document.getElementById('authUser').value.trim();
+    const p = document.getElementById('authPass').value;
+    const errEl = document.getElementById('authError');
+    if(u === AUTH_USER && p === AUTH_PASS){
+      localStorage.setItem(AUTH_KEY, 'granted');
+      errEl.style.display = 'none';
+      document.getElementById('authGate').classList.remove('show');
+      document.getElementById('profileCorner').style.display = 'flex';
+      showTopToast('Giriş başarılı — hoş geldin, Root', 'info', 'shield');
+      initFirebase();
+      fetchMarketPrices();
+    } else {
+      errEl.style.display = 'block';
+    }
+  }
+
+  async function logout(){
+    const ok = await showConfirm('Oturumu kapatmak istediğine emin misin?');
+    if(!ok) return;
+    localStorage.removeItem(AUTH_KEY);
+    document.getElementById('profileCorner').style.display = 'none';
+    document.getElementById('authUser').value = '';
+    document.getElementById('authPass').value = '';
+    document.getElementById('authGate').classList.add('show');
+    location.reload();
+  }
+
+  function checkAuthOnLoad(){
+    if(localStorage.getItem(AUTH_KEY) === 'granted'){
+      document.getElementById('authGate').classList.remove('show');
+      document.getElementById('profileCorner').style.display = 'flex';
+      initFirebase();
+      fetchMarketPrices();
+    } else {
+      document.getElementById('authGate').classList.add('show');
+    }
+  }
+
+  setInterval(() => {
+    const now = Date.now();
+    document.querySelectorAll('.countdown[data-deadline]').forEach(el => {
+      const dl = parseInt(el.dataset.deadline, 10);
+      const rem = dl - now;
+      el.innerHTML = `${icon('hourglass',10)} ${rem > 0 ? formatCountdown(rem) : 'Süre doldu'}`;
+      el.classList.toggle('overdue', rem <= 0);
+    });
+  }, 1000);
+  setInterval(() => autoFailExpired(false), 15000);
+  setInterval(checkRecurringReset, 60000);
+  setInterval(() => fetchMarketPrices(), 90000);
+
+  initTheme();
+  buildStaticUI();
+  leaderboardBots = generateLeaderboardBots();
+  attachDragScroll(document.getElementById('rankGallery'));
+  attachDragScroll(document.getElementById('achvGallery'));
+  attachDragScroll(document.getElementById('lbList'));
+  buildPortfolioStaticUI();
+  renderPortfolio();
+  onRecurringToggle();
+  selectDuration(0, document.querySelector('#durationGroup .seg-btn'));
+  checkAuthOnLoad();
+</script>
+</body>
+</html>

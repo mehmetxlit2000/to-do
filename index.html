@@ -162,6 +162,13 @@
       min-height:32px;
     }
     .link-btn svg{width:11px; height:11px;}
+    .quick-icons-row{display:flex; gap:14px; margin-top:12px; flex-wrap:wrap; position:relative; z-index:1;}
+    .quick-icon{
+      width:19px; height:19px; cursor:pointer; color:var(--ink-soft);
+      transition:color .15s ease, filter .15s ease;
+    }
+    .quick-icon:hover{color:var(--ink);}
+    .quick-icon.active{color:var(--ink); filter:drop-shadow(0 0 6px var(--glow-mid));}
 
     .badge-wrap{position:relative; display:inline-block; line-height:0;}
     .badge-wrap.glow{animation:badgeEmber 2.6s ease-in-out infinite;}
@@ -484,7 +491,76 @@
     .lb-rankname{font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
     .lb-xp{font-family:'Orbitron',sans-serif; font-weight:800; font-size:12.5px; flex:none; text-align:right;}
     .lb-rarity{flex:none; font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.06em; padding:2px 7px; border-radius:100px; border:1px solid rgba(255,255,255,.3); color:inherit; text-transform:uppercase; opacity:.85;}
+    /* ==================== FITNESS / BİYOMETRİK HUD ==================== */
+    :root{ --fx-power:#ff2b2b; --fx-fuel:#ffb020; --fx-water:#2bd4e0; }
+    html[data-theme="light"]{ --fx-power:#e11d5e; --fx-fuel:#d97706; --fx-water:#0891b2; }
 
+    #fitnessPanel{ position:relative; overflow:hidden; }
+    #fitnessPanel::before{
+      content:''; position:absolute; inset:0; pointer-events:none; opacity:.5;
+      background-image:
+              linear-gradient(var(--line-soft) 1px, transparent 1px),
+              linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+      background-size: 26px 26px; mask-image: radial-gradient(ellipse 100% 70% at 50% 0%, black 0%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse 100% 70% at 50% 0%, black 0%, transparent 75%);
+    }
+    #fitnessPanel > *{ position:relative; z-index:1; }
+
+    .fx-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+    .fx-head h3{ margin:0; }
+    .fx-head-tag{
+      font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.18em; text-transform:uppercase;
+      color:var(--fx-power); display:flex; align-items:center; gap:6px; padding:5px 10px; border:1px solid var(--fx-power);
+      border-radius:3px; background:rgba(255,43,43,.06);
+    }
+    .fx-head-tag .fx-blip{ width:5px; height:5px; border-radius:50%; background:var(--fx-power); box-shadow:0 0 8px var(--fx-power); animation:fxBlip 1.6s ease-in-out infinite; }
+    @keyframes fxBlip{ 0%,100%{opacity:1;} 50%{opacity:.25;} }
+
+    .fx-panel{ position:relative; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:16px; }
+    .fx-panel::before, .fx-panel::after{ content:''; position:absolute; width:12px; height:12px; opacity:.55; pointer-events:none; }
+    .fx-panel::before{ top:6px; left:6px; border-top:1.5px solid var(--fx-power); border-left:1.5px solid var(--fx-power); }
+    .fx-panel::after{ bottom:6px; right:6px; border-bottom:1.5px solid var(--fx-power); border-right:1.5px solid var(--fx-power); }
+    .fx-panel-label{ font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 12px; display:block; }
+
+    .fx-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px; }
+    @media (max-width:600px){ .fx-grid{ grid-template-columns:1fr; } }
+
+    .fx-scanwrap{ position:relative; width:180px; height:180px; margin:0 auto; display:flex; align-items:center; justify-content:center; }
+    .fx-scanring{ position:absolute; inset:0; border-radius:50%; border:1px solid var(--line); }
+    .fx-scanring.r2{ inset:16px; }
+    .fx-scanring.r3{ inset:32px; border-style:dashed; opacity:.5; }
+    .fx-scansweep{ position:absolute; inset:0; border-radius:50%; overflow:hidden; opacity:.35; background:conic-gradient(from 0deg, var(--fx-power), transparent 22%); animation:fxSweep 3.2s linear infinite; }
+    @keyframes fxSweep{ 100%{ transform:rotate(360deg); } }
+
+    .power-core-wrap{ position:relative; width:170px; height:170px; margin:0 auto 10px; flex:none; }
+    .power-core-ticks{ position:absolute; inset:-8px; border-radius:50%; background:repeating-conic-gradient(var(--line) 0deg 1.6deg, transparent 1.6deg 15deg);
+      -webkit-mask:radial-gradient(closest-side, transparent 84%, black 85%, black 100%); mask:radial-gradient(closest-side, transparent 84%, black 85%, black 100%); }
+    .power-core-svg{ position:absolute; inset:0; transform:rotate(-90deg); }
+    .power-core-track{ fill:none; stroke:var(--line); stroke-width:9; }
+    .power-core-fill{ fill:none; stroke:var(--fx-power); stroke-width:9; stroke-linecap:round; filter:drop-shadow(0 0 8px var(--fx-power)); transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1); }
+    .power-core-label{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .power-core-num{ font-family:'Orbitron',sans-serif; font-size:36px; font-weight:800; text-shadow:0 0 16px var(--glow-mid); line-height:1; }
+    .power-core-sub{ font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft); margin-top:4px; }
+
+    .power-bar-row{ display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+    .power-bar-row:last-child{ margin-bottom:0; }
+    .power-bar-label{ display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.03em; color:var(--ink-soft); width:100px; flex:none; text-transform:uppercase; }
+    .power-bar-track{ flex:1; height:7px; background:var(--panel-alt); border:1px solid var(--line); border-radius:4px; overflow:hidden; position:relative; }
+    .power-bar-fill{ height:100%; background:linear-gradient(90deg, var(--fx-power), #ff8a8a); border-radius:4px; box-shadow:0 0 8px var(--glow-mid); transition:width .6s cubic-bezier(.4,0,.2,1); }
+    .power-bar-val{ font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink); width:28px; text-align:right; flex:none; }
+
+    .fuel-row{ display:flex; gap:14px; flex-wrap:wrap; justify-content:space-around; }
+    .fuel-cell{ display:flex; flex-direction:column; align-items:center; gap:8px; flex:1; min-width:80px; }
+    .fuel-ring{ width:76px; height:76px; border-radius:50%; position:relative; display:flex; align-items:center; justify-content:center; background:conic-gradient(var(--fc,var(--fx-fuel)) calc(var(--fp,0)*1%), var(--line) 0); }
+    .fuel-ring::before{ content:''; position:absolute; inset:7px; border-radius:50%; background:var(--panel); }
+    .fuel-ring-inner{ position:relative; z-index:1; text-align:center; }
+    .fuel-ring-inner b{ display:block; font-family:'Orbitron',sans-serif; font-size:13px; }
+    .fuel-cell-name{ font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); }
+    .fuel-kcal{ font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-faint); }
+
+    .water-readout-sub{ font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--fx-water); letter-spacing:.06em; }
+
+    @media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important;} }
     @media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important;} }
     @media (max-width:600px){ .grid-2{grid-template-columns:1fr;} }
     @media (max-width:480px){
@@ -549,6 +625,10 @@
         <button class="link-btn" id="achvToggle" onclick="togglePanel('achvPanel','achvToggle','Başarımları')"></button>
         <button class="link-btn" id="lbToggle" onclick="togglePanel('lbPanel','lbToggle','Sıralamayı')"></button>
       </div>
+      <div class="quick-icons-row" id="quickIconsRow">
+        <span id="portfolioQuickBtn" onclick="toggleQuickIcon('portfolioPanel','portfolioQuickBtn')" title="Portföyüm (TL)"></span>
+        <span id="fitnessQuickBtn" onclick="toggleQuickIcon('fitnessPanel','fitnessQuickBtn')" title="Spor Gelişimim"></span>
+      </div>
     </div>
   </div>
 
@@ -579,6 +659,108 @@
       <div class="lb-list" id="lbList"></div>
     </div>
   </div>
+
+
+  <div class="panel gallery-panel" id="portfolioPanel" style="margin-bottom:14px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:4px; flex-wrap:wrap;">
+      <h3 style="margin:0;">Portföyüm</h3>
+      <button class="btn-text" id="portfolioRefreshBtn" onclick="fetchMarketPrices()" style="display:flex; align-items:center; gap:5px;"></button>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div id="portfolioTotal" style="font-family:'Orbitron',sans-serif; font-size:26px; font-weight:800; text-shadow:0 0 14px var(--glow-mid);">₺0,00</div>
+      <div id="portfolioMeta" style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); margin-top:3px;"></div>
+    </div>
+    <div id="portfolioHoldings" style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;"></div>
+    <div class="add-row" style="margin-bottom:0;">
+      <select id="portfolioAssetSelect" style="flex:1;"></select>
+      <label class="field-icon-input" style="width:120px;">
+        <span id="portfolioQtyIcon"></span>
+        <input type="number" id="portfolioQtyInput" min="0" step="any" placeholder="Miktar">
+      </label>
+      <button class="btn" id="portfolioAddBtn" onclick="addPortfolioQty()" style="min-width:110px;"></button>
+    </div>
+  </div>
+
+  <div class="panel gallery-panel" id="fitnessPanel" style="margin-bottom:14px;">
+    <div class="fx-head">
+      <h3 style="margin:0;">Spor Gelişimim</h3>
+      <span class="fx-head-tag"><span class="fx-blip"></span> CANLI VERİ</span>
+    </div>
+
+    <div class="fx-panel" style="margin-bottom:16px;">
+      <span class="fx-panel-label">Biyometrik Girdi</span>
+      <div class="add-row">
+        <label class="field-icon-input" style="width:110px;"><span id="fHeightIcon"></span><input type="number" id="fHeight" placeholder="Boy (cm)"></label>
+        <label class="field-icon-input" style="width:110px;"><span id="fWeightIcon"></span><input type="number" id="fWeight" placeholder="Kilo (kg)"></label>
+        <label class="field-icon-input" style="width:90px;"><span id="fAgeIcon"></span><input type="number" id="fAge" placeholder="Yaş"></label>
+        <select id="fGender" style="flex:none; width:110px;">
+          <option value="male">Erkek</option>
+          <option value="female">Kadın</option>
+        </select>
+        <label class="field-icon-input" style="width:130px;"><span id="fBodyFatIcon"></span><input type="number" id="fBodyFat" placeholder="Yağ oranı %"></label>
+        <button class="btn" id="fSaveStatsBtn" onclick="saveFitnessStats()" style="min-width:110px;"></button>
+      </div>
+    </div>
+
+    <div class="fx-grid">
+      <div class="fx-panel">
+        <span class="fx-panel-label">Vücut Taraması</span>
+        <div id="humanFigureWrap"></div>
+      </div>
+      <div class="fx-panel">
+        <span class="fx-panel-label">Hareket Rekorların (1RM)</span>
+        <div class="add-row"><label class="field-icon-input" style="width:100%;"><span id="fBenchIcon"></span><input type="number" id="fBench" placeholder="Incline Bench Press (1x1, kg)"></label></div>
+        <div class="add-row"><label class="field-icon-input" style="width:100%;"><span id="fDeadliftIcon"></span><input type="number" id="fDeadlift" placeholder="Deadlift (1x1, kg)"></label></div>
+        <div class="add-row"><label class="field-icon-input" style="width:100%;"><span id="fLatIcon"></span><input type="number" id="fLat" placeholder="Lat Pull Down (1x8, kg)"></label></div>
+        <div class="add-row"><label class="field-icon-input" style="width:100%;"><span id="fLateralIcon"></span><input type="number" id="fLateral" placeholder="Lateral Raise (1x8, kg)"></label></div>
+        <div class="add-row"><button class="btn btn-add" id="fSaveLiftsBtn" onclick="saveFitnessLifts()"></button></div>
+      </div>
+    </div>
+
+    <div class="fx-panel" style="margin-top:14px;">
+      <span class="fx-panel-label">Güç Çekirdeği</span>
+      <div id="strengthGauges"></div>
+    </div>
+
+    <div class="fx-panel" style="margin-top:14px;">
+      <span class="fx-panel-label">Güç Gelişim Grafiği</span>
+      <div class="week-chart" id="strengthChart" style="height:80px;"></div>
+    </div>
+
+    <div class="fx-grid">
+      <div class="fx-panel">
+        <span class="fx-panel-label">Günlük Yakıt İhtiyacın</span>
+        <div id="macroSummary"></div>
+      </div>
+      <div class="fx-panel">
+        <span class="fx-panel-label">Vitamin & Takviyeler</span>
+        <div id="supplementList"></div>
+      </div>
+    </div>
+
+    <div class="fx-panel" style="margin-top:14px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+        <span class="fx-panel-label" style="margin:0;">Hidrasyon</span>
+        <span id="waterMeta" class="water-readout-sub"></span>
+      </div>
+      <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
+        <div id="waterJugWrap" style="flex:none;"></div>
+        <div style="flex:1; min-width:200px; display:flex; flex-direction:column; gap:8px;">
+          <div class="add-row" style="margin-bottom:0;">
+            <button class="btn btn-ghost" onclick="logWater(250)">+250ml</button>
+            <button class="btn btn-ghost" onclick="logWater(500)">+500ml</button>
+            <button class="btn btn-ghost" onclick="logWater(750)">+750ml</button>
+          </div>
+          <div class="add-row" style="margin-bottom:0;">
+            <input type="number" id="waterCustomInput" placeholder="Özel miktar (ml)" style="flex:1;">
+            <button class="btn" onclick="logWaterCustom()">Ekle</button>
+          </div>
+          <button class="btn-text" onclick="resetWaterToday()" style="align-self:flex-start;">Bugünü sıfırla</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <div class="grid-2">
     <div class="panel">
@@ -615,26 +797,6 @@
         <span class="cal-legend"><span class="cal-dot"></span> Başarılı gün</span>
       </h3>
       <div class="month-cal" id="monthCalendar"></div>
-    </div>
-  </div>
-
-  <div class="panel" id="portfolioPanel" style="margin-bottom:14px;">
-    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:4px; flex-wrap:wrap;">
-      <h3 style="margin:0;">Portföyüm</h3>
-      <button class="btn-text" id="portfolioRefreshBtn" onclick="fetchMarketPrices()" style="display:flex; align-items:center; gap:5px;"></button>
-    </div>
-    <div style="margin-bottom:14px;">
-      <div id="portfolioTotal" style="font-family:'Orbitron',sans-serif; font-size:26px; font-weight:800; text-shadow:0 0 14px var(--glow-mid);">₺0,00</div>
-      <div id="portfolioMeta" style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); margin-top:3px;"></div>
-    </div>
-    <div id="portfolioHoldings" style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;"></div>
-    <div class="add-row" style="margin-bottom:0;">
-      <select id="portfolioAssetSelect" style="flex:1;"></select>
-      <label class="field-icon-input" style="width:120px;">
-        <span id="portfolioQtyIcon"></span>
-        <input type="number" id="portfolioQtyInput" min="0" step="any" placeholder="Miktar">
-      </label>
-      <button class="btn" id="portfolioAddBtn" onclick="addPortfolioQty()" style="min-width:110px;"></button>
     </div>
   </div>
 
@@ -823,12 +985,15 @@
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
     moon: '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>',
     coins: '<circle cx="9" cy="9" r="6"/><path d="M14.5 8a6 6 0 1 1 0 9.9"/>',
+    dollar: '<path d="M12 2v20"/><path d="M17 6.5c0-1.9-2.2-3-5-3s-5 1.1-5 3 2.2 2.6 5 3 5 1.1 5 3-2.2 3-5 3-5-1.1-5-3"/>',
     wallet: '<path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v3"/><path d="M3 7v10a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1h-4a2 2 0 0 0 0 4h5"/>',
     palette: '<circle cx="12" cy="12" r="9"/><circle cx="8.5" cy="10" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="8" r="1.3" fill="currentColor" stroke="none"/><circle cx="15.5" cy="10" r="1.3" fill="currentColor" stroke="none"/><circle cx="10" cy="14" r="1.3" fill="currentColor" stroke="none"/><path d="M12 3a9 9 0 0 0 0 18c1.2 0 1.8-.9 1.3-1.9-.3-.6-.1-1.3.5-1.6.4-.2.9-.2 1.3 0 1.4.7 2.9-.4 2.9-2 0-6.9-2.8-12.5-6-12.5z"/>',
     user: '<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/>',
     male: '<circle cx="10" cy="14" r="6"/><path d="M14.5 9.5 20 4M14 4h6v6"/>',
     female: '<circle cx="12" cy="9" r="6"/><path d="M12 15v7M8.5 19h7"/>',
-    logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>'
+    logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',
+    dumbbell: '<path d="M4 12h2M18 12h2M2 9v6M22 9v6M6 7v10M18 7v10M8 12h8"/>',
+    droplet: '<path d="M12 2s7 8 7 13a7 7 0 0 1-14 0c0-5 7-13 7-13z"/>'
   };
   function icon(name, size){
     size = size || 14;
@@ -1250,6 +1415,353 @@
     }
   }
 
+  /* ===================== SPOR GELİŞİMİ ===================== */
+  let fitness = {
+    height: null, weight: null, age: null, gender: 'male', bodyFat: null,
+    lifts: { bench:null, deadlift:null, lat:null, lateral:null },
+    liftHistory: [],
+    waterConsumed: 0, waterDate: null
+  };
+
+  function epley1RM(weight, reps){
+    if(!weight || !reps) return 0;
+    return weight * (1 + reps/30);
+  }
+
+  function saveFitnessStats(){
+    const h = parseFloat(document.getElementById('fHeight').value);
+    const w = parseFloat(document.getElementById('fWeight').value);
+    const a = parseFloat(document.getElementById('fAge').value);
+    const g = document.getElementById('fGender').value;
+    const bf = parseFloat(document.getElementById('fBodyFat').value);
+    if(h>0) fitness.height = h;
+    if(w>0) fitness.weight = w;
+    if(a>0) fitness.age = a;
+    fitness.gender = g;
+    if(bf>=0 && !isNaN(bf)) fitness.bodyFat = bf;
+    saveState();
+    renderFitness();
+    showTopToast('Vücut bilgilerin kaydedildi', 'info', 'check');
+  }
+
+  function saveFitnessLifts(){
+    const b = parseFloat(document.getElementById('fBench').value);
+    const d = parseFloat(document.getElementById('fDeadlift').value);
+    const l = parseFloat(document.getElementById('fLat').value);
+    const lr = parseFloat(document.getElementById('fLateral').value);
+    if(b>0) fitness.lifts.bench = b;
+    if(d>0) fitness.lifts.deadlift = d;
+    if(l>0) fitness.lifts.lat = l;
+    if(lr>0) fitness.lifts.lateral = lr;
+
+    const score = computeStrengthScore();
+    const map = {};
+    fitness.liftHistory.forEach(e => map[e.date] = e.score);
+    map[todayStr()] = score.total;
+    fitness.liftHistory = Object.keys(map).sort().slice(-14).map(dt => ({date:dt, score:map[dt]}));
+
+    saveState();
+    renderFitness();
+    showTopToast('Rekorların kaydedildi', 'info', 'bolt');
+  }
+
+  /* Güç standartları: vücut ağırlığına oran [acemi, novice, orta, ileri, elit] */
+  const STRENGTH_STANDARDS = {
+    bench:    [0.425, 0.6375, 1.0625, 1.4875, 1.9125],
+    deadlift: [0.75, 1.25, 1.75, 2.25, 2.75],
+    lat:      [0.5, 0.75, 1.0, 1.35, 1.7],
+    lateral:  [0.15, 0.25, 0.35, 0.5, 0.65]
+  };
+  function ratioToScore(ratio, standards){
+    const tiers = [0, 25, 50, 75, 100];
+    if(ratio <= standards[0]) return (ratio/standards[0])*25;
+    for(let i=1;i<standards.length;i++){
+      if(ratio <= standards[i]){
+        const span = standards[i]-standards[i-1];
+        const t = span>0 ? (ratio-standards[i-1])/span : 0;
+        return tiers[i-1] + t*(tiers[i]-tiers[i-1]);
+      }
+    }
+    const over = (ratio - standards[4]) / (standards[4]-standards[3]);
+    return Math.min(130, 100 + over*25);
+  }
+  function computeStrengthScore(){
+    const w = fitness.weight;
+    const out = { bench:0, deadlift:0, lat:0, lateral:0, total:0 };
+    if(!w || w<=0) return out;
+    const benchRM = fitness.lifts.bench || 0;
+    const deadliftRM = fitness.lifts.deadlift || 0;
+    const latRM = epley1RM(fitness.lifts.lat, 8);
+    const lateralRM = epley1RM(fitness.lifts.lateral, 8);
+    out.bench = Math.round(ratioToScore(benchRM/w, STRENGTH_STANDARDS.bench));
+    out.deadlift = Math.round(ratioToScore(deadliftRM/w, STRENGTH_STANDARDS.deadlift));
+    out.lat = Math.round(ratioToScore(latRM/w, STRENGTH_STANDARDS.lat));
+    out.lateral = Math.round(ratioToScore(lateralRM/w, STRENGTH_STANDARDS.lateral));
+    const vals = [out.bench, out.deadlift, out.lat, out.lateral];
+    out.total = Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+    return out;
+  }
+  function strengthLabel(score){
+    if(score < 20) return 'Başlangıç';
+    if(score < 45) return 'Acemi';
+    if(score < 70) return 'Orta Seviye';
+    if(score < 95) return 'İleri Seviye';
+    return 'Elit';
+  }
+
+  function renderStrengthGauges(){
+    const el = document.getElementById('strengthGauges');
+    if(!el) return;
+    const s = computeStrengthScore();
+    const C = 2 * Math.PI * 66;
+    const pct = Math.max(0, Math.min(100, s.total));
+    const offset = C - (C * pct / 100);
+    const rows = [
+      { label:'Bench', val:s.bench },
+      { label:'Deadlift', val:s.deadlift },
+      { label:'Lat Pull', val:s.lat },
+      { label:'Lateral', val:s.lateral }
+    ];
+    el.innerHTML = `
+    <div style="display:flex; gap:24px; align-items:center; flex-wrap:wrap; justify-content:center;">
+      <div class="power-core-wrap">
+        <div class="power-core-ticks"></div>
+        <svg class="power-core-svg" viewBox="0 0 160 160">
+          <circle class="power-core-track" cx="80" cy="80" r="66"></circle>
+          <circle class="power-core-fill" cx="80" cy="80" r="66" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}"></circle>
+        </svg>
+        <div class="power-core-label">
+          <div class="power-core-num">${s.total}</div>
+          <div class="power-core-sub">${strengthLabel(s.total)}</div>
+        </div>
+      </div>
+      <div style="flex:1; min-width:180px;">
+        ${rows.map(r => `<div class="power-bar-row">
+          <span class="power-bar-label">${icon('dumbbell',11)} ${r.label}</span>
+          <div class="power-bar-track"><div class="power-bar-fill" style="width:${Math.min(100,r.val)}%"></div></div>
+          <span class="power-bar-val">${r.val}</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  function renderStrengthChart(){
+    const el = document.getElementById('strengthChart');
+    if(!el) return;
+    const hist = fitness.liftHistory.slice(-7);
+    if(hist.length === 0){
+      el.innerHTML = `<div class="empty-state" style="padding:16px; width:100%;"><p>Henüz rekor girişi yok.</p></div>`;
+      return;
+    }
+    const max = Math.max(1, ...hist.map(h=>h.score));
+    el.innerHTML = hist.map(h => {
+      const hgt = Math.max(6, (h.score/max)*60);
+      const d = new Date(h.date);
+      const lbl = `${d.getDate()}/${d.getMonth()+1}`;
+      return `<div class="week-bar-col">
+      <div class="week-bar has-data" style="height:${hgt}px" title="${h.score} puan"></div>
+      <div class="week-bar-label">${lbl}</div>
+    </div>`;
+    }).join('');
+  }
+
+  /* ---- Beslenme (Mifflin-St Jeor formülü) ---- */
+  function computeNutrition(){
+    const { height:h, weight:w, age:a, gender:g } = fitness;
+    if(!h || !w || !a) return null;
+    const bmr = g === 'female' ? (10*w + 6.25*h - 5*a - 161) : (10*w + 6.25*h - 5*a + 5);
+    const tdee = bmr * 1.55; // orta-yoğun antrenman aktivite katsayısı
+    const proteinG = Math.round(w * 1.8);
+    const fatG = Math.round((tdee*0.25)/9);
+    const carbG = Math.round(Math.max(0, tdee - proteinG*4 - fatG*9)/4);
+    return { tdee:Math.round(tdee), proteinG, carbG, fatG };
+  }
+  function renderMacros(){
+    const el = document.getElementById('macroSummary');
+    if(!el) return;
+    const n = computeNutrition();
+    if(!n){
+      el.innerHTML = `<div class="empty-state" style="padding:16px;"><p>Boy, kilo ve yaşını gir.</p></div>`;
+      return;
+    }
+    const proteinKcal = n.proteinG*4, carbKcal = n.carbG*4, fatKcal = n.fatG*9;
+    const cells = [
+      { name:'Protein', g:n.proteinG, kcal:proteinKcal, color:'var(--fx-power)' },
+      { name:'Karbonhidrat', g:n.carbG, kcal:carbKcal, color:'var(--fx-fuel)' },
+      { name:'Yağ', g:n.fatG, kcal:fatKcal, color:'#b06bff' }
+    ];
+    el.innerHTML = `
+    <div style="text-align:center; margin-bottom:14px;">
+      <div style="font-family:'Orbitron',sans-serif; font-size:24px; font-weight:800;">${n.tdee}</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); letter-spacing:.1em; text-transform:uppercase;">kcal / gün</div>
+    </div>
+    <div class="fuel-row">
+      ${cells.map(c => `<div class="fuel-cell">
+        <div class="fuel-ring" style="--fc:${c.color}; --fp:${Math.round(c.kcal/n.tdee*100)};">
+          <div class="fuel-ring-inner"><b>${c.g}g</b></div>
+        </div>
+        <span class="fuel-cell-name">${c.name}</span>
+        <span class="fuel-kcal">${Math.round(c.kcal)} kcal</span>
+      </div>`).join('')}
+    </div>
+    <p style="font-size:10px; color:var(--ink-soft); margin-top:14px; text-align:center;">Genel bilimsel referans aralıklarıdır.</p>`;
+  }
+
+  function renderSupplements(){
+    const el = document.getElementById('supplementList');
+    if(!el) return;
+    const w = fitness.weight || 0;
+    const items = [
+      { name:'A Vitamini', dose: fitness.gender==='female' ? '700 mcg' : '900 mcg' },
+      { name:'B Kompleks', dose:'Günlük referans (1 tablet)' },
+      { name:'C Vitamini', dose: fitness.gender==='female' ? '75 mg' : '90 mg' },
+      { name:'D Vitamini', dose:'1000–2000 IU' },
+      { name:'Multivitamin', dose:'Günde 1 tablet' },
+      { name:'Kreatin Monohidrat', dose:'3–5 g' },
+      { name:'Ginseng', dose:'200–400 mg' },
+      { name:'ZMA', dose:'Gece 1 doz (Çinko 30mg/Mg 450mg/B6 ~10mg)' },
+      { name:'L-Arginin', dose:'3–6 g' },
+      { name:'BCAA', dose: w>0 ? Math.round(w*0.04)+' g (antrenman günü)' : '5–10 g (antrenman günü)' }
+    ];
+    el.innerHTML = `<div class="cat-chart">${items.map(i => `
+    <div class="cat-bar-row" style="align-items:flex-start;">
+      <span class="cat-bar-label" style="width:130px;">${icon('gem',12)} ${i.name}</span>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft);">${i.dose}</span>
+    </div>`).join('')}</div>
+    <p style="font-size:10px; color:var(--ink-soft); margin-top:10px;">Genel bilimsel referans aralıklarıdır.</p>`;
+  }
+
+  /* ---- Vücut figürü (yağ oranına göre) ---- */
+  function renderHumanFigure(){
+    const wrap = document.getElementById('humanFigureWrap');
+    if(!wrap) return;
+    const bf = fitness.bodyFat;
+    const fatFactor = bf==null ? 0.4 : Math.max(0, Math.min(1, (bf-8)/(35-8)));
+    const torsoW = 40 + fatFactor*26;
+    const armW = 10 + fatFactor*7;
+    const legW = 13 + fatFactor*8;
+    const armGap = 20 + fatFactor*12;
+    const legGap = 3 + fatFactor*3;
+    const abOpacity = Math.max(0, 0.85 - fatFactor*0.85);
+    const label = bf==null ? 'Yağ oranını gir' : (bf<10?'Çok Düşük':bf<15?'Atletik':bf<22?'Normal':bf<30?'Ortalama Üstü':'Yüksek');
+
+    wrap.innerHTML = `
+    <div class="fx-scanwrap">
+      <div class="fx-scanring"></div>
+      <div class="fx-scanring r2"></div>
+      <div class="fx-scanring r3"></div>
+      <div class="fx-scansweep"></div>
+      <svg width="150" height="150" viewBox="0 0 150 220" style="position:relative; z-index:1;">
+        <g transform="translate(75,110)">
+          <ellipse cx="0" cy="-78" rx="15" ry="17" fill="var(--ink-soft)" opacity="0.9"/>
+          <rect x="${-torsoW/2}" y="-58" width="${torsoW}" height="64" rx="13" fill="var(--ink)" opacity="0.9"/>
+          <rect x="${-torsoW/2-armGap}" y="-55" width="${armW}" height="58" rx="5" fill="var(--ink-soft)" opacity="0.9"/>
+          <rect x="${torsoW/2+armGap-armW}" y="-55" width="${armW}" height="58" rx="5" fill="var(--ink-soft)" opacity="0.9"/>
+          <rect x="${-legGap-legW}" y="6" width="${legW}" height="64" rx="6" fill="var(--ink)" opacity="0.9"/>
+          <rect x="${legGap}" y="6" width="${legW}" height="64" rx="6" fill="var(--ink)" opacity="0.9"/>
+          <g opacity="${abOpacity}">
+            <line x1="0" y1="-48" x2="0" y2="-6" stroke="var(--panel)" stroke-width="1.6"/>
+            <line x1="-10" y1="-38" x2="10" y2="-38" stroke="var(--panel)" stroke-width="1.6"/>
+            <line x1="-10" y1="-25" x2="10" y2="-25" stroke="var(--panel)" stroke-width="1.6"/>
+            <line x1="-10" y1="-12" x2="10" y2="-12" stroke="var(--panel)" stroke-width="1.6"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div class="fx-panel-label" style="text-align:center; margin-top:10px; margin-bottom:0;">${bf!=null?bf+'% YAĞ · ':''}${label.toUpperCase()}</div>`;
+  }
+
+  /* ---- Su takibi (damacana) ---- */
+  function dailyWaterTargetMl(){
+    const w = fitness.weight;
+    if(!w) return 2500;
+    return Math.round(w * 35); // kilogram başına ~35ml genel bilimsel öneri
+  }
+  function checkWaterDayReset(){
+    const today = todayStr();
+    if(fitness.waterDate !== today){
+      fitness.waterDate = today;
+      fitness.waterConsumed = 0;
+    }
+  }
+  function logWater(ml){
+    checkWaterDayReset();
+    const target = dailyWaterTargetMl();
+    fitness.waterConsumed = Math.min(target*1.5, (fitness.waterConsumed||0) + ml);
+    saveState();
+    renderWaterJug();
+    showTopToast(`+${ml}ml su eklendi`, 'info', 'droplet');
+  }
+  function logWaterCustom(){
+    const input = document.getElementById('waterCustomInput');
+    const v = parseFloat(input.value);
+    if(!v || v<=0) return;
+    logWater(Math.round(v));
+    input.value = '';
+  }
+  function resetWaterToday(){
+    fitness.waterConsumed = 0;
+    saveState();
+    renderWaterJug();
+  }
+  function renderWaterJug(){
+    const wrap = document.getElementById('waterJugWrap');
+    const meta = document.getElementById('waterMeta');
+    if(!wrap) return;
+    checkWaterDayReset();
+    const target = dailyWaterTargetMl();
+    const consumed = fitness.waterConsumed || 0;
+    const pct = Math.max(0, Math.min(100, (consumed/target)*100));
+    const fillHeight = 150 * (pct/100);
+    const fillY = 165 - fillHeight;
+    if(meta) meta.textContent = `${consumed} / ${target} ml`;
+    wrap.innerHTML = `
+    <svg width="110" height="190" viewBox="0 0 110 190">
+      <defs>
+        <clipPath id="jugClip"><path d="M20 20 Q20 10 30 10 L80 10 Q90 10 90 20 L90 155 Q90 175 55 178 Q20 175 20 155 Z"/></clipPath>
+        <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--fx-water)" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="var(--fx-water)" stop-opacity="0.4"/>
+        </linearGradient>
+      </defs>
+      <path d="M20 20 Q20 10 30 10 L80 10 Q90 10 90 20 L90 155 Q90 175 55 178 Q20 175 20 155 Z" fill="var(--panel-alt)" stroke="var(--line)" stroke-width="2"/>
+      <g clip-path="url(#jugClip)">
+        <rect x="15" y="${fillY}" width="80" height="${Math.max(0,fillHeight)+30}" fill="url(#waterGrad)">
+          <animate attributeName="y" from="190" to="${fillY}" dur="1s" fill="freeze"/>
+        </rect>
+     <path d="M15 ${fillY} Q35 ${fillY-6} 55 ${fillY} T95 ${fillY} V${fillY+30} H15 Z" fill="var(--fx-water)" opacity="0.3">
+             <animate attributeName="d"
+            values="M15 ${fillY} Q35 ${fillY-6} 55 ${fillY} T95 ${fillY} V${fillY+30} H15 Z;
+                    M15 ${fillY} Q35 ${fillY+6} 55 ${fillY} T95 ${fillY} V${fillY+30} H15 Z;
+                    M15 ${fillY} Q35 ${fillY-6} 55 ${fillY} T95 ${fillY} V${fillY+30} H15 Z"
+            dur="3s" repeatCount="indefinite"/>
+        </path>
+      </g>
+      <path d="M20 20 Q20 10 30 10 L80 10 Q90 10 90 20 L90 155 Q90 175 55 178 Q20 175 20 155 Z" fill="none" stroke="var(--line)" stroke-width="2"/>
+      <rect x="38" y="2" width="34" height="10" rx="3" fill="var(--panel-alt)" stroke="var(--line)" stroke-width="1.5"/>
+      <text x="55" y="100" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" fill="var(--fx-water)">${Math.round(pct)}%</text>
+    </svg>`;
+  }
+
+  function renderFitness(){
+    const hEl = document.getElementById('fHeight'); if(!hEl) return;
+    hEl.value = fitness.height || '';
+    document.getElementById('fWeight').value = fitness.weight || '';
+    document.getElementById('fAge').value = fitness.age || '';
+    document.getElementById('fGender').value = fitness.gender || 'male';
+    document.getElementById('fBodyFat').value = fitness.bodyFat!=null ? fitness.bodyFat : '';
+    document.getElementById('fBench').value = fitness.lifts.bench || '';
+    document.getElementById('fDeadlift').value = fitness.lifts.deadlift || '';
+    document.getElementById('fLat').value = fitness.lifts.lat || '';
+    document.getElementById('fLateral').value = fitness.lifts.lateral || '';
+    renderHumanFigure();
+    renderStrengthGauges();
+    renderStrengthChart();
+    renderMacros();
+    renderSupplements();
+    renderWaterJug();
+  }
+
   const firebaseConfig = {
     apiKey: "AIzaSyBV7jtoXPBcPdclcBseOK39wJsSXUxLpg4",
     databaseURL: "https://atamossocket-default-rtdb.firebaseio.com",
@@ -1291,6 +1803,20 @@
         totalCreated = p?.totalCreated || 0;
         portfolio = p?.portfolio || {};
         renderPortfolio();
+        const loadedFitness = p?.fitness || {};
+        fitness = {
+          height: loadedFitness.height ?? null,
+          weight: loadedFitness.weight ?? null,
+          age: loadedFitness.age ?? null,
+          gender: loadedFitness.gender || 'male',
+          bodyFat: loadedFitness.bodyFat ?? null,
+          lifts: Object.assign({ bench:null, deadlift:null, lat:null, lateral:null }, loadedFitness.lifts || {}),
+          liftHistory: loadedFitness.liftHistory || [],
+          waterConsumed: loadedFitness.waterConsumed || 0,
+          waterDate: loadedFitness.waterDate || null
+        };
+        checkWaterDayReset();
+        renderFitness();
         tasks.forEach(t=>{
           if(!t.type) t.type = 'once';
           if(t.autoFailed===undefined) t.autoFailed=false;
@@ -1317,7 +1843,7 @@
       await userRef.set({
         tasks, xp, streak, lastActiveDate, totalCompleted, completionsByDate,
         totalFailed, highPriorityCompleted, timedCompleted, categoryCompletions,
-        nightOwlCompletions, morningCompletions, weekendCompletions, totalCreated, portfolio
+        nightOwlCompletions, morningCompletions, weekendCompletions, totalCreated, portfolio, fitness
       });
     }catch(e){ console.error('Kaydetme hatası', e); }
   }
@@ -1335,7 +1861,25 @@
     btn.innerHTML = `${icon('layers',11)} ${label} ${open ? 'gizle' : 'gör'}`;
     if(open){ buildRankGallery(); buildAchvGallery(); buildLeaderboard(); }
   }
+  function toggleQuickIcon(panelId, btnId){
+    const panel = document.getElementById(panelId);
+    const wrap = document.getElementById(btnId);
+    const svgEl = wrap.querySelector('svg');
+    const isOpen = panel.classList.contains('open');
 
+    closeAllQuickPanels();
+
+    if(!isOpen){
+      panel.classList.add('open');
+      if(svgEl) svgEl.classList.add('active');
+    }
+  }
+
+  const QUICK_PANEL_IDS = ['portfolioPanel', 'fitnessPanel'];
+  function closeAllQuickPanels(){
+    QUICK_PANEL_IDS.forEach(id => document.getElementById(id).classList.remove('open'));
+    document.querySelectorAll('#quickIconsRow .quick-icon').forEach(s => s.classList.remove('active'));
+  }
   const questDraft = { category:'İş', priority:'Orta', duration:0 };
   function selectSeg(kind, value, el){
     questDraft[kind] = value;
@@ -1371,6 +1915,18 @@
     document.getElementById('achvToggle').innerHTML = `${icon('trophy',11)} Başarımları gör`;
     document.getElementById('lbToggle').innerHTML = `${icon('crown',11)} Sıralamayı gör`;
     document.getElementById('lbRefreshBtn').innerHTML = `${icon('refresh',11)} Listeyi yenile`;
+    document.getElementById('portfolioQuickBtn').innerHTML = icon('dollar',19).replace('<svg ', '<svg class="quick-icon" ');
+    document.getElementById('fitnessQuickBtn').innerHTML = icon('dumbbell',19).replace('<svg ', '<svg class="quick-icon" ');
+    document.getElementById('fHeightIcon').innerHTML = icon('scale',14) || '';
+    document.getElementById('fWeightIcon').innerHTML = icon('bolt',14);
+    document.getElementById('fAgeIcon').innerHTML = icon('clock',14);
+    document.getElementById('fBodyFatIcon').innerHTML = icon('gem',14);
+    document.getElementById('fBenchIcon').innerHTML = icon('dumbbell',14);
+    document.getElementById('fDeadliftIcon').innerHTML = icon('dumbbell',14);
+    document.getElementById('fLatIcon').innerHTML = icon('dumbbell',14);
+    document.getElementById('fLateralIcon').innerHTML = icon('dumbbell',14);
+    document.getElementById('fSaveStatsBtn').innerHTML = `${icon('check',14)} Bilgileri Kaydet`;
+    document.getElementById('fSaveLiftsBtn').innerHTML = `${icon('bolt',14)} Rekorları Kaydet`;
     document.getElementById('authShield').innerHTML = icon('lock',26);
     document.getElementById('authBtn').innerHTML = `${icon('shield',14)} Giriş Yap`;
     document.getElementById('profileSaveBtn').innerHTML = `${icon('check',14)} Kaydet`;
@@ -2455,6 +3011,8 @@
   attachDragScroll(document.getElementById('lbList'));
   buildPortfolioStaticUI();
   renderPortfolio();
+  renderFitness();
+  setInterval(() => { checkWaterDayReset(); renderWaterJug(); }, 60000);
   onRecurringToggle();
   selectDuration(0, document.querySelector('#durationGroup .seg-btn'));
   checkAuthOnLoad();

@@ -1872,8 +1872,8 @@
     st.buffer.push(rawMag);
     if(st.buffer.length > 20) st.buffer.shift();
 
-    if(st.buffer.length < 8){
-      if(dbg) dbg.textContent = `kalibre ediliyor... (${st.buffer.length}/8)`;
+    if(st.buffer.length < 10){
+      if(dbg) dbg.textContent = `kalibre ediliyor... (${st.buffer.length}/10)`;
       return;
     }
 
@@ -1881,15 +1881,26 @@
     const variance = st.buffer.reduce((a,b)=>a+(b-mean)*(b-mean),0) / st.buffer.length;
     const std = Math.sqrt(variance);
 
-    // Daha yüksek taban eşik + daha güçlü std çarpanı: ufak titreşimler artık tetiklemiyor
-    const threshold = Math.max(0.9, std * 1.4);
+    // buffer içindeki en yüksek-en düşük fark: yürüyüş sürekli/ritmik salınım üretir,
+    // tek seferlik el sarsıntısı bunu üretmez
+    const bufMax = Math.max(...st.buffer);
+    const bufMin = Math.min(...st.buffer);
+    const peakToPeak = bufMax - bufMin;
+
+    const threshold = Math.max(1.6, std * 1.6);
     const upper = mean + threshold;
     const lower = mean - threshold;
+    const MIN_PEAK_TO_PEAK = 3.0; // bu değerin altındaki hareketler adım sayılmaz
 
     const now = Date.now();
     const MIN_INTERVAL = 200; // 0.2 saniyede en fazla 1 adım
 
-    if(dbg) dbg.textContent = `mag:${rawMag.toFixed(2)} ort:${mean.toFixed(2)} std:${std.toFixed(2)} faz:${st.phase}`;
+    if(dbg) dbg.textContent = `mag:${rawMag.toFixed(2)} ort:${mean.toFixed(2)} std:${std.toFixed(2)} p2p:${peakToPeak.toFixed(2)} faz:${st.phase}`;
+
+    if(peakToPeak < MIN_PEAK_TO_PEAK){
+      st.phase = 'idle';
+      return;
+    }
 
     if(st.phase === 'idle' && rawMag < lower){
       st.phase = 'below';

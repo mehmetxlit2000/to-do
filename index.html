@@ -261,9 +261,6 @@
     .cat-bar-fill{height:100%; background:var(--ink); border-radius:5px; transition:width .5s ease;}
     .cat-bar-count{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); width:18px; text-align:right; flex:none;}
 
-    .split-2{display:grid; grid-template-columns:1fr 1fr; gap:22px;}
-    .split-col{min-width:0;}
-    @media (max-width:640px){ .split-2{grid-template-columns:1fr;} .split-col + .split-col{margin-top:18px; padding-top:18px; border-top:1px solid var(--line);} }
     .cal-legend{display:flex; align-items:center; gap:6px; font-size:9px; letter-spacing:.04em; color:var(--ink-soft); text-transform:none; font-weight:500;}
     .cal-dot{width:8px; height:8px; border-radius:2px; background:var(--ink); box-shadow:0 0 6px var(--glow-mid); flex:none;}
     .month-cal{display:flex; flex-direction:column; gap:5px; max-width:250px; margin:0 auto;}
@@ -435,7 +432,7 @@
       position:absolute; left:50px; top:8px; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:12px;
       color:var(--ink); pointer-events:none; animation:xpFloat 1s ease forwards; text-shadow:0 0 9px var(--glow-mid);
     }
-    .xp-float.neg{color:var(--ink-soft);}
+
     @keyframes xpFloat{ 0%{opacity:0; transform:translateY(0);} 15%{opacity:1;} 100%{opacity:0; transform:translateY(-26px);} }
 
     #snackbar{
@@ -475,7 +472,6 @@
     /* ---- asset logos ---- */
     .asset-logo{width:38px; height:38px; border-radius:10px; flex:none; display:flex; align-items:center; justify-content:center; background:var(--panel-alt); border:1px solid var(--line); overflow:hidden;}
     .asset-logo img{width:100%; height:100%; object-fit:contain; padding:6px;}
-    .asset-logo.stock{font-family:'JetBrains Mono',monospace; font-weight:800; font-size:10px; color:var(--ink); letter-spacing:.02em;}
     .qty-edit-input{width:78px; font-size:12.5px; padding:6px 8px; border-radius:6px; border:1px solid var(--ink); background:var(--bg); color:var(--ink); font-family:'JetBrains Mono',monospace;}
 
     /* ---- leaderboard ---- */
@@ -956,7 +952,7 @@
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
         <span class="fx-panel-label" style="margin:0;">Adım Sayar</span>
         <span id="stepSensorBadge" style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft);"></span>
-        <span id="stepDebugReadout" style="font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-soft); display:block; margin-top:4px;">debug bekleniyor…</span>
+        <span id="stepDebugReadout" style="font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-soft); display:none; margin-top:4px;">debug bekleniyor…</span>
       </div>
       <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
         <div id="stepRingWrap" style="flex:none;"></div>
@@ -1737,8 +1733,7 @@
     waterConsumed: 0, waterDate: null,
     steps: { count: 0, date: null, goal: 8000, history: [] }
   };
-  let stepTracking = false, lastStepTime = 0;
-  // let motionBuffer = [], smoothedMag = 0, stepPhase = 'idle';
+  let stepTracking = false;
   let wakeLock = null;
 
   function epley1RM(weight, reps){
@@ -1937,7 +1932,6 @@
   function startStepTracking(){
     if(stepTracking) return;
     stepTracking = true;
-    window._stepCalib = { min: 0, max: 0, samples: [] };
     window.addEventListener('devicemotion', handleMotionStep);
     requestWakeLockSafe();
     const btn = document.getElementById('stepTrackBtn');
@@ -2579,7 +2573,7 @@
     document.getElementById('recurringLabelText').innerHTML = `${icon('refresh',13)} Sonsuz rutin — süresiz, her gün otomatik tekrar eder`;
     document.getElementById('addTaskBtn').innerHTML = `${icon('plus',14)} Göreve Başla`;
     document.getElementById('addCardIcon').innerHTML = icon('terminal',22);
-    document.getElementById('addCardChevron').innerHTML = icon('chevDown',16);onRecurringToggle
+    document.getElementById('addCardChevron').innerHTML = icon('chevDown',16);
     document.getElementById('celebrateIcon').innerHTML = icon('sparkle',16);
     document.getElementById('galleryToggle').innerHTML = `${icon('layers',11)} Rütbe haritasını gör`;
     document.getElementById('achvToggle').innerHTML = `${icon('trophy',11)} Başarımları gör`;
@@ -2600,8 +2594,7 @@
     document.getElementById('fDeadliftIcon').innerHTML = icon('deadliftIc',20);
     document.getElementById('fLatIcon').innerHTML = icon('latPull',20);
     document.getElementById('fLateralIcon').innerHTML = icon('lateralRaise',20);
-    document.getElementById('fSaveStatsBtn').innerHTML = `${icon('check',14)} Bilgileri Kaydet`;
-    document.getElementById('fSaveStatsBtn').innerHTML = `${icon('check',14)} Bilgileri Kaydet`;
+    document.getElementById('fSaveStatsBtn').innerHTML = `${icon('check',14)} Kaydet`;
     document.getElementById('stepGoalIcon').innerHTML = icon('flag',14);
     document.getElementById('stepKcalLabel').innerHTML = `${icon('bolt',11)} Yakılan Kalori`;
     document.getElementById('stepDistLabel').innerHTML = `${icon('compass',11)} Mesafe`;

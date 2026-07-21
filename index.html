@@ -1215,13 +1215,32 @@
     <p class="modal-eyebrow">GÜVENLİ ERİŞİM</p>
     <div class="auth-shield" id="authShield"></div>
     <p class="modal-rankname" style="font-size:16px;">SYS.TASKCHAIN</p>
-    <p class="modal-sub">Bu panele yalnızca yetkili kullanıcılar erişebilir. Devam etmek için giriş yap.</p>
-    <div class="auth-fields">
-      <input type="text" id="authUser" placeholder="Kullanıcı adı" autocomplete="username">
-      <input type="password" id="authPass" placeholder="Şifre" autocomplete="current-password" onkeydown="if(event.key==='Enter')tryLogin()">
+    <div class="seg-group" style="justify-content:center; margin-bottom:14px;">
+      <button type="button" class="seg-btn active" id="authTabLogin" onclick="setAuthTab('login')">Giriş Yap</button>
+      <button type="button" class="seg-btn" id="authTabRegister" onclick="setAuthTab('register')">Kayıt Ol</button>
     </div>
-    <p class="auth-error" id="authError">Hatalı kullanıcı adı veya şifre.</p>
-    <button class="btn" style="width:100%;" onclick="tryLogin()" id="authBtn"></button>
+    <div class="auth-fields">
+      <input type="text" id="authUser" placeholder="E-posta" autocomplete="username">
+      <input type="password" id="authPass" placeholder="Şifre" autocomplete="current-password" onkeydown="if(event.key==='Enter')tryAuth()">
+    </div>
+    <p class="auth-error" id="authError">Hatalı bilgi.</p>
+    <button class="btn" style="width:100%;" onclick="tryAuth()" id="authBtn"></button>
+
+    <div style="display:flex; align-items:center; gap:10px; margin:16px 0;">
+      <div style="flex:1; height:1px; background:var(--line);"></div>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-soft); letter-spacing:.08em;">VEYA</span>
+      <div style="flex:1; height:1px; background:var(--line);"></div>
+    </div>
+
+    <button type="button" class="btn btn-ghost" style="width:100%;" onclick="signInWithGoogle()">
+      <svg width="16" height="16" viewBox="0 0 48 48" style="flex:none;">
+        <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.1 8 3.1l6-6C34.9 5.4 29.7 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.3-.4-3.5z"/>
+        <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.4 18.9 12 24 12c3.1 0 5.9 1.1 8 3.1l6-6C34.9 5.4 29.7 3 24 3 16 3 9 7.4 6.3 14.7z"/>
+        <path fill="#4CAF50" d="M24 45c5.6 0 10.7-2.1 14.5-5.6l-6.7-5.5C29.6 35.6 26.9 36 24 36c-5.3 0-9.7-3.1-11.3-7.6l-6.6 5.1C9 40.6 16 45 24 45z"/>
+        <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.3 5.6l6.7 5.5C41.5 36.4 44 30.7 44 24c0-1.2-.1-2.3-.4-3.5z"/>
+      </svg>
+      Google ile Devam Et
+    </button>
   </div>
 </div>
 
@@ -1247,8 +1266,20 @@
   </div>
 </div>
 
+<div id="adminModal" class="modal-overlay">
+  <div class="modal-card" style="max-width:480px; text-align:left;">
+    <p class="modal-eyebrow" style="text-align:center;">Yönetim Paneli</p>
+    <input type="text" id="adminSearch" placeholder="Kullanıcı ara…" oninput="renderAdminUserList()" style="margin-bottom:10px;">
+    <div id="adminUserList" style="max-height:340px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
+    <div class="modal-actions" style="margin-top:16px;">
+      <button class="btn btn-ghost" onclick="closeAdminPanel()">Kapat</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script>
   /* ===================== SVG ICON SET (no emoji anywhere) ===================== */
   const ICONS = {
@@ -2425,7 +2456,10 @@
     databaseURL: "https://atamossocket-default-rtdb.firebaseio.com",
     projectId: "atamossocket"
   };
-  let db = null, userRef = null;
+  let db = null, userRef = null, auth = null;
+  let currentUid = null;
+  let allUsersCache = {};
+  const ADMIN_UID = "H9AUmUsiasfV9yGD5WLwIMDscfz1";
 
   function setConnStatus(ok){
     const dot = document.getElementById('connDot');
@@ -2439,71 +2473,99 @@
     try{
       firebase.initializeApp(firebaseConfig);
       db = firebase.database();
-      userRef = db.ref('user');
+      auth = firebase.auth();
+
+      auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(err => {
+        console.warn('Persistence ayarlanamadı, oturum sekme kapanınca sonlanabilir', err);
+      });
 
       db.ref('.info/connected').on('value', snap => setConnStatus(!!snap.val()));
 
-      userRef.on('value', snapshot => {
-        const p = snapshot.val();
-        tasks = p?.tasks || [];
-        xp = p?.xp || 0;
-        streak = p?.streak || 0;
-        lastActiveDate = p?.lastActiveDate || null;
-        totalCompleted = p?.totalCompleted || 0;
-        completionsByDate = p?.completionsByDate || {};
-        totalFailed = p?.totalFailed || 0;
-        highPriorityCompleted = p?.highPriorityCompleted || 0;
-        timedCompleted = p?.timedCompleted || 0;
-        categoryCompletions = p?.categoryCompletions || {};
-        nightOwlCompletions = p?.nightOwlCompletions || 0;
-        morningCompletions = p?.morningCompletions || 0;
-        weekendCompletions = p?.weekendCompletions || 0;
-        totalCreated = p?.totalCreated || 0;
-        portfolio = p?.portfolio || {};
-        renderPortfolio();
-        const loadedFitness = p?.fitness || {};
-        fitness = {
-          height: loadedFitness.height ?? null,
-          weight: loadedFitness.weight ?? null,
-          age: loadedFitness.age ?? null,
-          gender: loadedFitness.gender || 'male',
-          bodyFat: loadedFitness.bodyFat ?? null,
-          goal: loadedFitness.goal || 'maintain',
-          activityLevel: loadedFitness.activityLevel || '1.55',
-          lossIntensity: loadedFitness.lossIntensity || 'moderate',
-          lifts: Object.assign({ bench:null, deadlift:null, lat:null, lateral:null }, loadedFitness.lifts || {}),
-          liftHistory: loadedFitness.liftHistory || [],
-          weightHistory: loadedFitness.weightHistory || [],
-          waterConsumed: loadedFitness.waterConsumed || 0,
-          waterDate: loadedFitness.waterDate || null,
-          steps: Object.assign({ count:0, date:null, goal:8000, history:[] }, loadedFitness.steps || {})
-        };
-        checkWaterDayReset();
-        renderFitness();
-        tasks.forEach(t=>{
-          if(!t.type) t.type = 'once';
-          if(t.autoFailed===undefined) t.autoFailed=false;
-          if(t.missedPending===undefined) t.missedPending=false;
-          if(t.type==='recurring' && !t.lastDate) t.lastDate = todayStr();
-          if(t.deadlineAt===undefined) t.deadlineAt = null;
+      auth.onAuthStateChanged(user => {
+        if(!user){
+          showAuthGate();
+          return;
+        }
+        currentUid = user.uid;
+        userRef = db.ref('developmentUsers/' + currentUid);
+
+        userRef.child('profile').once('value').then(snap => {
+          const profile = snap.val();
+          if(profile && profile.banned){
+            showTopToast('Hesabın askıya alındı', 'warn', 'ban');
+            auth.signOut();
+            return;
+          }
+          if(!profile){
+            userRef.child('profile').set({
+              username: user.email ? user.email.split('@')[0] : (user.displayName || 'Kullanıcı'),
+              email: user.email || '',
+              avatarUrl: user.photoURL || '',
+              isAdmin: user.uid === ADMIN_UID,
+              banned: false,
+              createdAt: Date.now()
+            });
+          }
+          attachUserListener();
+          document.getElementById('authGate').classList.remove('show');
+          document.getElementById('profileCorner').style.display = 'flex';
         });
-        checkRecurringReset();
-        autoFailExpired(true);
-        render();
-      }, err => {
-        console.error('Firebase okuma hatası', err);
-        setConnStatus(false);
       });
-    }catch(e){
-      console.error('Firebase başlatma hatası', e);
-      setConnStatus(false);
-    }
+    }catch(e){ console.error('Firebase başlatma hatası', e); setConnStatus(false); }
+  }
+
+  function attachUserListener(){
+    userRef.on('value', snapshot => {
+      const p = snapshot.val() || {};
+      tasks = p.tasks || [];
+      xp = p.xp || 0;
+      streak = p.streak || 0;
+      lastActiveDate = p.lastActiveDate || null;
+      totalCompleted = p.totalCompleted || 0;
+      completionsByDate = p.completionsByDate || {};
+      totalFailed = p.totalFailed || 0;
+      highPriorityCompleted = p.highPriorityCompleted || 0;
+      timedCompleted = p.timedCompleted || 0;
+      categoryCompletions = p.categoryCompletions || {};
+      nightOwlCompletions = p.nightOwlCompletions || 0;
+      morningCompletions = p.morningCompletions || 0;
+      weekendCompletions = p.weekendCompletions || 0;
+      totalCreated = p.totalCreated || 0;
+      portfolio = p.portfolio || {};
+      const profile = p.profile || {};
+      applyStoredProfile(profile);
+      renderPortfolio();
+
+      const loadedFitness = p.fitness || {};
+      fitness = {
+        height: loadedFitness.height ?? null, weight: loadedFitness.weight ?? null,
+        age: loadedFitness.age ?? null, gender: loadedFitness.gender || 'male',
+        bodyFat: loadedFitness.bodyFat ?? null, goal: loadedFitness.goal || 'maintain',
+        activityLevel: loadedFitness.activityLevel || '1.55', lossIntensity: loadedFitness.lossIntensity || 'moderate',
+        lifts: Object.assign({ bench:null, deadlift:null, lat:null, lateral:null }, loadedFitness.lifts || {}),
+        liftHistory: loadedFitness.liftHistory || [], weightHistory: loadedFitness.weightHistory || [],
+        waterConsumed: loadedFitness.waterConsumed || 0, waterDate: loadedFitness.waterDate || null,
+        steps: Object.assign({ count:0, date:null, goal:8000, history:[] }, loadedFitness.steps || {})
+      };
+      checkWaterDayReset();
+      renderFitness();
+      tasks.forEach(t=>{
+        if(!t.type) t.type = 'once';
+        if(t.autoFailed===undefined) t.autoFailed=false;
+        if(t.missedPending===undefined) t.missedPending=false;
+        if(t.type==='recurring' && !t.lastDate) t.lastDate = todayStr();
+        if(t.deadlineAt===undefined) t.deadlineAt = null;
+      });
+      checkRecurringReset();
+      autoFailExpired(true);
+      render();
+    });
   }
 
   async function saveState(){
     if(!userRef) return;
     try{
-      await userRef.set({
+      await userRef.update({
         tasks, xp, streak, lastActiveDate, totalCompleted, completionsByDate,
         totalFailed, highPriorityCompleted, timedCompleted, categoryCompletions,
         nightOwlCompletions, morningCompletions, weekendCompletions, totalCreated, portfolio, fitness
@@ -3587,14 +3649,24 @@
     }
   }
 
-  function applyStoredProfile(){
-    const avatar = localStorage.getItem(AVATAR_KEY);
-    if(avatar) applyAvatar(avatar);
-    const uname = getAuthUser();
+  function applyStoredProfile(profile){
+    profile = profile || {};
+    if(profile.avatarUrl) applyAvatar(profile.avatarUrl);
+    const uname = profile.username || 'Kullanıcı';
     const nameEl = document.querySelector('#profileCorner .p-name');
     if(nameEl) nameEl.textContent = uname;
     const fallback = document.getElementById('avatarFallback');
     if(fallback) fallback.textContent = uname.charAt(0).toUpperCase() || 'R';
+    document.getElementById('adminMenuItem')?.remove();
+    if(profile.isAdmin || currentUid === ADMIN_UID){
+      const menu = document.getElementById('profileMenu');
+      const btn = document.createElement('button');
+      btn.className = 'profile-menu-item';
+      btn.id = 'adminMenuItem';
+      btn.innerHTML = `${icon('shield',15)} Yönetim Paneli`;
+      btn.onclick = (e) => { e.stopPropagation(); closeProfileMenu(); openAdminPanel(); };
+      menu.insertBefore(btn, menu.firstChild);
+    }
   }
 
   function toggleProfileMenu(e){
@@ -3610,23 +3682,7 @@
     }
   });
 
-  function tryLogin(){
-    const u = document.getElementById('authUser').value.trim();
-    const p = document.getElementById('authPass').value;
-    const errEl = document.getElementById('authError');
-    if(u === getAuthUser() && p === getAuthPass()){
-      localStorage.setItem(AUTH_KEY, 'granted');
-      errEl.style.display = 'none';
-      document.getElementById('authGate').classList.remove('show');
-      document.getElementById('profileCorner').style.display = 'flex';
-      applyStoredProfile();
-      showTopToast(`Giriş başarılı — hoş geldin, ${getAuthUser()}`, 'info', 'shield');
-      initFirebase();
-      fetchMarketPrices();
-    } else {
-      errEl.style.display = 'block';
-    }
-  }
+
 
   function openProfilePanel(){
     document.getElementById('profileAvatarInput').value = localStorage.getItem(AVATAR_KEY) || document.getElementById('avatarImg').src || '';
@@ -3642,14 +3698,10 @@
   function saveProfileSettings(){
     const avatarUrl = document.getElementById('profileAvatarInput').value.trim();
     const username = document.getElementById('profileUsernameInput').value.trim();
-    const newPass = document.getElementById('profilePasswordInput').value;
     const errEl = document.getElementById('profileError');
     if(!username){ errEl.style.display = 'block'; return; }
     errEl.style.display = 'none';
-    if(avatarUrl){ localStorage.setItem(AVATAR_KEY, avatarUrl); applyAvatar(avatarUrl); }
-    localStorage.setItem(AUTH_USER_KEY, username);
-    if(newPass) localStorage.setItem(AUTH_PASS_KEY, newPass);
-    applyStoredProfile();
+    userRef.child('profile').update({ username, avatarUrl });
     closeProfileModal();
     showTopToast('Profil güncellendi', 'info', 'check');
   }
@@ -3658,24 +3710,119 @@
     const ok = await showConfirm('Oturumu kapatmak istediğine emin misin?');
     if(!ok) return;
     closeProfileModal();
-    localStorage.removeItem(AUTH_KEY);
-    document.getElementById('profileCorner').style.display = 'none';
-    document.getElementById('authUser').value = '';
-    document.getElementById('authPass').value = '';
-    document.getElementById('authGate').classList.add('show');
+    await auth.signOut();
     location.reload();
   }
 
-  function checkAuthOnLoad(){
-    if(localStorage.getItem(AUTH_KEY) === 'granted'){
-      document.getElementById('authGate').classList.remove('show');
-      document.getElementById('profileCorner').style.display = 'flex';
-      applyStoredProfile();
-      initFirebase();
-      fetchMarketPrices();
-    } else {
-      document.getElementById('authGate').classList.add('show');
+  let authMode = 'login';
+  function setAuthTab(mode){
+    authMode = mode;
+    document.getElementById('authTabLogin').classList.toggle('active', mode==='login');
+    document.getElementById('authTabRegister').classList.toggle('active', mode==='register');
+    document.getElementById('authBtn').innerHTML = `${icon('shield',14)} ${mode==='login'?'Giriş Yap':'Kayıt Ol'}`;
+  }
+
+  function tryAuth(){
+    const email = document.getElementById('authUser').value.trim();
+    const pass = document.getElementById('authPass').value;
+    const errEl = document.getElementById('authError');
+    errEl.style.display = 'none';
+    const action = authMode==='login'
+            ? auth.signInWithEmailAndPassword(email, pass)
+            : auth.createUserWithEmailAndPassword(email, pass);
+    action.catch(err => {
+      errEl.textContent = err.message;
+      errEl.style.display = 'block';
+    });
+  }
+  function signInWithGoogle(){
+    if(location.protocol !== 'https:' && location.protocol !== 'http:'){
+      showTopToast('Google girişi için sayfa http/https üzerinden açılmalı', 'warn', 'warn');
+      return;
     }
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider).catch(err => {
+      console.error('Google giriş hatası', err.code, err.message);
+      if(err.code === 'auth/popup-blocked' || err.code === 'auth/cancelled-popup-request'
+              || err.code === 'auth/operation-not-supported-in-this-environment'){
+        auth.signInWithRedirect(provider).catch(err2 => {
+          const errEl = document.getElementById('authError');
+          errEl.textContent = 'Bu ortamda Google girişi desteklenmiyor. Lütfen sayfayı tarayıcıda doğrudan açın.';
+          errEl.style.display = 'block';
+        });
+        return;
+      }
+      const errEl = document.getElementById('authError');
+      errEl.textContent = err.message;
+      errEl.style.display = 'block';
+    });
+  }
+  function showAuthGate(){
+    document.getElementById('authGate').classList.add('show');
+    document.getElementById('profileCorner').style.display = 'none';
+  }
+  function openAdminPanel(){
+    document.getElementById('adminModal').classList.add('show');
+    db.ref('developmentUsers').once('value').then(snap => {
+      allUsersCache = snap.val() || {};
+      renderAdminUserList();
+    });
+  }
+  function closeAdminPanel(){ document.getElementById('adminModal').classList.remove('show'); }
+
+  function renderAdminUserList(){
+    const q = document.getElementById('adminSearch').value.trim().toLowerCase();
+    const el = document.getElementById('adminUserList');
+    const uids = Object.keys(allUsersCache);
+    const rows = uids.filter(uid => {
+      const p = allUsersCache[uid].profile || {};
+      return !q || (p.username||'').toLowerCase().includes(q) || (p.email||'').toLowerCase().includes(q);
+    }).map(uid => {
+      const u = allUsersCache[uid];
+      const p = u.profile || {};
+      const idx = getRankIndex(u.xp || 0);
+      const banned = !!p.banned;
+      return `<div class="task-item" style="border-left-color:${banned?'var(--ink)':'var(--line)'}">
+      <div class="asset-logo">${p.avatarUrl ? `<img src="${p.avatarUrl}">` : icon('user',17)}</div>
+      <div class="task-body">
+        <div class="task-text">${escapeHtml(p.username||'—')} ${banned?'<span class="tag" style="border-color:var(--ink); color:var(--ink);">BANLI</span>':''}</div>
+        <div class="task-meta">
+          <span class="tag">${escapeHtml(p.email||'')}</span>
+          <span class="tag tag-xp">${RANKS[idx].name} · ${u.xp||0} XP</span>
+        </div>
+      </div>
+      <button class="icon-btn" title="Profili gör" onclick="viewUserProfile('${uid}')">${icon('compass',15)}</button>
+      <button class="icon-btn" title="${banned?'Ban kaldır':'Banla'}" onclick="toggleBan('${uid}', ${!banned})">${icon(banned?'check':'ban',15)}</button>
+    </div>`;
+    });
+    el.innerHTML = rows.join('') || `<div class="empty-state"><p>Kullanıcı bulunamadı.</p></div>`;
+  }
+
+  function toggleBan(uid, banned){
+    db.ref('developmentUsers/'+uid+'/profile/banned').set(banned).then(() => {
+      allUsersCache[uid].profile.banned = banned;
+      renderAdminUserList();
+      showTopToast(banned ? 'Kullanıcı banlandı' : 'Ban kaldırıldı', banned?'warn':'info', banned?'ban':'check');
+    });
+  }
+
+  function viewUserProfile(uid){
+    const u = allUsersCache[uid];
+    const p = u.profile || {};
+    const idx = getRankIndex(u.xp || 0);
+    document.getElementById('achvModalEyebrow').textContent = 'Kullanıcı Profili';
+    document.getElementById('achvModalIcon').innerHTML = p.avatarUrl ? `<img src="${p.avatarUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` : icon('user',26);
+    document.getElementById('achvModalIcon').style.opacity = '1';
+    document.getElementById('achvModalIcon').style.filter = 'none';
+    document.getElementById('achvModalName').textContent = p.username || 'Kullanıcı';
+    document.getElementById('achvModalDesc').textContent = `${RANKS[idx].name} · ${u.xp||0} XP · ${u.totalCompleted||0} tamamlanan görev`;
+    document.getElementById('achvModalProgressFill').style.width = '0%';
+    document.getElementById('achvModalProgressLabel').textContent = `E-posta: ${p.email||'—'}`;
+    document.getElementById('achvModal').classList.add('show');
+  }
+  function checkAuthOnLoad(){
+    initFirebase();
+    fetchMarketPrices();
   }
 
   setInterval(() => {

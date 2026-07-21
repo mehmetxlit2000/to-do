@@ -509,8 +509,7 @@
     .lb-xp{font-family:'Orbitron',sans-serif; font-weight:800; font-size:12.5px; flex:none; text-align:right;}
     .lb-rarity{flex:none; font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.06em; padding:2px 7px; border-radius:100px; border:1px solid rgba(255,255,255,.3); color:inherit; text-transform:uppercase; opacity:.85;}
     /* ==================== FITNESS / BİYOMETRİK HUD ==================== */
-    :root{ --fx-power:#ff2b2b; --fx-fuel:#ffb020; --fx-water:#2bd4e0; }
-    html[data-theme="light"]{ --fx-power:#e11d5e; --fx-fuel:#d97706; --fx-water:#0891b2; }
+    :root{ --fx-power:var(--ink); --fx-fuel:var(--ink-soft); --fx-water:var(--ink-soft); }
 
     #fitnessPanel{ position:relative; overflow:hidden; }
     #fitnessPanel::before{
@@ -530,14 +529,13 @@
       color:var(--fx-power); display:flex; align-items:center; gap:6px; padding:5px 10px; border:1px solid var(--fx-power);
       border-radius:3px; background:rgba(255,43,43,.06);
     }
-    :root{ --fx-elite: linear-gradient(120deg, #ffd700, #ff8c00 55%, #ff2b2b); }
     .fx-elite-label{
       font-family:'Orbitron',sans-serif; font-weight:800; letter-spacing:.03em;
-      background:var(--fx-elite); -webkit-background-clip:text; background-clip:text; color:transparent;
+      background:var(--brand-gradient); -webkit-background-clip:text; background-clip:text; color:transparent;
       display:inline-flex; align-items:center; gap:7px;
     }
-    .fx-elite-label svg{ color:#ffb020; -webkit-text-fill-color:#ffb020; }
-    #fitnessPanel{ border-top:2px solid #e60022; box-shadow:var(--shadow), 0 0 24px rgba(237, 0, 27, 0.1); }
+    .fx-elite-label svg{ color:var(--ink); -webkit-text-fill-color:var(--ink); }
+    #fitnessPanel{ border-top:2px solid var(--ink); box-shadow:var(--shadow), 0 0 24px var(--glow-soft); }
     .fx-head-tag .fx-blip{ width:5px; height:5px; border-radius:50%; background:var(--fx-power); box-shadow:0 0 8px var(--fx-power); animation:fxBlip 1.6s ease-in-out infinite; }
     @keyframes fxBlip{ 0%,100%{opacity:1;} 50%{opacity:.25;} }
 
@@ -2196,9 +2194,9 @@
     }
     const proteinKcal = n.proteinG*4, carbKcal = n.carbG*4, fatKcal = n.fatG*9;
     const cells = [
-      { name:'Protein', g:n.proteinG, kcal:proteinKcal, color:'var(--fx-power)' },
-      { name:'Karbonhidrat', g:n.carbG, kcal:carbKcal, color:'var(--fx-fuel)' },
-      { name:'Yağ', g:n.fatG, kcal:fatKcal, color:'#b06bff' }
+      { name:'Protein', g:n.proteinG, kcal:proteinKcal, color:'var(--ink)' },
+      { name:'Karbonhidrat', g:n.carbG, kcal:carbKcal, color:'var(--ink-soft)' },
+      { name:'Yağ', g:n.fatG, kcal:fatKcal, color:'var(--ink-faint)' }
     ];
     const goalLabels = { lose:'Kilo Verme', maintain:'Kiloyu Koruma', gain:'Kilo Alma', muscle:'Kas Yapma' };
     const goalText = goalLabels[fitness.goal] || 'Kiloyu Koruma';

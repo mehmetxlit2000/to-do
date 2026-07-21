@@ -1874,8 +1874,8 @@
     const avgDynamic = motionBuffer.reduce((a,b)=>a+b,0) / motionBuffer.length;
 
     // düşürülmüş, daha hassas eşikler
-    const PEAK_THRESHOLD = 0.9;
-    const TROUGH_THRESHOLD = -0.5;
+    const PEAK_THRESHOLD = 0.35;
+    const TROUGH_THRESHOLD = -0.2;
     const MIN_STEP_INTERVAL = 250;
     const MAX_STEP_INTERVAL = 2000;
 

@@ -1865,19 +1865,21 @@
     const x = acc.x||0, y = acc.y||0, z = acc.z||0;
     const rawMag = Math.sqrt(x*x + y*y + z*z);
 
-    smoothedMag = smoothedMag === 0 ? rawMag : (smoothedMag * 0.9 + rawMag * 0.1);
+    // yerçekimini daha yavaş öğren (0.95) — daha stabil bir taban çizgisi verir
+    smoothedMag = smoothedMag === 0 ? rawMag : (smoothedMag * 0.95 + rawMag * 0.05);
     const dynamic = rawMag - smoothedMag;
 
     motionBuffer.push(dynamic);
-    if(motionBuffer.length > 4) motionBuffer.shift();
+    if(motionBuffer.length > 3) motionBuffer.shift();
     const avgDynamic = motionBuffer.reduce((a,b)=>a+b,0) / motionBuffer.length;
 
-    if(dbg) dbg.textContent = `ham:${rawMag.toFixed(2)} düz:${smoothedMag.toFixed(2)} dinamik:${avgDynamic.toFixed(2)} faz:${stepPhase}`;
-
-    const PEAK_THRESHOLD = 2.2;
-    const TROUGH_THRESHOLD = -1.0;
-    const MIN_STEP_INTERVAL = 280;
+    // düşürülmüş, daha hassas eşikler
+    const PEAK_THRESHOLD = 0.9;
+    const TROUGH_THRESHOLD = -0.5;
+    const MIN_STEP_INTERVAL = 250;
     const MAX_STEP_INTERVAL = 2000;
+
+    if(dbg) dbg.textContent = `ham:${rawMag.toFixed(2)} düz:${smoothedMag.toFixed(2)} dinamik:${avgDynamic.toFixed(2)} faz:${stepPhase}`;
 
     const now = Date.now();
     if(now - lastStepTime > MAX_STEP_INTERVAL) stepPhase = 'idle';

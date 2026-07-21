@@ -79,21 +79,20 @@
 
     /* ---- profile corner ---- */
     #profileCorner{
-      display:none; position:fixed; top:14px; right:14px; z-index:70; align-items:center; gap:9px;
-      background:var(--panel); border:1px solid var(--line); padding:6px 14px 6px 6px; border-radius:100px;
-      box-shadow:var(--shadow), 0 0 0 1px rgba(255,40,40,.05); cursor:pointer; user-select:none;
-      transition:box-shadow .2s ease, border-color .2s ease;
+      display:none; position:fixed; top:14px; right:14px; z-index:70; align-items:center;
+      background:none; border:none; padding:0; border-radius:50%; cursor:pointer; user-select:none;
+      transition:transform .15s ease, box-shadow .2s ease;
     }
-    #profileCorner:hover{border-color:var(--ink); box-shadow:var(--shadow), 0 0 16px var(--glow-mid);}
-    .avatar-wrap{position:relative; width:32px; height:32px; flex:none;}
-    .avatar-wrap img{width:32px; height:32px; border-radius:50%; object-fit:cover; border:1.5px solid var(--ink); box-shadow:0 0 10px var(--glow-mid); display:block;}
+    #profileCorner:hover{ transform:scale(1.06); }
+    #profileCorner:hover .avatar-wrap img,
+    #profileCorner:hover .avatar-fallback{ box-shadow:0 0 16px var(--glow-mid); }
+    .avatar-wrap{position:relative; width:46px; height:46px; flex:none;}
+    .avatar-wrap img{width:46px; height:46px; border-radius:50%; object-fit:cover; border:2px solid var(--ink); box-shadow:0 0 10px var(--glow-mid); display:block;}
     .avatar-fallback{
-      display:none; width:32px; height:32px; border-radius:50%; border:1.5px solid var(--ink); background:var(--panel-alt);
-      align-items:center; justify-content:center; font-family:'Orbitron',sans-serif; font-weight:800; font-size:13px; color:var(--ink);
+      display:none; width:46px; height:46px; border-radius:50%; border:2px solid var(--ink); background:var(--panel-alt);
+      align-items:center; justify-content:center; font-family:'Orbitron',sans-serif; font-weight:800; font-size:17px; color:var(--ink);
       box-shadow:0 0 10px var(--glow-mid);
     }
-    #profileCorner .p-name{font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--ink); font-weight:700; letter-spacing:.05em;}
-    #profileCorner .p-sub{display:block; font-size:8.5px; color:var(--ink-soft); letter-spacing:.1em; margin-top:-1px;}
 
     .profile-menu{
       display:none; position:fixed; top:58px; right:14px; z-index:71; background:var(--panel); border:1px solid var(--line);
@@ -589,8 +588,6 @@
       h1{font-size:20px;}
       .topbar{padding-right:56px;}
       .top-actions{width:100%;}
-      #profileCorner .p-name{display:none;}
-      #profileCorner{padding:6px;}
     }
 
     /* ==================== PROFESYONEL FORM KONTROLLERİ (Spor paneli) ==================== */
@@ -754,10 +751,6 @@
     <img id="avatarImg" src="https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif" alt="" onerror="this.style.display='none'; document.getElementById('avatarFallback').style.display='flex';">
     <div class="avatar-fallback" id="avatarFallback">R</div>
   </div>
-  <span>
-    <span class="p-name">Root</span>
-    <span class="p-sub">OTURUM AÇIK</span>
-  </span>
 </div>
 <div id="profileMenu" class="profile-menu"></div>
 
@@ -3678,8 +3671,6 @@
     profile = profile || {};
     if(profile.avatarUrl) applyAvatar(profile.avatarUrl);
     const uname = profile.username || 'Kullanıcı';
-    const nameEl = document.querySelector('#profileCorner .p-name');
-    if(nameEl) nameEl.textContent = uname;
     const fallback = document.getElementById('avatarFallback');
     if(fallback) fallback.textContent = uname.charAt(0).toUpperCase() || 'R';
     document.getElementById('adminMenuItem')?.remove();

@@ -1872,8 +1872,8 @@
     st.buffer.push(rawMag);
     if(st.buffer.length > 20) st.buffer.shift();
 
-    if(st.buffer.length < 6){
-      if(dbg) dbg.textContent = `kalibre ediliyor... (${st.buffer.length}/6)`;
+    if(st.buffer.length < 8){
+      if(dbg) dbg.textContent = `kalibre ediliyor... (${st.buffer.length}/8)`;
       return;
     }
 
@@ -1881,26 +1881,27 @@
     const variance = st.buffer.reduce((a,b)=>a+(b-mean)*(b-mean),0) / st.buffer.length;
     const std = Math.sqrt(variance);
 
-    const threshold = Math.max(0.15, std * 0.6);
+    // Daha yüksek taban eşik + daha güçlü std çarpanı: ufak titreşimler artık tetiklemiyor
+    const threshold = Math.max(0.9, std * 1.4);
     const upper = mean + threshold;
     const lower = mean - threshold;
 
     const now = Date.now();
-    const MIN_INTERVAL = 300;
+    const MIN_INTERVAL = 200; // 0.2 saniyede en fazla 1 adım
 
     if(dbg) dbg.textContent = `mag:${rawMag.toFixed(2)} ort:${mean.toFixed(2)} std:${std.toFixed(2)} faz:${st.phase}`;
 
     if(st.phase === 'idle' && rawMag < lower){
       st.phase = 'below';
     } else if(st.phase === 'below' && rawMag > upper){
-      if(now - st.lastStepTime > MIN_INTERVAL){
+      st.phase = 'idle';
+      if(now - st.lastStepTime >= MIN_INTERVAL){
         st.lastStepTime = now;
         checkStepsDayReset();
         fitness.steps.count += 1;
         renderStepCounter();
         if(fitness.steps.count % 10 === 0) saveState();
       }
-      st.phase = 'idle';
     }
   }
 

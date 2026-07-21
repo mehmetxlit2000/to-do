@@ -513,6 +513,14 @@
       color:var(--fx-power); display:flex; align-items:center; gap:6px; padding:5px 10px; border:1px solid var(--fx-power);
       border-radius:3px; background:rgba(255,43,43,.06);
     }
+    :root{ --fx-elite: linear-gradient(120deg, #ffd700, #ff8c00 55%, #ff2b2b); }
+    .fx-elite-label{
+      font-family:'Orbitron',sans-serif; font-weight:800; letter-spacing:.03em;
+      background:var(--fx-elite); -webkit-background-clip:text; background-clip:text; color:transparent;
+      display:inline-flex; align-items:center; gap:7px;
+    }
+    .fx-elite-label svg{ color:#ffb020; -webkit-text-fill-color:#ffb020; }
+    #fitnessPanel{ border-top:2px solid #e60022; box-shadow:var(--shadow), 0 0 24px rgba(237, 0, 27, 0.1); }
     .fx-head-tag .fx-blip{ width:5px; height:5px; border-radius:50%; background:var(--fx-power); box-shadow:0 0 8px var(--fx-power); animation:fxBlip 1.6s ease-in-out infinite; }
     @keyframes fxBlip{ 0%,100%{opacity:1;} 50%{opacity:.25;} }
 
@@ -573,6 +581,133 @@
       #profileCorner .p-name{display:none;}
       #profileCorner{padding:6px;}
     }
+
+    /* ==================== PROFESYONEL FORM KONTROLLERİ (Spor paneli) ==================== */
+    #fitnessPanel select,
+    #fitnessPanel input[type=number],
+    #fitnessPanel input[type=text]{
+      appearance:none; -webkit-appearance:none; -moz-appearance:none;
+      background:linear-gradient(180deg, var(--panel-alt), var(--panel));
+      border:1px solid var(--line);
+      border-radius:10px;
+      color:var(--ink);
+      font-family:'Inter',sans-serif;
+      font-size:13px;
+      font-weight:500;
+      padding:11px 14px;
+      transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    #fitnessPanel select{
+      cursor:pointer;
+      padding-right:36px;
+      background-repeat:no-repeat;
+      background-position:right 13px center;
+      background-size:11px;
+      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b23636' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+    }
+    html[data-theme="light"] #fitnessPanel select{
+      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237d6aa8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+    }
+    #fitnessPanel select:hover,
+    #fitnessPanel input:hover{ border-color:var(--ink-soft); }
+    #fitnessPanel select:focus,
+    #fitnessPanel input:focus{
+      border-color:var(--line) !important;
+      box-shadow:none !important;
+      background-color:var(--panel);
+      outline:none;
+    }
+    #fitnessPanel .field-icon-input{
+      background:linear-gradient(180deg, var(--panel-alt), var(--panel));
+      border-radius:10px;
+      border:1px solid var(--line);
+      transition:border-color .18s ease, box-shadow .18s ease;
+    }
+    #fitnessPanel .field-icon-input:focus-within{
+      border-color:var(--ink);
+      box-shadow:0 0 0 3px var(--glow-soft);
+    }
+    #fitnessPanel .field-icon-input input{ background:none !important; border:none !important; padding:11px 0 !important; }
+
+    /* su/aksiyon çipleri — btn-ghost yerine daha zarif pill */
+    .aqua-chip{
+      display:flex; align-items:center; justify-content:center; gap:6px;
+      font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:600;
+      letter-spacing:.03em; color:var(--ink); background:var(--panel-alt);
+      border:1px solid var(--line); border-radius:100px; padding:10px 16px; cursor:pointer;
+      transition:border-color .15s ease, background .15s ease, box-shadow .15s ease, transform .1s ease;
+      flex:1; min-height:40px;
+    }
+    .aqua-chip:hover{ border-color:var(--ink); box-shadow:0 0 10px var(--glow-mid); background:var(--panel); }
+    .aqua-chip:active{ transform:scale(.96); }
+    .aqua-chip svg{ width:12px; height:12px; opacity:.85; }
+
+    /* ==================== ORTAK RADIAL GAUGE BİLEŞENİ ==================== */
+    .pro-gauge{ position:relative; margin:0 auto; }
+    .pro-gauge-ticks{
+      position:absolute; inset:-6px; border-radius:50%;
+      background:repeating-conic-gradient(var(--line) 0deg 1.4deg, transparent 1.4deg calc(360deg / var(--tick-count, 40)));
+      -webkit-mask:radial-gradient(closest-side, transparent 85.5%, black 86.5%, black 100%);
+      mask:radial-gradient(closest-side, transparent 85.5%, black 86.5%, black 100%);
+      opacity:.55;
+    }
+    .pro-gauge-svg{ position:absolute; inset:0; transform:rotate(-90deg); }
+    .pro-gauge-track{ fill:none; stroke:var(--line); }
+    .pro-gauge-fill{
+      fill:none; stroke-linecap:round;
+      transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1);
+      filter:drop-shadow(0 0 7px var(--glow-mid));
+    }
+    .pro-gauge-label{
+      position:absolute; inset:0; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; text-align:center; gap:2px;
+    }
+    .pro-gauge-num{ font-family:'Orbitron',sans-serif; font-weight:800; line-height:1; text-shadow:0 0 14px var(--glow-mid); }
+    .pro-gauge-sub{ font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft); }
+    .pro-gauge-ring2{ position:absolute; inset:14px; border:1px solid var(--line); border-radius:50%; opacity:.4; pointer-events:none; }
+
+    /* güç barları — daha yumuşak/degradeli */
+    .power-bar-track{ background:var(--bg); box-shadow:inset 0 1px 2px rgba(0,0,0,.35); }
+    .power-bar-fill{ background:linear-gradient(90deg, color-mix(in srgb, var(--ink) 55%, transparent), var(--ink)); }
+
+    /* insan figürü panelinin arka planı */
+    .fx-scanwrap{ filter:drop-shadow(0 4px 14px rgba(0,0,0,.35)); }
+
+    .add-card-head{transition:opacity .15s ease;}
+    .add-card-head:hover{opacity:.85;}
+    .add-card-chevron{flex:none; width:20px; height:20px; color:var(--ink-soft); transition:transform .25s ease; margin-left:auto;}
+    .add-card-body{overflow:hidden; max-height:1400px; transition:max-height .35s ease, opacity .25s ease, margin-top .25s ease; opacity:1; margin-top:16px;}
+    .add-card-body.collapsed{max-height:0; opacity:0; margin-top:0;}
+    /* ===== SPOR PANELİ — SADE/PROFESYONEL GÖRÜNÜM ===== */
+    #fitnessPanel::before{ display:none; }
+    #fitnessPanel .fx-head-tag{ display:none; }
+    #fitnessPanel .fx-panel::before,
+    #fitnessPanel .fx-panel::after{ display:none; }
+    #fitnessPanel .fx-panel{
+      border-radius:14px;
+      background:var(--panel);
+      border:1px solid var(--line);
+    }
+    #fitnessPanel .fx-panel-label{
+      font-size:10.5px; color:var(--ink); font-weight:600; letter-spacing:.08em;
+      margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--line-soft);
+      display:flex; align-items:center;
+    }
+    #fitnessPanel .fx-panel-label::before{
+      content:''; display:inline-block; width:3px; height:12px; background:var(--ink);
+      border-radius:2px; margin-right:8px;
+    }
+    #fitnessPanel .fx-scanring, #fitnessPanel .fx-scansweep{ display:none; }
+    #fitnessPanel .fx-scanwrap{ filter:none; }
+
+    /* Biyometrik alanlar için etiketli grid */
+    .fx-field-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:14px;}
+    @media (max-width:640px){ .fx-field-grid{grid-template-columns:repeat(2,1fr);} }
+    .fx-field-group{display:flex; flex-direction:column; gap:6px; min-width:0;}
+    .fx-field-label{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft);}
+    .fx-field-group .field-icon-input, .fx-field-group select{width:100%;}
+
+
   </style>
 </head>
 <body>
@@ -683,22 +818,65 @@
 
   <div class="panel gallery-panel" id="fitnessPanel" style="margin-bottom:14px;">
     <div class="fx-head">
-      <h3 style="margin:0;">Spor Gelişimim</h3>
+      <h3 class="fx-elite-label" style="margin:0; font-size:14px; text-transform:uppercase;" id="fxEliteTitle"></h3>
       <span class="fx-head-tag"><span class="fx-blip"></span> CANLI VERİ</span>
     </div>
 
     <div class="fx-panel" style="margin-bottom:16px;">
       <span class="fx-panel-label">Biyometrik Girdi</span>
+      <div class="fx-field-grid">
+        <div class="fx-field-group">
+          <span class="fx-field-label">Boy</span>
+          <label class="field-icon-input"><span id="fHeightIcon"></span><input type="number" id="fHeight" placeholder="cm"></label>
+        </div>
+        <div class="fx-field-group">
+          <span class="fx-field-label">Kilo</span>
+          <label class="field-icon-input"><span id="fWeightIcon"></span><input type="number" id="fWeight" placeholder="kg"></label>
+        </div>
+        <div class="fx-field-group">
+          <span class="fx-field-label">Yaş</span>
+          <label class="field-icon-input"><span id="fAgeIcon"></span><input type="number" id="fAge" placeholder="yaş"></label>
+        </div>
+        <div class="fx-field-group">
+          <span class="fx-field-label">Cinsiyet</span>
+          <select id="fGender">
+            <option value="male">Erkek</option>
+            <option value="female">Kadın</option>
+          </select>
+        </div>
+        <div class="fx-field-group">
+          <span class="fx-field-label">Yağ Oranı</span>
+          <label class="field-icon-input"><span id="fBodyFatIcon"></span><input type="number" id="fBodyFat" placeholder="%"></label>
+        </div>
+      </div>
       <div class="add-row">
-        <label class="field-icon-input" style="width:110px;"><span id="fHeightIcon"></span><input type="number" id="fHeight" placeholder="Boy (cm)"></label>
-        <label class="field-icon-input" style="width:110px;"><span id="fWeightIcon"></span><input type="number" id="fWeight" placeholder="Kilo (kg)"></label>
-        <label class="field-icon-input" style="width:90px;"><span id="fAgeIcon"></span><input type="number" id="fAge" placeholder="Yaş"></label>
-        <select id="fGender" style="flex:none; width:110px;">
-          <option value="male">Erkek</option>
-          <option value="female">Kadın</option>
+        <select id="fGoal" style="flex:1; min-width:160px;" onchange="onGoalChange()">
+          <option value="lose">Hedef: Kilo Vermek</option>
+          <option value="maintain" selected>Hedef: Kiloyu Korumak</option>
+          <option value="gain">Hedef: Kilo Almak</option>
+          <option value="muscle">Hedef: Kas Yapmak</option>
         </select>
-        <label class="field-icon-input" style="width:130px;"><span id="fBodyFatIcon"></span><input type="number" id="fBodyFat" placeholder="Yağ oranı %"></label>
-        <button class="btn" id="fSaveStatsBtn" onclick="saveFitnessStats()" style="min-width:110px;"></button>
+        <select id="fActivity" style="flex:1; min-width:200px;">
+          <option value="1.2">Hareketsiz (masa başı iş, egzersiz yok)</option>
+          <option value="1.375">Az Aktif (haftada 1-3 gün hafif egzersiz)</option>
+          <option value="1.55" selected>Orta Aktif (haftada 3-5 gün egzersiz)</option>
+          <option value="1.725">Çok Aktif (haftada 6-7 gün egzersiz)</option>
+          <option value="1.9">Ekstra Aktif (günde 2 antrenman / ağır fiziksel iş)</option>
+        </select>
+      </div>
+      <div class="add-row" id="fLossIntensityWrap" style="display:none;">
+        <div class="seg-block">
+          <span class="seg-label">Kilo Verme Hızı</span>
+          <select id="fLossIntensity" style="width:100%;">
+            <option value="gentle">Yavaş ve Sürdürülebilir (~%12 açık)</option>
+            <option value="moderate">Dengeli Tempo (~%20 açık)</option>
+            <option value="fast">Hızlı (~%25 açık)</option>
+            <option value="max">En Hızlı — Güvenli Üst Sınır (max 1000 kcal açık)</option>
+          </select>
+        </div>
+      </div>
+      <div class="add-row" style="justify-content:flex-end; margin-bottom:0;">
+        <button class="btn" id="fSaveStatsBtn" onclick="saveFitnessStats()"></button>
       </div>
     </div>
 
@@ -716,7 +894,35 @@
         <div class="add-row"><button class="btn btn-add" id="fSaveLiftsBtn" onclick="saveFitnessLifts()"></button></div>
       </div>
     </div>
-
+    <div class="fx-panel" style="margin-top:14px;">
+      <span class="fx-panel-label">Kilo & Yağ Oranı Trendi</span>
+      <div id="weightTrendChart"></div>
+    </div>
+    <div class="fx-panel" style="margin-top:14px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+        <span class="fx-panel-label" style="margin:0;">Adım Sayar</span>
+        <span id="stepSensorBadge" style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft);"></span>
+      </div>
+      <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
+        <div id="stepRingWrap" style="flex:none;"></div>
+        <div style="flex:1; min-width:190px; display:flex; flex-direction:column; gap:9px;">
+          <div class="add-row" style="margin-bottom:0;">
+            <label class="field-icon-input" style="width:150px;"><span id="stepGoalIcon"></span><input type="number" id="stepGoalInput" min="1000" step="500" placeholder="Günlük hedef"></label>
+            <button class="btn-text" onclick="saveStepGoal()">Hedefi Kaydet</button>
+          </div>
+          <div class="power-bar-row" style="margin-bottom:0;">
+            <span class="power-bar-label" id="stepKcalLabel" style="width:auto;"></span>
+            <span id="stepStatKcal" style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--ink); margin-left:auto;">0 kcal</span>
+          </div>
+          <div class="power-bar-row" style="margin-bottom:0;">
+            <span class="power-bar-label" id="stepDistLabel" style="width:auto;"></span>
+            <span id="stepStatDist" style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--ink); margin-left:auto;">0 km</span>
+          </div>
+          <button class="btn" id="stepTrackBtn" onclick="requestMotionPermission()"></button>
+          <button class="btn-text" onclick="resetStepsToday()" style="align-self:flex-start;">Bugünü sıfırla</button>
+        </div>
+      </div>
+    </div>
     <div class="fx-panel" style="margin-top:14px;">
       <span class="fx-panel-label">Güç Çekirdeği</span>
       <div id="strengthGauges"></div>
@@ -747,9 +953,9 @@
         <div id="waterJugWrap" style="flex:none;"></div>
         <div style="flex:1; min-width:200px; display:flex; flex-direction:column; gap:8px;">
           <div class="add-row" style="margin-bottom:0;">
-            <button class="btn btn-ghost" onclick="logWater(250)">+250ml</button>
-            <button class="btn btn-ghost" onclick="logWater(500)">+500ml</button>
-            <button class="btn btn-ghost" onclick="logWater(750)">+750ml</button>
+            <button class="aqua-chip" onclick="logWater(250)">+250ml</button>
+            <button class="aqua-chip" onclick="logWater(500)">+500ml</button>
+            <button class="aqua-chip" onclick="logWater(750)">+750ml</button>
           </div>
           <div class="add-row" style="margin-bottom:0;">
             <input type="number" id="waterCustomInput" placeholder="Özel miktar (ml)" style="flex:1;">
@@ -801,51 +1007,55 @@
   </div>
 
   <div class="add-card">
-    <div class="add-card-head">
+    <div class="add-card-head" onclick="toggleAddCard()" style="cursor:pointer;">
       <span class="add-card-icon" id="addCardIcon"></span>
-      <div>
+      <div style="flex:1;">
         <p class="add-card-title">Yeni Görev</p>
         <p class="add-card-sub">Panele bir görev daha ekle — XP ve rütbe seni bekliyor.</p>
       </div>
+      <span class="add-card-chevron" id="addCardChevron"></span>
     </div>
-    <div class="add-row">
-      <input type="text" id="taskInput" placeholder="Görevin adını yaz…" onkeydown="if(event.key==='Enter')addTask()">
-    </div>
-    <div class="add-row">
-      <div class="seg-block">
-        <span class="seg-label">Kategori</span>
-        <div class="seg-group" id="categoryGroup"></div>
+    <div class="add-card-body" id="addCardBody">
+      <div class="add-row">
+        <input type="text" id="taskInput" placeholder="Görevin adını yaz…" onkeydown="if(event.key==='Enter')addTask()">
       </div>
-    </div>
-    <div class="add-row">
-      <div class="seg-block">
-        <span class="seg-label">Öncelik</span>
-        <div class="seg-group" id="priorityGroup"></div>
-      </div>
-    </div>
-    <div class="add-row">
-      <label class="rune-switch" id="recurringLabel">
-        <input type="checkbox" id="isRecurring" onchange="onRecurringToggle()">
-        <span class="switch-track"><span class="switch-thumb"></span></span>
-        <span id="recurringLabelText"></span>
-      </label>
-    </div>
-    <div class="add-row" id="dueRow">
-      <div class="seg-block">
-        <span class="seg-label">Süre Sınırı (opsiyonel)</span>
-        <div class="seg-group" id="durationGroup"></div>
-        <div id="customDurationWrap" style="display:none; margin-top:8px;">
-          <label class="field-icon-input" style="width:150px;">
-            <span id="customDurationIcon"></span>
-            <input type="number" id="dueHours" min="1" max="999" step="1" placeholder="Saat">
-            <span class="suffix">SAAT</span>
-          </label>
+      <div class="add-row">
+        <div class="seg-block">
+          <span class="seg-label">Kategori</span>
+          <div class="seg-group" id="categoryGroup"></div>
         </div>
       </div>
+      <div class="add-row">
+        <div class="seg-block">
+          <span class="seg-label">Öncelik</span>
+          <div class="seg-group" id="priorityGroup"></div>
+        </div>
+      </div>
+      <div class="add-row">
+        <label class="rune-switch" id="recurringLabel">
+          <input type="checkbox" id="isRecurring" onchange="onRecurringToggle()">
+          <span class="switch-track"><span class="switch-thumb"></span></span>
+          <span id="recurringLabelText"></span>
+        </label>
+      </div>
+      <div class="add-row" id="dueRow">
+        <div class="seg-block">
+          <span class="seg-label">Süre Sınırı (opsiyonel)</span>
+          <div class="seg-group" id="durationGroup"></div>
+          <div id="customDurationWrap" style="display:none; margin-top:8px;">
+            <label class="field-icon-input" style="width:150px;">
+              <span id="customDurationIcon"></span>
+              <input type="number" id="dueHours" min="1" max="999" step="1" placeholder="Saat">
+              <span class="suffix">SAAT</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="add-row">
+        <button class="btn btn-add" onclick="addTask()" id="addTaskBtn"></button>
+      </div>
     </div>
-    <div class="add-row">
-      <button class="btn btn-add" onclick="addTask()" id="addTaskBtn"></button>
-    </div>
+
   </div>
 
   <div class="filter-row">
@@ -950,6 +1160,7 @@
 <script>
   /* ===================== SVG ICON SET (no emoji anywhere) ===================== */
   const ICONS = {
+    chevDown: '<path d="M6 9l6 6 6-6"/>',
     check: '<path d="M20 6 9 17l-5-5"/>',
     x: '<path d="M18 6 6 18M6 6l12 12"/>',
     flame: '<path d="M12 2c1.2 3.4-2.4 4.6-3.2 7.4-.7 2.4.5 5.3 3.2 6.6 2.7-1.3 3.9-4.2 3.2-6.6C14.4 6.6 10.8 5.4 12 2z"/><path d="M12 21a4 4 0 0 0 4-4c0-1.6-1-2.6-2-3.4.1 1.3-.6 2.1-1.4 2.4-1-1.6-.4-3.2.4-4.6C10.2 12.5 8 14.4 8 17a4 4 0 0 0 4 4z" fill="currentColor" stroke="none" opacity=".18"/>',
@@ -1415,30 +1626,54 @@
     }
   }
 
-  /* ===================== SPOR GELİŞİMİ ===================== */
   let fitness = {
     height: null, weight: null, age: null, gender: 'male', bodyFat: null,
+    goal: 'maintain', activityLevel: '1.55', lossIntensity: 'moderate',
     lifts: { bench:null, deadlift:null, lat:null, lateral:null },
     liftHistory: [],
-    waterConsumed: 0, waterDate: null
+    weightHistory: [],
+    waterConsumed: 0, waterDate: null,
+    steps: { count: 0, date: null, goal: 8000 }
   };
+  let stepTracking = false, lastStepMag = 0, lastStepTime = 0;
 
   function epley1RM(weight, reps){
     if(!weight || !reps) return 0;
     return weight * (1 + reps/30);
   }
+  function onGoalChange(){
+    const goal = document.getElementById('fGoal').value;
+    document.getElementById('fLossIntensityWrap').style.display = goal === 'lose' ? 'flex' : 'none';
+  }
 
+  function pushWeightHistoryEntry(){
+    if(!fitness.weight) return;
+    const today = todayStr();
+    const entry = { date: today, weight: fitness.weight, bodyFat: fitness.bodyFat };
+    const idx = fitness.weightHistory.findIndex(e => e.date === today);
+    if(idx >= 0) fitness.weightHistory[idx] = entry;
+    else fitness.weightHistory.push(entry);
+    fitness.weightHistory.sort((a,b) => a.date.localeCompare(b.date));
+    if(fitness.weightHistory.length > 60) fitness.weightHistory = fitness.weightHistory.slice(-60);
+  }
   function saveFitnessStats(){
     const h = parseFloat(document.getElementById('fHeight').value);
     const w = parseFloat(document.getElementById('fWeight').value);
     const a = parseFloat(document.getElementById('fAge').value);
     const g = document.getElementById('fGender').value;
     const bf = parseFloat(document.getElementById('fBodyFat').value);
+    const goal = document.getElementById('fGoal').value;
+    const activity = document.getElementById('fActivity').value;
+    const lossIntensity = document.getElementById('fLossIntensity').value;
     if(h>0) fitness.height = h;
     if(w>0) fitness.weight = w;
     if(a>0) fitness.age = a;
     fitness.gender = g;
     if(bf>=0 && !isNaN(bf)) fitness.bodyFat = bf;
+    fitness.goal = goal;
+    fitness.activityLevel = activity;
+    fitness.lossIntensity = lossIntensity;
+    pushWeightHistoryEntry();
     saveState();
     renderFitness();
     showTopToast('Vücut bilgilerin kaydedildi', 'info', 'check');
@@ -1463,6 +1698,107 @@
     saveState();
     renderFitness();
     showTopToast('Rekorların kaydedildi', 'info', 'bolt');
+  }
+
+  /* ---- Adım Sayar (gerçek ivmeölçer sensörü) ---- */
+  function checkStepsDayReset(){
+    const today = todayStr();
+    if(fitness.steps.date !== today){
+      fitness.steps.date = today;
+      fitness.steps.count = 0;
+    }
+  }
+
+  function handleMotionStep(event){
+    const acc = event.accelerationIncludingGravity || event.acceleration;
+    if(!acc) return;
+    const x = acc.x||0, y = acc.y||0, z = acc.z||0;
+    const mag = Math.sqrt(x*x + y*y + z*z);
+    const now = Date.now();
+    const delta = mag - lastStepMag;
+    lastStepMag = mag;
+    const STEP_THRESHOLD = 1.15;
+    const STEP_DEBOUNCE = 300;
+    if(delta > STEP_THRESHOLD && (now - lastStepTime) > STEP_DEBOUNCE){
+      lastStepTime = now;
+      checkStepsDayReset();
+      fitness.steps.count += 1;
+      renderStepCounter();
+      if(fitness.steps.count % 10 === 0) saveState();
+    }
+  }
+
+  async function requestMotionPermission(){
+    if(typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function'){
+      try{
+        const res = await DeviceMotionEvent.requestPermission();
+        if(res === 'granted') startStepTracking();
+        else showTopToast('Hareket sensörü izni reddedildi', 'warn', 'warn');
+      }catch(e){ showTopToast('Sensör izni alınamadı', 'warn', 'warn'); }
+    } else if(window.DeviceMotionEvent){
+      startStepTracking();
+    } else {
+      showTopToast('Cihazın hareket sensörünü desteklemiyor', 'warn', 'warn');
+    }
+  }
+
+  function startStepTracking(){
+    if(stepTracking) return;
+    stepTracking = true;
+    lastStepMag = 0; lastStepTime = 0;
+    window.addEventListener('devicemotion', handleMotionStep);
+    const btn = document.getElementById('stepTrackBtn');
+    btn.innerHTML = `${icon('bolt',14)} Takibi Durdur`;
+    btn.onclick = stopStepTracking;
+    document.getElementById('stepSensorBadge').innerHTML = `${icon('bolt',10)} CANLI SENSÖR AKTİF`;
+    showTopToast('Adım sayar aktif — telefonu üzerinde taşı', 'info', 'bolt');
+  }
+
+  function stopStepTracking(){
+    stepTracking = false;
+    window.removeEventListener('devicemotion', handleMotionStep);
+    const btn = document.getElementById('stepTrackBtn');
+    btn.innerHTML = `${icon('bolt',14)} Adım Saymayı Başlat`;
+    btn.onclick = requestMotionPermission;
+    document.getElementById('stepSensorBadge').innerHTML = `${icon('circleEmpty',10)} SENSÖR PASİF`;
+    saveState();
+  }
+
+  function saveStepGoal(){
+    const v = parseInt(document.getElementById('stepGoalInput').value, 10);
+    if(v>0){
+      fitness.steps.goal = v;
+      saveState();
+      renderStepCounter();
+      showTopToast('Adım hedefi güncellendi', 'info', 'flag');
+    }
+  }
+
+  function resetStepsToday(){
+    fitness.steps.count = 0;
+    fitness.steps.date = todayStr();
+    saveState();
+    renderStepCounter();
+  }
+
+  function renderStepCounter(){
+    const wrap = document.getElementById('stepRingWrap');
+    if(!wrap) return;
+    checkStepsDayReset();
+    const goal = fitness.steps.goal || 8000;
+    const count = fitness.steps.count || 0;
+    const kcalBurned = fitness.weight ? Math.round(count * fitness.weight * 0.0005) : Math.round(count*0.035);
+    const distanceKm = ((count * 0.762) / 1000).toFixed(2);
+
+    wrap.innerHTML = buildRadialGauge({
+      value: count, max: goal, size: 150, strokeWidth: 11,
+      color: 'var(--fx-fuel)', bigLabel: count, subLabel: '/ ' + goal + ' ADIM'
+    });
+
+    document.getElementById('stepStatKcal').textContent = kcalBurned + ' kcal';
+    document.getElementById('stepStatDist').textContent = distanceKm + ' km';
+    const goalInput = document.getElementById('stepGoalInput');
+    if(goalInput && document.activeElement !== goalInput) goalInput.value = goal;
   }
 
   /* Güç standartları: vücut ağırlığına oran [acemi, novice, orta, ileri, elit] */
@@ -1508,14 +1844,36 @@
     if(score < 95) return 'İleri Seviye';
     return 'Elit';
   }
-
+  function buildRadialGauge({ value, max, size=150, strokeWidth=10, color='var(--fx-power)', bigLabel='', subLabel='', ticks=40 }){
+    const radius = (size/2) - strokeWidth - 5;
+    const C = 2*Math.PI*radius;
+    const pct = Math.max(0, Math.min(1, max ? value/max : 0));
+    const offset = C - C*pct;
+    const cx = size/2, cy = size/2;
+    return `
+  <div class="pro-gauge" style="width:${size}px;height:${size}px; --tick-count:${ticks};">
+    <div class="pro-gauge-ticks"></div>
+    <div class="pro-gauge-ring2"></div>
+    <svg class="pro-gauge-svg" viewBox="0 0 ${size} ${size}">
+      <circle class="pro-gauge-track" cx="${cx}" cy="${cy}" r="${radius}" stroke-width="${strokeWidth}"></circle>
+      <circle class="pro-gauge-fill" cx="${cx}" cy="${cy}" r="${radius}" stroke-width="${strokeWidth}"
+        stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}"
+        style="stroke:${color};"></circle>
+    </svg>
+    <div class="pro-gauge-label">
+      <div class="pro-gauge-num" style="font-size:${Math.round(size*0.16)}px;">${bigLabel}</div>
+      <div class="pro-gauge-sub">${subLabel}</div>
+    </div>
+  </div>`;
+  }
   function renderStrengthGauges(){
     const el = document.getElementById('strengthGauges');
     if(!el) return;
     const s = computeStrengthScore();
-    const C = 2 * Math.PI * 66;
-    const pct = Math.max(0, Math.min(100, s.total));
-    const offset = C - (C * pct / 100);
+    const gauge = buildRadialGauge({
+      value: Math.min(100, s.total), max: 100, size: 150, strokeWidth: 11,
+      color: 'var(--fx-power)', bigLabel: s.total, subLabel: strengthLabel(s.total)
+    });
     const rows = [
       { label:'Bench', val:s.bench },
       { label:'Deadlift', val:s.deadlift },
@@ -1524,17 +1882,7 @@
     ];
     el.innerHTML = `
     <div style="display:flex; gap:24px; align-items:center; flex-wrap:wrap; justify-content:center;">
-      <div class="power-core-wrap">
-        <div class="power-core-ticks"></div>
-        <svg class="power-core-svg" viewBox="0 0 160 160">
-          <circle class="power-core-track" cx="80" cy="80" r="66"></circle>
-          <circle class="power-core-fill" cx="80" cy="80" r="66" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}"></circle>
-        </svg>
-        <div class="power-core-label">
-          <div class="power-core-num">${s.total}</div>
-          <div class="power-core-sub">${strengthLabel(s.total)}</div>
-        </div>
-      </div>
+      ${gauge}
       <div style="flex:1; min-width:180px;">
         ${rows.map(r => `<div class="power-bar-row">
           <span class="power-bar-label">${icon('dumbbell',11)} ${r.label}</span>
@@ -1564,24 +1912,88 @@
     </div>`;
     }).join('');
   }
+  function renderWeightTrend(){
+    const el = document.getElementById('weightTrendChart');
+    if(!el) return;
+    const hist = (fitness.weightHistory || []).filter(e => e.weight);
+    if(hist.length < 2){
+      el.innerHTML = `<div class="empty-state" style="padding:20px;"><p>${icon('compass',18)}</p><p>En az 2 kayıt olunca trend grafiği burada görünecek.</p></div>`;
+      return;
+    }
+    const last = hist.slice(-30);
+    const weights = last.map(e => e.weight);
+    const min = Math.min(...weights), max = Math.max(...weights);
+    const span = Math.max(0.5, max - min);
+    const padY = span * 0.25;
+    const W = 600, H = 130, padX = 10;
+    const stepX = (W - padX*2) / Math.max(1, last.length - 1);
+    const yFor = wgt => H - 18 - ((wgt - (min-padY)) / (span + padY*2)) * (H-34);
+    const points = last.map((e,i) => [padX + i*stepX, yFor(e.weight)]);
+    const linePath = points.map((p,i) => (i===0?'M':'L') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+    const areaPath = linePath + ` L${points[points.length-1][0].toFixed(1)} ${H-4} L${points[0][0].toFixed(1)} ${H-4} Z`;
+    const first = last[0].weight, latest = last[last.length-1].weight;
+    const diff = (latest - first);
+    const diffLabel = (diff>0?'+':'') + diff.toFixed(1) + ' kg';
+    const diffColor = diff <= 0 ? 'var(--pos)' : 'var(--neg)';
+    const dots = points.map((p,i) => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3" fill="var(--ink)"><title>${last[i].date}: ${last[i].weight} kg${last[i].bodyFat?(' · '+last[i].bodyFat+'% yağ'):''}</title></circle>`).join('');
+    el.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px;">
+      <span style="font-family:'Orbitron',sans-serif; font-size:20px; font-weight:800;">${latest} kg</span>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:${diffColor};">${diffLabel} (${last.length} kayıt)</span>
+    </div>
+    <svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" preserveAspectRatio="none" style="overflow:visible;">
+      <defs>
+        <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--ink)" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="var(--ink)" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <path d="${areaPath}" fill="url(#trendGrad)" stroke="none"></path>
+      <path d="${linePath}" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"></path>
+      ${dots}
+    </svg>
+    <div style="display:flex; justify-content:space-between; margin-top:4px; font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-soft);">
+      <span>${last[0].date.slice(5)}</span><span>${last[last.length-1].date.slice(5)}</span>
+    </div>`;
+  }
+  const LOSS_INTENSITY = {
+    gentle:   { label:'Yavaş ve Sürdürülebilir', pct:0.12 },
+    moderate: { label:'Dengeli Tempo',           pct:0.20 },
+    fast:     { label:'Hızlı',                   pct:0.25 },
+    max:      { label:'En Hızlı (Güvenli Üst Sınır)', pct:0.30, capKcal:1000 }
+  };
 
-  /* ---- Beslenme (Mifflin-St Jeor formülü) ---- */
   function computeNutrition(){
-    const { height:h, weight:w, age:a, gender:g } = fitness;
+    const { height:h, weight:w, age:a, gender:g, goal, activityLevel } = fitness;
     if(!h || !w || !a) return null;
     const bmr = g === 'female' ? (10*w + 6.25*h - 5*a - 161) : (10*w + 6.25*h - 5*a + 5);
-    const tdee = bmr * 1.55; // orta-yoğun antrenman aktivite katsayısı
-    const proteinG = Math.round(w * 1.8);
-    const fatG = Math.round((tdee*0.25)/9);
-    const carbG = Math.round(Math.max(0, tdee - proteinG*4 - fatG*9)/4);
-    return { tdee:Math.round(tdee), proteinG, carbG, fatG };
+    const activityMult = parseFloat(activityLevel) || 1.55;
+    const tdee = bmr * activityMult;
+
+    let goalAdjust = 0, proteinPerKg = 1.8;
+    if(goal === 'lose'){
+      const intensity = LOSS_INTENSITY[fitness.lossIntensity] || LOSS_INTENSITY.moderate;
+      let deficit = tdee * intensity.pct;
+      if(intensity.capKcal) deficit = Math.min(deficit, intensity.capKcal);
+      goalAdjust = -Math.round(deficit);
+      proteinPerKg = 1.8;
+    }
+    else if(goal === 'gain'){ goalAdjust = Math.round(tdee*0.12); proteinPerKg = 1.8; }
+    else if(goal === 'muscle'){ goalAdjust = Math.round(tdee*0.10); proteinPerKg = 2.0; }
+
+    const safeFloor = Math.max(1200, Math.round(bmr));
+    const targetKcal = Math.max(safeFloor, Math.round(tdee + goalAdjust));
+    const proteinG = Math.round(w * proteinPerKg);
+    const fatG = Math.round((targetKcal*0.25)/9);
+    const carbG = Math.round(Math.max(0, targetKcal - proteinG*4 - fatG*9)/4);
+    return { tdee:Math.round(tdee), targetKcal, goalAdjust, proteinG, carbG, fatG };
   }
   function renderMacros(){
     const el = document.getElementById('macroSummary');
     if(!el) return;
     const n = computeNutrition();
     if(!n){
-      el.innerHTML = `<div class="empty-state" style="padding:16px;"><p>Boy, kilo ve yaşını gir.</p></div>`;
+      el.innerHTML = `<div class="empty-state" style="padding:16px;"><p>Boy, kilo, yaş, hedef ve aktivite düzeyini gir.</p></div>`;
       return;
     }
     const proteinKcal = n.proteinG*4, carbKcal = n.carbG*4, fatKcal = n.fatG*9;
@@ -1590,14 +2002,22 @@
       { name:'Karbonhidrat', g:n.carbG, kcal:carbKcal, color:'var(--fx-fuel)' },
       { name:'Yağ', g:n.fatG, kcal:fatKcal, color:'#b06bff' }
     ];
+    const goalLabels = { lose:'Kilo Verme', maintain:'Kiloyu Koruma', gain:'Kilo Alma', muscle:'Kas Yapma' };
+    const goalText = goalLabels[fitness.goal] || 'Kiloyu Koruma';
+    let diffText = n.goalAdjust === 0 ? 'bakım seviyesinde' : (n.goalAdjust > 0 ? `bakımın +${n.goalAdjust} kcal üzerinde` : `bakımın ${n.goalAdjust} kcal altında`);
+    if(fitness.goal === 'lose'){
+      const intensity = LOSS_INTENSITY[fitness.lossIntensity] || LOSS_INTENSITY.moderate;
+      diffText += ` · ${intensity.label}`;
+    }
     el.innerHTML = `
-    <div style="text-align:center; margin-bottom:14px;">
-      <div style="font-family:'Orbitron',sans-serif; font-size:24px; font-weight:800;">${n.tdee}</div>
-      <div style="font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); letter-spacing:.1em; text-transform:uppercase;">kcal / gün</div>
+    <div style="text-align:center; margin-bottom:4px;">
+      <div style="font-family:'Orbitron',sans-serif; font-size:26px; font-weight:800;">${n.targetKcal}</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); letter-spacing:.1em; text-transform:uppercase;">kcal / gün · ${goalText}</div>
     </div>
+    <div style="text-align:center; margin-bottom:14px; font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-soft);">Bakım: ${n.tdee} kcal · ${diffText}</div>
     <div class="fuel-row">
       ${cells.map(c => `<div class="fuel-cell">
-        <div class="fuel-ring" style="--fc:${c.color}; --fp:${Math.round(c.kcal/n.tdee*100)};">
+        <div class="fuel-ring" style="--fc:${c.color}; --fp:${Math.round(c.kcal/n.targetKcal*100)};">
           <div class="fuel-ring-inner"><b>${c.g}g</b></div>
         </div>
         <span class="fuel-cell-name">${c.name}</span>
@@ -1631,19 +2051,19 @@
     <p style="font-size:10px; color:var(--ink-soft); margin-top:10px;">Genel bilimsel referans aralıklarıdır.</p>`;
   }
 
-  /* ---- Vücut figürü (yağ oranına göre) ---- */
   function renderHumanFigure(){
     const wrap = document.getElementById('humanFigureWrap');
     if(!wrap) return;
     const bf = fitness.bodyFat;
     const fatFactor = bf==null ? 0.4 : Math.max(0, Math.min(1, (bf-8)/(35-8)));
-    const torsoW = 40 + fatFactor*26;
-    const armW = 10 + fatFactor*7;
-    const legW = 13 + fatFactor*8;
-    const armGap = 20 + fatFactor*12;
+    const torsoW = 34 + fatFactor*24;
+    const armW = 9 + fatFactor*6;
+    const legW = 12 + fatFactor*7;
+    const armGap = 19 + fatFactor*11;
     const legGap = 3 + fatFactor*3;
-    const abOpacity = Math.max(0, 0.85 - fatFactor*0.85);
+    const abOpacity = Math.max(0, 0.8 - fatFactor*0.8);
     const label = bf==null ? 'Yağ oranını gir' : (bf<10?'Çok Düşük':bf<15?'Atletik':bf<22?'Normal':bf<30?'Ortalama Üstü':'Yüksek');
+    const uid = 'bodyGrad_'+currentTheme();
 
     wrap.innerHTML = `
     <div class="fx-scanwrap">
@@ -1652,19 +2072,30 @@
       <div class="fx-scanring r3"></div>
       <div class="fx-scansweep"></div>
       <svg width="150" height="150" viewBox="0 0 150 220" style="position:relative; z-index:1;">
-        <g transform="translate(75,110)">
-          <ellipse cx="0" cy="-78" rx="15" ry="17" fill="var(--ink-soft)" opacity="0.9"/>
-          <rect x="${-torsoW/2}" y="-58" width="${torsoW}" height="64" rx="13" fill="var(--ink)" opacity="0.9"/>
-          <rect x="${-torsoW/2-armGap}" y="-55" width="${armW}" height="58" rx="5" fill="var(--ink-soft)" opacity="0.9"/>
-          <rect x="${torsoW/2+armGap-armW}" y="-55" width="${armW}" height="58" rx="5" fill="var(--ink-soft)" opacity="0.9"/>
-          <rect x="${-legGap-legW}" y="6" width="${legW}" height="64" rx="6" fill="var(--ink)" opacity="0.9"/>
-          <rect x="${legGap}" y="6" width="${legW}" height="64" rx="6" fill="var(--ink)" opacity="0.9"/>
-          <g opacity="${abOpacity}">
-            <line x1="0" y1="-48" x2="0" y2="-6" stroke="var(--panel)" stroke-width="1.6"/>
-            <line x1="-10" y1="-38" x2="10" y2="-38" stroke="var(--panel)" stroke-width="1.6"/>
-            <line x1="-10" y1="-25" x2="10" y2="-25" stroke="var(--panel)" stroke-width="1.6"/>
-            <line x1="-10" y1="-12" x2="10" y2="-12" stroke="var(--panel)" stroke-width="1.6"/>
+        <defs>
+          <linearGradient id="${uid}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--ink)" stop-opacity="1"/>
+            <stop offset="100%" stop-color="var(--ink-soft)" stop-opacity="0.85"/>
+          </linearGradient>
+          <filter id="bodyShadow" x="-40%" y="-40%" width="180%" height="180%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.35"/>
+          </filter>
+        </defs>
+        <g transform="translate(75,110)" filter="url(#bodyShadow)">
+          <ellipse cx="0" cy="-80" rx="14" ry="16" fill="url(#${uid})"/>
+          <path d="M0 -66 Q1 -70 5 -70 L5 -73 Q0 -75 -5 -73 L-5 -70 Q-1 -70 0 -66 Z" fill="url(#${uid})" opacity=".9"/>
+          <rect x="${-torsoW/2}" y="-58" width="${torsoW}" height="62" rx="${torsoW*0.32}" fill="url(#${uid})"/>
+          <rect x="${-torsoW/2-armGap}" y="-54" width="${armW}" height="56" rx="${armW/2}" fill="url(#${uid})" opacity=".92"/>
+          <rect x="${torsoW/2+armGap-armW}" y="-54" width="${armW}" height="56" rx="${armW/2}" fill="url(#${uid})" opacity=".92"/>
+          <rect x="${-legGap-legW}" y="4" width="${legW}" height="66" rx="${legW/2}" fill="url(#${uid})"/>
+          <rect x="${legGap}" y="4" width="${legW}" height="66" rx="${legW/2}" fill="url(#${uid})"/>
+          <g opacity="${abOpacity}" stroke="var(--panel)" stroke-width="1.4" stroke-linecap="round">
+            <line x1="0" y1="-46" x2="0" y2="-8"/>
+            <line x1="-9" y1="-36" x2="9" y2="-36"/>
+            <line x1="-9" y1="-24" x2="9" y2="-24"/>
+            <line x1="-9" y1="-12" x2="9" y2="-12"/>
           </g>
+          <path d="M${-torsoW/2+3} -55 Q${-torsoW/2-2} -30 ${-torsoW/2+4} 0" fill="none" stroke="#fff" stroke-width="1" opacity=".12"/>
         </g>
       </svg>
     </div>
@@ -1750,6 +2181,10 @@
     document.getElementById('fAge').value = fitness.age || '';
     document.getElementById('fGender').value = fitness.gender || 'male';
     document.getElementById('fBodyFat').value = fitness.bodyFat!=null ? fitness.bodyFat : '';
+    document.getElementById('fGoal').value = fitness.goal || 'maintain';
+    document.getElementById('fActivity').value = fitness.activityLevel || '1.55';
+    document.getElementById('fLossIntensity').value = fitness.lossIntensity || 'moderate';
+    onGoalChange();
     document.getElementById('fBench').value = fitness.lifts.bench || '';
     document.getElementById('fDeadlift').value = fitness.lifts.deadlift || '';
     document.getElementById('fLat').value = fitness.lifts.lat || '';
@@ -1757,9 +2192,11 @@
     renderHumanFigure();
     renderStrengthGauges();
     renderStrengthChart();
+    renderWeightTrend();
     renderMacros();
     renderSupplements();
     renderWaterJug();
+    renderStepCounter();
   }
 
   const firebaseConfig = {
@@ -1810,10 +2247,15 @@
           age: loadedFitness.age ?? null,
           gender: loadedFitness.gender || 'male',
           bodyFat: loadedFitness.bodyFat ?? null,
+          goal: loadedFitness.goal || 'maintain',
+          activityLevel: loadedFitness.activityLevel || '1.55',
+          lossIntensity: loadedFitness.lossIntensity || 'moderate',
           lifts: Object.assign({ bench:null, deadlift:null, lat:null, lateral:null }, loadedFitness.lifts || {}),
           liftHistory: loadedFitness.liftHistory || [],
+          weightHistory: loadedFitness.weightHistory || [],
           waterConsumed: loadedFitness.waterConsumed || 0,
-          waterDate: loadedFitness.waterDate || null
+          waterDate: loadedFitness.waterDate || null,
+          steps: Object.assign({ count:0, date:null, goal:8000 }, loadedFitness.steps || {})
         };
         checkWaterDayReset();
         renderFitness();
@@ -1910,12 +2352,13 @@
     document.getElementById('recurringLabelText').innerHTML = `${icon('refresh',13)} Sonsuz rutin — süresiz, her gün otomatik tekrar eder`;
     document.getElementById('addTaskBtn').innerHTML = `${icon('plus',14)} Göreve Başla`;
     document.getElementById('addCardIcon').innerHTML = icon('terminal',22);
+    document.getElementById('addCardChevron').innerHTML = icon('chevDown',16);onRecurringToggle
     document.getElementById('celebrateIcon').innerHTML = icon('sparkle',16);
     document.getElementById('galleryToggle').innerHTML = `${icon('layers',11)} Rütbe haritasını gör`;
     document.getElementById('achvToggle').innerHTML = `${icon('trophy',11)} Başarımları gör`;
     document.getElementById('lbToggle').innerHTML = `${icon('crown',11)} Sıralamayı gör`;
     document.getElementById('lbRefreshBtn').innerHTML = `${icon('refresh',11)} Listeyi yenile`;
-    document.getElementById('portfolioQuickBtn').innerHTML = icon('dollar',19).replace('<svg ', '<svg class="quick-icon" ');
+    document.getElementById('portfolioQuickBtn').innerHTML = icon('wallet',19).replace('<svg ', '<svg class="quick-icon" ');
     document.getElementById('fitnessQuickBtn').innerHTML = icon('dumbbell',19).replace('<svg ', '<svg class="quick-icon" ');
     document.getElementById('fHeightIcon').innerHTML = icon('scale',14) || '';
     document.getElementById('fWeightIcon').innerHTML = icon('bolt',14);
@@ -1926,17 +2369,36 @@
     document.getElementById('fLatIcon').innerHTML = icon('dumbbell',14);
     document.getElementById('fLateralIcon').innerHTML = icon('dumbbell',14);
     document.getElementById('fSaveStatsBtn').innerHTML = `${icon('check',14)} Bilgileri Kaydet`;
+    document.getElementById('fSaveStatsBtn').innerHTML = `${icon('check',14)} Bilgileri Kaydet`;
+    document.getElementById('stepGoalIcon').innerHTML = icon('flag',14);
+    document.getElementById('stepKcalLabel').innerHTML = `${icon('bolt',11)} Yakılan Kalori`;
+    document.getElementById('stepDistLabel').innerHTML = `${icon('compass',11)} Mesafe`;
+    document.getElementById('stepTrackBtn').innerHTML = `${icon('bolt',14)} Adım Saymayı Başlat`;
+    document.getElementById('stepSensorBadge').innerHTML = `${icon('circleEmpty',10)} SENSÖR PASİF`;
     document.getElementById('fSaveLiftsBtn').innerHTML = `${icon('bolt',14)} Rekorları Kaydet`;
     document.getElementById('authShield').innerHTML = icon('lock',26);
     document.getElementById('authBtn').innerHTML = `${icon('shield',14)} Giriş Yap`;
     document.getElementById('profileSaveBtn').innerHTML = `${icon('check',14)} Kaydet`;
+    document.getElementById('fxEliteTitle').innerHTML = `${icon('crown',16)} Spor Gelişimim`;
     document.getElementById('profileMenu').innerHTML = `
       <button class="profile-menu-item" onclick="event.stopPropagation(); closeProfileMenu(); openProfilePanel();">${icon('edit',15)} Profil Ayarları</button>
       <div class="profile-menu-sep"></div>
       <button class="profile-menu-item danger" onclick="event.stopPropagation(); closeProfileMenu(); logout();">${icon('logout',15)} Çıkış Yap</button>
     `;
   }
-
+  function toggleAddCard(){
+    const body = document.getElementById('addCardBody');
+    const chevron = document.getElementById('addCardChevron');
+    const collapsed = body.classList.toggle('collapsed');
+    chevron.style.transform = collapsed ? 'rotate(-90deg)' : 'rotate(0deg)';
+    localStorage.setItem('tc_addcard_collapsed_v1', collapsed ? '1' : '0');
+  }
+  function initAddCardCollapse(){
+    if(localStorage.getItem('tc_addcard_collapsed_v1') === '1'){
+      document.getElementById('addCardBody').classList.add('collapsed');
+      document.getElementById('addCardChevron').style.transform = 'rotate(-90deg)';
+    }
+  }
   function onRecurringToggle(){
     const checked = document.getElementById('isRecurring').checked;
     document.getElementById('dueRow').style.display = checked ? 'none' : 'flex';
@@ -3005,6 +3467,7 @@
 
   initTheme();
   buildStaticUI();
+  initAddCardCollapse();
   leaderboardBots = generateLeaderboardBots();
   attachDragScroll(document.getElementById('rankGallery'));
   attachDragScroll(document.getElementById('achvGallery'));

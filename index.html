@@ -956,6 +956,7 @@
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
         <span class="fx-panel-label" style="margin:0;">Adım Sayar</span>
         <span id="stepSensorBadge" style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft);"></span>
+        <span id="stepDebugReadout" style="font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-soft); display:block; margin-top:4px;">debug bekleniyor…</span>
       </div>
       <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
         <div id="stepRingWrap" style="flex:none;"></div>
@@ -1856,23 +1857,27 @@
 
   function handleMotionStep(event){
     const acc = event.accelerationIncludingGravity || event.acceleration;
-    if(!acc) return;
+    const dbg = document.getElementById('stepDebugReadout');
+    if(!acc){
+      if(dbg) dbg.textContent = 'UYARI: cihaz ivme verisi göndermiyor (acc=null)';
+      return;
+    }
     const x = acc.x||0, y = acc.y||0, z = acc.z||0;
     const rawMag = Math.sqrt(x*x + y*y + z*z);
 
-    // yerçekimi bileşenini yumuşat (low-pass)
     smoothedMag = smoothedMag === 0 ? rawMag : (smoothedMag * 0.9 + rawMag * 0.1);
     const dynamic = rawMag - smoothedMag;
 
-    // küçük titremeleri (el titremesi vb.) elemek için son birkaç örneğin ortalamasını al
     motionBuffer.push(dynamic);
     if(motionBuffer.length > 4) motionBuffer.shift();
     const avgDynamic = motionBuffer.reduce((a,b)=>a+b,0) / motionBuffer.length;
 
-    const PEAK_THRESHOLD = 2.2;     // adım tepe eşiği — titremeyi elemek için yüksek
-    const TROUGH_THRESHOLD = -1.0;  // adım öncesi çukur eşiği
-    const MIN_STEP_INTERVAL = 280;  // ms — art arda sahte sayımı engeller
-    const MAX_STEP_INTERVAL = 2000; // ms — bu süre hareketsizlikte durumu sıfırla
+    if(dbg) dbg.textContent = `ham:${rawMag.toFixed(2)} düz:${smoothedMag.toFixed(2)} dinamik:${avgDynamic.toFixed(2)} faz:${stepPhase}`;
+
+    const PEAK_THRESHOLD = 2.2;
+    const TROUGH_THRESHOLD = -1.0;
+    const MIN_STEP_INTERVAL = 280;
+    const MAX_STEP_INTERVAL = 2000;
 
     const now = Date.now();
     if(now - lastStepTime > MAX_STEP_INTERVAL) stepPhase = 'idle';
@@ -1892,6 +1897,10 @@
   }
 
   async function requestMotionPermission(){
+    if(location.protocol !== 'https:' && location.hostname !== 'localhost'){
+      showTopToast('Sensör için sayfanın https üzerinden açılması gerekiyor', 'warn', 'warn');
+      return;
+    }
     if(typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function'){
       try{
         const res = await DeviceMotionEvent.requestPermission();

@@ -1865,7 +1865,6 @@
     const x = acc.x||0, y = acc.y||0, z = acc.z||0;
     const rawMag = Math.sqrt(x*x + y*y + z*z);
 
-    // yerçekimini daha yavaş öğren (0.95) — daha stabil bir taban çizgisi verir
     smoothedMag = smoothedMag === 0 ? rawMag : (smoothedMag * 0.95 + rawMag * 0.05);
     const dynamic = rawMag - smoothedMag;
 
@@ -1873,28 +1872,39 @@
     if(motionBuffer.length > 3) motionBuffer.shift();
     const avgDynamic = motionBuffer.reduce((a,b)=>a+b,0) / motionBuffer.length;
 
-    // düşürülmüş, daha hassas eşikler
-    const PEAK_THRESHOLD = 0.35;
-    const TROUGH_THRESHOLD = -0.2;
+    // ---- otomatik kalibrasyon: son birkaç saniyenin min/max aralığını takip et ----
+    if(!window._stepCalib) window._stepCalib = { min: 0, max: 0, samples: [] };
+    const calib = window._stepCalib;
+    calib.samples.push(avgDynamic);
+    if(calib.samples.length > 60) calib.samples.shift(); // ~son birkaç saniye
+    calib.min = Math.min(...calib.samples);
+    calib.max = Math.max(...calib.samples);
+    const range = calib.max - calib.min;
+
+    // eşikleri gözlemlenen aralığın bir yüzdesi olarak belirle
+    const PEAK_THRESHOLD = calib.max - range*0.25;
+    const TROUGH_THRESHOLD = calib.min + range*0.25;
     const MIN_STEP_INTERVAL = 250;
     const MAX_STEP_INTERVAL = 2000;
 
-    if(dbg) dbg.textContent = `ham:${rawMag.toFixed(2)} düz:${smoothedMag.toFixed(2)} dinamik:${avgDynamic.toFixed(2)} faz:${stepPhase}`;
+    if(dbg) dbg.textContent = `dinamik:${avgDynamic.toFixed(2)} [aralık ${calib.min.toFixed(2)}..${calib.max.toFixed(2)}] eşik:${TROUGH_THRESHOLD.toFixed(2)}/${PEAK_THRESHOLD.toFixed(2)} faz:${stepPhase}`;
 
     const now = Date.now();
     if(now - lastStepTime > MAX_STEP_INTERVAL) stepPhase = 'idle';
 
-    if(stepPhase === 'idle' && avgDynamic < TROUGH_THRESHOLD){
-      stepPhase = 'trough';
-    } else if(stepPhase === 'trough' && avgDynamic > PEAK_THRESHOLD){
-      if(now - lastStepTime > MIN_STEP_INTERVAL){
-        lastStepTime = now;
-        checkStepsDayReset();
-        fitness.steps.count += 1;
-        renderStepCounter();
-        if(fitness.steps.count % 10 === 0) saveState();
+    if(range > 0.05){ // gürültü tabanını ele, tamamen düz sinyalde tetiklenmesin
+      if(stepPhase === 'idle' && avgDynamic < TROUGH_THRESHOLD){
+        stepPhase = 'trough';
+      } else if(stepPhase === 'trough' && avgDynamic > PEAK_THRESHOLD){
+        if(now - lastStepTime > MIN_STEP_INTERVAL){
+          lastStepTime = now;
+          checkStepsDayReset();
+          fitness.steps.count += 1;
+          renderStepCounter();
+          if(fitness.steps.count % 10 === 0) saveState();
+        }
+        stepPhase = 'idle';
       }
-      stepPhase = 'idle';
     }
   }
 
@@ -1919,7 +1929,7 @@
   function startStepTracking(){
     if(stepTracking) return;
     stepTracking = true;
-    motionBuffer = []; smoothedMag = 0; stepPhase = 'idle'; lastStepTime = 0;
+    window._stepCalib = { min: 0, max: 0, samples: [] };
     window.addEventListener('devicemotion', handleMotionStep);
     requestWakeLockSafe();
     const btn = document.getElementById('stepTrackBtn');

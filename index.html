@@ -170,6 +170,23 @@
     .quick-icon:hover{color:var(--ink);}
     .quick-icon.active{color:var(--ink); filter:drop-shadow(0 0 6px var(--glow-mid));}
 
+    .quick-icon.active{color:var(--ink); filter:drop-shadow(0 0 6px var(--glow-mid));}
+    #quickIconsRow span[data-tooltip]{ position:relative; }
+    #quickIconsRow span[data-tooltip]::after{
+      content:attr(data-tooltip); position:absolute; bottom:calc(100% + 9px); left:50%;
+      transform:translateX(-50%) translateY(4px); background:var(--panel); color:var(--ink);
+      border:1px solid var(--line); padding:5px 10px; border-radius:6px; font-family:'JetBrains Mono',monospace;
+      font-size:10px; letter-spacing:.02em; white-space:nowrap; opacity:0; pointer-events:none;
+      transition:opacity .15s ease, transform .15s ease; box-shadow:var(--shadow); z-index:5;
+    }
+    #quickIconsRow span[data-tooltip]::before{
+      content:''; position:absolute; bottom:calc(100% + 4px); left:50%; transform:translateX(-50%) translateY(4px);
+      border:5px solid transparent; border-top-color:var(--line); opacity:0; pointer-events:none;
+      transition:opacity .15s ease, transform .15s ease; z-index:5;
+    }
+    #quickIconsRow span[data-tooltip]:hover::after,
+    #quickIconsRow span[data-tooltip]:hover::before{ opacity:1; transform:translateX(-50%) translateY(0); }
+
     .badge-wrap{position:relative; display:inline-block; line-height:0;}
     .badge-wrap.glow{animation:badgeEmber 2.6s ease-in-out infinite;}
     @keyframes badgeEmber{
@@ -642,6 +659,30 @@
     .aqua-chip:active{ transform:scale(.96); }
     .aqua-chip svg{ width:12px; height:12px; opacity:.85; }
 
+    .step-fab{
+      flex:none; width:56px; height:56px; border-radius:50%; border:none; cursor:pointer;
+      background:var(--brand-gradient); color:#fff; display:flex; align-items:center; justify-content:center;
+      box-shadow:0 0 0 4px var(--panel-alt), 0 0 16px var(--glow-mid); transition:transform .15s ease, box-shadow .2s ease;
+    }
+    .step-fab:hover{ box-shadow:0 0 0 4px var(--panel-alt), 0 0 22px var(--glow-mid); transform:scale(1.05); }
+    .step-fab:active{ transform:scale(.94); }
+    .step-fab.tracking{ background:var(--panel); color:var(--ink); border:2px solid var(--ink); box-shadow:0 0 0 4px var(--panel-alt), 0 0 18px var(--glow-mid); }
+    .step-fab svg{ width:22px; height:22px; }
+
+    .lift-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+    @media (max-width:600px){ .lift-grid{grid-template-columns:1fr;} }
+    .lift-card{display:flex; align-items:center; gap:12px; background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:12px; transition:border-color .15s ease, box-shadow .15s ease;}
+    .lift-card:focus-within{border-color:var(--ink); box-shadow:0 0 0 3px var(--glow-soft);}
+    .lift-card-icon{flex:none; width:38px; height:38px; border-radius:10px; background:var(--panel-alt); border:1px solid var(--line); color:var(--ink); display:flex; align-items:center; justify-content:center;}
+    .lift-card-body{flex:1; min-width:0; display:flex; flex-direction:column; gap:4px;}
+    .lift-card-name{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft);}
+    .lift-card-body input{border:none; background:none; padding:0; font-family:'Orbitron',sans-serif; font-size:15px; font-weight:700; color:var(--ink); width:100%;}
+    .lift-card-body input:focus{outline:none; box-shadow:none;}
+    .bf-calc{margin:0;}
+    .bf-calc-body{
+      padding:16px; background:var(--bg); border:1px solid var(--line); border-radius:12px;
+      box-shadow:inset 0 1px 3px rgba(0,0,0,.15);
+    }
     /* ==================== ORTAK RADIAL GAUGE BİLEŞENİ ==================== */
     .pro-gauge{ position:relative; margin:0 auto; }
     .pro-gauge-ticks{
@@ -761,8 +802,9 @@
         <button class="link-btn" id="lbToggle" onclick="togglePanel('lbPanel','lbToggle','Sıralamayı')"></button>
       </div>
       <div class="quick-icons-row" id="quickIconsRow">
-        <span id="portfolioQuickBtn" onclick="toggleQuickIcon('portfolioPanel','portfolioQuickBtn')" title="Portföyüm (TL)"></span>
-        <span id="fitnessQuickBtn" onclick="toggleQuickIcon('fitnessPanel','fitnessQuickBtn')" title="Spor Gelişimim"></span>
+        <span id="targetQuickBtn" onclick="toggleQuickIcon('targetPanel','targetQuickBtn')" data-tooltip="Görev Paneli"></span>
+        <span id="portfolioQuickBtn" onclick="toggleQuickIcon('portfolioPanel','portfolioQuickBtn')" data-tooltip="Portföyüm (TL)"></span>
+        <span id="fitnessQuickBtn" onclick="toggleQuickIcon('fitnessPanel','fitnessQuickBtn')" data-tooltip="Spor Gelişimim"></span>
       </div>
     </div>
   </div>
@@ -839,7 +881,7 @@
         </div>
         <div class="fx-field-group">
           <span class="fx-field-label">Cinsiyet</span>
-          <select id="fGender">
+          <select id="fGender" onchange="onGenderChangeBf()">
             <option value="male">Erkek</option>
             <option value="female">Kadın</option>
           </select>
@@ -875,7 +917,7 @@
           </select>
         </div>
       </div>
-      <div class="add-row" style="justify-content:flex-end; margin-bottom:0;">
+      <div class="add-row" style="justify-content:center; margin-bottom:0;">
         <button class="btn" id="fSaveStatsBtn" onclick="saveFitnessStats()"></button>
       </div>
     </div>
@@ -886,12 +928,26 @@
         <div id="humanFigureWrap"></div>
       </div>
       <div class="fx-panel">
-        <span class="fx-panel-label">Hareket Rekorların (1RM)</span>
-        <div class="add-row"><label class="field-icon-input" style="width:100%;"><span id="fBenchIcon"></span><input type="number" id="fBench" placeholder="Incline Bench Press (1x1, kg)"></label></div>
-        <div class="add-row"><label class="field-icon-input" style="width:100%;"><span id="fDeadliftIcon"></span><input type="number" id="fDeadlift" placeholder="Deadlift (1x1, kg)"></label></div>
-        <div class="add-row"><label class="field-icon-input" style="width:100%;"><span id="fLatIcon"></span><input type="number" id="fLat" placeholder="Lat Pull Down (1x8, kg)"></label></div>
-        <div class="add-row"><label class="field-icon-input" style="width:100%;"><span id="fLateralIcon"></span><input type="number" id="fLateral" placeholder="Lateral Raise (1x8, kg)"></label></div>
-        <div class="add-row"><button class="btn btn-add" id="fSaveLiftsBtn" onclick="saveFitnessLifts()"></button></div>
+        <span class="fx-panel-label">Yağ Oranı Hesaplama</span>
+        <div class="bf-calc">
+          <div class="bf-calc-body" id="bfCalcBody">
+            <div class="fx-field-grid" style="grid-template-columns:repeat(3,1fr); margin-bottom:10px;">
+              <div class="fx-field-group">
+                <span class="fx-field-label">Bel</span>
+                <label class="field-icon-input"><span id="bfWaistIcon"></span><input type="number" id="bfWaist" placeholder="cm"></label>
+              </div>
+              <div class="fx-field-group">
+                <span class="fx-field-label">Boyun</span>
+                <label class="field-icon-input"><span id="bfNeckIcon"></span><input type="number" id="bfNeck" placeholder="cm"></label>
+              </div>
+              <div class="fx-field-group" id="bfHipGroup" style="display:none;">
+                <span class="fx-field-label">Kalça</span>
+                <label class="field-icon-input"><span id="bfHipIcon"></span><input type="number" id="bfHip" placeholder="cm"></label>
+              </div>
+            </div>
+            <button type="button" class="btn" style="width:100%;" id="bfCalcBtn" onclick="calculateBodyFat()"></button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="fx-panel" style="margin-top:14px;">
@@ -905,7 +961,7 @@
       </div>
       <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
         <div id="stepRingWrap" style="flex:none;"></div>
-        <div style="flex:1; min-width:190px; display:flex; flex-direction:column; gap:9px;">
+        <div style="flex:1; min-width:190px; display:flex; flex-direction:column; gap:10px;">
           <div class="add-row" style="margin-bottom:0;">
             <label class="field-icon-input" style="width:150px;"><span id="stepGoalIcon"></span><input type="number" id="stepGoalInput" min="1000" step="500" placeholder="Günlük hedef"></label>
             <button class="btn-text" onclick="saveStepGoal()">Hedefi Kaydet</button>
@@ -918,14 +974,53 @@
             <span class="power-bar-label" id="stepDistLabel" style="width:auto;"></span>
             <span id="stepStatDist" style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--ink); margin-left:auto;">0 km</span>
           </div>
-          <button class="btn" id="stepTrackBtn" onclick="requestMotionPermission()"></button>
-          <button class="btn-text" onclick="resetStepsToday()" style="align-self:flex-start;">Bugünü sıfırla</button>
+          <div style=" display:flex; flex-direction: column; align-items:center; justify-content:center; gap:7px; margin-top:10px;">
+            <button class="step-fab" id="stepTrackBtn" onclick="requestMotionPermission()"></button>
+            <button class="btn-text" onclick="resetStepsToday()">Bugünü sıfırla</button>
+          </div>
         </div>
       </div>
+      <div class="week-chart" id="stepWeekChart" style="height:70px; margin-top:18px;"></div>
     </div>
-    <div class="fx-panel" style="margin-top:14px;">
-      <span class="fx-panel-label">Güç Çekirdeği</span>
-      <div id="strengthGauges"></div>
+    <div class="fx-grid" style="margin-top:14px;">
+      <div class="fx-panel">
+        <span class="fx-panel-label">Güç Çekirdeği</span>
+        <div id="strengthGauges"></div>
+      </div>
+      <div class="fx-panel">
+        <span class="fx-panel-label">Hareket Rekorların (1RM)</span>
+        <div class="lift-grid">
+          <div class="lift-card">
+            <div class="lift-card-icon" id="fBenchIcon"></div>
+            <div class="lift-card-body">
+              <span class="lift-card-name">Incline Bench Press · 1x1</span>
+              <input type="number" id="fBench" placeholder="kg">
+            </div>
+          </div>
+          <div class="lift-card">
+            <div class="lift-card-icon" id="fDeadliftIcon"></div>
+            <div class="lift-card-body">
+              <span class="lift-card-name">Deadlift · 1x1</span>
+              <input type="number" id="fDeadlift" placeholder="kg">
+            </div>
+          </div>
+          <div class="lift-card">
+            <div class="lift-card-icon" id="fLatIcon"></div>
+            <div class="lift-card-body">
+              <span class="lift-card-name">Lat Pull Down · 1x8</span>
+              <input type="number" id="fLat" placeholder="kg">
+            </div>
+          </div>
+          <div class="lift-card">
+            <div class="lift-card-icon" id="fLateralIcon"></div>
+            <div class="lift-card-body">
+              <span class="lift-card-name">Lateral Raise · 1x8</span>
+              <input type="number" id="fLateral" placeholder="kg">
+            </div>
+          </div>
+        </div>
+        <div class="add-row" style="margin-top:12px;"><button class="btn btn-add" id="fSaveLiftsBtn" onclick="saveFitnessLifts()"></button></div>
+      </div>
     </div>
 
     <div class="fx-panel" style="margin-top:14px;">
@@ -943,7 +1038,6 @@
         <div id="supplementList"></div>
       </div>
     </div>
-
     <div class="fx-panel" style="margin-top:14px;">
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
         <span class="fx-panel-label" style="margin:0;">Hidrasyon</span>
@@ -968,117 +1062,120 @@
   </div>
 
 
-  <div class="grid-2">
-    <div class="panel">
-      <h3>İlerleme</h3>
-      <div class="dial-stats">
-        <div class="dial-wrap">
-          <svg width="82" height="82" viewBox="0 0 104 104">
-            <circle class="dial-track" cx="52" cy="52" r="44"></circle>
-            <circle class="dial-fill" id="dialFill" cx="52" cy="52" r="44" stroke-dasharray="276.5" stroke-dashoffset="276.5"></circle>
-          </svg>
-          <div class="dial-label"><span class="dial-pct" id="dialPct">0%</span></div>
-        </div>
-        <div class="stat-mini-row">
-          <div class="stat-mini"><b id="statTotal">0</b> toplam görev</div>
-          <div class="stat-mini"><b id="statDone">0</b> tamamlandı</div>
-          <div class="stat-mini"><b id="statLeft">0</b> kalan</div>
-        </div>
-      </div>
-    </div>
-    <div class="panel">
-      <h3>Bu Hafta</h3>
-      <div class="week-chart" id="weekChart"></div>
-    </div>
-  </div>
-
-  <div class="grid-2">
-    <div class="panel">
-      <h3>Kategori Grafiği</h3>
-      <div class="cat-chart" id="categoryChart"></div>
-    </div>
-    <div class="panel">
-      <h3 style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
-        <span id="calMonthLabel">Bu Ay</span>
-        <span class="cal-legend"><span class="cal-dot"></span> Başarılı gün</span>
-      </h3>
-      <div class="month-cal" id="monthCalendar"></div>
-    </div>
-  </div>
-
-  <div class="add-card">
-    <div class="add-card-head" onclick="toggleAddCard()" style="cursor:pointer;">
-      <span class="add-card-icon" id="addCardIcon"></span>
-      <div style="flex:1;">
-        <p class="add-card-title">Yeni Görev</p>
-        <p class="add-card-sub">Panele bir görev daha ekle — XP ve rütbe seni bekliyor.</p>
-      </div>
-      <span class="add-card-chevron" id="addCardChevron"></span>
-    </div>
-    <div class="add-card-body" id="addCardBody">
-      <div class="add-row">
-        <input type="text" id="taskInput" placeholder="Görevin adını yaz…" onkeydown="if(event.key==='Enter')addTask()">
-      </div>
-      <div class="add-row">
-        <div class="seg-block">
-          <span class="seg-label">Kategori</span>
-          <div class="seg-group" id="categoryGroup"></div>
-        </div>
-      </div>
-      <div class="add-row">
-        <div class="seg-block">
-          <span class="seg-label">Öncelik</span>
-          <div class="seg-group" id="priorityGroup"></div>
-        </div>
-      </div>
-      <div class="add-row">
-        <label class="rune-switch" id="recurringLabel">
-          <input type="checkbox" id="isRecurring" onchange="onRecurringToggle()">
-          <span class="switch-track"><span class="switch-thumb"></span></span>
-          <span id="recurringLabelText"></span>
-        </label>
-      </div>
-      <div class="add-row" id="dueRow">
-        <div class="seg-block">
-          <span class="seg-label">Süre Sınırı (opsiyonel)</span>
-          <div class="seg-group" id="durationGroup"></div>
-          <div id="customDurationWrap" style="display:none; margin-top:8px;">
-            <label class="field-icon-input" style="width:150px;">
-              <span id="customDurationIcon"></span>
-              <input type="number" id="dueHours" min="1" max="999" step="1" placeholder="Saat">
-              <span class="suffix">SAAT</span>
-            </label>
+  <div class="target-panel gallery-panel open" id="targetPanel">
+    <div class="grid-2">
+      <div class="panel">
+        <h3>İlerleme</h3>
+        <div class="dial-stats">
+          <div class="dial-wrap">
+            <svg width="82" height="82" viewBox="0 0 104 104">
+              <circle class="dial-track" cx="52" cy="52" r="44"></circle>
+              <circle class="dial-fill" id="dialFill" cx="52" cy="52" r="44" stroke-dasharray="276.5" stroke-dashoffset="276.5"></circle>
+            </svg>
+            <div class="dial-label"><span class="dial-pct" id="dialPct">0%</span></div>
+          </div>
+          <div class="stat-mini-row">
+            <div class="stat-mini"><b id="statTotal">0</b> toplam görev</div>
+            <div class="stat-mini"><b id="statDone">0</b> tamamlandı</div>
+            <div class="stat-mini"><b id="statLeft">0</b> kalan</div>
           </div>
         </div>
       </div>
-      <div class="add-row">
-        <button class="btn btn-add" onclick="addTask()" id="addTaskBtn"></button>
+      <div class="panel">
+        <h3>Bu Hafta</h3>
+        <div class="week-chart" id="weekChart"></div>
       </div>
     </div>
 
-  </div>
-
-  <div class="filter-row">
-    <button class="chip active" data-filter="all" onclick="setFilter('all')">Tümü</button>
-    <button class="chip" data-filter="active" onclick="setFilter('active')">Aktif</button>
-    <button class="chip" data-filter="done" onclick="setFilter('done')">Tamamlanan</button>
-    <div class="row-right">
-      <select class="sort-select" id="sortSelect" onchange="render()">
-        <option value="manual">Manuel sıra</option>
-        <option value="priority">Önceliğe göre</option>
-        <option value="due">Süreye göre</option>
-        <option value="newest">En yeni</option>
-      </select>
-      <input type="text" class="search" id="searchInput" placeholder="Ara…" oninput="render()">
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Kategori Grafiği</h3>
+        <div class="cat-chart" id="categoryChart"></div>
+      </div>
+      <div class="panel">
+        <h3 style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+          <span id="calMonthLabel">Bu Ay</span>
+          <span class="cal-legend"><span class="cal-dot"></span> Başarılı gün</span>
+        </h3>
+        <div class="month-cal" id="monthCalendar"></div>
+      </div>
     </div>
+
+    <div class="add-card">
+      <div class="add-card-head" onclick="toggleAddCard()" style="cursor:pointer;">
+        <span class="add-card-icon" id="addCardIcon"></span>
+        <div style="flex:1;">
+          <p class="add-card-title">Yeni Görev</p>
+          <p class="add-card-sub">Panele bir görev daha ekle — XP ve rütbe seni bekliyor.</p>
+        </div>
+        <span class="add-card-chevron" id="addCardChevron"></span>
+      </div>
+      <div class="add-card-body" id="addCardBody">
+        <div class="add-row">
+          <input type="text" id="taskInput" placeholder="Görevin adını yaz…" onkeydown="if(event.key==='Enter')addTask()">
+        </div>
+        <div class="add-row">
+          <div class="seg-block">
+            <span class="seg-label">Kategori</span>
+            <div class="seg-group" id="categoryGroup"></div>
+          </div>
+        </div>
+        <div class="add-row">
+          <div class="seg-block">
+            <span class="seg-label">Öncelik</span>
+            <div class="seg-group" id="priorityGroup"></div>
+          </div>
+        </div>
+        <div class="add-row">
+          <label class="rune-switch" id="recurringLabel">
+            <input type="checkbox" id="isRecurring" onchange="onRecurringToggle()">
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            <span id="recurringLabelText"></span>
+          </label>
+        </div>
+        <div class="add-row" id="dueRow">
+          <div class="seg-block">
+            <span class="seg-label">Süre Sınırı (opsiyonel)</span>
+            <div class="seg-group" id="durationGroup"></div>
+            <div id="customDurationWrap" style="display:none; margin-top:8px;">
+              <label class="field-icon-input" style="width:150px;">
+                <span id="customDurationIcon"></span>
+                <input type="number" id="dueHours" min="1" max="999" step="1" placeholder="Saat">
+                <span class="suffix">SAAT</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="add-row">
+          <button class="btn btn-add" onclick="addTask()" id="addTaskBtn"></button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="filter-row">
+      <button class="chip active" data-filter="all" onclick="setFilter('all')">Tümü</button>
+      <button class="chip" data-filter="active" onclick="setFilter('active')">Aktif</button>
+      <button class="chip" data-filter="done" onclick="setFilter('done')">Tamamlanan</button>
+      <div class="row-right">
+        <select class="sort-select" id="sortSelect" onchange="render()">
+          <option value="manual">Manuel sıra</option>
+          <option value="priority">Önceliğe göre</option>
+          <option value="due">Süreye göre</option>
+          <option value="newest">En yeni</option>
+        </select>
+        <input type="text" class="search" id="searchInput" placeholder="Ara…" oninput="render()">
+      </div>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:14px; margin-bottom:8px;">
+      <button class="btn-text" onclick="clearCompleted()">Tamamlananları temizle</button>
+      <button class="btn-text" onclick="clearAll()">Tümünü sil</button>
+    </div>
+
+    <div id="taskList"></div>
   </div>
 
-  <div style="display:flex; justify-content:flex-end; gap:14px; margin-bottom:8px;">
-    <button class="btn-text" onclick="clearCompleted()">Tamamlananları temizle</button>
-    <button class="btn-text" onclick="clearAll()">Tümünü sil</button>
-  </div>
-
-  <div id="taskList"></div>
 </div>
 
 <div id="snackbar"></div>
@@ -1204,7 +1301,13 @@
     female: '<circle cx="12" cy="9" r="6"/><path d="M12 15v7M8.5 19h7"/>',
     logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',
     dumbbell: '<path d="M4 12h2M18 12h2M2 9v6M22 9v6M6 7v10M18 7v10M8 12h8"/>',
-    droplet: '<path d="M12 2s7 8 7 13a7 7 0 0 1-14 0c0-5 7-13 7-13z"/>'
+    droplet: '<path d="M12 2s7 8 7 13a7 7 0 0 1-14 0c0-5 7-13 7-13z"/>',
+    target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/>',
+    benchPress: '<path d="M2 16h20"/><path d="M5 16v3M19 16v3"/><rect x="7" y="10" width="10" height="3" rx="1"/><circle cx="5" cy="11" r="1.6"/><circle cx="19" cy="11" r="1.6"/><path d="M9 16v-3M15 16v-3"/>',
+    deadliftIc: '<path d="M2 18h4M18 18h4"/><circle cx="5" cy="14" r="3.2"/><circle cx="19" cy="14" r="3.2"/><path d="M8 14h8"/><path d="M12 8V3M9 6l3-3 3 3"/>',
+    latPull: '<path d="M12 3v4"/><path d="M6 7h12"/><path d="M7 7l5 6 5-6"/><path d="M12 13v8"/><path d="M8 21h8"/>',
+    lateralRaise: '<circle cx="12" cy="5" r="2"/><path d="M12 7v7"/><path d="M4 9l8-2 8 2"/><path d="M9 14l-2 6M15 14l2 6"/>',
+    ruler: '<rect x="3" y="9" width="18" height="6" rx="1"/><path d="M6 9v2M9 9v3M12 9v2M15 9v3M18 9v2"/>'
   };
   function icon(name, size){
     size = size || 14;
@@ -1633,9 +1736,11 @@
     liftHistory: [],
     weightHistory: [],
     waterConsumed: 0, waterDate: null,
-    steps: { count: 0, date: null, goal: 8000 }
+    steps: { count: 0, date: null, goal: 8000, history: [] }
   };
-  let stepTracking = false, lastStepMag = 0, lastStepTime = 0;
+  let stepTracking = false, lastStepTime = 0;
+  let motionBuffer = [], smoothedMag = 0, stepPhase = 'idle';
+  let wakeLock = null;
 
   function epley1RM(weight, reps){
     if(!weight || !reps) return 0;
@@ -1645,7 +1750,31 @@
     const goal = document.getElementById('fGoal').value;
     document.getElementById('fLossIntensityWrap').style.display = goal === 'lose' ? 'flex' : 'none';
   }
-
+  function onGenderChangeBf(){
+    document.getElementById('bfHipGroup').style.display = document.getElementById('fGender').value === 'female' ? 'flex' : 'none';
+  }
+  function calculateBodyFat(){
+    const height = parseFloat(document.getElementById('fHeight').value) || fitness.height;
+    const waist = parseFloat(document.getElementById('bfWaist').value);
+    const neck = parseFloat(document.getElementById('bfNeck').value);
+    const hip = parseFloat(document.getElementById('bfHip').value);
+    const gender = document.getElementById('fGender').value;
+    if(!height || !waist || !neck || (gender==='female' && !hip)){
+      showTopToast('Hesaplamak için tüm ölçüleri gir', 'warn', 'warn');
+      return;
+    }
+    let bf;
+    if(gender === 'female'){
+      bf = 495 / (1.29579 - 0.35004*Math.log10(waist+hip-neck) + 0.22100*Math.log10(height)) - 450;
+    } else {
+      bf = 495 / (1.0324 - 0.19077*Math.log10(waist-neck) + 0.15456*Math.log10(height)) - 450;
+    }
+    bf = Math.max(3, Math.min(60, bf));
+    document.getElementById('fBodyFat').value = bf.toFixed(1);
+    fitness.bodyFat = parseFloat(bf.toFixed(1));
+    renderHumanFigure();
+    showTopToast(`Tahmini yağ oranı: %${bf.toFixed(1)}`, 'info', 'gem');
+  }
   function pushWeightHistoryEntry(){
     if(!fitness.weight) return;
     const today = todayStr();
@@ -1700,10 +1829,28 @@
     showTopToast('Rekorların kaydedildi', 'info', 'bolt');
   }
 
-  /* ---- Adım Sayar (gerçek ivmeölçer sensörü) ---- */
+  async function requestWakeLockSafe(){
+    try{
+      if('wakeLock' in navigator){ wakeLock = await navigator.wakeLock.request('screen'); }
+    }catch(e){ console.warn('Wake Lock alınamadı', e); }
+  }
+  function releaseWakeLockSafe(){
+    if(wakeLock){ wakeLock.release().catch(()=>{}); wakeLock = null; }
+  }
+  document.addEventListener('visibilitychange', () => {
+    if(stepTracking && document.visibilityState === 'visible') requestWakeLockSafe();
+  });
+
   function checkStepsDayReset(){
     const today = todayStr();
+    if(!fitness.steps.history) fitness.steps.history = [];
     if(fitness.steps.date !== today){
+      if(fitness.steps.date && fitness.steps.count > 0){
+        const idx = fitness.steps.history.findIndex(h => h.date === fitness.steps.date);
+        if(idx >= 0) fitness.steps.history[idx].count = fitness.steps.count;
+        else fitness.steps.history.push({ date: fitness.steps.date, count: fitness.steps.count });
+        fitness.steps.history = fitness.steps.history.slice(-30);
+      }
       fitness.steps.date = today;
       fitness.steps.count = 0;
     }
@@ -1713,18 +1860,36 @@
     const acc = event.accelerationIncludingGravity || event.acceleration;
     if(!acc) return;
     const x = acc.x||0, y = acc.y||0, z = acc.z||0;
-    const mag = Math.sqrt(x*x + y*y + z*z);
+    const rawMag = Math.sqrt(x*x + y*y + z*z);
+
+    // yerçekimi bileşenini yumuşat (low-pass)
+    smoothedMag = smoothedMag === 0 ? rawMag : (smoothedMag * 0.9 + rawMag * 0.1);
+    const dynamic = rawMag - smoothedMag;
+
+    // küçük titremeleri (el titremesi vb.) elemek için son birkaç örneğin ortalamasını al
+    motionBuffer.push(dynamic);
+    if(motionBuffer.length > 4) motionBuffer.shift();
+    const avgDynamic = motionBuffer.reduce((a,b)=>a+b,0) / motionBuffer.length;
+
+    const PEAK_THRESHOLD = 2.2;     // adım tepe eşiği — titremeyi elemek için yüksek
+    const TROUGH_THRESHOLD = -1.0;  // adım öncesi çukur eşiği
+    const MIN_STEP_INTERVAL = 280;  // ms — art arda sahte sayımı engeller
+    const MAX_STEP_INTERVAL = 2000; // ms — bu süre hareketsizlikte durumu sıfırla
+
     const now = Date.now();
-    const delta = mag - lastStepMag;
-    lastStepMag = mag;
-    const STEP_THRESHOLD = 1.15;
-    const STEP_DEBOUNCE = 300;
-    if(delta > STEP_THRESHOLD && (now - lastStepTime) > STEP_DEBOUNCE){
-      lastStepTime = now;
-      checkStepsDayReset();
-      fitness.steps.count += 1;
-      renderStepCounter();
-      if(fitness.steps.count % 10 === 0) saveState();
+    if(now - lastStepTime > MAX_STEP_INTERVAL) stepPhase = 'idle';
+
+    if(stepPhase === 'idle' && avgDynamic < TROUGH_THRESHOLD){
+      stepPhase = 'trough';
+    } else if(stepPhase === 'trough' && avgDynamic > PEAK_THRESHOLD){
+      if(now - lastStepTime > MIN_STEP_INTERVAL){
+        lastStepTime = now;
+        checkStepsDayReset();
+        fitness.steps.count += 1;
+        renderStepCounter();
+        if(fitness.steps.count % 10 === 0) saveState();
+      }
+      stepPhase = 'idle';
     }
   }
 
@@ -1745,10 +1910,13 @@
   function startStepTracking(){
     if(stepTracking) return;
     stepTracking = true;
-    lastStepMag = 0; lastStepTime = 0;
+    motionBuffer = []; smoothedMag = 0; stepPhase = 'idle'; lastStepTime = 0;
     window.addEventListener('devicemotion', handleMotionStep);
+    requestWakeLockSafe();
     const btn = document.getElementById('stepTrackBtn');
-    btn.innerHTML = `${icon('bolt',14)} Takibi Durdur`;
+    btn.innerHTML = icon('x',22);
+    btn.classList.add('tracking');
+    btn.title = 'Adım Saymayı Durdur';
     btn.onclick = stopStepTracking;
     document.getElementById('stepSensorBadge').innerHTML = `${icon('bolt',10)} CANLI SENSÖR AKTİF`;
     showTopToast('Adım sayar aktif — telefonu üzerinde taşı', 'info', 'bolt');
@@ -1757,8 +1925,11 @@
   function stopStepTracking(){
     stepTracking = false;
     window.removeEventListener('devicemotion', handleMotionStep);
+    releaseWakeLockSafe();
     const btn = document.getElementById('stepTrackBtn');
-    btn.innerHTML = `${icon('bolt',14)} Adım Saymayı Başlat`;
+    btn.innerHTML = icon('bolt',22);
+    btn.classList.remove('tracking');
+    btn.title = 'Adım Saymayı Başlat';
     btn.onclick = requestMotionPermission;
     document.getElementById('stepSensorBadge').innerHTML = `${icon('circleEmpty',10)} SENSÖR PASİF`;
     saveState();
@@ -1799,6 +1970,33 @@
     document.getElementById('stepStatDist').textContent = distanceKm + ' km';
     const goalInput = document.getElementById('stepGoalInput');
     if(goalInput && document.activeElement !== goalInput) goalInput.value = goal;
+    renderStepWeekChart();
+  }
+
+  function renderStepWeekChart(){
+    const el = document.getElementById('stepWeekChart');
+    if(!el) return;
+    const days = [];
+    for(let i=6;i>=0;i--){ const d = new Date(); d.setDate(d.getDate()-i); days.push(d); }
+    const hist = fitness.steps.history || [];
+    const today = todayStr();
+    const counts = days.map(d => {
+      const key = d.toISOString().slice(0,10);
+      if(key === today) return fitness.steps.count || 0;
+      const found = hist.find(h => h.date === key);
+      return found ? found.count : 0;
+    });
+    const max = Math.max(fitness.steps.goal || 8000, ...counts, 1);
+    const labels = ['Pt','Sa','Ça','Pe','Cu','Ct','Pz'];
+    el.innerHTML = days.map((d,i) => {
+      const c = counts[i];
+      const h = c === 0 ? 4 : Math.max(6, (c/max)*56);
+      const isToday = d.toISOString().slice(0,10) === today;
+      return `<div class="week-bar-col">
+        <div class="week-bar ${c>0?'has-data':''}" style="height:${h}px;${isToday?' outline:1px solid var(--ink); outline-offset:1px;':''}" title="${c} adım"></div>
+        <div class="week-bar-label">${labels[d.getDay()===0?6:d.getDay()-1]}</div>
+      </div>`;
+    }).join('');
   }
 
   /* Güç standartları: vücut ağırlığına oran [acemi, novice, orta, ileri, elit] */
@@ -1881,9 +2079,9 @@
       { label:'Lateral', val:s.lateral }
     ];
     el.innerHTML = `
-    <div style="display:flex; gap:24px; align-items:center; flex-wrap:wrap; justify-content:center;">
+    <div style="display:flex; flex-direction:column; align-items:center; gap:18px;">
       ${gauge}
-      <div style="flex:1; min-width:180px;">
+      <div style="width:100%;">
         ${rows.map(r => `<div class="power-bar-row">
           <span class="power-bar-label">${icon('dumbbell',11)} ${r.label}</span>
           <div class="power-bar-track"><div class="power-bar-fill" style="width:${Math.min(100,r.val)}%"></div></div>
@@ -2181,6 +2379,7 @@
     document.getElementById('fAge').value = fitness.age || '';
     document.getElementById('fGender').value = fitness.gender || 'male';
     document.getElementById('fBodyFat').value = fitness.bodyFat!=null ? fitness.bodyFat : '';
+    onGenderChangeBf();
     document.getElementById('fGoal').value = fitness.goal || 'maintain';
     document.getElementById('fActivity').value = fitness.activityLevel || '1.55';
     document.getElementById('fLossIntensity').value = fitness.lossIntensity || 'moderate';
@@ -2255,7 +2454,7 @@
           weightHistory: loadedFitness.weightHistory || [],
           waterConsumed: loadedFitness.waterConsumed || 0,
           waterDate: loadedFitness.waterDate || null,
-          steps: Object.assign({ count:0, date:null, goal:8000 }, loadedFitness.steps || {})
+          steps: Object.assign({ count:0, date:null, goal:8000, history:[] }, loadedFitness.steps || {})
         };
         checkWaterDayReset();
         renderFitness();
@@ -2317,7 +2516,7 @@
     }
   }
 
-  const QUICK_PANEL_IDS = ['portfolioPanel', 'fitnessPanel'];
+  const QUICK_PANEL_IDS = ['targetPanel', 'portfolioPanel', 'fitnessPanel'];
   function closeAllQuickPanels(){
     QUICK_PANEL_IDS.forEach(id => document.getElementById(id).classList.remove('open'));
     document.querySelectorAll('#quickIconsRow .quick-icon').forEach(s => s.classList.remove('active'));
@@ -2358,22 +2557,28 @@
     document.getElementById('achvToggle').innerHTML = `${icon('trophy',11)} Başarımları gör`;
     document.getElementById('lbToggle').innerHTML = `${icon('crown',11)} Sıralamayı gör`;
     document.getElementById('lbRefreshBtn').innerHTML = `${icon('refresh',11)} Listeyi yenile`;
+    document.getElementById('targetQuickBtn').innerHTML = icon('target',19).replace('<svg ', '<svg class="quick-icon active" ');
     document.getElementById('portfolioQuickBtn').innerHTML = icon('wallet',19).replace('<svg ', '<svg class="quick-icon" ');
     document.getElementById('fitnessQuickBtn').innerHTML = icon('dumbbell',19).replace('<svg ', '<svg class="quick-icon" ');
-    document.getElementById('fHeightIcon').innerHTML = icon('scale',14) || '';
+    document.getElementById('fHeightIcon').innerHTML = icon('ruler',14);
     document.getElementById('fWeightIcon').innerHTML = icon('bolt',14);
     document.getElementById('fAgeIcon').innerHTML = icon('clock',14);
     document.getElementById('fBodyFatIcon').innerHTML = icon('gem',14);
-    document.getElementById('fBenchIcon').innerHTML = icon('dumbbell',14);
-    document.getElementById('fDeadliftIcon').innerHTML = icon('dumbbell',14);
-    document.getElementById('fLatIcon').innerHTML = icon('dumbbell',14);
-    document.getElementById('fLateralIcon').innerHTML = icon('dumbbell',14);
+    document.getElementById('bfWaistIcon').innerHTML = icon('ruler',14);
+    document.getElementById('bfNeckIcon').innerHTML = icon('ruler',14);
+    document.getElementById('bfHipIcon').innerHTML = icon('ruler',14);
+    document.getElementById('bfCalcBtn').innerHTML = `${icon('gem',14)} Hesapla`;
+    document.getElementById('fBenchIcon').innerHTML = icon('benchPress',20);
+    document.getElementById('fDeadliftIcon').innerHTML = icon('deadliftIc',20);
+    document.getElementById('fLatIcon').innerHTML = icon('latPull',20);
+    document.getElementById('fLateralIcon').innerHTML = icon('lateralRaise',20);
     document.getElementById('fSaveStatsBtn').innerHTML = `${icon('check',14)} Bilgileri Kaydet`;
     document.getElementById('fSaveStatsBtn').innerHTML = `${icon('check',14)} Bilgileri Kaydet`;
     document.getElementById('stepGoalIcon').innerHTML = icon('flag',14);
     document.getElementById('stepKcalLabel').innerHTML = `${icon('bolt',11)} Yakılan Kalori`;
     document.getElementById('stepDistLabel').innerHTML = `${icon('compass',11)} Mesafe`;
-    document.getElementById('stepTrackBtn').innerHTML = `${icon('bolt',14)} Adım Saymayı Başlat`;
+    document.getElementById('stepTrackBtn').innerHTML = icon('bolt',22);
+    document.getElementById('stepTrackBtn').title = 'Adım Saymayı Başlat';
     document.getElementById('stepSensorBadge').innerHTML = `${icon('circleEmpty',10)} SENSÖR PASİF`;
     document.getElementById('fSaveLiftsBtn').innerHTML = `${icon('bolt',14)} Rekorları Kaydet`;
     document.getElementById('authShield').innerHTML = icon('lock',26);
@@ -2789,7 +2994,7 @@
   document.addEventListener('click', function(e){
     const check = e.target.closest('.check-hit');
     const del = e.target.closest('.icon-btn[title="Sil"], .icon-btn[title="Kaldır"]');
-    const generic = e.target.closest('button, .chip, .seg-btn, .link-btn, .theme-toggle, #profileCorner, .achv-item, .gallery-item, .task-text[ondblclick]');
+    const generic = e.target.closest('button, .chip, .seg-btn, .link-btn, .theme-toggle, #profileCorner, .achv-item, .gallery-item, .task-text[ondblclick], #quickIconsRow span');
     if(check){ /* toggle() zaten başarı sesi çalıyor */ return; }
     if(del){ playDeleteSound(); return; }
     if(generic){ playClickSound(); }

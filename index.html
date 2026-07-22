@@ -619,6 +619,8 @@
         .chat-msg.is-mine .chat-msg-body{ display:flex; flex-direction:column; align-items:flex-end; }
         .chat-msg.is-mine .chat-msg-headrow{ flex-direction:row-reverse; }
         .chat-msg.is-mine .chat-msg-footer{ flex-direction:row-reverse; }
+        /* ---- karşı taraftan gelen mesajlar: gerçek içerik genişliğine göre sola yaslı ---- */
+        .chat-msg:not(.is-mine) .chat-msg-body{ display:flex; flex-direction:column; align-items:flex-start; }
         .chat-msg.is-mine .chat-msg-bubble{
             background:var(--brand-gradient); color:#fff; border-color:transparent;
             border-radius:16px 4px 16px 16px; box-shadow:0 2px 10px var(--glow-mid);
@@ -1825,7 +1827,11 @@
                         </div>
                     </div>
                     <div id="dmMessagesWrap" style="flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; touch-action:pan-y; padding:16px 20px; display:flex; flex-direction:column; gap:10px;"></div>
+                    <div id="dmImagePreviewWrap" style="display:none; padding:0 20px 10px;"></div>
                     <div class="chat-mega-input-row">
+                        <button class="icon-btn" id="dmImageBtn" title="Resim ekle" onclick="document.getElementById('dmImageInput').click()"></button>
+                        <input type="file" id="dmImageInput" accept="image/*" style="display:none;" onchange="handleDmImageSelect(event)">
+                        <button class="icon-btn" id="dmVoiceBtn" title="Ses kaydet" onclick="toggleDmVoiceRecording()"></button>
                         <input type="text" id="dmInput" placeholder="Mesaj yaz…" onkeydown="if(event.key==='Enter')sendDmMessage()">
                         <button class="chat-mega-send" id="dmSendBtn" onclick="sendDmMessage()"></button>
                     </div>
@@ -2432,7 +2438,7 @@
         if(leaderboardBots.length === 0) leaderboardBots = generateLeaderboardBots();
         const myAvatar = localStorage.getItem(AVATAR_KEY) || document.getElementById('avatarImg').src;
         const entries = leaderboardBots.map(b => ({ name:b.name, xp:b.xp, code:b.code, gender:b.gender, avatarIdx:b.avatarIdx, seed:b.seed, isMe:false }));
-        entries.push({ name:getAuthUser(), xp: xp, code:'tr', gender:'male', avatarIdx:-1, seed:'me', isMe:true });
+        entries.push({ name:currentUsername, xp: xp, code:'tr', gender:'male', avatarIdx:-1, seed:'me', isMe:true });
         entries.sort((a,b) => b.xp - a.xp);
         el.innerHTML = entries.map((e,i) => {
             const rIdx = getRankIndex(e.xp);
@@ -2714,7 +2720,7 @@
 
     function getMyProfileCache(){
         return {
-            username: document.getElementById('psUserName').textContent || getAuthUser(),
+            username: document.getElementById('psUserName').textContent || currentUsername,
             avatarUrl: document.getElementById('avatarImg').src || ''
         };
     }
@@ -3140,6 +3146,8 @@ ${m.role === 'admin' ? `
         renderChatHub();
         document.getElementById('chatMegaModal').classList.add('show');
         document.body.style.overflow = 'hidden';
+        document.getElementById('profileCorner').style.display = 'none';
+        document.getElementById('chatFab').style.display = 'none';
         setAppVh();
         if(window.innerWidth <= 720) openChatSidebarMobile();
         _chatHasRenderedOnce = false;
@@ -3148,6 +3156,8 @@ ${m.role === 'admin' ? `
     function closeChatHub(){
         document.getElementById('chatMegaModal').classList.remove('show');
         document.body.style.overflow = '';
+        document.getElementById('profileCorner').style.display = 'flex';
+        document.getElementById('chatFab').style.display = 'flex';
         closeChatSidebarMobile();
     }
 
@@ -3214,6 +3224,118 @@ ${m.role === 'admin' ? `
         renderChatHub();
         document.getElementById('chatMegaModal').classList.add('show');
     }
+    let _pendingDmImageDataUrl = null;
+    let dmMediaRecorderRef = null, dmRecordedChunks = [], isRecordingDmVoice = false;
+
+    function handleDmImageSelect(event){
+        const file = event.target.files[0];
+        if(!file) return;
+        if(!file.type.startsWith('image/')){ showTopToast('Lütfen bir görsel seç', 'warn', 'warn'); return; }
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = new Image();
+            img.onload = () => {
+                const maxDim = 800;
+                const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width*scale; canvas.height = img.height*scale;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                _pendingDmImageDataUrl = canvas.toDataURL('image/jpeg', 0.75);
+                const wrap = document.getElementById('dmImagePreviewWrap');
+                wrap.style.display = 'block';
+                wrap.innerHTML = `<div style="position:relative; display:inline-block;">
+          <img src="${_pendingDmImageDataUrl}" style="max-height:90px; border-radius:8px;">
+          <button class="icon-btn" style="position:absolute; top:2px; right:2px; background:rgba(0,0,0,.5); color:#fff;" onclick="cancelDmImage()">${icon('x',12)}</button>
+        </div>`;
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+    function cancelDmImage(){
+        _pendingDmImageDataUrl = null;
+        document.getElementById('dmImagePreviewWrap').style.display = 'none';
+        document.getElementById('dmImageInput').value = '';
+    }
+
+    async function toggleDmVoiceRecording(){
+        if(isRecordingDmVoice){ stopDmVoiceRecording(); return; }
+        try{
+            const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+            dmRecordedChunks = [];
+            dmMediaRecorderRef = new MediaRecorder(stream);
+            dmMediaRecorderRef.ondataavailable = e => { if(e.data.size>0) dmRecordedChunks.push(e.data); };
+            dmMediaRecorderRef.onstop = handleDmVoiceRecordingStop;
+            dmMediaRecorderRef.start();
+            isRecordingDmVoice = true;
+            const btn = document.getElementById('dmVoiceBtn');
+            btn.innerHTML = icon('x',15);
+            btn.title = 'Kaydı durdur';
+            showTopToast('Sesli mesaj kaydediliyor…', 'info', 'bolt');
+        }catch(e){
+            showTopToast('Mikrofon izni alınamadı', 'warn', 'warn');
+        }
+    }
+    function stopDmVoiceRecording(){
+        if(dmMediaRecorderRef && isRecordingDmVoice){
+            dmMediaRecorderRef.stop();
+            dmMediaRecorderRef.stream.getTracks().forEach(t=>t.stop());
+        }
+        isRecordingDmVoice = false;
+        const btn = document.getElementById('dmVoiceBtn');
+        if(btn){ btn.title = 'Ses kaydet'; }
+    }
+    function handleDmVoiceRecordingStop(){
+        const blob = new Blob(dmRecordedChunks, { type:'audio/webm' });
+        if(blob.size > 900000){
+            showTopToast('Sesli mesaj çok uzun, daha kısa dene', 'warn', 'warn');
+            document.getElementById('dmVoiceBtn').innerHTML = icon('bolt',15);
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => { sendDmMessage(reader.result); };
+        reader.readAsDataURL(blob);
+    }
+
+    async function toggleDmLike(msgId){
+        const ref = db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages/'+msgId+'/likes/'+currentUid);
+        const snap = await ref.once('value');
+        if(snap.exists()) await ref.remove(); else await ref.set(true);
+    }
+    async function toggleDmReaction(msgId, emoji){
+        const ref = db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages/'+msgId+'/reactions/'+emoji+'/'+currentUid);
+        const snap = await ref.once('value');
+        if(snap.exists()) await ref.remove(); else await ref.set(true);
+    }
+    function startEditDmMessage(msgId, oldText){
+        const bubble = document.getElementById('dmbubble-'+msgId);
+        if(!bubble) return;
+        bubble.innerHTML = `
+          <input type="text" id="dmEditInput-${msgId}" value="${escapeHtml(oldText||'')}"
+            style="width:100%; background:rgba(0,0,0,.15); border:1px solid rgba(255,255,255,.3); border-radius:8px; padding:7px 10px; color:inherit; font-size:13.5px; font-family:'Inter',sans-serif;">
+          <div style="display:flex; gap:10px; margin-top:6px; font-family:'JetBrains Mono',monospace; font-size:10px;">
+            <button onclick="saveEditDmMessage('${msgId}')" style="background:none; border:none; color:inherit; cursor:pointer; text-decoration:underline;">Kaydet</button>
+            <button onclick="renderDmMessages()" style="background:none; border:none; color:inherit; cursor:pointer; text-decoration:underline; opacity:.7;">Vazgeç</button>
+          </div>`;
+        const input = document.getElementById('dmEditInput-'+msgId);
+        input.focus(); input.select();
+        input.addEventListener('keydown', e => { if(e.key==='Enter') saveEditDmMessage(msgId); if(e.key==='Escape') renderDmMessages(); });
+    }
+    async function saveEditDmMessage(msgId){
+        const input = document.getElementById('dmEditInput-'+msgId);
+        if(!input) return;
+        const newText = input.value.trim();
+        if(!newText) return;
+        try{ await db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages/'+msgId).update({ text:newText, edited:true }); }
+        catch(err){ showTopToast('Mesaj düzenlenemedi: '+err.message, 'warn', 'warn'); }
+    }
+    async function deleteDmMessage(msgId){
+        const ok = await showConfirm('Bu mesajı silmek istediğine emin misin?');
+        if(!ok) return;
+        try{ await db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages/'+msgId).remove(); showTopToast('Mesaj silindi', 'warn', 'trash'); }
+        catch(err){ showTopToast('Mesaj silinemedi: '+err.message, 'warn', 'warn'); }
+    }
     function closeDmModal(){
         if(currentDmPairKey) db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages').off();
         currentDmPairKey = null;
@@ -3251,6 +3373,8 @@ ${m.role === 'admin' ? `
             wrap.innerHTML = `<div class="empty-state" style="border:none; padding:60px 20px;">${icon('inbox',24)}<p><strong>Henüz mesaj yok.</strong></p><p>Bir merhaba de!</p></div>`;
             return;
         }
+        const myAvatar = document.getElementById('avatarImg').src;
+        const theirAvatar = document.getElementById('dmTargetAvatar').src;
         let lastDay = null;
         wrap.innerHTML = dmMessages.map(m => {
             const mine = m.uid === currentUid;
@@ -3258,42 +3382,89 @@ ${m.role === 'admin' ? `
             let sep = '';
             if(dayKey !== lastDay){ sep = chatDaySeparatorHtml(m.ts); lastDay = dayKey; }
             const time = new Date(m.ts).toLocaleTimeString('tr-TR', { hour:'2-digit', minute:'2-digit' });
-            return `${sep}<div class="dm-row${mine?' is-mine':''}">
-      <div class="chat-msg-bubble dm-bubble">
-        ${escapeHtml(m.text||'')}
-        ${m.imageUrl ? `<img class="chat-msg-img" src="${m.imageUrl}" onclick="openLightbox('${m.imageUrl}')">` : ''}
-        <span class="dm-bubble-time">${time}</span>
-      </div>
-    </div>`;
+            const liked = m.likes && m.likes[currentUid];
+            const likeCount = m.likes ? Object.keys(m.likes).length : 0;
+            const reactions = m.reactions || {};
+            const reactionChips = Object.keys(reactions).filter(k=>Object.keys(reactions[k]||{}).length>0).map(k => {
+                const count = Object.keys(reactions[k]).length;
+                const mineReact = reactions[k][currentUid];
+                const def = CUSTOM_REACTIONS.find(r=>r.key===k);
+                return `<span class="chat-reaction-chip${mineReact?' mine':''}" onclick="toggleDmReaction('${m.id}','${k}')"><span class="reaction-emoji">${def?def.emoji:'✨'}</span> ${count}</span>`;
+            }).join('');
+            const reactionMenuBtns = CUSTOM_REACTIONS.map(r => `<button class="reaction-pick-btn" onclick="toggleDmReaction('${m.id}','${r.key}'); closeReactionMenus();">${r.emoji}</button>`).join('');
+            const editedLabel = m.edited ? `<span style="opacity:.6; font-size:9px; margin-left:4px;">(düzenlendi)</span>` : '';
+            const mineActions = mine ? `
+        <button class="chat-like-btn" onclick="startEditDmMessage('${m.id}', decodeURIComponent('${encodeURIComponent(m.text||'')}'))" title="Düzenle">${icon('edit',12)}</button>
+        <button class="chat-like-btn" onclick="deleteDmMessage('${m.id}')" title="Sil">${icon('trash',12)}</button>
+      ` : '';
+
+            return `${sep}<div class="chat-msg${mine?' is-mine':''}">
+        <img class="chat-msg-avatar" src="${mine?myAvatar:theirAvatar}">
+        <div class="chat-msg-body">
+          <div class="chat-msg-bubble" id="dmbubble-${m.id}">
+            <div class="chat-msg-text">${m.text ? escapeHtml(m.text) : ''}</div>
+            ${m.imageUrl ? `<img class="chat-msg-img" src="${m.imageUrl}" onclick="openLightbox('${m.imageUrl}')">` : ''}
+            ${m.audioUrl ? `
+          <div class="voice-msg-pill">
+            <button class="voice-play-btn" onclick="toggleVoicePlay(this)">${icon('bolt',14)}</button>
+            <div class="voice-wave">${Array.from({length:22}).map(()=>`<span style="height:${6+Math.random()*16}px"></span>`).join('')}</div>
+            <audio class="voice-audio-el" src="${m.audioUrl}" preload="metadata"></audio>
+          </div>` : ''}
+            <span class="chat-msg-time-tag">${time}${editedLabel}</span>
+          </div>
+          <div class="chat-msg-footer">
+            <button class="chat-like-btn${liked?' liked':''}" onclick="toggleDmLike('${m.id}')">${icon(liked?'heartFilled':'heart',13)} ${likeCount||''}</button>
+            <div class="chat-reaction-picker">
+              <button class="chat-like-btn" onclick="toggleReactionMenu('${m.id}')">${icon('smilePlus',13)}</button>
+              <div class="chat-reaction-menu" id="reactMenu-${m.id}">${reactionMenuBtns}</div>
+            </div>
+            <div class="chat-reactions-row">${reactionChips}</div>
+            ${mineActions}
+          </div>
+        </div>
+      </div>`;
         }).join('');
         if(wasNearBottom) wrap.scrollTop = wrap.scrollHeight;
     }
 
-    async function sendDmMessage(){
+    async function sendDmMessage(audioDataUrl){
         const input = document.getElementById('dmInput');
-        const text = input.value.trim();
-        if(!text || !currentDmPairKey || !currentDmTargetUid) return;
+        const text = input ? input.value.trim() : '';
+        if(!text && !_pendingDmImageDataUrl && !audioDataUrl) return;
+        if(!currentDmPairKey || !currentDmTargetUid){ showTopToast('Sohbet seçilmedi', 'warn', 'warn'); return; }
         const me = getMyProfileCache();
-        const msg = { uid: currentUid, text, ts: Date.now(), imageUrl: null };
+        const msg = {
+            uid: currentUid,
+            text: text || '',
+            imageUrl: _pendingDmImageDataUrl || null,
+            audioUrl: audioDataUrl || null,
+            ts: Date.now(),
+            likes: {},
+            reactions: {}
+        };
         try{
-            await db.ref('directMessages/'+currentDmPairKey+'/messages').push(msg);
-            await db.ref('directMessages/'+currentDmPairKey+'/participants').update({ [currentUid]: true, [currentDmTargetUid]: true });
+            await db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages').push(msg);
+            await db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/participants').update({ [currentUid]: true, [currentDmTargetUid]: true });
 
             const targetProfileSnap = await db.ref('developmentUsers/'+currentDmTargetUid+'/profile').once('value');
             const targetProfile = targetProfileSnap.val() || {};
+            const lastMsgPreview = text || (msg.imageUrl ? '📷 Görsel' : (msg.audioUrl ? '🎤 Sesli mesaj' : ''));
 
-            await db.ref('dmIndex/'+currentUid+'/'+currentDmTargetUid).update({
+            await db.ref('developmentUsers/dmIndex/'+currentUid+'/'+currentDmTargetUid).update({
                 otherUsername: targetProfile.username || 'Kullanıcı',
                 otherAvatar: targetProfile.avatarUrl || '',
-                lastMessage: text, ts: Date.now()
+                lastMessage: lastMsgPreview, ts: Date.now()
             });
-            await db.ref('dmIndex/'+currentDmTargetUid+'/'+currentUid).update({
+            await db.ref('developmentUsers/dmIndex/'+currentDmTargetUid+'/'+currentUid).update({
                 otherUsername: me.username, otherAvatar: me.avatarUrl,
-                lastMessage: text, ts: Date.now()
+                lastMessage: lastMsgPreview, ts: Date.now()
             });
-            input.value = '';
+            if(input) input.value = '';
+            cancelDmImage();
+            const vbtn = document.getElementById('dmVoiceBtn');
+            if(vbtn) vbtn.innerHTML = icon('bolt',15);
         }catch(err){
-            showTopToast('Mesaj gönderilemedi: '+err.message, 'warn', 'warn');
+            showTopToast('Mesaj gönderilemedi: ' + (err && err.message ? err.message : 'bilinmeyen hata'), 'warn', 'warn');
         }
     }
     function closeReactionMenus(){
@@ -4113,6 +4284,7 @@ ${m.role === 'admin' ? `
         { key:'clap', emoji:'👏' }
     ];
     let currentUid = null;
+    let currentUsername = 'Kullanıcı';
     let allUsersCache = {};
     const ADMIN_UID = "H9AUmUsiasfV9yGD5WLwIMDscfz1";
 
@@ -4187,7 +4359,7 @@ ${m.role === 'admin' ? `
         db.ref('.info/connected').on('value', snap => {
             if(snap.val() === true){
                 myPresenceRef.onDisconnect().remove();
-                myPresenceRef.set({ since: Date.now(), username: getAuthUser() });
+                myPresenceRef.set({ since: Date.now(), username: currentUsername });
             }
         });
     }
@@ -4388,6 +4560,8 @@ ${m.role === 'admin' ? `
         document.getElementById('adminTabModsBtn').innerHTML = `${icon('shield',13)} Moderatörler`;
         document.getElementById('startEventBtn').innerHTML = `${icon('flag',12)} Etkinlik Başlat`;
         document.getElementById('dmSendBtn').innerHTML = icon('send',18);
+        document.getElementById('dmImageBtn').innerHTML = icon('camera',15);
+        document.getElementById('dmVoiceBtn').innerHTML = icon('bolt',15);
     }
     function toggleAddCard(){
         const body = document.getElementById('addCardBody');
@@ -5450,10 +5624,11 @@ ${m.role === 'admin' ? `
         }
     }
 
-    function applyStoredProfile(profile){
+       function applyStoredProfile(profile){
         profile = profile || {};
         if(profile.avatarUrl) applyAvatar(profile.avatarUrl);
         const uname = profile.username || 'Kullanıcı';
+        currentUsername = uname;
         const fallback = document.getElementById('avatarFallback');
         if(fallback) fallback.textContent = uname.charAt(0).toUpperCase() || 'R';
         window._isAdminUser = !!(profile.isAdmin || currentUid === ADMIN_UID);
@@ -5616,7 +5791,7 @@ ${m.role === 'admin' ? `
         const rank = RANKS[idx];
         const avatarUrl = ov ? (ov.avatarUrl || 'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif') : document.getElementById('avatarImg').src;
         const displayXp = ov ? ov.xp : xp;
-        const displayName = ov ? ov.username : getAuthUser();
+        const displayName = ov ? ov.username : currentUsername;
 
         document.getElementById('pvAvatar').src = avatarUrl;
         document.getElementById('pvName').textContent = displayName;
@@ -5721,7 +5896,7 @@ ${m.role === 'admin' ? `
             view.style.display = '';
         } else {
             _pendingAvatarDataUrl = null;
-            document.getElementById('profileUsernameInput').value = getAuthUser();
+            document.getElementById('profileUsernameInput').value = currentUsername;
             document.getElementById('profileEmailInput').value = (auth.currentUser && auth.currentUser.email) || '';
             document.getElementById('profilePasswordInput').value = '';
             document.getElementById('profileAvatarPreview').src = document.getElementById('pvAvatar').src;

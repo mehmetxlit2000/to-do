@@ -536,17 +536,70 @@
         .chat-msg-footer{ opacity:.7; transition:opacity .15s ease; }
         .chat-msg-avatar{ width:36px; height:36px; border-radius:50%; object-fit:cover; border:1.5px solid var(--line); flex:none; cursor:pointer; }
         .chat-msg-body{ flex:1; min-width:0; max-width:78%; }
-        .chat-msg-headrow{ display:flex; align-items:center; gap:7px; flex-wrap:wrap; margin-bottom:3px; }
+        .chat-msg-headrow{ display:flex; align-items:center; justify-content:center; gap:7px; flex-wrap:wrap; margin-bottom:2px; }
         .chat-msg-name{ font-size:12.5px; font-weight:700; cursor:pointer; }
         .chat-msg-name:hover{ text-decoration:underline; }
         .chat-msg-rankicon{ width:16px; flex:none; }
+
+        .chat-msg-badge-row{ display:flex; justify-content:center; margin-bottom:5px; }
+
         .chat-msg-badge{
-            font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.06em; text-transform:uppercase;
-            padding:2px 7px; border-radius:100px; font-weight:700; flex:none;
+            font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.08em; text-transform:uppercase;
+            padding:3px 9px; border-radius:100px; font-weight:700; flex:none;
+            display:inline-flex; align-items:center; gap:4px;
         }
         .chat-msg-badge.mod{ background:rgba(91,150,255,.15); color:#5b96ff; border:1px solid rgba(91,150,255,.4); }
-        .chat-msg-badge.admin{ background:rgba(255,43,43,.18); color:#ff5a5a; border:1px solid rgba(255,43,43,.5); }
-        .chat-msg-time{ font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-faint); }
+
+        .chat-msg-badge.admin{
+            background:linear-gradient(120deg, #7a0f0f, #ff2b2b 55%, #ffb020);
+            color:#fff; border:1px solid rgba(255,176,32,.55);
+            text-shadow:0 1px 2px rgba(0,0,0,.45);
+            box-shadow:0 0 10px rgba(255,43,43,.5), 0 0 0 1px rgba(255,176,32,.25) inset;
+            animation: adminBadgeGlow 2.4s ease-in-out infinite;
+        }
+        @keyframes adminBadgeGlow{
+            0%,100%{ box-shadow:0 0 8px rgba(255,43,43,.45), 0 0 0 1px rgba(255,176,32,.2) inset; }
+            50%{ box-shadow:0 0 18px rgba(255,140,40,.9), 0 0 0 1px rgba(255,176,32,.45) inset; }
+        }
+        .chat-msg.is-admin .admin-frame{
+            border:1.5px solid rgba(255,176,32,.55);
+            border-radius:4px 16px 16px 16px;
+            overflow:hidden;
+            animation: adminFrameGlow 2.4s ease-in-out infinite;
+        }
+        .chat-msg.is-admin .admin-frame-badge{
+            background:linear-gradient(120deg, #7a0f0f, #ff2b2b 55%, #ffb020);
+            padding:5px 13px;
+            display:flex;
+            align-items:center;
+            gap:5px;
+            font-family:'JetBrains Mono',monospace;
+            font-size:8.5px;
+            letter-spacing:.08em;
+            text-transform:uppercase;
+            font-weight:700;
+            color:#fff;
+            text-shadow:0 1px 2px rgba(0,0,0,.45);
+        }
+        .chat-msg.is-admin .admin-frame .chat-msg-bubble{
+            border:none;
+            border-radius:0;
+            box-shadow:none;
+        }
+        @keyframes adminFrameGlow{
+            0%,100%{ box-shadow:0 0 10px rgba(255,43,43,.35), 0 0 0 1px rgba(255,176,32,.2) inset; }
+            50%{ box-shadow:0 0 20px rgba(255,140,40,.9), 0 0 0 1px rgba(255,176,32,.45) inset; }
+        }
+        .chat-msg-flag{ width:14px; height:10px; border-radius:2px; margin-left:5px; vertical-align:middle; box-shadow:0 0 0 1px rgba(0,0,0,.2); }
+
+        .chat-msg-bubble{ position:relative; padding-bottom:20px; }
+        .chat-msg-text{ margin-bottom:10px; }
+        .chat-msg-text:last-child{ margin-bottom:0; }
+        .chat-msg-time-tag{
+            position:absolute; bottom:6px; right:11px;
+            font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-soft); opacity:.75; white-space:nowrap;
+        }
+        .chat-msg.is-mine .chat-msg-time-tag{ right:auto; left:11px; color:rgba(255,255,255,.8); }
         .chat-msg-bubble{
             background:var(--panel-alt); border:1px solid var(--line); border-radius:4px 16px 16px 16px; padding:10px 13px;
             font-size:13.5px; line-height:1.48; word-break:break-word; display:inline-block; max-width:100%;
@@ -639,9 +692,6 @@
             background:var(--brand-gradient); color:#fff; display:flex; align-items:center; justify-content:center;
             box-shadow:0 8px 24px rgba(0,0,0,.45), 0 0 18px var(--glow-mid);
             transition:transform .15s ease; animation:fabPulse 2.6s ease-out infinite;
-        }
-        body:has(#chatMegaModal.show) #chatFab{
-            display:none;
         }
         #chatFab:hover{ transform:scale(1.06); }
         #chatFab:active{ transform:scale(.94); }
@@ -2193,7 +2243,20 @@
         size = size || 14;
         return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]||''}</svg>`;
     }
-
+    function detectUserCountryCode(){
+        try{
+            const loc = navigator.language || navigator.userLanguage || 'tr-TR';
+            const parts = loc.split('-');
+            if(parts.length > 1 && parts[1].length === 2) return parts[1].toLowerCase();
+        }catch(e){}
+        return 'tr';
+    }
+    function chatFlagHtml(code){
+        if(!code) return '';
+        const myCode = detectUserCountryCode();
+        if(code.toLowerCase() === myCode.toLowerCase()) return '';
+        return `<img class="chat-msg-flag" src="https://flagcdn.com/w20/${code.toLowerCase()}.png" alt="" loading="lazy" onerror="this.remove()">`;
+    }
     const CATEGORY_ICON = { 'İş':'briefcase', 'Kişisel':'compass', 'Sağlık':'cross', 'Eğitim':'book', 'Diğer':'grid' };
     const PRIORITY_ICON = { 'Düşük':'circleEmpty', 'Orta':'circleHalf', 'Yüksek':'chevUp2' };
     const PRIORITY_COLOR = { 'Düşük':'#8f4646', 'Orta':'#d65b5b', 'Yüksek':'#ff2b2b' };
@@ -2744,6 +2807,7 @@
             ts: Date.now(),
             rankIdx: getRankIndex(xp),
             role: isAdmin ? 'admin' : (isMod ? 'mod' : null),
+            country: detectUserCountryCode(),
             likes: {},
             reactions: {}
         };
@@ -2794,7 +2858,7 @@
         const rankIdx = m.rankIdx || 0;
         const mine = m.uid === currentUid;
         const badgeHtml = m.role === 'admin'
-            ? `<span class="chat-msg-badge admin">${icon('shield',9)} Yönetici</span>`
+            ? `<span class="chat-msg-badge admin">${icon('crown',10)} Yönetici</span>`
             : (m.role === 'mod' ? `<span class="chat-msg-badge mod">${icon('shield',9)} Moderatör</span>` : '');
         const time = new Date(m.ts).toLocaleTimeString('tr-TR', { hour:'2-digit', minute:'2-digit' });
         const liked = m.likes && m.likes[currentUid];
@@ -2808,24 +2872,41 @@
         }).join('');
         const reactionMenuBtns = CUSTOM_REACTIONS.map(r => `<button class="reaction-pick-btn" onclick="toggleReaction('${m.id}','${r.key}'); closeReactionMenus();">${r.emoji}</button>`).join('');
 
-        const editedLabel = m.edited ? `<span style="opacity:.6; font-size:9.5px; margin-left:4px;">(düzenlendi)</span>` : '';
+        const editedLabel = m.edited ? `<span style="opacity:.6; font-size:9px; margin-left:4px;">(düzenlendi)</span>` : '';
         const mineActions = mine ? `
         <button class="chat-like-btn" onclick="startEditChatMessage('${m.id}', decodeURIComponent('${encodeURIComponent(m.text||'')}'))" title="Düzenle">${icon('edit',12)}</button>
         <button class="chat-like-btn" onclick="deleteChatMessage('${m.id}')" title="Sil">${icon('trash',12)}</button>
     ` : '';
+
+        const flagHtml = chatFlagHtml(m.country);
 
         return `<div class="chat-msg${isNew?' chat-msg-new':''}${m.role==='admin'?' is-admin':''}${mine?' is-mine':''}${m.isEventMsg?' is-event':''}">
     <img class="chat-msg-avatar" src="${m.avatarUrl || 'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" onclick="openUserSocialProfile('${m.uid}')" style="cursor:pointer;">
     <div class="chat-msg-body">
       <div class="chat-msg-headrow">
         <span class="chat-msg-rankicon">${badgeHTML(rankIdx, 16, false)}</span>
-        <span class="chat-msg-name" onclick="openUserSocialProfile('${m.uid}')">${escapeHtml(m.username||'Kullanıcı')}</span>
-        ${badgeHtml}
-        <span class="chat-msg-time">${time}</span>
-        ${editedLabel}
+        <span class="chat-msg-name" onclick="openUserSocialProfile('${m.uid}')">${escapeHtml(m.username||'Kullanıcı')}${flagHtml}</span>
       </div>
+${m.role === 'admin' ? `
+      <div class="admin-frame">
+        <div class="admin-frame-badge">${icon('crown',10)} Yönetici</div>
+        <div class="chat-msg-bubble" id="bubble-${m.id}">
+          <div class="chat-msg-text">${m.isEventMsg ? icon('flag',12)+' ' : ''}${m.text ? escapeHtml(m.text) : ''}</div>
+          ${m.imageUrl ? `<img class="chat-msg-img" src="${m.imageUrl}" onclick="openLightbox('${m.imageUrl}')">` : ''}
+          ${m.audioUrl ? `
+    <div class="voice-msg-pill">
+      <button class="voice-play-btn" onclick="toggleVoicePlay(this)">${icon('bolt',14)}</button>
+      <div class="voice-wave">${Array.from({length:22}).map(()=>`<span style="height:${6+Math.random()*16}px"></span>`).join('')}</div>
+      <audio class="voice-audio-el" src="${m.audioUrl}" preload="metadata"></audio>
+    </div>
+  ` : ''}
+          <span class="chat-msg-time-tag">${time}${editedLabel}</span>
+        </div>
+      </div>
+    ` : `
+      ${badgeHtml ? `<div class="chat-msg-badge-row">${badgeHtml}</div>` : ''}
       <div class="chat-msg-bubble" id="bubble-${m.id}">
-        ${m.isEventMsg ? icon('flag',12)+' ' : ''}${m.text ? escapeHtml(m.text) : ''}
+        <div class="chat-msg-text">${m.isEventMsg ? icon('flag',12)+' ' : ''}${m.text ? escapeHtml(m.text) : ''}</div>
         ${m.imageUrl ? `<img class="chat-msg-img" src="${m.imageUrl}" onclick="openLightbox('${m.imageUrl}')">` : ''}
         ${m.audioUrl ? `
   <div class="voice-msg-pill">
@@ -2834,7 +2915,9 @@
     <audio class="voice-audio-el" src="${m.audioUrl}" preload="metadata"></audio>
   </div>
 ` : ''}
+        <span class="chat-msg-time-tag">${time}${editedLabel}</span>
       </div>
+    `}
   <div class="chat-msg-footer">
         <button class="chat-like-btn${liked?' liked':''}" onclick="toggleChatLike('${m.id}')">${icon(liked?'heartFilled':'heart',13)} ${likeCount||''}</button>
         <div class="chat-reaction-picker">
@@ -3056,7 +3139,6 @@
         showMegaGlobalView();
         renderChatHub();
         document.getElementById('chatMegaModal').classList.add('show');
-        document.getElementById('chatFab').style.display = 'none';
         document.body.style.overflow = 'hidden';
         setAppVh();
         if(window.innerWidth <= 720) openChatSidebarMobile();
@@ -3065,7 +3147,6 @@
     }
     function closeChatHub(){
         document.getElementById('chatMegaModal').classList.remove('show');
-        document.getElementById('chatFab').style.display = '';
         document.body.style.overflow = '';
         closeChatSidebarMobile();
     }

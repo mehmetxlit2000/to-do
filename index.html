@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
     <title>SYS // Görev Paneli</title>
     <script>
         (function(){
@@ -521,13 +521,20 @@
         .lb-rankname{font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
         .lb-xp{font-family:'Orbitron',sans-serif; font-weight:800; font-size:12.5px; flex:none; text-align:right;}
         .lb-rarity{flex:none; font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.06em; padding:2px 7px; border-radius:100px; border:1px solid rgba(255,255,255,.3); color:inherit; text-transform:uppercase; opacity:.85;}
-        /* ==================== KÜRESEL SOHBET ==================== */
-        .chat-msg{ display:flex; gap:10px; padding:4px 6px; border-radius:12px; transition:background .12s ease; }
+        /* ==================== KÜRESEL SOHBET (v2) ==================== */
+        .chat-day-sep{ display:flex; align-items:center; justify-content:center; margin:14px 0 10px; }
+        .chat-day-sep span{
+            font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.08em; text-transform:uppercase;
+            color:var(--ink-soft); background:var(--panel-alt); border:1px solid var(--line); padding:5px 12px;
+            border-radius:100px;
+        }
+        @keyframes chatIn{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:translateY(0); } }
+        .chat-msg{ display:flex; gap:10px; padding:5px 6px; border-radius:12px; transition:background .12s ease; animation:chatIn .22s ease; }
         .chat-msg:hover{ background:var(--panel-alt); }
         .chat-msg:hover .chat-msg-footer{ opacity:1; }
-        .chat-msg-footer{ opacity:.75; transition:opacity .15s ease; }
-        .chat-msg-avatar{ width:36px; height:36px; border-radius:50%; object-fit:cover; border:1.5px solid var(--line); flex:none; }
-        .chat-msg-body{ flex:1; min-width:0; }
+        .chat-msg-footer{ opacity:.7; transition:opacity .15s ease; }
+        .chat-msg-avatar{ width:36px; height:36px; border-radius:50%; object-fit:cover; border:1.5px solid var(--line); flex:none; cursor:pointer; }
+        .chat-msg-body{ flex:1; min-width:0; max-width:78%; }
         .chat-msg-headrow{ display:flex; align-items:center; gap:7px; flex-wrap:wrap; margin-bottom:3px; }
         .chat-msg-name{ font-size:12.5px; font-weight:700; cursor:pointer; }
         .chat-msg-name:hover{ text-decoration:underline; }
@@ -540,37 +547,48 @@
         .chat-msg-badge.admin{ background:rgba(255,43,43,.18); color:#ff5a5a; border:1px solid rgba(255,43,43,.5); }
         .chat-msg-time{ font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-faint); }
         .chat-msg-bubble{
-            background:var(--panel-alt); border:1px solid var(--line); border-radius:10px; padding:9px 12px;
-            font-size:13px; line-height:1.45; word-break:break-word; display:inline-block; max-width:100%;
+            background:var(--panel-alt); border:1px solid var(--line); border-radius:4px 16px 16px 16px; padding:10px 13px;
+            font-size:13.5px; line-height:1.48; word-break:break-word; display:inline-block; max-width:100%;
+            box-shadow:0 1px 2px rgba(0,0,0,.15);
         }
         .chat-msg.is-admin .chat-msg-bubble{
             background:linear-gradient(120deg, rgba(255,43,43,.16), rgba(120,10,10,.10));
-            border-color:rgba(255,43,43,.4);
-            box-shadow:0 0 14px rgba(255,43,43,.12);
+            border-color:rgba(255,43,43,.4); box-shadow:0 0 14px rgba(255,43,43,.12);
         }
-        .chat-msg-img{ max-width:200px; max-height:200px; width:auto; height:auto; object-fit:cover; border-radius:10px; margin-top:6px; display:block; cursor:pointer; border:1px solid var(--line); }
-        .chat-msg-bubble{ max-width:68%; }
+        /* ---- kendi mesajların: sağa yaslı, gradyanlı balon ---- */
+        .chat-msg.is-mine{ flex-direction:row-reverse; }
+        .chat-msg.is-mine .chat-msg-body{ display:flex; flex-direction:column; align-items:flex-end; }
+        .chat-msg.is-mine .chat-msg-headrow{ flex-direction:row-reverse; }
+        .chat-msg.is-mine .chat-msg-footer{ flex-direction:row-reverse; }
+        .chat-msg.is-mine .chat-msg-bubble{
+            background:var(--brand-gradient); color:#fff; border-color:transparent;
+            border-radius:16px 4px 16px 16px; box-shadow:0 2px 10px var(--glow-mid);
+        }
+        .chat-msg-img{ max-width:210px; max-height:210px; width:auto; height:auto; object-fit:cover; border-radius:12px; margin-top:6px; display:block; cursor:pointer; border:1px solid rgba(0,0,0,.15); }
         .chat-msg-audio{ max-width:230px; }
         .voice-msg-pill{
             display:flex; align-items:center; gap:10px; background:var(--panel-alt); border:1px solid var(--line);
             border-radius:100px; padding:8px 14px 8px 8px; max-width:220px; margin-top:6px;
         }
+        .chat-msg.is-mine .voice-msg-pill{ background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.3); }
         .voice-play-btn{
             flex:none; width:32px; height:32px; border-radius:50%; border:none; cursor:pointer;
             background:var(--brand-gradient); color:#fff; display:flex; align-items:center; justify-content:center;
         }
+        .chat-msg.is-mine .voice-play-btn{ background:#fff; color:var(--ink); }
         .voice-wave{ display:flex; align-items:center; gap:2px; height:20px; flex:1; }
         .voice-wave span{ width:2.5px; background:var(--ink-soft); border-radius:2px; opacity:.6; }
+        .chat-msg.is-mine .voice-wave span{ background:rgba(255,255,255,.85); }
         .voice-msg-pill.playing .voice-wave span{ background:var(--ink); animation:voicePulse 0.9s ease-in-out infinite; opacity:1; }
         .voice-msg-pill.playing .voice-wave span:nth-child(even){ animation-delay:.15s; }
         .voice-msg-pill.playing .voice-wave span:nth-child(3n){ animation-delay:.3s; }
         @keyframes voicePulse{ 0%,100%{transform:scaleY(.5);} 50%{transform:scaleY(1);} }
-        .chat-msg-audio{ margin-top:6px; }
         .chat-msg-footer{ display:flex; align-items:center; gap:10px; margin-top:5px; }
         .chat-like-btn{
             display:flex; align-items:center; gap:4px; background:none; border:none; cursor:pointer;
-            color:var(--ink-soft); font-family:'JetBrains Mono',monospace; font-size:10.5px; padding:2px 4px;
+            color:var(--ink-soft); font-family:'JetBrains Mono',monospace; font-size:10.5px; padding:4px 6px; border-radius:100px;
         }
+        .chat-like-btn:hover{ background:var(--panel-alt); }
         .chat-like-btn.liked{ color:var(--ink); }
         .chat-like-btn svg{ width:12px; height:12px; }
         .chat-reactions-row{ display:flex; gap:4px; flex-wrap:wrap; }
@@ -579,7 +597,6 @@
             padding:2px 8px; cursor:pointer; display:flex; align-items:center; gap:3px;
             font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-soft);
         }
-        .chat-reaction-chip svg{ width:11px; height:11px; }
         .reaction-emoji{ font-size:13px; line-height:1; }
         .chat-reaction-menu{ flex-wrap:wrap; max-width:230px; padding:8px; }
         .reaction-pick-btn{ font-size:20px !important; padding:8px !important; transition:transform .12s ease; }
@@ -593,83 +610,176 @@
         }
         .chat-reaction-menu.open{ display:flex; }
         .chat-reaction-menu button{ background:none; border:none; cursor:pointer; padding:6px; border-radius:6px; color:var(--ink-soft); display:flex; align-items:center; justify-content:center; }
-        .chat-reaction-menu button:hover{ color:var(--ink); }
-        .chat-reaction-menu button:hover{ background:var(--panel-alt); }
+        .chat-reaction-menu button:hover{ color:var(--ink); background:var(--panel-alt); }
         #chatImagePreviewWrap img{ max-height:90px; border-radius:8px; }
         .chat-recording-indicator{ display:flex; align-items:center; gap:6px; color:var(--ink); font-family:'JetBrains Mono',monospace; font-size:11px; }
         .chat-recording-dot{ width:8px; height:8px; border-radius:50%; background:var(--neg); animation:fxBlip 1s ease-in-out infinite; }
-        /* ==================== SOHBET FAB + HUB ==================== */
+
+        /* ---- DM balonları ---- */
+        .dm-row{ display:flex; margin-bottom:2px; animation:chatIn .2s ease; }
+        .dm-row.is-mine{ justify-content:flex-end; }
+        .dm-bubble{ position:relative; max-width:75%; padding-right:52px; }
+        .dm-row.is-mine .dm-bubble{ background:var(--brand-gradient); color:#fff; border-color:transparent; border-radius:16px 4px 16px 16px; }
+        .dm-row:not(.is-mine) .dm-bubble{ border-radius:4px 16px 16px 16px; }
+        .dm-bubble-time{
+            position:absolute; right:11px; bottom:8px; font-family:'JetBrains Mono',monospace; font-size:8.5px;
+            opacity:.65;
+        }
+        /* ==================== SOHBET FAB + HUB (v2) ==================== */
+        @keyframes fabPulse{ 0%{ box-shadow:0 8px 24px rgba(0,0,0,.45), 0 0 0 0 var(--glow-mid);} 100%{ box-shadow:0 8px 24px rgba(0,0,0,.45), 0 0 0 14px rgba(255,43,43,0);} }
         #chatFab{
-            position:fixed; right:18px; bottom:22px; z-index:65;
+            position:fixed; right:18px; bottom:calc(22px + env(safe-area-inset-bottom)); z-index:65;
             width:58px; height:58px; border-radius:50%; border:none; cursor:pointer;
             background:var(--brand-gradient); color:#fff; display:flex; align-items:center; justify-content:center;
-            box-shadow:0 8px 24px rgba(0,0,0,.45), 0 0 18px var(--glow-mid); transition:transform .15s ease;
+            box-shadow:0 8px 24px rgba(0,0,0,.45), 0 0 18px var(--glow-mid);
+            transition:transform .15s ease; animation:fabPulse 2.6s ease-out infinite;
+        }
+        body:has(#chatMegaModal.show) #chatFab{
+            display:none;
         }
         #chatFab:hover{ transform:scale(1.06); }
         #chatFab:active{ transform:scale(.94); }
         #chatFab svg{ width:26px; height:26px; }
 
         .chat-hub-row{
-            display:flex; align-items:center; gap:12px; padding:12px; border-radius:12px; cursor:pointer;
-            border:1px solid var(--line); background:var(--panel-alt); margin-bottom:8px; transition:border-color .15s ease;
+            display:flex; align-items:center; gap:12px; padding:11px 12px; border-radius:14px; cursor:pointer;
+            border:1px solid transparent; background:transparent; margin-bottom:2px; transition:background .15s ease, border-color .15s ease;
         }
-        .chat-hub-row:hover{ border-color:var(--ink-faint); }
+        .chat-hub-row:hover{ background:var(--panel-alt); }
+        .chat-hub-row.active{ background:var(--panel-alt); border-color:var(--ink-faint); }
         .chat-hub-row.pinned{ border-color:var(--ink); background:linear-gradient(120deg, rgba(255,43,43,.10), transparent); }
         .chat-hub-avatar{ width:44px; height:44px; border-radius:50%; object-fit:cover; flex:none; border:1.5px solid var(--line); }
         .chat-hub-icon-circle{
             width:44px; height:44px; border-radius:50%; flex:none; background:var(--brand-gradient); color:#fff;
-            display:flex; align-items:center; justify-content:center;
+            display:flex; align-items:center; justify-content:center; box-shadow:0 0 10px var(--glow-mid);
         }
         .chat-hub-info{ flex:1; min-width:0; }
         .chat-hub-name{ font-size:13.5px; font-weight:700; }
         .chat-hub-sub{ font-size:11.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px; }
 
-        /* ==================== GENİŞ SOHBET PANELİ (yan yana) ==================== */
+        /* ---- geniş sohbet paneli ---- */
         .modal-card.chat-mega-card{
             flex-direction:row; width:96vw; max-width:1280px; height:760px; max-height:92vh;
-            padding:0; overflow:hidden; align-items:stretch; text-align:left; border-radius:18px;
+            padding:0; overflow:hidden; align-items:stretch; text-align:left; border-radius:20px;
+            box-shadow:0 30px 80px rgba(0,0,0,.6), 0 0 50px var(--glow-soft);
         }
         .chat-mega-sidebar{
             width:340px; flex:none; display:flex; flex-direction:column;
             border-right:1px solid var(--line); background:var(--panel);
         }
-        .chat-mega-sidebar-head{ padding:16px; border-bottom:1px solid var(--line); }
+        .chat-mega-sidebar-head{ padding:18px 16px 14px; border-bottom:1px solid var(--line); }
         .chat-mega-me-row{ display:flex; align-items:center; gap:10px; }
         .chat-mega-me-avatar{ width:42px; height:42px; border-radius:50%; object-fit:cover; border:2px solid var(--ink); flex:none; }
         .chat-mega-me-name{ font-size:13.5px; font-weight:700; }
         .chat-mega-me-rank{ font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); margin-top:2px; display:flex; align-items:center; gap:5px; }
-        .chat-mega-search{ padding:12px 14px; border-bottom:1px solid var(--line-soft); }
-        .chat-mega-search .field-icon-input{ width:100%; }
-        .chat-mega-list{ flex:1; overflow-y:auto; padding:10px 12px; }
-        .chat-hub-row.active{ border-color:var(--ink); box-shadow:0 0 0 1px var(--ink) inset; }
+        .chat-mega-search{ padding:10px 14px; border-bottom:1px solid var(--line-soft); }
+        .chat-mega-search .field-icon-input{ width:100%; background:var(--bg); }
+        .chat-mega-list{ flex:1; overflow-y:auto; padding:8px 10px; }
 
         .chat-mega-main{ flex:1; min-width:0; display:flex; flex-direction:column; position:relative; background:var(--bg); }
-        .chat-mega-close{ position:absolute; top:10px; right:10px; z-index:3; }
+        .chat-mega-close{ position:absolute; top:12px; right:12px; z-index:3; }
         .chat-mega-back{ display:none; }
         .chat-mega-header{
-            display:flex; align-items:center; gap:10px; padding:16px 52px 16px 20px;
-            border-bottom:1px solid var(--line); flex-wrap:wrap; min-height:66px;
+            display:flex; align-items:center; gap:10px; padding:14px 52px 14px 20px;
+            border-bottom:1px solid var(--line); flex-wrap:wrap; min-height:62px;
+            background:var(--panel); backdrop-filter:blur(6px);
         }
+        #chatMessagesWrap{ background-image:radial-gradient(circle, var(--glow-soft) 1px, transparent 1px); background-size:20px 20px; }
         .chat-mega-input-row{
-            padding:14px 20px; border-top:1px solid var(--line); display:flex; gap:8px; align-items:center; flex:none;
+            padding:12px 16px calc(12px + env(safe-area-inset-bottom)); border-top:1px solid var(--line);
+            display:flex; gap:8px; align-items:center; flex:none; background:var(--panel);
         }
-        .chat-mega-input-row input[type=text]{ flex:1; }
+        .chat-mega-input-row input[type=text]{ flex:1; background:var(--bg); border-radius:100px; padding:12px 16px; }
         .chat-mega-send{
             flex:none; width:42px; height:42px; border-radius:50%; border:none; cursor:pointer;
             background:var(--brand-gradient); color:#fff; display:flex; align-items:center; justify-content:center;
             box-shadow:0 0 12px var(--glow-mid); transition:transform .12s ease;
         }
         .chat-mega-send:hover{ transform:scale(1.06); }
+        .chat-mega-send:active{ transform:scale(.92); }
         .chat-mega-send svg{ width:18px; height:18px; margin-left:-1px; }
 
         @media (max-width:720px){
-            .modal-card.chat-mega-card{ flex-direction:column; width:100vw; height:100vh; max-height:100vh; border-radius:0; }
-            .chat-mega-sidebar{ width:100%; }
-            .chat-mega-main{ display:none; width:100%; }
-            .chat-mega-card.mobile-chat-open .chat-mega-sidebar{ display:none; }
-            .chat-mega-card.mobile-chat-open .chat-mega-main{ display:flex; }
-            .chat-mega-back{ display:flex !important; }
+            #chatMegaModal{ padding:0; }
+            .modal-card.chat-mega-card{
+                flex-direction:column; width:100vw;
+                height:calc(var(--app-vh, 1vh) * 100);
+                max-height:calc(var(--app-vh, 1vh) * 100);
+                border-radius:0; position:relative; overflow:hidden;
+            }
+
+            /* Sidebar artık kayan bir çekmece (drawer) — tam ekranı kaplamıyor */
+            .chat-mega-sidebar{
+                position:absolute; top:0; left:0; z-index:20;
+                width:86%; max-width:340px; height:100%;
+                transform:translateX(-105%);
+                transition:transform .3s cubic-bezier(.4,0,.2,1);
+                box-shadow:14px 0 34px rgba(0,0,0,.4);
+            }
+            .chat-mega-card.sidebar-open .chat-mega-sidebar{ transform:translateX(0); }
+
+            .chat-mega-sidebar-backdrop{
+                position:absolute; inset:0; z-index:19;
+                background:rgba(0,0,0,.5); opacity:0; pointer-events:none;
+                transition:opacity .25s ease;
+            }
+            .chat-mega-card.sidebar-open .chat-mega-sidebar-backdrop{ opacity:1; pointer-events:auto; }
+
+            .chat-mega-sidebar-head{ padding:calc(14px + env(safe-area-inset-top)) 16px 12px; }
+            .chat-mega-me-avatar{ width:38px; height:38px; }
+            .chat-mega-me-name{ font-size:13px; }
+            .chat-mega-search{ padding:8px 12px; }
+            .chat-mega-list{ padding:6px 8px; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; }
+            .chat-hub-row{ padding:13px 10px; gap:11px; }
+            .chat-hub-avatar, .chat-hub-icon-circle{ width:42px; height:42px; }
+
+            /* Ana sohbet paneli artık her zaman görünür */
+            .chat-mega-main{ display:flex !important; width:100%; min-height:0; }
+
+            .chat-mega-header{
+                padding:calc(12px + env(safe-area-inset-top)) 46px 12px 8px;
+                gap:8px; min-height:56px; flex:none;
+            }
+            .chat-mega-back{ display:flex !important; flex:none; }
+            #chatHeaderTitle, #dmTargetName{
+                font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:150px;
+            }
+            #dmTargetRank{ font-size:9px !important; }
+            .chat-mega-close{ top:calc(10px + env(safe-area-inset-top)); right:8px; }
+
+            #megaGlobalView, #megaDmView{ min-height:0; }
+            #chatMessagesWrap, #dmMessagesWrap{
+                padding:12px 14px; gap:10px; min-height:0;
+                -webkit-overflow-scrolling:touch; overscroll-behavior:contain; touch-action:pan-y;
+            }
+            .chat-msg-avatar{ width:32px; height:32px; }
+            .chat-msg-body{ max-width:82%; }
+            .chat-msg-bubble{ padding:9px 12px; font-size:13.5px; }
+            .chat-msg-img{ max-width:170px; max-height:170px; }
+            .dm-bubble{ max-width:86%; padding-right:48px; }
+
+            .chat-mega-input-row{
+                padding:9px 10px calc(9px + env(safe-area-inset-bottom));
+                gap:6px; flex:none;
+            }
+            .chat-mega-input-row input[type=text], .chat-mega-input-row input, #chatInput, #dmInput{
+                font-size:16px; padding:11px 14px;
+            }
+            #chatImageBtn, #chatVoiceBtn{ width:38px; height:38px; padding:8px; }
+            .chat-mega-send{ width:38px; height:38px; }
+            .chat-mega-send svg{ width:16px; height:16px; }
+
+            .chat-mega-header > div[style*="margin-left:auto"]{ gap:6px !important; }
         }
+
+        @media (max-width:380px){
+            /* Çok dar ekranlarda "Etkinlik Başlat" yazısını gizle, ikon kalsın */
+            #startEventBtn{ font-size:0; padding:8px !important; }
+            #chatOnlineBadge{ font-size:0; }
+            .chat-hub-name{ font-size:12.5px; }
+            .chat-hub-sub{ font-size:10px; }
+        }
+
         /* ==================== FITNESS / BİYOMETRİK HUD ==================== */
         :root{ --fx-power:var(--ink); --fx-fuel:var(--ink-soft); --fx-water:var(--ink-soft); }
 
@@ -1529,6 +1639,7 @@
 
     <div id="chatMegaModal" class="modal-overlay">
         <div class="modal-card chat-mega-card">
+            <div class="chat-mega-sidebar-backdrop" onclick="closeChatSidebarMobile()"></div>
             <div class="chat-mega-sidebar">
                 <div class="chat-mega-sidebar-head">
                     <div class="chat-mega-me-row">
@@ -1558,7 +1669,7 @@
                         </div>
                     </div>
                     <div id="activeEventsWrap" style="padding:12px 20px 0; display:flex; flex-direction:column; gap:8px;"></div>
-                    <div id="chatMessagesWrap" style="flex:1; overflow-y:auto; padding:16px 20px; display:flex; flex-direction:column; gap:12px;"></div>
+                    <div id="chatMessagesWrap" style="flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; touch-action:pan-y; padding:16px 20px; display:flex; flex-direction:column; gap:12px;"></div>
                     <div id="chatImagePreviewWrap" style="display:none; padding:0 20px 10px;"></div>
                     <div class="chat-mega-input-row">
                         <button class="icon-btn" id="chatImageBtn" title="Resim ekle" onclick="document.getElementById('chatImageInput').click()"></button>
@@ -1578,7 +1689,7 @@
                             <div id="dmTargetRank" style="font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft);"></div>
                         </div>
                     </div>
-                    <div id="dmMessagesWrap" style="flex:1; overflow-y:auto; padding:16px 20px; display:flex; flex-direction:column; gap:10px;"></div>
+                    <div id="dmMessagesWrap" style="flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; touch-action:pan-y; padding:16px 20px; display:flex; flex-direction:column; gap:10px;"></div>
                     <div class="chat-mega-input-row">
                         <input type="text" id="dmInput" placeholder="Mesaj yaz…" onkeydown="if(event.key==='Enter')sendDmMessage()">
                         <button class="chat-mega-send" id="dmSendBtn" onclick="sendDmMessage()"></button>
@@ -2545,12 +2656,23 @@
         if(!wrap) return;
         const wasNearBottom = (wrap.scrollHeight - wrap.scrollTop - wrap.clientHeight) < 80;
         const visibleMsgs = chatMessages.filter(m => !blocked[m.uid] && !(friends[m.uid]===undefined && isBlockedByMe(m.uid)));
-        wrap.innerHTML = visibleMsgs.map(m => renderSingleChatMessage(m)).join('');
+        if(visibleMsgs.length === 0){
+            wrap.innerHTML = `<div class="empty-state" style="border:none; padding:60px 20px;">${icon('inbox',24)}<p><strong>Henüz mesaj yok.</strong></p><p>İlk mesajı sen gönder!</p></div>`;
+        } else {
+            let lastDay = null, html = '';
+            visibleMsgs.forEach(m => {
+                const dayKey = new Date(m.ts).toDateString();
+                if(dayKey !== lastDay){ html += chatDaySeparatorHtml(m.ts); lastDay = dayKey; }
+                html += renderSingleChatMessage(m);
+            });
+            wrap.innerHTML = html;
+        }
         if(wasNearBottom) wrap.scrollTop = wrap.scrollHeight;
     }
 
     function renderSingleChatMessage(m){
         const rankIdx = m.rankIdx || 0;
+        const mine = m.uid === currentUid;
         const badgeHtml = m.role === 'admin'
             ? `<span class="chat-msg-badge admin">${icon('shield',9)} Yönetici</span>`
             : (m.role === 'mod' ? `<span class="chat-msg-badge mod">${icon('shield',9)} Moderatör</span>` : '');
@@ -2566,7 +2688,7 @@
         }).join('');
         const reactionMenuBtns = CUSTOM_REACTIONS.map(r => `<button class="reaction-pick-btn" onclick="toggleReaction('${m.id}','${r.key}'); closeReactionMenus();">${r.emoji}</button>`).join('');
 
-        return `<div class="chat-msg${m.role==='admin'?' is-admin':''}">
+        return `<div class="chat-msg${m.role==='admin'?' is-admin':''}${mine?' is-mine':''}">
     <img class="chat-msg-avatar" src="${m.avatarUrl || 'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" onclick="openUserSocialProfile('${m.uid}')" style="cursor:pointer;">
     <div class="chat-msg-body">
       <div class="chat-msg-headrow">
@@ -2597,7 +2719,15 @@
     </div>
   </div>`;
     }
-
+    function chatDaySeparatorHtml(ts){
+        const d = new Date(ts);
+        const today = new Date();
+        const isToday = d.toDateString() === today.toDateString();
+        const yest = new Date(today); yest.setDate(yest.getDate()-1);
+        const isYest = d.toDateString() === yest.toDateString();
+        const label = isToday ? 'Bugün' : (isYest ? 'Dün' : d.toLocaleDateString('tr-TR', { day:'numeric', month:'long', year: d.getFullYear()!==today.getFullYear() ? 'numeric' : undefined }));
+        return `<div class="chat-day-sep"><span>${label}</span></div>`;
+    }
     function toggleReactionMenu(msgId){
         document.querySelectorAll('.chat-reaction-menu').forEach(el => {
             if(el.id !== 'reactMenu-'+msgId) el.classList.remove('open');
@@ -2742,20 +2872,42 @@
 
     let _chatMegaActiveKey = 'global';
 
+    /* Klavye açılınca gerçek görünür yüksekliği hesapla (mobilde input kaybolma sorununu çözer) */
+    function setAppVh(){
+        const h = (window.visualViewport ? window.visualViewport.height : window.innerHeight);
+        document.documentElement.style.setProperty('--app-vh', (h*0.01) + 'px');
+    }
+    setAppVh();
+    window.addEventListener('resize', setAppVh);
+    window.addEventListener('orientationchange', setAppVh);
+    if(window.visualViewport){
+        window.visualViewport.addEventListener('resize', setAppVh);
+        window.visualViewport.addEventListener('scroll', setAppVh);
+    }
+
+    function openChatSidebarMobile(){
+        const card = document.querySelector('#chatMegaModal .chat-mega-card');
+        if(card) card.classList.add('sidebar-open');
+    }
+    function closeChatSidebarMobile(){
+        const card = document.querySelector('#chatMegaModal .chat-mega-card');
+        if(card) card.classList.remove('sidebar-open');
+    }
+
     function showMegaGlobalView(){
         _chatMegaActiveKey = 'global';
         document.getElementById('megaGlobalView').style.display = 'flex';
         document.getElementById('megaDmView').style.display = 'none';
-        document.querySelector('#chatMegaModal .chat-mega-card').classList.add('mobile-chat-open');
+        closeChatSidebarMobile();
     }
     function showMegaDmView(){
         _chatMegaActiveKey = currentDmTargetUid;
         document.getElementById('megaGlobalView').style.display = 'none';
         document.getElementById('megaDmView').style.display = 'flex';
-        document.querySelector('#chatMegaModal .chat-mega-card').classList.add('mobile-chat-open');
+        closeChatSidebarMobile();
     }
     function showChatMegaSidebar(){
-        document.querySelector('#chatMegaModal .chat-mega-card').classList.remove('mobile-chat-open');
+        openChatSidebarMobile();
     }
 
     function openChatHub(){
@@ -2763,8 +2915,17 @@
         showMegaGlobalView();
         renderChatHub();
         document.getElementById('chatMegaModal').classList.add('show');
+        document.getElementById('chatFab').style.display = 'none';
+        document.body.style.overflow = 'hidden';
+        setAppVh();
+        if(window.innerWidth <= 720) openChatSidebarMobile();
     }
-    function closeChatHub(){ document.getElementById('chatMegaModal').classList.remove('show'); }
+    function closeChatHub(){
+        document.getElementById('chatMegaModal').classList.remove('show');
+        document.getElementById('chatFab').style.display = '';
+        document.body.style.overflow = '';
+        closeChatSidebarMobile();
+    }
 
     function openGlobalChat(){ showMegaGlobalView(); renderChatHub(); }
     function closeGlobalChat(){ showChatMegaSidebar(); }
@@ -2851,12 +3012,22 @@
         const wrap = document.getElementById('dmMessagesWrap');
         if(!wrap) return;
         const wasNearBottom = (wrap.scrollHeight - wrap.scrollTop - wrap.clientHeight) < 80;
+        if(dmMessages.length === 0){
+            wrap.innerHTML = `<div class="empty-state" style="border:none; padding:60px 20px;">${icon('inbox',24)}<p><strong>Henüz mesaj yok.</strong></p><p>Bir merhaba de!</p></div>`;
+            return;
+        }
+        let lastDay = null;
         wrap.innerHTML = dmMessages.map(m => {
             const mine = m.uid === currentUid;
-            return `<div style="display:flex; ${mine?'justify-content:flex-end;':''}">
-      <div class="chat-msg-bubble" style="max-width:75%; ${mine?'background:var(--brand-gradient); color:#fff; border-color:transparent;':''}">
+            const dayKey = new Date(m.ts).toDateString();
+            let sep = '';
+            if(dayKey !== lastDay){ sep = chatDaySeparatorHtml(m.ts); lastDay = dayKey; }
+            const time = new Date(m.ts).toLocaleTimeString('tr-TR', { hour:'2-digit', minute:'2-digit' });
+            return `${sep}<div class="dm-row${mine?' is-mine':''}">
+      <div class="chat-msg-bubble dm-bubble">
         ${escapeHtml(m.text||'')}
         ${m.imageUrl ? `<img class="chat-msg-img" src="${m.imageUrl}" onclick="openLightbox('${m.imageUrl}')">` : ''}
+        <span class="dm-bubble-time">${time}</span>
       </div>
     </div>`;
         }).join('');
@@ -4979,6 +5150,8 @@
     const AUTH_USER_KEY = 'tc_auth_user_v1';
     const AUTH_PASS_KEY = 'tc_auth_pass_v1';
     const AVATAR_KEY = 'tc_avatar_v1';
+    const AUTH_USER_DEFAULT = 'Kullanıcı';
+    const AUTH_PASS_DEFAULT = '';
     function translateAuthError(code){
         const map = {
             'auth/invalid-email': 'Geçersiz e-posta adresi.',

@@ -1448,6 +1448,120 @@
             .pv-name{ font-size:15px; max-width:150px; }
             .pv-avatar-wrap, .pv-avatar{ width:56px; height:56px; }
         }
+        .chat-input-wrap{ position:relative; flex:1; display:flex; align-items:center; min-width:0; }
+        .chat-input-wrap input[type=text]{ width:100%; padding-right:118px !important; }
+        .chat-input-icons{ position:absolute; right:6px; top:50%; transform:translateY(-50%); display:flex; align-items:center; gap:2px; }
+        .chat-input-icon-btn{
+            width:34px; height:34px; border-radius:50%; border:none; background:none; color:var(--ink-soft);
+            display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none;
+            transition:color .15s ease, background .15s ease;
+        }
+        .chat-input-icon-btn:hover{ background:var(--panel-alt); color:var(--ink); }
+        .chat-input-icon-btn svg{ width:16px; height:16px; }
+        .chat-attach-menu{
+            display:none; position:absolute; bottom:calc(100% + 8px); right:0; background:var(--panel); border:1px solid var(--line);
+            border-radius:12px; padding:6px; box-shadow:var(--shadow); z-index:8; min-width:160px;
+        }
+        .chat-attach-menu.open{ display:flex; flex-direction:column; gap:2px; }
+        .chat-attach-menu button{
+            display:flex; align-items:center; gap:10px; padding:10px 12px; background:none; border:none; border-radius:8px;
+            color:var(--ink); font-family:'Inter',sans-serif; font-size:12.5px; font-weight:600; cursor:pointer; text-align:left; width:100%;
+        }
+        .chat-attach-menu button:hover{ background:var(--panel-alt); }
+        .chat-attach-menu button svg{ color:var(--ink-soft); flex:none; }
+
+        .spotify-track-row{ display:flex; align-items:center; gap:12px; padding:9px 8px; border-radius:10px; cursor:pointer; transition:background .15s ease; }
+        .spotify-track-row:hover{ background:var(--panel-alt); }
+        .spotify-track-art{ width:46px; height:46px; border-radius:8px; object-fit:cover; flex:none; background:var(--panel-alt); }
+        .spotify-track-info{ flex:1; min-width:0; }
+        .spotify-track-name{ font-size:13px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .spotify-track-artist{ font-size:11px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+        .chat-msg-track-card{
+            display:flex; align-items:center; gap:10px; background:var(--panel-alt); border:1px solid var(--line);
+            border-radius:12px; padding:9px; max-width:260px; margin-top:6px; text-decoration:none; cursor:pointer;
+        }
+        .chat-msg.is-mine .chat-msg-track-card{ background:rgba(255,255,255,.15); border-color:rgba(255,255,255,.3); }
+        .chat-msg-track-art{ width:44px; height:44px; border-radius:8px; object-fit:cover; flex:none; }
+        .chat-msg-track-meta{ min-width:0; flex:1; }
+        .chat-msg-track-name{ font-size:12.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .chat-msg-track-artist{ font-size:10.5px; opacity:.8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        /* ==== ŞU MU, BU MU? (Görsel Anket) ==== */
+        .vs-poll-upload-slot{
+            aspect-ratio:1; border:1.5px dashed var(--line); border-radius:12px; background:var(--bg);
+            display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer;
+            color:var(--ink-soft); transition:border-color .15s ease, color .15s ease; overflow:hidden; position:relative;
+        }
+        .vs-poll-upload-slot:hover{ border-color:var(--ink); color:var(--ink); }
+        .vs-poll-upload-slot.filled{ border-style:solid; }
+        .vs-poll-upload-slot img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+
+        .vs-poll-card{
+            margin-top:8px; max-width:320px; border-radius:14px; overflow:hidden;
+            border:1px solid var(--line); background:var(--panel-alt); box-shadow:0 2px 10px rgba(0,0,0,.12);
+        }
+        .chat-msg.is-mine .vs-poll-card{ background:rgba(255,255,255,.14); border-color:rgba(255,255,255,.28); }
+        .vs-poll-question{
+            padding:9px 12px; font-size:12.5px; font-weight:700; display:flex; align-items:center; gap:6px;
+        }
+        .vs-poll-grid{ display:grid; grid-template-columns:1fr 1fr; gap:2px; position:relative; }
+        .vs-poll-opt{ position:relative; cursor:pointer; overflow:hidden; aspect-ratio:1; }
+        .vs-poll-opt img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s ease; }
+        .vs-poll-opt:hover img{ transform:scale(1.05); }
+        .vs-poll-opt.voted-mine{ box-shadow:inset 0 0 0 3px var(--ink); }
+        .vs-poll-badge-vs{
+            position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:3;
+            width:32px; height:32px; border-radius:50%; background:var(--brand-gradient); color:#fff;
+            display:flex; align-items:center; justify-content:center; font-family:'Orbitron',sans-serif;
+            font-size:10px; font-weight:800; box-shadow:0 0 14px rgba(0,0,0,.45), 0 0 0 3px var(--panel-alt);
+        }
+        .chat-msg.is-mine .vs-poll-badge-vs{ box-shadow:0 0 14px rgba(0,0,0,.45), 0 0 0 3px var(--panel); }
+        .vs-poll-pct-overlay{
+            position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:center; padding-bottom:10px;
+            background:linear-gradient(180deg, transparent 40%, rgba(0,0,0,.68) 100%); opacity:0; transition:opacity .25s ease;
+        }
+        .vs-poll-card.revealed .vs-poll-pct-overlay{ opacity:1; }
+        .vs-poll-pct-num{ font-family:'Orbitron',sans-serif; font-size:21px; font-weight:800; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,.6); }
+        .vs-poll-check{
+            position:absolute; top:7px; right:7px; width:22px; height:22px; border-radius:50%;
+            background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center;
+            opacity:0; transform:scale(.5); transition:all .2s cubic-bezier(.34,1.56,.64,1); z-index:2;
+            box-shadow:0 0 8px var(--glow-mid);
+        }
+        .vs-poll-opt.voted-mine .vs-poll-check{ opacity:1; transform:scale(1); }
+        .vs-poll-footer{
+            display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 12px;
+            font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); border-top:1px solid var(--line-soft);
+        }
+        .chat-msg.is-mine .vs-poll-footer{ border-top-color:rgba(255,255,255,.2); color:rgba(255,255,255,.8); }
+
+        /* ==== ANKET (Metin) ==== */
+        .txt-poll-card{
+            margin-top:8px; max-width:280px; border-radius:14px; padding:13px 14px;
+            border:1px solid var(--line); background:var(--panel-alt); box-shadow:0 2px 10px rgba(0,0,0,.12);
+        }
+        .chat-msg.is-mine .txt-poll-card{ background:rgba(255,255,255,.14); border-color:rgba(255,255,255,.28); }
+        .txt-poll-question{ font-size:12.5px; font-weight:700; margin-bottom:11px; display:flex; align-items:center; gap:6px; line-height:1.4; }
+        .txt-poll-opt{
+            position:relative; display:block; width:100%; text-align:left; cursor:pointer;
+            border:1px solid var(--line); border-radius:9px; background:var(--bg); overflow:hidden;
+            margin-bottom:6px; padding:0; font-family:'Inter',sans-serif; transition:border-color .15s ease;
+        }
+        .txt-poll-opt:hover{ border-color:var(--ink-soft); }
+        .chat-msg.is-mine .txt-poll-opt{ background:rgba(0,0,0,.16); border-color:rgba(255,255,255,.25); }
+        .txt-poll-opt:last-child{ margin-bottom:0; }
+        .txt-poll-fill{
+            position:absolute; inset:0; background:var(--brand-gradient); opacity:.24; z-index:0;
+            width:0%; transition:width .6s cubic-bezier(.4,0,.2,1);
+        }
+        .txt-poll-opt-row{ position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; font-size:12px; font-weight:600; color:var(--ink); }
+        .chat-msg.is-mine .txt-poll-opt-row{ color:#fff; }
+        .txt-poll-opt.voted-mine{ border-color:var(--ink); }
+        .chat-msg.is-mine .txt-poll-opt.voted-mine{ border-color:#fff; }
+        .txt-poll-opt.voted-mine .txt-poll-fill{ opacity:.4; }
+        .txt-poll-pct{ font-family:'JetBrains Mono',monospace; font-size:10.5px; flex:none; opacity:.85; }
+        .txt-poll-footer{ margin-top:7px; font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); display:flex; align-items:center; gap:6px; }
+        .chat-msg.is-mine .txt-poll-footer{ color:rgba(255,255,255,.75); }
     </style>
 </head>
 <body>
@@ -1809,10 +1923,22 @@
                     <div id="chatMessagesWrap" style="flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; touch-action:pan-y; padding:16px 20px; display:flex; flex-direction:column; gap:12px;"></div>
                     <div id="chatImagePreviewWrap" style="display:none; padding:0 20px 10px;"></div>
                     <div class="chat-mega-input-row">
-                        <button class="icon-btn" id="chatImageBtn" title="Resim ekle" onclick="document.getElementById('chatImageInput').click()"></button>
-                        <input type="file" id="chatImageInput" accept="image/*" style="display:none;" onchange="handleChatImageSelect(event)">
-                        <button class="icon-btn" id="chatVoiceBtn" title="Ses kaydet" onclick="toggleVoiceRecording()"></button>
-                        <input type="text" id="chatInput" placeholder="Mesajınızı yazın.." onkeydown="if(event.key==='Enter')sendChatMessage()">
+                        <div class="chat-input-wrap">
+                            <input type="text" id="chatInput" placeholder="Mesajınızı yazın.." onkeydown="if(event.key==='Enter')sendChatMessage()">
+                            <div class="chat-input-icons">
+                                <button class="chat-input-icon-btn" id="chatImageBtn" title="Resim ekle" onclick="document.getElementById('chatImageInput').click()"></button>
+                                <input type="file" id="chatImageInput" accept="image/*" style="display:none;" onchange="handleChatImageSelect(event)">
+                                <button class="chat-input-icon-btn" id="chatVoiceBtn" title="Ses kaydet" onclick="toggleVoiceRecording()"></button>
+                                <div style="position:relative;">
+                                    <button class="chat-input-icon-btn" id="chatAttachBtn" title="Ekle" onclick="toggleAttachMenu('global')"></button>
+                                    <div class="chat-attach-menu" id="chatAttachMenu">
+                                        <button onclick="openSpotifyPicker('global')"><span id="attachMusicIconGlobal"></span> Müzik Gönder</button>
+                                        <button onclick="openImagePollCreator('global')"><span id="attachVsIconGlobal"></span> Şu mu, Bu mu?</button>
+                                        <button onclick="openTextPollCreator('global')"><span id="attachPollIconGlobal"></span> Anket Oluştur</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <button class="chat-mega-send" id="chatSendBtn" onclick="sendChatMessage()"></button>
                     </div>
                 </div>
@@ -1829,10 +1955,22 @@
                     <div id="dmMessagesWrap" style="flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; touch-action:pan-y; padding:16px 20px; display:flex; flex-direction:column; gap:10px;"></div>
                     <div id="dmImagePreviewWrap" style="display:none; padding:0 20px 10px;"></div>
                     <div class="chat-mega-input-row">
-                        <button class="icon-btn" id="dmImageBtn" title="Resim ekle" onclick="document.getElementById('dmImageInput').click()"></button>
-                        <input type="file" id="dmImageInput" accept="image/*" style="display:none;" onchange="handleDmImageSelect(event)">
-                        <button class="icon-btn" id="dmVoiceBtn" title="Ses kaydet" onclick="toggleDmVoiceRecording()"></button>
-                        <input type="text" id="dmInput" placeholder="Mesaj yaz…" onkeydown="if(event.key==='Enter')sendDmMessage()">
+                        <div class="chat-input-wrap">
+                            <input type="text" id="dmInput" placeholder="Mesaj yaz…" onkeydown="if(event.key==='Enter')sendDmMessage()">
+                            <div class="chat-input-icons">
+                                <button class="chat-input-icon-btn" id="dmImageBtn" title="Resim ekle" onclick="document.getElementById('dmImageInput').click()"></button>
+                                <input type="file" id="dmImageInput" accept="image/*" style="display:none;" onchange="handleDmImageSelect(event)">
+                                <button class="chat-input-icon-btn" id="dmVoiceBtn" title="Ses kaydet" onclick="toggleDmVoiceRecording()"></button>
+                                <div style="position:relative;">
+                                    <button class="chat-input-icon-btn" id="dmAttachBtn" title="Ekle" onclick="toggleAttachMenu('dm')"></button>
+                                    <div class="chat-attach-menu" id="dmAttachMenu">
+                                        <button onclick="openSpotifyPicker('dm')"><span id="attachMusicIconDm"></span> Müzik Gönder</button>
+                                        <button onclick="openImagePollCreator('dm')"><span id="attachVsIconDm"></span> Şu mu, Bu mu?</button>
+                                        <button onclick="openTextPollCreator('dm')"><span id="attachPollIconDm"></span> Anket Oluştur</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <button class="chat-mega-send" id="dmSendBtn" onclick="sendDmMessage()"></button>
                     </div>
                 </div>
@@ -1863,6 +2001,54 @@
             <div class="modal-actions" style="margin-top:18px; width:100%;">
                 <button class="btn btn-ghost" onclick="closeCreateEventModal()">Vazgeç</button>
                 <button class="btn" onclick="createCommunityEvent()">Başlat</button>
+            </div>
+        </div>
+    </div>
+    <div id="spotifyPickerModal" class="modal-overlay">
+        <div class="modal-card" style="max-width:380px; text-align:left;">
+            <p class="modal-eyebrow" style="text-align:center;">Spotify — En Çok Dinlenenler</p>
+            <div id="spotifyTrackList" style="max-height:360px; overflow-y:auto; margin-top:12px; display:flex; flex-direction:column; gap:2px;"></div>
+            <div class="modal-actions" style="margin-top:16px; width:100%;">
+                <button class="btn btn-ghost" style="width:100%;" onclick="closeSpotifyPicker()">Kapat</button>
+            </div>
+        </div>
+    </div>
+    <div id="imagePollCreateModal" class="modal-overlay">
+        <div class="modal-card" style="max-width:420px; text-align:left;">
+            <p class="modal-eyebrow" style="text-align:center;">Şu mu, Bu mu?</p>
+            <div class="auth-fields" style="width:100%; margin-top:8px;">
+                <input type="text" id="vsPollQuestion" placeholder="Soru (opsiyonel) — örn. Hangisi daha iyi?">
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px;">
+                <div>
+                    <div id="vsPollSlotA" class="vs-poll-upload-slot" onclick="document.getElementById('vsPollFileA').click()"></div>
+                    <input type="file" id="vsPollFileA" accept="image/*" style="display:none;" onchange="handleVsPollImageSelect(event,'A')">
+                    <input type="text" id="vsPollLabelA" placeholder="Etiket A (opsiyonel)" style="margin-top:6px; width:100%; font-size:11.5px; padding:8px 10px;">
+                </div>
+                <div>
+                    <div id="vsPollSlotB" class="vs-poll-upload-slot" onclick="document.getElementById('vsPollFileB').click()"></div>
+                    <input type="file" id="vsPollFileB" accept="image/*" style="display:none;" onchange="handleVsPollImageSelect(event,'B')">
+                    <input type="text" id="vsPollLabelB" placeholder="Etiket B (opsiyonel)" style="margin-top:6px; width:100%; font-size:11.5px; padding:8px 10px;">
+                </div>
+            </div>
+            <div class="modal-actions" style="margin-top:18px; width:100%;">
+                <button class="btn btn-ghost" onclick="closeImagePollCreator()">Vazgeç</button>
+                <button class="btn" onclick="submitImagePoll()">Gönder</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="textPollCreateModal" class="modal-overlay">
+        <div class="modal-card" style="max-width:400px; text-align:left;">
+            <p class="modal-eyebrow" style="text-align:center;">Anket Oluştur</p>
+            <div class="auth-fields" style="width:100%; margin-top:8px;">
+                <input type="text" id="txtPollQuestion" placeholder="Anket sorusu">
+            </div>
+            <div id="txtPollOptionsWrap" style="display:flex; flex-direction:column; gap:8px; margin-top:12px;"></div>
+            <button class="btn-text" onclick="addTxtPollOptionField()" style="margin-top:4px; display:flex; align-items:center; gap:5px;" id="txtPollAddOptBtn"></button>
+            <div class="modal-actions" style="margin-top:16px; width:100%;">
+                <button class="btn btn-ghost" onclick="closeTextPollCreator()">Vazgeç</button>
+                <button class="btn" onclick="submitTextPoll()">Gönder</button>
             </div>
         </div>
     </div>
@@ -2243,7 +2429,10 @@
         arrowLeft: '<path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>',
         heart: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>',
         heartFilled: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z" fill="currentColor"/>',
-        smilePlus: '<circle cx="9" cy="12" r="7"/><path d="M6.5 13.5s1 1.5 2.5 1.5 2.5-1.5 2.5-1.5"/><line x1="7" y1="10" x2="7" y2="10.01"/><line x1="11" y1="10" x2="11" y2="10.01"/><path d="M18 4v6M15 7h6"/>'
+        smilePlus: '<circle cx="9" cy="12" r="7"/><path d="M6.5 13.5s1 1.5 2.5 1.5 2.5-1.5 2.5-1.5"/><line x1="7" y1="10" x2="7" y2="10.01"/><line x1="11" y1="10" x2="11" y2="10.01"/><path d="M18 4v6M15 7h6"/>',
+        music: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+        poll: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+        vsIcon: '<path d="M4 4l16 16M20 4L4 20"/>'
     };
     function icon(name, size){
         size = size || 14;
@@ -2906,6 +3095,17 @@ ${m.role === 'admin' ? `
       <audio class="voice-audio-el" src="${m.audioUrl}" preload="metadata"></audio>
     </div>
   ` : ''}
+${m.track ? `
+    <div class="chat-msg-track-card" onclick="window.open('${m.track.url}','_blank')">
+      <img class="chat-msg-track-art" src="${m.track.albumArt}">
+      <div class="chat-msg-track-meta">
+        <div class="chat-msg-track-name">${escapeHtml(m.track.name)}</div>
+        <div class="chat-msg-track-artist">${escapeHtml(m.track.artist)}</div>
+      </div>
+      ${icon('music',14)}
+    </div>` : ''}
+          ${m.imagePoll ? renderImagePollCard(m, false) : ''}
+          ${m.textPoll ? renderTextPollCard(m, false) : ''}
           <span class="chat-msg-time-tag">${time}${editedLabel}</span>
         </div>
       </div>
@@ -2914,13 +3114,24 @@ ${m.role === 'admin' ? `
       <div class="chat-msg-bubble" id="bubble-${m.id}">
         <div class="chat-msg-text">${m.isEventMsg ? icon('flag',12)+' ' : ''}${m.text ? escapeHtml(m.text) : ''}</div>
         ${m.imageUrl ? `<img class="chat-msg-img" src="${m.imageUrl}" onclick="openLightbox('${m.imageUrl}')">` : ''}
-        ${m.audioUrl ? `
+${m.audioUrl ? `
   <div class="voice-msg-pill">
     <button class="voice-play-btn" onclick="toggleVoicePlay(this)">${icon('bolt',14)}</button>
     <div class="voice-wave">${Array.from({length:22}).map(()=>`<span style="height:${6+Math.random()*16}px"></span>`).join('')}</div>
     <audio class="voice-audio-el" src="${m.audioUrl}" preload="metadata"></audio>
   </div>
 ` : ''}
+        ${m.track ? `
+    <div class="chat-msg-track-card" onclick="window.open('${m.track.url}','_blank')">
+      <img class="chat-msg-track-art" src="${m.track.albumArt}">
+      <div class="chat-msg-track-meta">
+        <div class="chat-msg-track-name">${escapeHtml(m.track.name)}</div>
+        <div class="chat-msg-track-artist">${escapeHtml(m.track.artist)}</div>
+      </div>
+      ${icon('music',14)}
+    </div>` : ''}
+        ${m.imagePoll ? renderImagePollCard(m, false) : ''}
+        ${m.textPoll ? renderTextPollCard(m, false) : ''}
         <span class="chat-msg-time-tag">${time}${editedLabel}</span>
       </div>
     `}
@@ -3410,6 +3621,17 @@ ${m.role === 'admin' ? `
             <div class="voice-wave">${Array.from({length:22}).map(()=>`<span style="height:${6+Math.random()*16}px"></span>`).join('')}</div>
             <audio class="voice-audio-el" src="${m.audioUrl}" preload="metadata"></audio>
           </div>` : ''}
+${m.track ? `
+    <div class="chat-msg-track-card" onclick="window.open('${m.track.url}','_blank')">
+      <img class="chat-msg-track-art" src="${m.track.albumArt}">
+      <div class="chat-msg-track-meta">
+        <div class="chat-msg-track-name">${escapeHtml(m.track.name)}</div>
+        <div class="chat-msg-track-artist">${escapeHtml(m.track.artist)}</div>
+      </div>
+      ${icon('music',14)}
+    </div>` : ''}
+            ${m.imagePoll ? renderImagePollCard(m, true) : ''}
+            ${m.textPoll ? renderTextPollCard(m, true) : ''}
             <span class="chat-msg-time-tag">${time}${editedLabel}</span>
           </div>
           <div class="chat-msg-footer">
@@ -4288,6 +4510,324 @@ ${m.role === 'admin' ? `
     let allUsersCache = {};
     const ADMIN_UID = "H9AUmUsiasfV9yGD5WLwIMDscfz1";
 
+    /* ===================== SPOTIFY MÜZİK PAYLAŞIMI ===================== */
+    const SPOTIFY_CLIENT_ID = 'fbd713c817d34c4e8f209b431687c90e';
+    const SPOTIFY_CLIENT_SECRET = '37cef861e5864e2c8d4e7e65b1244f6c';
+    const SPOTIFY_TOP_PLAYLIST_ID = '37i9dQZEVXbMDoHDwVN2tF'; // Spotify'ın resmi "Top 50 - Global" çalma listesi
+
+    let _spotifyToken = null, _spotifyTokenExpiry = 0;
+    let _spotifyTopTracksCache = null;
+    let _attachMenuTarget = null; // 'global' | 'dm'
+    let _spotifyPickerTarget = null;
+
+    async function getSpotifyToken(){
+        if(_spotifyToken && Date.now() < _spotifyTokenExpiry) return _spotifyToken;
+        const res = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': 'Basic ' + btoa(SPOTIFY_CLIENT_ID + ':' + SPOTIFY_CLIENT_SECRET)
+            },
+            body: 'grant_type=client_credentials'
+        });
+        if(!res.ok) throw new Error('Spotify token alınamadı');
+        const data = await res.json();
+        _spotifyToken = data.access_token;
+        _spotifyTokenExpiry = Date.now() + (data.expires_in - 60) * 1000;
+        return _spotifyToken;
+    }
+
+    async function fetchSpotifyTopTracks(){
+        if(_spotifyTopTracksCache) return _spotifyTopTracksCache;
+        const token = await getSpotifyToken();
+        const res = await fetch(`https://api.spotify.com/v1/playlists/${SPOTIFY_TOP_PLAYLIST_ID}/tracks?limit=10`, {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if(!res.ok) throw new Error('Şarkılar alınamadı');
+        const data = await res.json();
+        _spotifyTopTracksCache = (data.items || []).filter(i => i.track).map(i => ({
+            name: i.track.name,
+            artist: (i.track.artists || []).map(a => a.name).join(', '),
+            albumArt: i.track.album && i.track.album.images && i.track.album.images[2] ? i.track.album.images[2].url : (i.track.album.images[0] ? i.track.album.images[0].url : ''),
+            url: i.track.external_urls ? i.track.external_urls.spotify : '#'
+        }));
+        return _spotifyTopTracksCache;
+    }
+
+    function toggleAttachMenu(target){
+        const menuId = target === 'dm' ? 'dmAttachMenu' : 'chatAttachMenu';
+        document.querySelectorAll('.chat-attach-menu').forEach(el => { if(el.id !== menuId) el.classList.remove('open'); });
+        document.getElementById(menuId).classList.toggle('open');
+    }
+    document.addEventListener('click', e => {
+        if(!e.target.closest('#chatAttachBtn') && !e.target.closest('#chatAttachMenu')) document.getElementById('chatAttachMenu').classList.remove('open');
+        if(!e.target.closest('#dmAttachBtn') && !e.target.closest('#dmAttachMenu')) document.getElementById('dmAttachMenu').classList.remove('open');
+    });
+
+    async function openSpotifyPicker(target){
+        _spotifyPickerTarget = target;
+        document.getElementById('chatAttachMenu').classList.remove('open');
+        document.getElementById('dmAttachMenu').classList.remove('open');
+        closeAllAppModals();
+        document.getElementById('spotifyPickerModal').classList.add('show');
+        const listEl = document.getElementById('spotifyTrackList');
+        listEl.innerHTML = `<div class="empty-state" style="padding:26px;"><p>Yükleniyor…</p></div>`;
+        try{
+            const tracks = await fetchSpotifyTopTracks();
+            listEl.innerHTML = tracks.map((t,i) => `
+      <div class="spotify-track-row" onclick='sendTrackToChat(${JSON.stringify(t)})'>
+        <img class="spotify-track-art" src="${t.albumArt}" alt="">
+        <div class="spotify-track-info">
+          <div class="spotify-track-name">${i+1}. ${escapeHtml(t.name)}</div>
+          <div class="spotify-track-artist">${escapeHtml(t.artist)}</div>
+        </div>
+        ${icon('music',15)}
+      </div>`).join('');
+        }catch(err){
+            listEl.innerHTML = `<div class="empty-state" style="padding:26px;"><p>Şarkılar alınamadı: ${escapeHtml(err.message)}</p></div>`;
+        }
+    }
+    function closeSpotifyPicker(){ document.getElementById('spotifyPickerModal').classList.remove('show'); }
+    /* ===================== ŞU MU, BU MU? (Görsel Anket) ===================== */
+    let _vsPollImages = { A:null, B:null };
+    let _vsPollTarget = 'global';
+
+    function openImagePollCreator(target){
+        _vsPollTarget = target;
+        document.getElementById('chatAttachMenu').classList.remove('open');
+        document.getElementById('dmAttachMenu').classList.remove('open');
+        closeAllAppModals();
+        _vsPollImages = { A:null, B:null };
+        document.getElementById('vsPollQuestion').value = '';
+        document.getElementById('vsPollLabelA').value = '';
+        document.getElementById('vsPollLabelB').value = '';
+        resetVsPollSlot('A'); resetVsPollSlot('B');
+        document.getElementById('imagePollCreateModal').classList.add('show');
+    }
+    function closeImagePollCreator(){ document.getElementById('imagePollCreateModal').classList.remove('show'); }
+
+    function resetVsPollSlot(key){
+        const slot = document.getElementById('vsPollSlot'+key);
+        slot.classList.remove('filled');
+        slot.innerHTML = `${icon('camera',22)}<span style="font-size:10.5px; margin-top:6px;">${key} Görseli Seç</span>`;
+    }
+
+    function handleVsPollImageSelect(event, key){
+        const file = event.target.files[0];
+        if(!file) return;
+        if(!file.type.startsWith('image/')){ showTopToast('Lütfen bir görsel seç', 'warn', 'warn'); return; }
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = new Image();
+            img.onload = () => {
+                const size = 500;
+                const canvas = document.createElement('canvas');
+                canvas.width = size; canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                const scale = Math.max(size/img.width, size/img.height);
+                const w = img.width*scale, h = img.height*scale;
+                ctx.drawImage(img, (size-w)/2, (size-h)/2, w, h);
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.78);
+                _vsPollImages[key] = dataUrl;
+                const slot = document.getElementById('vsPollSlot'+key);
+                slot.classList.add('filled');
+                slot.innerHTML = `<img src="${dataUrl}">`;
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    async function submitImagePoll(){
+        if(!_vsPollImages.A || !_vsPollImages.B){
+            showTopToast('İki görseli de seçmelisin', 'warn', 'warn');
+            return;
+        }
+        const question = document.getElementById('vsPollQuestion').value.trim() || 'Şu mu, Bu mu?';
+        const labelA = document.getElementById('vsPollLabelA').value.trim() || 'A';
+        const labelB = document.getElementById('vsPollLabelB').value.trim() || 'B';
+        const me = getMyProfileCache();
+        const imagePoll = {
+            question, options:[ { label:labelA, imageUrl:_vsPollImages.A }, { label:labelB, imageUrl:_vsPollImages.B } ], votes:{}
+        };
+        closeImagePollCreator();
+        try{
+            if(_vsPollTarget === 'dm'){
+                if(!currentDmPairKey || !currentDmTargetUid){ showTopToast('Sohbet seçilmedi', 'warn', 'warn'); return; }
+                await db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages').push({
+                    uid: currentUid, text:'', imageUrl:null, audioUrl:null, imagePoll, ts: Date.now(), likes:{}, reactions:{}
+                });
+                const targetProfileSnap = await db.ref('developmentUsers/'+currentDmTargetUid+'/profile').once('value');
+                const targetProfile = targetProfileSnap.val() || {};
+                await db.ref('developmentUsers/dmIndex/'+currentUid+'/'+currentDmTargetUid).update({ otherUsername: targetProfile.username||'Kullanıcı', otherAvatar: targetProfile.avatarUrl||'', lastMessage:'🖼️ Şu mu, Bu mu?', ts: Date.now() });
+                await db.ref('developmentUsers/dmIndex/'+currentDmTargetUid+'/'+currentUid).update({ otherUsername: me.username, otherAvatar: me.avatarUrl, lastMessage:'🖼️ Şu mu, Bu mu?', ts: Date.now() });
+            } else {
+                const isAdmin = currentUid === ADMIN_UID;
+                const isMod = !!moderators[currentUid];
+                await chatRef.push({
+                    uid: currentUid, username: me.username, avatarUrl: me.avatarUrl,
+                    text:'', imageUrl:null, audioUrl:null, imagePoll,
+                    ts: Date.now(), rankIdx: getRankIndex(xp), role: isAdmin?'admin':(isMod?'mod':null),
+                    country: detectUserCountryCode(), likes:{}, reactions:{}
+                });
+            }
+        }catch(err){ showTopToast('Anket gönderilemedi: '+err.message, 'warn', 'warn'); }
+    }
+
+    function pollMsgRef(msgId, isDm){
+        return isDm ? db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages/'+msgId) : chatRef.child(msgId);
+    }
+    async function voteImagePoll(msgId, optIdx, isDm){
+        const ref = pollMsgRef(msgId, isDm).child('imagePoll/votes/'+currentUid);
+        const snap = await ref.once('value');
+        if(snap.val() === optIdx) await ref.remove(); else await ref.set(optIdx);
+    }
+
+    function renderImagePollCard(m, isDm){
+        const poll = m.imagePoll;
+        if(!poll) return '';
+        const votes = poll.votes || {};
+        const counts = [0,0];
+        Object.values(votes).forEach(v => { if(v===0||v===1) counts[v]++; });
+        const total = counts[0]+counts[1];
+        const myVote = votes[currentUid];
+        const revealed = myVote !== undefined;
+        const pct = total>0 ? [Math.round(counts[0]/total*100), Math.round(counts[1]/total*100)] : [0,0];
+        const opts = poll.options.map((o,i) => `
+    <div class="vs-poll-opt${myVote===i?' voted-mine':''}" onclick="voteImagePoll('${m.id}',${i},${isDm})">
+      <img src="${o.imageUrl}" alt="">
+      <div class="vs-poll-check">${icon('check',12)}</div>
+      <div class="vs-poll-pct-overlay"><span class="vs-poll-pct-num">${pct[i]}%</span></div>
+    </div>`).join('');
+        return `<div class="vs-poll-card${revealed?' revealed':''}">
+    <div class="vs-poll-question">${icon('vsIcon',13)} ${escapeHtml(poll.question)}</div>
+    <div class="vs-poll-grid">${opts}<div class="vs-poll-badge-vs">VS</div></div>
+    <div class="vs-poll-footer">
+      <span>${escapeHtml(poll.options[0].label)}</span>
+      <span>${total} oy</span>
+      <span>${escapeHtml(poll.options[1].label)}</span>
+    </div>
+  </div>`;
+    }
+
+    /* ===================== ANKET (Metin) ===================== */
+    let _txtPollTarget = 'global';
+    let _txtPollOptionCount = 0;
+
+    function openTextPollCreator(target){
+        _txtPollTarget = target;
+        document.getElementById('chatAttachMenu').classList.remove('open');
+        document.getElementById('dmAttachMenu').classList.remove('open');
+        closeAllAppModals();
+        document.getElementById('txtPollQuestion').value = '';
+        document.getElementById('txtPollOptionsWrap').innerHTML = '';
+        _txtPollOptionCount = 0;
+        addTxtPollOptionField(); addTxtPollOptionField();
+        document.getElementById('textPollCreateModal').classList.add('show');
+    }
+    function closeTextPollCreator(){ document.getElementById('textPollCreateModal').classList.remove('show'); }
+
+    function addTxtPollOptionField(){
+        if(_txtPollOptionCount >= 6){ showTopToast('En fazla 6 seçenek ekleyebilirsin', 'warn', 'warn'); return; }
+        _txtPollOptionCount++;
+        const wrap = document.getElementById('txtPollOptionsWrap');
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex; gap:6px; align-items:center;';
+        row.innerHTML = `<input type="text" class="txtPollOptInput" placeholder="Seçenek ${_txtPollOptionCount}" style="flex:1;">
+    <button class="icon-btn" title="Kaldır" onclick="this.parentElement.remove()">${icon('x',14)}</button>`;
+        wrap.appendChild(row);
+    }
+
+    async function submitTextPoll(){
+        const question = document.getElementById('txtPollQuestion').value.trim();
+        const optionInputs = [...document.querySelectorAll('.txtPollOptInput')];
+        const options = optionInputs.map(i => i.value.trim()).filter(v => v);
+        if(!question){ showTopToast('Bir soru yaz', 'warn', 'warn'); return; }
+        if(options.length < 2){ showTopToast('En az 2 seçenek gerekli', 'warn', 'warn'); return; }
+        const me = getMyProfileCache();
+        const textPoll = { question, options, votes:{} };
+        closeTextPollCreator();
+        try{
+            if(_txtPollTarget === 'dm'){
+                if(!currentDmPairKey || !currentDmTargetUid){ showTopToast('Sohbet seçilmedi', 'warn', 'warn'); return; }
+                await db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages').push({
+                    uid: currentUid, text:'', imageUrl:null, audioUrl:null, textPoll, ts: Date.now(), likes:{}, reactions:{}
+                });
+                const targetProfileSnap = await db.ref('developmentUsers/'+currentDmTargetUid+'/profile').once('value');
+                const targetProfile = targetProfileSnap.val() || {};
+                await db.ref('developmentUsers/dmIndex/'+currentUid+'/'+currentDmTargetUid).update({ otherUsername: targetProfile.username||'Kullanıcı', otherAvatar: targetProfile.avatarUrl||'', lastMessage:'📊 '+question, ts: Date.now() });
+                await db.ref('developmentUsers/dmIndex/'+currentDmTargetUid+'/'+currentUid).update({ otherUsername: me.username, otherAvatar: me.avatarUrl, lastMessage:'📊 '+question, ts: Date.now() });
+            } else {
+                const isAdmin = currentUid === ADMIN_UID;
+                const isMod = !!moderators[currentUid];
+                await chatRef.push({
+                    uid: currentUid, username: me.username, avatarUrl: me.avatarUrl,
+                    text:'', imageUrl:null, audioUrl:null, textPoll,
+                    ts: Date.now(), rankIdx: getRankIndex(xp), role: isAdmin?'admin':(isMod?'mod':null),
+                    country: detectUserCountryCode(), likes:{}, reactions:{}
+                });
+            }
+        }catch(err){ showTopToast('Anket gönderilemedi: '+err.message, 'warn', 'warn'); }
+    }
+
+    async function voteTextPoll(msgId, optIdx, isDm){
+        const ref = pollMsgRef(msgId, isDm).child('textPoll/votes/'+currentUid);
+        const snap = await ref.once('value');
+        if(snap.val() === optIdx) await ref.remove(); else await ref.set(optIdx);
+    }
+
+    function renderTextPollCard(m, isDm){
+        const poll = m.textPoll;
+        if(!poll) return '';
+        const votes = poll.votes || {};
+        const counts = poll.options.map((_,i) => Object.values(votes).filter(v=>v===i).length);
+        const total = counts.reduce((a,b)=>a+b,0);
+        const myVote = votes[currentUid];
+        const opts = poll.options.map((label,i) => {
+            const pct = total>0 ? Math.round(counts[i]/total*100) : 0;
+            return `<button type="button" class="txt-poll-opt${myVote===i?' voted-mine':''}" onclick="voteTextPoll('${m.id}',${i},${isDm})">
+      <div class="txt-poll-fill" style="width:${pct}%"></div>
+      <div class="txt-poll-opt-row">
+        <span>${myVote===i?icon('check',11)+' ':''}${escapeHtml(label)}</span>
+        <span class="txt-poll-pct">${pct}%</span>
+      </div>
+    </button>`;
+        }).join('');
+        return `<div class="txt-poll-card">
+    <div class="txt-poll-question">${icon('poll',13)} ${escapeHtml(poll.question)}</div>
+    ${opts}
+    <div class="txt-poll-footer">${icon('user',10)} ${total} kişi oy verdi</div>
+  </div>`;
+    }
+
+    async function sendTrackToChat(track){
+        closeSpotifyPicker();
+        const me = getMyProfileCache();
+        if(_spotifyPickerTarget === 'dm'){
+            if(!currentDmPairKey || !currentDmTargetUid){ showTopToast('Sohbet seçilmedi', 'warn', 'warn'); return; }
+            try{
+                await db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages').push({
+                    uid: currentUid, text:'', imageUrl:null, audioUrl:null, track, ts: Date.now(), likes:{}, reactions:{}
+                });
+                const targetProfileSnap = await db.ref('developmentUsers/'+currentDmTargetUid+'/profile').once('value');
+                const targetProfile = targetProfileSnap.val() || {};
+                await db.ref('developmentUsers/dmIndex/'+currentUid+'/'+currentDmTargetUid).update({ otherUsername: targetProfile.username||'Kullanıcı', otherAvatar: targetProfile.avatarUrl||'', lastMessage:'🎵 '+track.name, ts: Date.now() });
+                await db.ref('developmentUsers/dmIndex/'+currentDmTargetUid+'/'+currentUid).update({ otherUsername: me.username, otherAvatar: me.avatarUrl, lastMessage:'🎵 '+track.name, ts: Date.now() });
+            }catch(err){ showTopToast('Gönderilemedi: '+err.message, 'warn', 'warn'); }
+        } else {
+            const isAdmin = currentUid === ADMIN_UID;
+            const isMod = !!moderators[currentUid];
+            try{
+                await chatRef.push({
+                    uid: currentUid, username: me.username, avatarUrl: me.avatarUrl,
+                    text:'', imageUrl:null, audioUrl:null, track,
+                    ts: Date.now(), rankIdx: getRankIndex(xp), role: isAdmin?'admin':(isMod?'mod':null),
+                    country: detectUserCountryCode(), likes:{}, reactions:{}
+                });
+            }catch(err){ showTopToast('Gönderilemedi: '+err.message, 'warn', 'warn'); }
+        }
+    }
+
     function setConnStatus(ok){
         const dot = document.getElementById('connDot');
         const label = document.getElementById('connLabel');
@@ -4556,12 +5096,22 @@ ${m.role === 'admin' ? `
         document.getElementById('chatHeaderTitle').innerHTML = `${icon('inbox',15)} Küresel Sohbet`;
         document.getElementById('chatImageBtn').innerHTML = icon('camera',15);
         document.getElementById('chatVoiceBtn').innerHTML = icon('bolt',15);
+        document.getElementById('chatAttachBtn').innerHTML = icon('plus',16);
+        document.getElementById('attachMusicIconGlobal').innerHTML = icon('music',13);
         document.getElementById('chatSendBtn').innerHTML = icon('send',18);
         document.getElementById('adminTabModsBtn').innerHTML = `${icon('shield',13)} Moderatörler`;
         document.getElementById('startEventBtn').innerHTML = `${icon('flag',12)} Etkinlik Başlat`;
         document.getElementById('dmSendBtn').innerHTML = icon('send',18);
         document.getElementById('dmImageBtn').innerHTML = icon('camera',15);
         document.getElementById('dmVoiceBtn').innerHTML = icon('bolt',15);
+        document.getElementById('dmAttachBtn').innerHTML = icon('plus',16);
+        document.getElementById('attachMusicIconDm').innerHTML = icon('music',13);
+        document.getElementById('attachVsIconGlobal').innerHTML = icon('vsIcon',13);
+        document.getElementById('attachPollIconGlobal').innerHTML = icon('poll',13);
+        document.getElementById('attachVsIconDm').innerHTML = icon('vsIcon',13);
+        document.getElementById('attachPollIconDm').innerHTML = icon('poll',13);
+        document.getElementById('txtPollAddOptBtn').innerHTML = `${icon('plus',12)} Seçenek Ekle`;
+        resetVsPollSlot('A'); resetVsPollSlot('B');
     }
     function toggleAddCard(){
         const body = document.getElementById('addCardBody');
@@ -5624,7 +6174,7 @@ ${m.role === 'admin' ? `
         }
     }
 
-       function applyStoredProfile(profile){
+    function applyStoredProfile(profile){
         profile = profile || {};
         if(profile.avatarUrl) applyAvatar(profile.avatarUrl);
         const uname = profile.username || 'Kullanıcı';

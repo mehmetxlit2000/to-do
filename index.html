@@ -28,8 +28,8 @@
             --glow:#ff2b2b; --glow-soft:rgba(255,40,40,.07); --glow-mid:rgba(255,40,40,.14);
             --shadow: 0 1px 2px rgba(0,0,0,.85), 0 18px 44px rgba(0,0,0,.7);
             --pos:#2fae66; --neg:#e0463f;
-            --grad-1:#ff2b2b; --grad-2:#ff2b2b; --grad-3:#ff2b2b;
-            --brand-gradient: linear-gradient(120deg, var(--grad-1), var(--grad-2) 55%, var(--grad-3));
+            --grad-1:#ff2b2b; --grad-2:#ff2b2b; --grad-3:#ff2b2b; --grad-angle:120deg;
+            --brand-gradient: linear-gradient(var(--grad-angle), var(--grad-1), var(--grad-2) 55%, var(--grad-3));
             --hero-blob: radial-gradient(circle at 72% 20%, var(--ink) 0%, rgba(120,10,10,.55) 32%, rgba(20,2,2,.15) 62%, transparent 78%);
             --hero-blob-opacity: .55;
         }
@@ -39,8 +39,8 @@
             --glow:#5b2ec7; --glow-soft:rgba(91,46,199,.07); --glow-mid:rgba(91,46,199,.12);
             --shadow: 0 1px 2px rgba(40,20,80,.05), 0 10px 26px rgba(40,20,80,.08);
             --pos:#1f9d58; --neg:#d1315a;
-            --grad-1:#7c3aed; --grad-2:#3b82f6; --grad-3:#e11d5e;
-            --brand-gradient: linear-gradient(120deg, var(--grad-1), var(--grad-2) 55%, var(--grad-3));
+            --grad-1:#7c3aed; --grad-2:#3b82f6; --grad-3:#e11d5e; --grad-angle:120deg;
+            --brand-gradient: linear-gradient(var(--grad-angle), var(--grad-1), var(--grad-2) 55%, var(--grad-3));
             --hero-blob: conic-gradient(from 200deg, var(--grad-1), var(--grad-2), var(--grad-3), var(--grad-1));
             --hero-blob-opacity: .16;
         }
@@ -1793,6 +1793,155 @@
         .msg-highlight-flash{ animation:msgHighlightFlash 1.1s ease; }
         .reply-quote{ cursor:pointer; }
         .reply-quote:hover{ filter:brightness(1.15); }
+
+        /* ==================== TEMA STÜDYOSU ==================== */
+        .theme-studio-card{ max-width:520px; width:100%; text-align:left; padding:0; max-height:90vh; overflow:hidden; display:flex; flex-direction:column; border-radius:22px; box-shadow:0 30px 80px rgba(0,0,0,.6), 0 0 60px var(--glow-soft); }
+        .ts-scroll{ overflow-y:auto; padding:26px 26px 22px; }
+        .ts-head{ padding:22px 26px 0; }
+        .ts-head .modal-eyebrow{ text-align:left; margin-bottom:2px; }
+        .ts-head-title{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--ink-soft); margin:2px 0 0; line-height:1.4; }
+
+        .ts-hero-preview{
+            position:relative; margin:16px 26px 0; border-radius:16px; padding:20px; overflow:hidden;
+            background:var(--brand-gradient); display:flex; align-items:center; gap:14px; box-shadow:0 10px 30px var(--glow-mid);
+        }
+        .ts-hero-preview::before{
+            content:''; position:absolute; inset:0; opacity:.18; pointer-events:none;
+            background-image:radial-gradient(circle, rgba(255,255,255,.7) 1px, transparent 1px); background-size:14px 14px;
+        }
+        .ts-hero-badge{
+            position:relative; z-index:1; flex:none; width:46px; height:46px; border-radius:13px; background:rgba(255,255,255,.18);
+            border:1px solid rgba(255,255,255,.35); display:flex; align-items:center; justify-content:center; color:#fff;
+            backdrop-filter:blur(4px);
+        }
+        .ts-hero-text{ position:relative; z-index:1; flex:1; min-width:0; }
+        .ts-hero-title{ display:block; font-family:'Orbitron',sans-serif; font-weight:800; font-size:13px; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.3); }
+        .ts-hero-sub{ display:block; font-family:'JetBrains Mono',monospace; font-size:9.5px; color:rgba(255,255,255,.85); margin-top:2px; }
+        .ts-hero-btn{
+            position:relative; z-index:1; flex:none; font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700;
+            padding:9px 14px; border-radius:100px; background:rgba(255,255,255,.22); border:1px solid rgba(255,255,255,.4);
+            color:#fff; backdrop-filter:blur(4px);
+        }
+
+        .ts-section{ margin-top:20px; }
+        .ts-section:first-of-type{ margin-top:18px; }
+        .ts-section-title{ display:flex; align-items:center; gap:7px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px; }
+        .ts-mode-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+        .ts-mode-btn{
+            position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:6px; padding:13px 14px;
+            border-radius:12px; border:1px solid var(--line); background:var(--panel-alt); color:var(--ink); cursor:pointer;
+            transition:border-color .15s ease, box-shadow .2s ease, transform .1s ease; text-align:left;
+        }
+        .ts-mode-btn:hover{ border-color:var(--ink-soft); transform:translateY(-1px); }
+        .ts-mode-btn.active{ border-color:var(--ink); box-shadow:0 0 0 1px var(--ink) inset, 0 0 16px var(--glow-mid); background:linear-gradient(120deg, var(--glow-soft), transparent); }
+        .ts-mode-icon{ width:30px; height:30px; border-radius:9px; background:var(--bg); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color:var(--ink); }
+        .ts-mode-btn.active .ts-mode-icon{ background:var(--brand-gradient); color:#fff; border-color:transparent; }
+        .ts-mode-name{ font-size:12.5px; font-weight:700; }
+        .ts-mode-sub{ font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-soft); line-height:1.4; }
+        .ts-mode-check{ position:absolute; top:10px; right:10px; width:16px; height:16px; border-radius:50%; background:var(--ink); color:#fff; display:none; align-items:center; justify-content:center; font-size:10px; }
+        .ts-mode-check::before{ content:'✓'; }
+        .ts-mode-btn.active .ts-mode-check{ display:flex; }
+
+        .ts-tabs{ display:flex; gap:6px; background:var(--panel-alt); border:1px solid var(--line); border-radius:11px; padding:4px; margin-top:18px; }
+        .ts-tab-btn{
+            flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
+            font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; letter-spacing:.03em; color:var(--ink-soft);
+            background:none; border:none; border-radius:8px; padding:10px 6px; cursor:pointer;
+        }
+        .ts-tab-btn.active{ color:#fff; background:var(--brand-gradient); box-shadow:0 0 10px var(--glow-mid); }
+        .ts-tab-panel{ display:none; margin-top:16px; }
+        .ts-tab-panel.active{ display:block; }
+
+        .ts-swatch-grid{ display:grid; grid-template-columns:repeat(6,1fr); gap:9px; }
+        .ts-swatch{
+            position:relative; aspect-ratio:1; border-radius:50%; cursor:pointer; border:2px solid var(--line);
+            box-shadow:0 1px 3px rgba(0,0,0,.25); transition:transform .12s ease, border-color .15s ease;
+        }
+        .ts-swatch:hover{ transform:scale(1.1); }
+        .ts-swatch.active{ border-color:var(--ink); box-shadow:0 0 0 2px var(--panel), 0 0 0 4px var(--ink); }
+        .ts-swatch.active::after{ content:''; position:absolute; inset:0; border-radius:50%; box-shadow:0 0 10px var(--glow-mid); }
+        .ts-custom-row{ display:flex; align-items:center; gap:10px; margin-top:12px; }
+        .ts-custom-swatch{
+            width:38px; height:38px; border-radius:50%; flex:none; cursor:pointer; border:2px dashed var(--line);
+            display:flex; align-items:center; justify-content:center; color:var(--ink-soft); background:var(--panel-alt);
+        }
+        .ts-custom-swatch:hover{ border-color:var(--ink); color:var(--ink); }
+
+        .ts-preset-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .ts-preset-card{
+            position:relative; border-radius:13px; overflow:hidden; cursor:pointer; height:64px; border:2px solid transparent;
+            transition:transform .12s ease, border-color .15s ease; display:flex; align-items:flex-end; padding:8px 10px;
+        }
+        .ts-preset-card:hover{ transform:translateY(-2px); }
+        .ts-preset-card.active{ border-color:#fff; box-shadow:0 0 0 2px var(--ink), 0 6px 18px rgba(0,0,0,.35); }
+        .ts-preset-card span{
+            position:relative; z-index:1; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:#fff;
+            text-shadow:0 1px 4px rgba(0,0,0,.6);
+        }
+        .ts-preset-card::before{ content:''; position:absolute; inset:0; background:linear-gradient(0deg, rgba(0,0,0,.45), transparent 60%); }
+
+        .ts-stop-row{ display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+        .ts-stop-row:last-child{ margin-bottom:0; }
+        input.ts-stop-input[type=color]{
+            -webkit-appearance:none; appearance:none; width:42px; height:42px; border-radius:50%; border:2px solid var(--line);
+            padding:0; cursor:pointer; flex:none; box-shadow:0 1px 3px rgba(0,0,0,.25); background:none;
+        }
+        input.ts-stop-input[type=color]::-webkit-color-swatch-wrapper{ padding:0; border-radius:50%; }
+        input.ts-stop-input[type=color]::-webkit-color-swatch{ border:none; border-radius:50%; }
+        .ts-stop-info{ flex:1; min-width:0; }
+        .ts-stop-label{ display:block; font-size:12px; font-weight:700; color:var(--ink); }
+        .ts-stop-hex{ display:block; font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); text-transform:uppercase; margin-top:1px; }
+
+        .ts-angle-row{ display:flex; align-items:center; gap:14px; margin-top:16px; }
+        .ts-angle-dial{
+            position:relative; flex:none; width:52px; height:52px; border-radius:50%; background:var(--panel-alt);
+            border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+        }
+        .ts-angle-dial-arrow{
+            position:absolute; top:6px; left:50%; width:2px; height:16px; background:var(--ink); transform-origin:50% 20px;
+            border-radius:2px; box-shadow:0 0 6px var(--glow-mid);
+        }
+        .ts-angle-dial-center{ width:8px; height:8px; border-radius:50%; background:var(--ink); box-shadow:0 0 6px var(--glow-mid); }
+        .ts-angle-slider-wrap{ flex:1; min-width:0; }
+        .ts-angle-label-row{ display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); margin-bottom:6px; }
+        .ts-angle-slider{
+            -webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:100px;
+            background:var(--panel-alt); border:1px solid var(--line); outline:none; cursor:pointer;
+        }
+        .ts-angle-slider::-webkit-slider-thumb{
+            -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--brand-gradient);
+            border:2px solid #fff; box-shadow:0 0 8px var(--glow-mid); cursor:pointer;
+        }
+        .ts-angle-slider::-moz-range-thumb{
+            width:18px; height:18px; border-radius:50%; background:var(--ink); border:2px solid #fff; box-shadow:0 0 8px var(--glow-mid); cursor:pointer;
+        }
+
+        .ts-reset-btn{ margin-top:16px; width:100%; }
+
+        .ts-status-bar{
+            display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:10px; background:var(--panel-alt);
+            border:1px solid var(--line); font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); margin-top:18px;
+        }
+        .ts-status-bar .ts-dot{ width:7px; height:7px; border-radius:50%; background:var(--ink); box-shadow:0 0 7px var(--glow-mid); flex:none; animation:fxBlip 1.6s ease-in-out infinite; }
+        .ts-season-badge{
+            display:inline-flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:9.5px;
+            padding:4px 10px; border-radius:100px; background:var(--panel-alt); border:1px solid var(--line); color:var(--ink);
+        }
+        .ts-preview-strip{ display:flex; height:14px; border-radius:100px; overflow:hidden; margin-top:14px; border:1px solid var(--line); }
+        .ts-preview-strip span{ flex:1; }
+        .ts-foot{ padding:16px 26px calc(16px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); flex:none; background:var(--panel); }
+
+        @media (max-width:560px){
+            #themeStudioModal{ align-items:flex-end; padding:0; }
+            .theme-studio-card{ max-width:100%; border-radius:20px 20px 0 0; max-height:calc(var(--app-vh, 1vh) * 92); }
+            .ts-scroll{ padding:20px 18px 18px; }
+            .ts-head{ padding:calc(18px + env(safe-area-inset-top)) 18px 0; }
+            .ts-hero-preview{ margin:14px 18px 0; padding:16px; }
+            .ts-mode-grid{ grid-template-columns:1fr; }
+            .ts-swatch-grid{ grid-template-columns:repeat(5,1fr); }
+            .ts-preset-grid{ grid-template-columns:1fr; }
+            .ts-foot{ padding:14px 18px calc(14px + env(safe-area-inset-bottom)); }
+        }
     </style>
 </head>
 <body>
@@ -1832,7 +1981,7 @@
         </div>
         <div class="top-actions">
             <span class="conn-pill"><span class="conn-dot" id="connDot"></span><span id="connLabel">Bağlantı bekleniyor…</span></span>
-            <button class="theme-toggle" id="accentPickerBtn" onclick="openAccentPicker()" title="Açık mod renk tonunu özelleştir" style="display:none;"></button>
+            <button class="theme-toggle" id="accentPickerBtn" onclick="openThemeStudio()" title="Tema Stüdyosunu Aç" style="display:none;"></button>
             <input type="color" id="accentColorInput" value="#5b2ec7" oninput="onAccentColorChange(this.value)" style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;">
             <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Temayı değiştir"></button>
         </div>
@@ -2683,6 +2832,107 @@
         </div>
     </div>
 </div>
+<div id="themeStudioModal" class="modal-overlay">
+    <div class="modal-card theme-studio-card">
+        <div class="ts-head">
+            <p class="modal-eyebrow">Tema Stüdyosu</p>
+            <p class="ts-head-title" id="tsHeadTitle"></p>
+        </div>
+        <div class="ts-hero-preview" id="tsHeroPreview">
+            <span class="ts-hero-badge" id="tsHeroBadge"></span>
+            <div class="ts-hero-text">
+                <span class="ts-hero-title">Canlı Önizleme</span>
+                <span class="ts-hero-sub">Değişiklikler anında uygulanır</span>
+            </div>
+            <span class="ts-hero-btn">Örnek</span>
+        </div>
+        <div class="ts-scroll">
+            <div class="ts-section" style="margin-top:0;">
+                <div class="ts-section-title" id="tsModeTitle"></div>
+                <div class="ts-mode-grid">
+                    <button type="button" class="ts-mode-btn" id="tsModeManual" onclick="setThemeMode('manual')">
+                        <span class="ts-mode-icon" id="tsModeManualIcon"></span>
+                        <span class="ts-mode-name">Manuel</span>
+                        <span class="ts-mode-sub">Kendi rengini ve gradyanını seç</span>
+                        <span class="ts-mode-check"></span>
+                    </button>
+                    <button type="button" class="ts-mode-btn" id="tsModeSystem" onclick="setThemeMode('system')">
+                        <span class="ts-mode-icon" id="tsModeSystemIcon"></span>
+                        <span class="ts-mode-name">Cihaza Uy</span>
+                        <span class="ts-mode-sub">Sistem koyu/açık moduna göre değişir</span>
+                        <span class="ts-mode-check"></span>
+                    </button>
+                    <button type="button" class="ts-mode-btn" id="tsModeSeason" onclick="setThemeMode('season')" style="grid-column:1 / -1;">
+                        <span class="ts-mode-icon" id="tsModeSeasonIcon"></span>
+                        <span class="ts-mode-name">Mevsime Göre</span>
+                        <span class="ts-mode-sub">Konumundan mevsimi algılar, rengi otomatik uygular</span>
+                        <span class="ts-mode-check"></span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="ts-tabs">
+                <button type="button" class="ts-tab-btn active" id="tsTabPresetsBtn" onclick="switchTsTab('presets')"></button>
+                <button type="button" class="ts-tab-btn" id="tsTabCustomBtn" onclick="switchTsTab('custom')"></button>
+            </div>
+
+            <div class="ts-tab-panel active" id="tsTabPresets">
+                <div class="ts-section" style="margin-top:0;">
+                    <div class="ts-section-title" id="tsGradPresetTitle"></div>
+                    <div class="ts-preset-grid" id="tsGradPresetGrid"></div>
+                </div>
+                <div class="ts-section">
+                    <div class="ts-section-title" id="tsPaletteTitle"></div>
+                    <div class="ts-swatch-grid" id="tsSwatchGrid"></div>
+                    <div class="ts-custom-row">
+                        <div class="ts-custom-swatch" id="tsCustomSwatch" onclick="document.getElementById('accentColorInput').click()"></div>
+                        <span style="font-size:11.5px; color:var(--ink-soft);" id="tsCustomLabel">Kendi rengini seç</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ts-tab-panel" id="tsTabCustom">
+                <div class="ts-section" style="margin-top:0;">
+                    <div class="ts-section-title" id="tsStopsTitle"></div>
+                    <div class="ts-stop-row">
+                        <input type="color" class="ts-stop-input" id="tsStop1" oninput="onGradStopChange()">
+                        <div class="ts-stop-info">
+                            <span class="ts-stop-label" id="tsStop1Label">Başlangıç Rengi</span>
+                            <span class="ts-stop-hex" id="tsStop1Hex">#FF2B2B</span>
+                        </div>
+                    </div>
+                    <div class="ts-stop-row">
+                        <input type="color" class="ts-stop-input" id="tsStop2" oninput="onGradStopChange()">
+                        <div class="ts-stop-info">
+                            <span class="ts-stop-label" id="tsStop2Label">Ana Renk</span>
+                            <span class="ts-stop-hex" id="tsStop2Hex">#FF2B2B</span>
+                        </div>
+                    </div>
+                    <div class="ts-stop-row">
+                        <input type="color" class="ts-stop-input" id="tsStop3" oninput="onGradStopChange()">
+                        <div class="ts-stop-info">
+                            <span class="ts-stop-label" id="tsStop3Label">Bitiş Rengi</span>
+                            <span class="ts-stop-hex" id="tsStop3Hex">#FF2B2B</span>
+                        </div>
+                    </div>
+                    <div class="ts-angle-row">
+                        <div class="ts-angle-dial" id="tsAngleDial"><div class="ts-angle-dial-arrow" id="tsAngleArrow"></div><div class="ts-angle-dial-center"></div></div>
+                        <div class="ts-angle-slider-wrap">
+                            <div class="ts-angle-label-row"><span id="tsAngleLabel">Gradyan Açısı</span><span id="tsAngleValue">120°</span></div>
+                            <input type="range" class="ts-angle-slider" id="tsAngleSlider" min="0" max="360" value="120" oninput="onGradAngleChange(this.value)">
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-ghost ts-reset-btn" id="tsResetBtn" onclick="resetGradientCustom()"></button>
+                </div>
+            </div>
+
+            <div class="ts-status-bar" id="tsStatusBar"></div>
+        </div>
+        <div class="ts-foot">
+            <button class="btn btn-ghost" style="width:100%;" onclick="closeThemeStudio()">Kapat</button>
+        </div>
+    </div>
+</div>
 <div id="adminModal" class="modal-overlay">
     <div class="modal-card" style="max-width:880px; width:94vw; text-align:left; position:relative;">
         <button class="icon-btn admin-close-btn" id="adminCloseBtn" onclick="closeAdminPanel()"></button>
@@ -2786,7 +3036,10 @@
         music: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
         poll: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
         vsIcon: '<path d="M4 4l16 16M20 4L4 20"/>',
-        prestigeStar: '<path d="M12 2.5l2.9 6.1 6.7.6-5.1 4.5 1.6 6.6L12 16.8l-6.1 3.5 1.6-6.6-5.1-4.5 6.7-.6z" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="9.5" fill="none"/>'
+        prestigeStar: '<path d="M12 2.5l2.9 6.1 6.7.6-5.1 4.5 1.6 6.6L12 16.8l-6.1 3.5 1.6-6.6-5.1-4.5 6.7-.6z" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="9.5" fill="none"/>',
+        leaf: '<path d="M4 20c0-9 6-15 15-15 1 9-5 15-15 15z"/><path d="M4 20c3-6 7-10 13-13"/>',
+        snowflake: '<path d="M12 2v20M4 7l16 10M20 7L4 17"/>',
+        monitor: '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>'
     };
     function icon(name, size){
         size = size || 14;
@@ -6413,7 +6666,7 @@ ${locationCardHtml(m.location)}
         render();
         burstConfettiTop();
         playChime(true);
-        showTopToast(`Prestij ${prestige} kazandın!`, 'info', 'crown');
+        showTopToast(`Prestij ${prestige} kazandın!`, 'info', 'prestigeStar');
     }
     function buildStaticUI(){
         document.getElementById('categoryGroup').innerHTML = Object.keys(CATEGORY_ICON).map((c,i) =>
@@ -6685,7 +6938,7 @@ ${locationCardHtml(m.location)}
         const prestigePill = document.getElementById('prestigePill');
         if(prestige > 0){
             prestigePill.style.display = 'inline-flex';
-            prestigePill.innerHTML = `${icon('crown',11)} Prestij ${prestige}`;
+            prestigePill.innerHTML = `${icon('prestigeStar',11)} Prestij ${prestige}`;
         } else {
             prestigePill.style.display = 'none';
         }
@@ -6863,7 +7116,7 @@ ${locationCardHtml(m.location)}
         html += `</div>`;
         el.innerHTML = html;
     }
-    const APP_MODAL_IDS = ['rankModal','achvModal','profileModal','settingsModal','adminModal','createEventModal','chatMegaModal'];
+    const APP_MODAL_IDS = ['rankModal','achvModal','profileModal','settingsModal','adminModal','createEventModal','chatMegaModal','themeStudioModal'];
     function closeAllAppModals(exclude){
         APP_MODAL_IDS.forEach(id => {
             if(exclude && id === exclude) return;
@@ -7557,12 +7810,317 @@ ${locationCardHtml(m.location)}
         const root = document.documentElement;
         ['--grad-1','--grad-2','--grad-3','--glow','--ink','--glow-soft','--glow-mid'].forEach(p => root.style.removeProperty(p));
     }
-    function openAccentPicker(){
-        document.getElementById('accentColorInput').click();
+    /* ===================== TEMA STÜDYOSU — mod, otomasyon & gelişmiş gradyan ===================== */
+    const THEME_MODE_KEY = 'tc_theme_mode_v2'; // 'manual' | 'system' | 'season'
+    const THEME_ACCENT_KEY = 'tc_theme_accent_v2';
+    const THEME_GRADIENT_KEY = 'tc_theme_gradient_v1'; // {c1,c2,c3,angle}
+    let themeMode = localStorage.getItem(THEME_MODE_KEY) || 'manual';
+    let tsActiveTab = 'presets';
+    let systemThemeMedia = null;
+    let seasonWatchInterval = null;
+
+    const THEME_PRESETS = [
+        { name:'Kızıl Alev',     hex:'#ff2b2b' },
+        { name:'Ejder Moru',     hex:'#7c3aed' },
+        { name:'Derin Okyanus',  hex:'#2563eb' },
+        { name:'Zümrüt',         hex:'#0f9d58' },
+        { name:'Gün Batımı',     hex:'#f97316' },
+        { name:'Altın',          hex:'#eab308' },
+        { name:'Orkide',         hex:'#d63384' },
+        { name:'Buz Mavisi',     hex:'#06b6d4' },
+        { name:'Kehribar',       hex:'#b45309' },
+        { name:'Gece Grisi',     hex:'#64748b' },
+        { name:'Nane',           hex:'#10b981' },
+        { name:'Vişne',          hex:'#9f1239' }
+    ];
+
+    const GRADIENT_PRESETS = [
+        { name:'Kızıl Şafak',      c1:'#ff8a5c', c2:'#ff2b2b', c3:'#7a0000', angle:120 },
+        { name:'Kraliyet Moru',    c1:'#c084fc', c2:'#7c3aed', c3:'#2e1065', angle:130 },
+        { name:'Okyanus Derinliği',c1:'#38bdf8', c2:'#2563eb', c3:'#0c1e3e', angle:135 },
+        { name:'Zümrüt Orman',     c1:'#86efac', c2:'#0f9d58', c3:'#053b21', angle:115 },
+        { name:'Gün Batımı',       c1:'#fde68a', c2:'#f97316', c3:'#9a3412', angle:110 },
+        { name:'Neon Gece',        c1:'#f9a8d4', c2:'#a855f7', c3:'#3730a3', angle:140 },
+        { name:'Buzul',            c1:'#e0f2fe', c2:'#06b6d4', c3:'#0e4f5c', angle:130 },
+        { name:'Kara Elmas',       c1:'#94a3b8', c2:'#334155', c3:'#020617', angle:125 },
+        { name:'Kehribar Tozu',    c1:'#fde68a', c2:'#b45309', c3:'#4a1d05', angle:115 },
+        { name:'Vişne Şarabı',     c1:'#fda4af', c2:'#be123c', c3:'#3f0512', angle:120 }
+    ];
+
+    const SEASON_PALETTES = {
+        spring: { name:'İlkbahar', hex:'#ec4899', ic:'leaf' },
+        summer: { name:'Yaz',      hex:'#f59e0b', ic:'sun' },
+        autumn: { name:'Sonbahar', hex:'#ea580c', ic:'flame' },
+        winter: { name:'Kış',      hex:'#3b82f6', ic:'snowflake' }
+    };
+
+    function getSeasonForDate(date, isSouthern){
+        const m = date.getMonth();
+        let season;
+        if(m===11||m===0||m===1) season = 'winter';
+        else if(m>=2 && m<=4) season = 'spring';
+        else if(m>=5 && m<=7) season = 'summer';
+        else season = 'autumn';
+        if(isSouthern){
+            const map = { winter:'summer', summer:'winter', spring:'autumn', autumn:'spring' };
+            season = map[season];
+        }
+        return season;
+    }
+
+    function deriveGradientFromHex(hex, angle){
+        const hsl = hexToHsl(hex);
+        const c1 = hslToHex(hsl.h, Math.min(100,hsl.s+10), Math.min(62, hsl.l+16));
+        const c3 = hslToHex((hsl.h+28)%360, Math.min(100,hsl.s+5), Math.max(30,hsl.l-6));
+        return { c1, c2:hex, c3, angle: angle!=null ? angle : 120 };
+    }
+
+    function currentGradient(){
+        const stored = localStorage.getItem(THEME_GRADIENT_KEY);
+        if(stored){ try{ const g = JSON.parse(stored); if(g && g.c1 && g.c2 && g.c3) return g; }catch(e){} }
+        const accent = localStorage.getItem(THEME_ACCENT_KEY) || '#ff2b2b';
+        return deriveGradientFromHex(accent, 120);
+    }
+
+    function applyGradientState(g, opts){
+        opts = opts || {};
+        const persist = opts.persist !== false;
+        const doRender = opts.render !== false;
+        const root = document.documentElement;
+        root.style.setProperty('--grad-1', g.c1);
+        root.style.setProperty('--grad-2', g.c2);
+        root.style.setProperty('--grad-3', g.c3);
+        root.style.setProperty('--grad-angle', (g.angle!=null?g.angle:120)+'deg');
+        root.style.setProperty('--glow', g.c2);
+        root.style.setProperty('--ink', g.c2);
+        root.style.setProperty('--glow-soft', hexToRgba(g.c2, .07));
+        root.style.setProperty('--glow-mid', hexToRgba(g.c2, .14));
+        const input = document.getElementById('accentColorInput');
+        if(input) input.value = g.c2;
+        if(persist){
+            localStorage.setItem(THEME_GRADIENT_KEY, JSON.stringify(g));
+            localStorage.setItem(THEME_ACCENT_KEY, g.c2);
+        }
+        if(doRender){
+            render();
+            if(document.getElementById('rankGalleryPanel').classList.contains('open')) buildRankGallery();
+            if(document.getElementById('lbPanel').classList.contains('open')) buildLeaderboard();
+        }
+        renderThemeStudioSwatches();
+        renderGradientTab();
+    }
+
+    function setThemeMode(mode){
+        themeMode = mode;
+        localStorage.setItem(THEME_MODE_KEY, mode);
+        stopSystemThemeSync();
+        stopSeasonWatch();
+        if(mode === 'system'){
+            startSystemThemeSync();
+        } else if(mode === 'season'){
+            startSeasonWatch();
+        } else {
+            applyGradientState(currentGradient(), { persist:false, render:true });
+        }
+        renderThemeStudio();
+        showTopToast(
+            mode==='system' ? 'Tema artık cihazına uyacak' : (mode==='season' ? 'Tema mevsime göre ayarlanacak' : 'Manuel tema modu aktif'),
+            'info',
+            mode==='system' ? 'monitor' : (mode==='season' ? 'compass' : 'palette')
+        );
+    }
+
+    function startSystemThemeSync(){
+        if(!window.matchMedia) return;
+        systemThemeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+        const apply = () => {
+            const t = systemThemeMedia.matches ? 'dark' : 'light';
+            localStorage.setItem(THEME_KEY, t);
+            applyTheme(t);
+            render();
+            if(document.getElementById('rankGalleryPanel').classList.contains('open')) buildRankGallery();
+            if(document.getElementById('lbPanel').classList.contains('open')) buildLeaderboard();
+            renderThemeStudio();
+        };
+        apply();
+        if(systemThemeMedia.addEventListener) systemThemeMedia.addEventListener('change', apply);
+        else systemThemeMedia.addListener(apply);
+        systemThemeMedia._applyHandler = apply;
+    }
+    function stopSystemThemeSync(){
+        if(systemThemeMedia){
+            const handler = systemThemeMedia._applyHandler;
+            if(handler){
+                if(systemThemeMedia.removeEventListener) systemThemeMedia.removeEventListener('change', handler);
+                else systemThemeMedia.removeListener(handler);
+            }
+            systemThemeMedia = null;
+        }
+    }
+
+    function startSeasonWatch(){
+        applySeasonThemeNow();
+        seasonWatchInterval = setInterval(applySeasonThemeNow, 6*60*60*1000);
+    }
+    function stopSeasonWatch(){
+        if(seasonWatchInterval){ clearInterval(seasonWatchInterval); seasonWatchInterval = null; }
+    }
+    function applySeasonThemeNow(){
+        const applyFor = (isSouthern) => {
+            const season = getSeasonForDate(new Date(), isSouthern);
+            const pal = SEASON_PALETTES[season];
+            applyGradientState(deriveGradientFromHex(pal.hex, 120), { persist:false, render:true });
+            renderThemeStudio();
+        };
+        if(!navigator.geolocation){ applyFor(false); return; }
+        navigator.geolocation.getCurrentPosition(
+            pos => applyFor(pos.coords.latitude < 0),
+            () => applyFor(false),
+            { timeout: 8000, maximumAge: 3600000 }
+        );
+    }
+
+    function openThemeStudio(){
+        closeAllAppModals();
+        setAppVh();
+        renderThemeStudio();
+        document.getElementById('themeStudioModal').classList.add('show');
+    }
+    function closeThemeStudio(){ document.getElementById('themeStudioModal').classList.remove('show'); }
+
+    function switchTsTab(tab){
+        tsActiveTab = tab;
+        document.getElementById('tsTabPresetsBtn').classList.toggle('active', tab==='presets');
+        document.getElementById('tsTabCustomBtn').classList.toggle('active', tab==='custom');
+        document.getElementById('tsTabPresets').classList.toggle('active', tab==='presets');
+        document.getElementById('tsTabCustom').classList.toggle('active', tab==='custom');
+    }
+
+    function renderThemeStudio(){
+        const modeTitle = document.getElementById('tsModeTitle');
+        if(!modeTitle) return;
+        document.getElementById('tsHeadTitle').textContent = 'Rengini, gradyanını ve modunu tamamen sen belirle';
+        document.getElementById('tsHeroBadge').innerHTML = icon('palette',20);
+        modeTitle.innerHTML = `${icon('sparkle',11)} Tema Modu`;
+        document.getElementById('tsModeManualIcon').innerHTML = icon('palette',15);
+        document.getElementById('tsModeSystemIcon').innerHTML = icon('monitor',15);
+        const currentSeason = getSeasonForDate(new Date(), false);
+        document.getElementById('tsModeSeasonIcon').innerHTML = icon(SEASON_PALETTES[currentSeason].ic, 15);
+        document.getElementById('tsTabPresetsBtn').innerHTML = `${icon('gem',12)} Hazır Temalar`;
+        document.getElementById('tsTabCustomBtn').innerHTML = `${icon('palette',12)} Özel Gradyan`;
+        document.getElementById('tsGradPresetTitle').innerHTML = `${icon('layers',11)} Gradyan Temaları`;
+        document.getElementById('tsPaletteTitle').innerHTML = `${icon('gem',11)} Tek Renk Paleti`;
+        document.getElementById('tsCustomSwatch').innerHTML = icon('plus',15);
+        document.getElementById('tsStopsTitle').innerHTML = `${icon('gem',11)} Gradyan Renkleri`;
+        document.getElementById('tsAngleLabel').textContent = 'Gradyan Açısı';
+        document.getElementById('tsResetBtn').innerHTML = `${icon('refresh',13)} Varsayılana Sıfırla`;
+        switchTsTab(tsActiveTab);
+
+        ['tsModeManual','tsModeSystem','tsModeSeason'].forEach(id => document.getElementById(id).classList.remove('active'));
+        const activeId = themeMode==='system' ? 'tsModeSystem' : (themeMode==='season' ? 'tsModeSeason' : 'tsModeManual');
+        document.getElementById(activeId).classList.add('active');
+
+        const statusBar = document.getElementById('tsStatusBar');
+        if(themeMode==='system'){
+            statusBar.innerHTML = `<span class="ts-dot"></span> Şu an cihaz modu: ${currentTheme()==='light'?'Açık':'Koyu'} — otomatik takip ediliyor`;
+        } else if(themeMode==='season'){
+            const pal = SEASON_PALETTES[currentSeason];
+            statusBar.innerHTML = `<span class="ts-dot"></span> Algılanan mevsim: <span class="ts-season-badge" style="margin-left:4px;">${icon(pal.ic,11)} ${pal.name}</span>`;
+        } else {
+            statusBar.innerHTML = `<span class="ts-dot"></span> Manuel mod — rengi, gradyanı ve modu istediğin an değiştirebilirsin`;
+        }
+        renderThemeStudioSwatches();
+        renderGradientPresetGrid();
+        renderGradientTab();
+    }
+
+    function renderThemeStudioSwatches(){
+        const grid = document.getElementById('tsSwatchGrid');
+        if(!grid) return;
+        const g = currentGradient();
+        const currentAccent = (g.c2 || '#ff2b2b').toLowerCase();
+        grid.innerHTML = THEME_PRESETS.map(p => `
+      <div class="ts-swatch${p.hex.toLowerCase()===currentAccent && themeMode==='manual'?' active':''}" style="background:${p.hex};" title="${p.name}" onclick="pickPresetAccent('${p.hex}')"></div>
+    `).join('');
+    }
+
+    function renderGradientPresetGrid(){
+        const grid = document.getElementById('tsGradPresetGrid');
+        if(!grid) return;
+        const g = currentGradient();
+        grid.innerHTML = GRADIENT_PRESETS.map((p,i) => {
+            const active = themeMode==='manual' && g.c1===p.c1 && g.c2===p.c2 && g.c3===p.c3;
+            return `<div class="ts-preset-card${active?' active':''}" style="background:linear-gradient(${p.angle}deg, ${p.c1}, ${p.c2} 55%, ${p.c3});" onclick="applyGradientPreset(${i})"><span>${p.name}</span></div>`;
+        }).join('');
+    }
+
+    function pickPresetAccent(hex){
+        themeMode = 'manual';
+        localStorage.setItem(THEME_MODE_KEY, 'manual');
+        stopSystemThemeSync(); stopSeasonWatch();
+        applyGradientState(deriveGradientFromHex(hex, 120), { persist:true, render:true });
+        renderThemeStudio();
     }
     function onAccentColorChange(hex){
-        localStorage.setItem(ACCENT_KEY, hex);
-        applyLightGradient(hex);
+        pickPresetAccent(hex);
+    }
+    function applyGradientPreset(idx){
+        const p = GRADIENT_PRESETS[idx];
+        if(!p) return;
+        themeMode = 'manual';
+        localStorage.setItem(THEME_MODE_KEY, 'manual');
+        stopSystemThemeSync(); stopSeasonWatch();
+        applyGradientState({ c1:p.c1, c2:p.c2, c3:p.c3, angle:p.angle }, { persist:true, render:true });
+        renderThemeStudio();
+        showTopToast(`"${p.name}" teması uygulandı`, 'info', 'sparkle');
+    }
+
+    function renderGradientTab(){
+        const s1 = document.getElementById('tsStop1');
+        if(!s1) return;
+        const g = currentGradient();
+        document.getElementById('tsStop1').value = g.c1;
+        document.getElementById('tsStop2').value = g.c2;
+        document.getElementById('tsStop3').value = g.c3;
+        document.getElementById('tsStop1Hex').textContent = g.c1.toUpperCase();
+        document.getElementById('tsStop2Hex').textContent = g.c2.toUpperCase();
+        document.getElementById('tsStop3Hex').textContent = g.c3.toUpperCase();
+        const angle = g.angle!=null ? g.angle : 120;
+        document.getElementById('tsAngleSlider').value = angle;
+        document.getElementById('tsAngleValue').textContent = angle+'°';
+        const arrow = document.getElementById('tsAngleArrow');
+        if(arrow) arrow.style.transform = `rotate(${angle}deg)`;
+    }
+
+    function onGradStopChange(){
+        const g = {
+            c1: document.getElementById('tsStop1').value,
+            c2: document.getElementById('tsStop2').value,
+            c3: document.getElementById('tsStop3').value,
+            angle: parseInt(document.getElementById('tsAngleSlider').value, 10)
+        };
+        themeMode = 'manual';
+        localStorage.setItem(THEME_MODE_KEY, 'manual');
+        stopSystemThemeSync(); stopSeasonWatch();
+        applyGradientState(g, { persist:true, render:true });
+        renderThemeStudio();
+    }
+    function onGradAngleChange(val){
+        const angle = parseInt(val, 10);
+        document.getElementById('tsAngleValue').textContent = angle+'°';
+        const arrow = document.getElementById('tsAngleArrow');
+        if(arrow) arrow.style.transform = `rotate(${angle}deg)`;
+        document.documentElement.style.setProperty('--grad-angle', angle+'deg');
+        const g = currentGradient();
+        g.angle = angle;
+        themeMode = 'manual';
+        localStorage.setItem(THEME_MODE_KEY, 'manual');
+        stopSystemThemeSync(); stopSeasonWatch();
+        localStorage.setItem(THEME_GRADIENT_KEY, JSON.stringify(g));
+    }
+    function resetGradientCustom(){
+        pickPresetAccent('#ff2b2b');
+        showTopToast('Varsayılan temaya dönüldü', 'info', 'refresh');
     }
 
     function applyTheme(theme){
@@ -7571,29 +8129,37 @@ ${locationCardHtml(m.location)}
         if(btn) btn.innerHTML = theme === 'light' ? icon('moon',15) : icon('sun',15);
         const accentBtn = document.getElementById('accentPickerBtn');
         if(accentBtn){
-            accentBtn.style.display = theme === 'light' ? 'flex' : 'none';
+            accentBtn.style.display = 'flex';
             accentBtn.innerHTML = icon('palette',15);
         }
-        if(theme === 'light'){
-            const saved = localStorage.getItem(ACCENT_KEY);
-            if(saved) applyLightGradient(saved);
-            else clearLightGradientOverride();
-        } else {
-            clearLightGradientOverride();
-        }
+        applyGradientState(currentGradient(), { persist:false, render:false });
     }
     function toggleTheme(){
         const current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
         const next = current === 'light' ? 'dark' : 'light';
         localStorage.setItem(THEME_KEY, next);
+        if(themeMode !== 'manual'){
+            themeMode = 'manual';
+            localStorage.setItem(THEME_MODE_KEY, 'manual');
+            stopSystemThemeSync(); stopSeasonWatch();
+        }
         applyTheme(next);
         render();
         if(document.getElementById('rankGalleryPanel').classList.contains('open')) buildRankGallery();
         if(document.getElementById('lbPanel').classList.contains('open')) buildLeaderboard();
+        renderThemeStudio();
     }
     function initTheme(){
-        const saved = localStorage.getItem(THEME_KEY);
-        applyTheme(saved === 'light' ? 'light' : 'dark');
+        const savedTheme = localStorage.getItem(THEME_KEY);
+        if(!localStorage.getItem(THEME_ACCENT_KEY)) localStorage.setItem(THEME_ACCENT_KEY, '#ff2b2b');
+        if(themeMode === 'system'){
+            startSystemThemeSync();
+        } else if(themeMode === 'season'){
+            applyTheme(savedTheme === 'light' ? 'light' : 'dark');
+            startSeasonWatch();
+        } else {
+            applyTheme(savedTheme === 'light' ? 'light' : 'dark');
+        }
     }
 
     /* ===================== OTURUM / GİRİŞ KAPISI ===================== */
@@ -7717,7 +8283,7 @@ ${locationCardHtml(m.location)}
     }
     function prestigeBadgeHtml(p, size){
         if(!p) return '';
-        return `<span class="streak-pill prestige-pill" title="Prestij ${p}">${icon('crown',11)} Prestij ${p}</span>`;
+        return `<span class="streak-pill prestige-pill" title="Prestij ${p}">${icon('prestigeStar',11)} Prestij ${p}</span>`;
     }
     function msgBadgeRowHtml(m){
         const roleHtml = m.role === 'admin' ? `<span class="chat-msg-badge admin">${icon('crown',9)} Yönetici</span>` : (m.role === 'mod' ? `<span class="chat-msg-badge mod">${icon('shield',8)} Moderatör</span>` : '');

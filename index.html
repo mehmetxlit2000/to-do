@@ -1735,7 +1735,30 @@
         @media (max-width:720px){
             .group-info-panel{ width:100%; max-width:100%; }
         }
-
+        .reply-preview-bar{ display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--panel-alt); border-left:3px solid var(--ink); border-radius:8px; padding:7px 12px; margin:0 20px 8px; }
+        .reply-preview-text{ display:flex; flex-direction:column; gap:1px; font-size:11.5px; overflow:hidden; }
+        .reply-preview-text b{ font-size:10px; color:var(--ink); }
+        .reply-preview-text span{ color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px; }
+        .reply-quote{ border-left:3px solid var(--ink); background:rgba(0,0,0,.08); border-radius:6px; padding:5px 8px; margin-bottom:6px; font-size:11.5px; cursor:pointer; }
+        .reply-quote b{ display:block; color:var(--ink); font-size:10px; }
+        .reply-quote span{ color:var(--ink-soft); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:220px; }
+        .chat-msg.is-mine .reply-quote{ background:rgba(255,255,255,.18); }
+        .heart-burst-piece{ position:fixed; z-index:120; pointer-events:none; color:#ff2b5e; text-shadow:0 0 6px rgba(255,40,90,.55); }
+        .big-heart-overlay{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#ff2b5e; pointer-events:none; z-index:5; animation:bigHeartPop .7s cubic-bezier(.17,.89,.32,1.49); }
+        .big-heart-overlay svg{ filter:drop-shadow(0 4px 14px rgba(0,0,0,.4)); }
+        @keyframes bigHeartPop{ 0%{transform:scale(0);opacity:0;} 35%{transform:scale(1.15);opacity:1;} 55%{transform:scale(.95);} 100%{transform:scale(1);opacity:0;} }
+        .chat-msg-file-card{ display:flex; align-items:center; gap:10px; background:var(--panel-alt); border:1px solid var(--line); border-radius:12px; padding:9px 12px; max-width:240px; margin-top:6px; text-decoration:none; color:inherit; }
+        .chat-msg.is-mine .chat-msg-file-card{ background:rgba(255,255,255,.15); border-color:rgba(255,255,255,.3); }
+        .file-card-icon{ flex:none; width:34px; height:34px; border-radius:8px; background:var(--brand-gradient); color:#fff; display:flex; align-items:center; justify-content:center; }
+        .file-card-info{ flex:1; min-width:0; display:flex; flex-direction:column; }
+        .file-card-name{ font-size:12.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .file-card-size{ font-size:10px; color:var(--ink-soft); }
+        .chat-msg-location-card{ display:flex; align-items:center; gap:10px; background:var(--panel-alt); border:1px solid var(--line); border-radius:12px; padding:9px 12px; max-width:240px; margin-top:6px; text-decoration:none; color:inherit; }
+        .chat-msg.is-mine .chat-msg-location-card{ background:rgba(255,255,255,.15); border-color:rgba(255,255,255,.3); }
+        .location-card-icon{ flex:none; width:34px; height:34px; border-radius:8px; background:var(--brand-gradient); color:#fff; display:flex; align-items:center; justify-content:center; }
+        .location-card-info{ flex:1; min-width:0; display:flex; flex-direction:column; }
+        .location-card-title{ font-size:12.5px; font-weight:700; }
+        .location-card-sub{ font-size:10px; color:var(--ink-soft); }
     </style>
 </head>
 <body>
@@ -2096,12 +2119,14 @@
                     </div>
                     <div id="chatMessagesWrap" style="flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; touch-action:pan-y; padding:16px 20px; display:flex; flex-direction:column; gap:12px;"></div>
                     <div id="chatImagePreviewWrap" style="display:none; padding:0 20px 10px;"></div>
+                    <div id="chatReplyPreviewWrap" style="display:none;"></div>
                     <div class="chat-mega-input-row">
                         <div class="chat-input-wrap">
                             <input type="text" id="chatInput" placeholder="Mesajınızı yazın.." onkeydown="if(event.key==='Enter')sendChatMessage()">
                             <div class="chat-input-icons">
                                 <button class="chat-input-icon-btn" id="chatImageBtn" title="Resim ekle" onclick="document.getElementById('chatImageInput').click()"></button>
                                 <input type="file" id="chatImageInput" accept="image/*" style="display:none;" onchange="handleChatImageSelect(event)">
+                                <input type="file" id="chatFileInput" style="display:none;" onchange="handleChatFileSelect(event)">
                                 <button class="chat-input-icon-btn" id="chatVoiceBtn" title="Ses kaydet" onclick="toggleVoiceRecording()"></button>
                                 <div style="position:relative;">
                                     <button class="chat-input-icon-btn" id="chatAttachBtn" title="Ekle" onclick="toggleAttachMenu('global')"></button>
@@ -2117,6 +2142,14 @@
                                         <button onclick="openTextPollCreator('global')">
                                             <span class="attach-opt-icon" id="attachPollIconGlobal"></span>
                                             <span class="attach-opt-text"><span>Anket Oluştur</span><span class="attach-opt-sub">Metin bazlı oylama</span></span>
+                                        </button>
+                                        <button onclick="triggerFileAttach('global')">
+                                            <span class="attach-opt-icon" id="attachFileIconGlobal"></span>
+                                            <span class="attach-opt-text"><span>Dosya Gönder</span><span class="attach-opt-sub">Belge veya dosya paylaş</span></span>
+                                        </button>
+                                        <button onclick="shareLiveLocation('global')">
+                                            <span class="attach-opt-icon" id="attachLocationIconGlobal"></span>
+                                            <span class="attach-opt-text"><span>Konum Paylaş</span><span class="attach-opt-sub">Google Maps ile paylaş</span></span>
                                         </button>
                                     </div>
                                 </div>
@@ -2141,12 +2174,14 @@
                     </div>
                     <div id="dmMessagesWrap" style="flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; touch-action:pan-y; padding:16px 20px; display:flex; flex-direction:column; gap:10px;"></div>
                     <div id="dmImagePreviewWrap" style="display:none; padding:0 20px 10px;"></div>
+                    <div id="dmReplyPreviewWrap" style="display:none;"></div>
                     <div class="chat-mega-input-row">
                         <div class="chat-input-wrap">
                             <input type="text" id="dmInput" placeholder="Mesaj yaz…" onkeydown="if(event.key==='Enter')sendDmOrGroupMessage()">
                             <div class="chat-input-icons">
                                 <button class="chat-input-icon-btn" id="dmImageBtn" title="Resim ekle" onclick="document.getElementById('dmImageInput').click()"></button>
                                 <input type="file" id="dmImageInput" accept="image/*" style="display:none;" onchange="handleDmImageSelect(event)">
+                                <input type="file" id="dmFileInput" style="display:none;" onchange="handleDmFileSelect(event)">
                                 <button class="chat-input-icon-btn" id="dmVoiceBtn" title="Ses kaydet" onclick="toggleDmVoiceRecording()"></button>
                                 <div style="position:relative;">
                                     <button class="chat-input-icon-btn" id="dmAttachBtn" title="Ekle" onclick="toggleAttachMenu('dm')"></button>
@@ -2162,6 +2197,14 @@
                                         <button onclick="openTextPollCreator('dm')">
                                             <span class="attach-opt-icon" id="attachPollIconDm"></span>
                                             <span class="attach-opt-text"><span>Anket Oluştur</span><span class="attach-opt-sub">Metin bazlı oylama</span></span>
+                                        </button>
+                                        <button onclick="triggerFileAttach('dm')">
+                                            <span class="attach-opt-icon" id="attachFileIconDm"></span>
+                                            <span class="attach-opt-text"><span>Dosya Gönder</span><span class="attach-opt-sub">Belge veya dosya paylaş</span></span>
+                                        </button>
+                                        <button onclick="shareLiveLocation('dm')">
+                                            <span class="attach-opt-icon" id="attachLocationIconDm"></span>
+                                            <span class="attach-opt-text"><span>Konum Paylaş</span><span class="attach-opt-sub">Google Maps ile paylaş</span></span>
                                         </button>
                                     </div>
                                 </div>
@@ -2644,6 +2687,8 @@
         stopwatch: '<circle cx="12" cy="13" r="8"/><path d="M12 13V9"/><path d="M9 2h6"/>',
         terminal: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3"/><path d="M13 15h4"/>',
         sparkle: '<path d="M12 2v5M12 17v5M2 12h5M17 12h5M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/>',
+        reply: '<path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v2"/>',
+        paperclip: '<path d="M21 12.5 12.5 21a5 5 0 0 1-7-7L14 5.5a3.5 3.5 0 0 1 5 5L10.5 19a2 2 0 0 1-3-3L15 8"/>',
         layers: '<path d="M12 3 2 8l10 5 10-5z"/><path d="M2 14l10 5 10-5"/>',
         inbox: '<path d="M4 12h5l1.5 3h3L15 12h5"/><path d="M4 12l2-7h12l2 7v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/>',
         plus: '<path d="M12 5v14M5 12h14"/>',
@@ -3151,7 +3196,82 @@
             avatarUrl: document.getElementById('avatarImg').src || ''
         };
     }
-
+    const MAX_FILE_BYTES = 900000;
+    function triggerFileAttach(target){
+        document.getElementById(target==='dm'?'dmAttachMenu':'chatAttachMenu').classList.remove('open');
+        document.getElementById(target==='dm'?'dmFileInput':'chatFileInput').click();
+    }
+    function formatFileSize(bytes){
+        if(bytes < 1024) return bytes+' B';
+        if(bytes < 1024*1024) return (bytes/1024).toFixed(1)+' KB';
+        return (bytes/1024/1024).toFixed(1)+' MB';
+    }
+    function handleChatFileSelect(event){
+        const file = event.target.files[0];
+        if(!file) return;
+        if(file.size > MAX_FILE_BYTES){ showTopToast('Dosya çok büyük (maks ~900KB)', 'warn', 'warn'); return; }
+        const reader = new FileReader();
+        reader.onload = () => sendFileMessage('global', { name:file.name, size:file.size, type:file.type, dataUrl:reader.result });
+        reader.readAsDataURL(file);
+        event.target.value = '';
+    }
+    function handleDmFileSelect(event){
+        const file = event.target.files[0];
+        if(!file) return;
+        if(file.size > MAX_FILE_BYTES){ showTopToast('Dosya çok büyük (maks ~900KB)', 'warn', 'warn'); return; }
+        const reader = new FileReader();
+        reader.onload = () => sendFileMessage('dm', { name:file.name, size:file.size, type:file.type, dataUrl:reader.result });
+        reader.readAsDataURL(file);
+        event.target.value = '';
+    }
+    async function sendFileMessage(target, file){
+        const me = getMyProfileCache();
+        try{
+            if(target === 'dm' && currentGroupId){
+                await db.ref('developmentUsers/groupChats/'+currentGroupId+'/messages').push({ uid:currentUid, username:me.username, avatarUrl:me.avatarUrl, text:'', file, ts:Date.now(), likes:{}, reactions:{} });
+            } else if(target === 'dm'){
+                if(!currentDmPairKey || !currentDmTargetUid){ showTopToast('Sohbet seçilmedi','warn','warn'); return; }
+                await db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages').push({ uid:currentUid, text:'', file, ts:Date.now(), likes:{}, reactions:{} });
+                const targetProfileSnap = await db.ref('developmentUsers/'+currentDmTargetUid+'/profile').once('value');
+                const targetProfile = targetProfileSnap.val() || {};
+                await db.ref('developmentUsers/dmIndex/'+currentUid+'/'+currentDmTargetUid).update({ otherUsername:targetProfile.username||'Kullanıcı', otherAvatar:targetProfile.avatarUrl||'', lastMessage:'📎 '+file.name, ts:Date.now() });
+                await db.ref('developmentUsers/dmIndex/'+currentDmTargetUid+'/'+currentUid).update({ otherUsername:me.username, otherAvatar:me.avatarUrl, lastMessage:'📎 '+file.name, ts:Date.now() });
+            } else {
+                const isAdmin = currentUid === ADMIN_UID, isMod = !!moderators[currentUid];
+                await chatRef.push({ uid:currentUid, username:me.username, avatarUrl:me.avatarUrl, text:'', file, ts:Date.now(), rankIdx:getRankIndex(xp), role:isAdmin?'admin':(isMod?'mod':null), country:detectUserCountryCode(), likes:{}, reactions:{} });
+            }
+        }catch(err){ showTopToast('Dosya gönderilemedi: '+err.message, 'warn', 'warn'); }
+    }
+    function shareLiveLocation(target){
+        document.getElementById(target==='dm'?'dmAttachMenu':'chatAttachMenu').classList.remove('open');
+        if(!navigator.geolocation){ showTopToast('Cihazın konum özelliğini desteklemiyor', 'warn', 'warn'); return; }
+        showTopToast('Konumun alınıyor…', 'info', 'compass');
+        navigator.geolocation.getCurrentPosition(pos => {
+            const lat = pos.coords.latitude, lng = pos.coords.longitude;
+            sendLocationMessage(target, { lat, lng, mapsUrl:`https://www.google.com/maps?q=${lat},${lng}` });
+        }, err => {
+            showTopToast('Konum alınamadı: '+err.message, 'warn', 'warn');
+        }, { enableHighAccuracy:true, timeout:10000 });
+    }
+    async function sendLocationMessage(target, location){
+        const me = getMyProfileCache();
+        try{
+            if(target === 'dm' && currentGroupId){
+                await db.ref('developmentUsers/groupChats/'+currentGroupId+'/messages').push({ uid:currentUid, username:me.username, avatarUrl:me.avatarUrl, text:'', location, ts:Date.now(), likes:{}, reactions:{} });
+            } else if(target === 'dm'){
+                if(!currentDmPairKey || !currentDmTargetUid){ showTopToast('Sohbet seçilmedi','warn','warn'); return; }
+                await db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages').push({ uid:currentUid, text:'', location, ts:Date.now(), likes:{}, reactions:{} });
+                const targetProfileSnap = await db.ref('developmentUsers/'+currentDmTargetUid+'/profile').once('value');
+                const targetProfile = targetProfileSnap.val() || {};
+                await db.ref('developmentUsers/dmIndex/'+currentUid+'/'+currentDmTargetUid).update({ otherUsername:targetProfile.username||'Kullanıcı', otherAvatar:targetProfile.avatarUrl||'', lastMessage:'📍 Konum', ts:Date.now() });
+                await db.ref('developmentUsers/dmIndex/'+currentDmTargetUid+'/'+currentUid).update({ otherUsername:me.username, otherAvatar:me.avatarUrl, lastMessage:'📍 Konum', ts:Date.now() });
+            } else {
+                const isAdmin = currentUid === ADMIN_UID, isMod = !!moderators[currentUid];
+                await chatRef.push({ uid:currentUid, username:me.username, avatarUrl:me.avatarUrl, text:'', location, ts:Date.now(), rankIdx:getRankIndex(xp), role:isAdmin?'admin':(isMod?'mod':null), country:detectUserCountryCode(), likes:{}, reactions:{} });
+            }
+            showTopToast('Konum paylaşıldı', 'info', 'compass');
+        }catch(err){ showTopToast('Konum gönderilemedi: '+err.message, 'warn', 'warn'); }
+    }
     function handleChatImageSelect(event){
         const file = event.target.files[0];
         if(!file) return;
@@ -3240,6 +3360,7 @@
             ts: Date.now(),
             rankIdx: getRankIndex(xp),
             role: isAdmin ? 'admin' : (isMod ? 'mod' : null),
+            replyTo: _chatReplyTo,
             country: detectUserCountryCode(),
             likes: {},
             reactions: {}
@@ -3247,6 +3368,7 @@
         try{
             await chatRef.push(msg);
             if(input) input.value = '';
+            _chatReplyTo = null; renderReplyPreview('global');
             cancelChatImage();
             const vbtn = document.getElementById('chatVoiceBtn');
             if(vbtn) vbtn.innerHTML = icon('bolt',15);
@@ -3325,6 +3447,7 @@ ${m.role === 'admin' ? `
       <div class="admin-frame">
         <div class="admin-frame-badge">${icon('crown',10)} Yönetici</div>
         <div class="chat-msg-bubble" id="bubble-${m.id}">
+          ${m.replyTo ? `<div class="reply-quote"><b>${escapeHtml(m.replyTo.username)}</b><span>${escapeHtml(m.replyTo.text)}</span></div>` : ''}
           ${m.isEventMsg && m.eventId ? buildEventCardHtml(m.eventId) : `<div class="chat-msg-text">${m.isEventMsg ? icon('flag',12)+' ' : ''}${m.text ? escapeHtml(m.text) : ''}</div>`}
           ${m.imageUrl ? `<img class="chat-msg-img" src="${m.imageUrl}" onclick="openLightbox('${m.imageUrl}')">` : ''}
           ${m.audioUrl ? `
@@ -3343,6 +3466,14 @@ ${m.track ? `
       </div>
       ${icon('music',14)}
     </div>` : ''}
+  ${m.file ? `<a class="chat-msg-file-card" href="${m.file.dataUrl}" download="${escapeHtml(m.file.name)}">
+    <span class="file-card-icon">${icon('paperclip',17)}</span>
+    <span class="file-card-info"><span class="file-card-name">${escapeHtml(m.file.name)}</span><span class="file-card-size">${formatFileSize(m.file.size)}</span></span>
+  </a>` : ''}
+  ${m.location ? `<a class="chat-msg-location-card" href="${m.location.mapsUrl}" target="_blank" rel="noopener">
+    <span class="location-card-icon">${icon('compass',18)}</span>
+    <span class="location-card-info"><span class="location-card-title">Canlı Konum</span><span class="location-card-sub">Google Maps'te aç</span></span>
+  </a>` : ''}
           ${m.imagePoll ? renderImagePollCard(m, false) : ''}
           ${m.textPoll ? renderTextPollCard(m, false) : ''}
           <div class="chat-msg-time-row"><span>${time}${editedLabel}</span></div>
@@ -3350,7 +3481,8 @@ ${m.track ? `
       </div>
     ` : `
       ${badgeHtml ? `<div class="chat-msg-badge-row">${badgeHtml}</div>` : ''}
-      <div class="chat-msg-bubble" id="bubble-${m.id}">
+      <div class="chat-msg-bubble" id="bubble-${m.id}" ondblclick="handleBubbleDoubleLike(event,'${m.id}', false)">
+        ${m.replyTo ? `<div class="reply-quote"><b>${escapeHtml(m.replyTo.username)}</b><span>${escapeHtml(m.replyTo.text)}</span></div>` : ''}
         ${m.isEventMsg && m.eventId ? buildEventCardHtml(m.eventId) : `<div class="chat-msg-text">${m.isEventMsg ? icon('flag',12)+' ' : ''}${m.text ? escapeHtml(m.text) : ''}</div>`}
         ${m.imageUrl ? `<img class="chat-msg-img" src="${m.imageUrl}" onclick="openLightbox('${m.imageUrl}')">` : ''}
 ${m.audioUrl ? `
@@ -3369,13 +3501,22 @@ ${m.audioUrl ? `
       </div>
       ${icon('music',14)}
     </div>` : ''}
+ ${m.file ? `<a class="chat-msg-file-card" href="${m.file.dataUrl}" download="${escapeHtml(m.file.name)}">
+    <span class="file-card-icon">${icon('paperclip',17)}</span>
+    <span class="file-card-info"><span class="file-card-name">${escapeHtml(m.file.name)}</span><span class="file-card-size">${formatFileSize(m.file.size)}</span></span>
+  </a>` : ''}
+  ${m.location ? `<a class="chat-msg-location-card" href="${m.location.mapsUrl}" target="_blank" rel="noopener">
+    <span class="location-card-icon">${icon('compass',18)}</span>
+    <span class="location-card-info"><span class="location-card-title">Canlı Konum</span><span class="location-card-sub">Google Maps'te aç</span></span>
+  </a>` : ''}
   ${m.imagePoll ? renderImagePollCard(m, false) : ''}
         ${m.textPoll ? renderTextPollCard(m, false) : ''}
         <div class="chat-msg-time-row"><span>${time}${editedLabel}</span></div>
       </div>
     `}
-  <div class="chat-msg-footer">
-        <button class="chat-like-btn${liked?' liked':''}" onclick="toggleChatLike('${m.id}')">${icon(liked?'heartFilled':'heart',13)} ${likeCount||''}</button>
+<div class="chat-msg-footer">
+        <button class="chat-like-btn${liked?' liked':''}" onclick="toggleChatLike('${m.id}', event)">${icon(liked?'heartFilled':'heart',13)} ${likeCount||''}</button>
+        <button class="chat-like-btn" onclick="setChatReply('${m.id}')" title="Yanıtla">${icon('reply',13)}</button>
         <div class="chat-reaction-picker">
           <button class="chat-like-btn" onclick="toggleReactionMenu('${m.id}')">${icon('smilePlus',13)}</button>
           <div class="chat-reaction-menu" id="reactMenu-${m.id}">${reactionMenuBtns}</div>
@@ -3609,6 +3750,8 @@ ${m.audioUrl ? `
         }
     }
     /* ===================== ÖZEL MESAJLAŞMA (DM) ===================== */
+    let _chatReplyTo = null; // {id, username, text}
+    let _dmReplyTo = null;
     let currentDmPairKey = null, currentDmTargetUid = null;
     let dmMessages = [];
     let dmListenerAttached = false;
@@ -3983,7 +4126,8 @@ ${m.audioUrl ? `
       <img class="chat-msg-avatar" src="${m.avatarUrl||'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" onclick="openUserSocialProfile('${m.uid}')" style="cursor:pointer;" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'">
       <div class="chat-msg-body">
         ${!mine?`<div class="chat-msg-headrow"><span class="chat-msg-name" onclick="openUserSocialProfile('${m.uid}')">${escapeHtml(m.username||'Kullanıcı')}</span></div>`:''}
-        <div class="chat-msg-bubble" id="dmbubble-${m.id}">
+<div class="chat-msg-bubble" id="dmbubble-${m.id}" ondblclick="handleBubbleDoubleLike(event,'${m.id}', true)">
+          ${m.replyTo ? `<div class="reply-quote"><b>${escapeHtml(m.replyTo.username)}</b><span>${escapeHtml(m.replyTo.text)}</span></div>` : ''}
           <div class="chat-msg-text">${m.text?escapeHtml(m.text):''}</div>
           ${m.imageUrl ? `<img class="chat-msg-img" src="${m.imageUrl}" onclick="openLightbox('${m.imageUrl}')">` : ''}
           ${m.audioUrl ? `
@@ -3999,14 +4143,23 @@ ${m.audioUrl ? `
             <div class="chat-msg-track-name">${escapeHtml(m.track.name)}</div>
             <div class="chat-msg-track-artist">${escapeHtml(m.track.artist)}</div>
           </div>
-          ${icon('music',14)}
+         ${icon('music',14)}
         </div>` : ''}
+          ${m.file ? `<a class="chat-msg-file-card" href="${m.file.dataUrl}" download="${escapeHtml(m.file.name)}">
+    <span class="file-card-icon">${icon('paperclip',17)}</span>
+    <span class="file-card-info"><span class="file-card-name">${escapeHtml(m.file.name)}</span><span class="file-card-size">${formatFileSize(m.file.size)}</span></span>
+  </a>` : ''}
+          ${m.location ? `<a class="chat-msg-location-card" href="${m.location.mapsUrl}" target="_blank" rel="noopener">
+    <span class="location-card-icon">${icon('compass',18)}</span>
+    <span class="location-card-info"><span class="location-card-title">Canlı Konum</span><span class="location-card-sub">Google Maps'te aç</span></span>
+  </a>` : ''}
           ${m.imagePoll ? renderImagePollCard(m, true) : ''}
           ${m.textPoll ? renderTextPollCard(m, true) : ''}
           <div class="chat-msg-time-row"><span>${time}${editedLabel}</span></div>
         </div>
         <div class="chat-msg-footer">
-          <button class="chat-like-btn${liked?' liked':''}" onclick="toggleDmLike('${m.id}')">${icon(liked?'heartFilled':'heart',13)} ${likeCount||''}</button>
+          <button class="chat-like-btn${liked?' liked':''}" onclick="toggleDmLike('${m.id}', event)">${icon(liked?'heartFilled':'heart',13)} ${likeCount||''}</button>
+          <button class="chat-like-btn" onclick="setDmReply('${m.id}')" title="Yanıtla">${icon('reply',13)}</button>
           <div class="chat-reaction-picker">
             <button class="chat-like-btn" onclick="toggleReactionMenu('${m.id}')">${icon('smilePlus',13)}</button>
             <div class="chat-reaction-menu" id="reactMenu-${m.id}">${reactionMenuBtns}</div>
@@ -4032,16 +4185,17 @@ ${m.audioUrl ? `
         const msg = {
             uid: currentUid, username: me.username, avatarUrl: me.avatarUrl,
             text: text || '', imageUrl: _pendingDmImageDataUrl || null,
-            audioUrl: audioDataUrl || null, ts: Date.now(), likes: {}, reactions: {}
+            audioUrl: audioDataUrl || null, ts: Date.now(), replyTo: _dmReplyTo, likes: {}, reactions: {}
         };
         try{
             await db.ref('developmentUsers/groupChats/'+currentGroupId+'/messages').push(msg);
             const preview = text || (msg.imageUrl ? '📷 Görsel' : (msg.audioUrl ? '🎤 Sesli mesaj' : ''));
-            await db.ref('developmentUsers/groups/'+currentGroupId).update({ lastMessageTs: msg.ts, lastMessagePreview: preview });
-            if(groupsCache[currentGroupId]){ groupsCache[currentGroupId].lastMessageTs = msg.ts; groupsCache[currentGroupId].lastMessagePreview = preview; }
+            await db.ref('developmentUsers/groups/'+currentGroupId).update({ lastMessageTs: msg.ts, lastMessagePreview: preview, lastMessageUid: currentUid });
+            if(groupsCache[currentGroupId]){ groupsCache[currentGroupId].lastMessageTs = msg.ts; groupsCache[currentGroupId].lastMessagePreview = preview; groupsCache[currentGroupId].lastMessageUid = currentUid; }
             await db.ref('developmentUsers/'+currentUid+'/groupReads/'+currentGroupId).set(msg.ts);
             groupReadsCache[currentGroupId] = msg.ts;
             if(input) input.value = '';
+            _dmReplyTo = null; renderReplyPreview('dm');
             cancelDmImage();
             const vbtn = document.getElementById('dmVoiceBtn');
             if(vbtn) vbtn.innerHTML = icon('bolt',15);
@@ -4148,7 +4302,7 @@ ${m.audioUrl ? `
             html += groupIds.map(gid => {
                 const g = groupsCache[gid];
                 if(!g) return '';
-                const isUnread = (g.lastMessageTs || 0) > (groupReadsCache[gid] || 0) && _chatMegaActiveKey !== ('group_'+gid);
+                const isUnread = g.lastMessageUid !== currentUid && (g.lastMessageTs || 0) > (groupReadsCache[gid] || 0) && _chatMegaActiveKey !== ('group_'+gid);
                 const memberCount = Object.keys(g.members||{}).length;
                 const sub = g.lastMessagePreview ? escapeHtml(g.lastMessagePreview.slice(0,40)) : (memberCount + ' üye');
                 const avatarInner = g.photoUrl
@@ -4298,12 +4452,16 @@ ${m.audioUrl ? `
         reader.readAsDataURL(blob);
     }
 
-    async function toggleDmLike(msgId){
+    async function toggleDmLike(msgId, evt){
         const ref = currentGroupId
             ? db.ref('developmentUsers/groupChats/'+currentGroupId+'/messages/'+msgId+'/likes/'+currentUid)
             : db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages/'+msgId+'/likes/'+currentUid);
         const snap = await ref.once('value');
-        if(snap.exists()) await ref.remove(); else await ref.set(true);
+        if(snap.exists()) await ref.remove();
+        else{
+            await ref.set(true);
+            if(evt && evt.currentTarget){ const r = evt.currentTarget.getBoundingClientRect(); spawnHeartBurst(r.left+r.width/2, r.top+r.height/2, 10); }
+        }
     }
     async function toggleDmReaction(msgId, emoji){
         const ref = currentGroupId
@@ -4421,7 +4579,8 @@ ${m.audioUrl ? `
             return `${sep}<div class="chat-msg${mine?' is-mine':''}">
         <img class="chat-msg-avatar" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'" src="${mine?myAvatar:theirAvatar}">
         <div class="chat-msg-body">
-          <div class="chat-msg-bubble" id="dmbubble-${m.id}">
+<div class="chat-msg-bubble" id="dmbubble-${m.id}" ondblclick="handleBubbleDoubleLike(event,'${m.id}', true)">
+            ${m.replyTo ? `<div class="reply-quote"><b>${escapeHtml(m.replyTo.username)}</b><span>${escapeHtml(m.replyTo.text)}</span></div>` : ''}
             <div class="chat-msg-text">${m.text ? escapeHtml(m.text) : ''}</div>
             ${m.imageUrl ? `<img class="chat-msg-img" src="${m.imageUrl}" onclick="openLightbox('${m.imageUrl}')">` : ''}
             ${m.audioUrl ? `
@@ -4439,12 +4598,21 @@ ${m.track ? `
       </div>
       ${icon('music',14)}
     </div>` : ''}
+            ${m.file ? `<a class="chat-msg-file-card" href="${m.file.dataUrl}" download="${escapeHtml(m.file.name)}">
+    <span class="file-card-icon">${icon('paperclip',17)}</span>
+    <span class="file-card-info"><span class="file-card-name">${escapeHtml(m.file.name)}</span><span class="file-card-size">${formatFileSize(m.file.size)}</span></span>
+  </a>` : ''}
+            ${m.location ? `<a class="chat-msg-location-card" href="${m.location.mapsUrl}" target="_blank" rel="noopener">
+    <span class="location-card-icon">${icon('compass',18)}</span>
+    <span class="location-card-info"><span class="location-card-title">Canlı Konum</span><span class="location-card-sub">Google Maps'te aç</span></span>
+  </a>` : ''}
             ${m.imagePoll ? renderImagePollCard(m, true) : ''}
             ${m.textPoll ? renderTextPollCard(m, true) : ''}
             <div class="chat-msg-time-row">${seenTickHtml}<span>${time}${editedLabel}</span></div>
           </div>
-          <div class="chat-msg-footer">
-            <button class="chat-like-btn${liked?' liked':''}" onclick="toggleDmLike('${m.id}')">${icon(liked?'heartFilled':'heart',13)} ${likeCount||''}</button>
+<div class="chat-msg-footer">
+            <button class="chat-like-btn${liked?' liked':''}" onclick="toggleDmLike('${m.id}', event)">${icon(liked?'heartFilled':'heart',13)} ${likeCount||''}</button>
+            <button class="chat-like-btn" onclick="setDmReply('${m.id}')" title="Yanıtla">${icon('reply',13)}</button>
             <div class="chat-reaction-picker">
               <button class="chat-like-btn" onclick="toggleReactionMenu('${m.id}')">${icon('smilePlus',13)}</button>
               <div class="chat-reaction-menu" id="reactMenu-${m.id}">${reactionMenuBtns}</div>
@@ -4466,7 +4634,7 @@ ${m.track ? `
         const me = getMyProfileCache();
         const msg = {
             uid: currentUid, text: text || '', imageUrl: _pendingDmImageDataUrl || null,
-            audioUrl: audioDataUrl || null, ts: Date.now(), likes: {}, reactions: {}, seen:false
+            audioUrl: audioDataUrl || null, ts: Date.now(), replyTo: _dmReplyTo, likes: {}, reactions: {}, seen:false
         };
         try{
             await db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages').push(msg);
@@ -4486,12 +4654,48 @@ ${m.track ? `
                 lastMessage: lastMsgPreview, ts: Date.now(), unread:true
             });
             if(input) input.value = '';
+            _dmReplyTo = null; renderReplyPreview('dm');
             cancelDmImage();
             const vbtn = document.getElementById('dmVoiceBtn');
             if(vbtn) vbtn.innerHTML = icon('bolt',15);
         }catch(err){
             showTopToast('Mesaj gönderilemedi: ' + (err && err.message ? err.message : 'bilinmeyen hata'), 'warn', 'warn');
         }
+    }
+    function getActiveConvMessage(msgId){
+        const list = currentGroupId ? groupMessages : dmMessages;
+        return list.find(m => m.id === msgId);
+    }
+    function setChatReply(msgId){
+        const m = chatMessages.find(x => x.id === msgId);
+        if(!m) return;
+        _chatReplyTo = { id:m.id, username:m.username||'Kullanıcı', text:(m.text || (m.imageUrl?'📷 Görsel':(m.audioUrl?'🎤 Sesli mesaj':''))).slice(0,80) };
+        renderReplyPreview('global');
+        document.getElementById('chatInput').focus();
+    }
+    function setDmReply(msgId){
+        const m = getActiveConvMessage(msgId);
+        if(!m) return;
+        const uname = m.username || (m.uid===currentUid ? currentUsername : document.getElementById('dmTargetName').textContent);
+        _dmReplyTo = { id:m.id, username:uname, text:(m.text || (m.imageUrl?'📷 Görsel':(m.audioUrl?'🎤 Sesli mesaj':''))).slice(0,80) };
+        renderReplyPreview('dm');
+        document.getElementById('dmInput').focus();
+    }
+    function cancelReply(target){
+        if(target==='global') _chatReplyTo = null; else _dmReplyTo = null;
+        renderReplyPreview(target);
+    }
+    function renderReplyPreview(target){
+        const wrapId = target==='global' ? 'chatReplyPreviewWrap' : 'dmReplyPreviewWrap';
+        const data = target==='global' ? _chatReplyTo : _dmReplyTo;
+        const el = document.getElementById(wrapId);
+        if(!el) return;
+        if(!data){ el.style.display='none'; el.innerHTML=''; return; }
+        el.style.display = 'flex';
+        el.innerHTML = `<div class="reply-preview-bar">
+    <div class="reply-preview-text"><b>${escapeHtml(data.username)}</b><span>${escapeHtml(data.text)}</span></div>
+    <button class="icon-btn" onclick="cancelReply('${target}')">${icon('x',13)}</button>
+  </div>`;
     }
     function closeReactionMenus(){
         document.querySelectorAll('.chat-reaction-menu').forEach(el => el.classList.remove('open'));
@@ -4514,10 +4718,14 @@ ${m.track ? `
         }
         audioEl.onended = () => { pill.classList.remove('playing'); btn.innerHTML = icon('bolt',14); };
     }
-    async function toggleChatLike(msgId){
+    async function toggleChatLike(msgId, evt){
         const ref = chatRef.child(msgId+'/likes/'+currentUid);
         const snap = await ref.once('value');
-        if(snap.exists()) await ref.remove(); else await ref.set(true);
+        if(snap.exists()) await ref.remove();
+        else{
+            await ref.set(true);
+            if(evt && evt.currentTarget){ const r = evt.currentTarget.getBoundingClientRect(); spawnHeartBurst(r.left+r.width/2, r.top+r.height/2, 10); }
+        }
     }
     function startEditChatMessage(msgId, oldText){
         const bubble = document.getElementById('bubble-'+msgId);
@@ -5997,8 +6205,12 @@ ${m.track ? `
         document.getElementById('attachVsIconDm').innerHTML = icon('vsIcon',13);
         document.getElementById('attachPollIconDm').innerHTML = icon('poll',13);
         document.getElementById('txtPollAddOptBtn').innerHTML = `${icon('plus',12)} Seçenek Ekle`;
+        document.getElementById('attachFileIconGlobal').innerHTML = icon('paperclip',13);
+        document.getElementById('attachFileIconDm').innerHTML = icon('paperclip',13);
         document.getElementById('createGroupBtn').innerHTML = `${icon('plus',12)} Yeni Grup`;
         document.getElementById('groupLeaveBtn').innerHTML = `${icon('logout',13)} Gruptan Ayrıl`;
+        document.getElementById('attachLocationIconGlobal').innerHTML = icon('compass',13);
+        document.getElementById('attachLocationIconDm').innerHTML = icon('compass',13);
         resetVsPollSlot('A'); resetVsPollSlot('B');
     }
     function toggleAddCard(){
@@ -6373,7 +6585,55 @@ ${m.track ? `
             noBtn.onclick = () => cleanup(false);
         });
     }
-
+    function spawnHeartBurst(x, y, count){
+        count = count || 10;
+        for(let i=0;i<count;i++){
+            const el = document.createElement('div');
+            el.className = 'heart-burst-piece';
+            el.textContent = '❤';
+            const dx = (Math.random()-0.5) * 90;
+            const dy = -40 - Math.random()*70;
+            const rot = Math.random()*60-30;
+            const dur = 650 + Math.random()*300;
+            el.style.left = x+'px'; el.style.top = y+'px';
+            el.style.fontSize = (12+Math.random()*12)+'px';
+            el.style.transform = 'translate(0,0) scale(.3)';
+            el.style.opacity = '1';
+            el.style.transition = `transform ${dur}ms cubic-bezier(.25,.46,.45,.94), opacity ${dur}ms ease`;
+            document.body.appendChild(el);
+            requestAnimationFrame(() => {
+                el.style.transform = `translate(${dx}px, ${dy}px) scale(1.2) rotate(${rot}deg)`;
+                el.style.opacity = '0';
+            });
+            setTimeout(() => el.remove(), dur+80);
+        }
+    }
+    function showBigHeartOverlay(bubbleEl){
+        bubbleEl.style.position = 'relative';
+        const overlay = document.createElement('div');
+        overlay.className = 'big-heart-overlay';
+        overlay.innerHTML = icon('heartFilled', 54);
+        bubbleEl.appendChild(overlay);
+        setTimeout(()=>overlay.remove(), 800);
+        const r = bubbleEl.getBoundingClientRect();
+        spawnHeartBurst(r.left+r.width/2, r.top+r.height/2, 14);
+    }
+    async function forceLikeChat(msgId){
+        const ref = chatRef.child(msgId+'/likes/'+currentUid);
+        const snap = await ref.once('value');
+        if(!snap.exists()) await ref.set(true);
+    }
+    async function forceLikeDm(msgId){
+        const ref = currentGroupId
+            ? db.ref('developmentUsers/groupChats/'+currentGroupId+'/messages/'+msgId+'/likes/'+currentUid)
+            : db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages/'+msgId+'/likes/'+currentUid);
+        const snap = await ref.once('value');
+        if(!snap.exists()) await ref.set(true);
+    }
+    function handleBubbleDoubleLike(evt, msgId, isDm){
+        showBigHeartOverlay(evt.currentTarget);
+        if(isDm) forceLikeDm(msgId); else forceLikeChat(msgId);
+    }
     function spawnConfetti(x, y, count){
         if(!siteSettings.confetti) return;
         const shades = ['#ff3b3b','#ff7a7a','#c81e1e','#7a0f0f'];

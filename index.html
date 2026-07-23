@@ -1942,6 +1942,64 @@
             .ts-preset-grid{ grid-template-columns:1fr; }
             .ts-foot{ padding:14px 18px calc(14px + env(safe-area-inset-bottom)); }
         }
+    @keyframes holidayBannerGlow{
+            0%,100%{ box-shadow:0 8px 20px rgba(0,0,0,.35), 0 0 0 0 rgba(255,255,255,.25); }
+            50%{ box-shadow:0 8px 26px rgba(0,0,0,.4), 0 0 0 6px rgba(255,255,255,.08); }
+        }
+        #holidayBanner{ animation: holidayBannerGlow 2.4s ease-in-out infinite; }
+
+        /* ==================== ÖZEL GÜN — KÖŞE ROZETİ & DETAYLAR ==================== */
+        :root{ --hc1:#ff2b2b; --hc2:#ff2b2b; --hc3:#7a0000; }
+        @keyframes holidayBadgePulse{
+            0%,100%{ box-shadow:0 0 0 0 var(--hc2), 0 4px 12px rgba(0,0,0,.3); transform:scale(1); }
+            50%{ box-shadow:0 0 0 6px transparent, 0 6px 16px rgba(0,0,0,.35); transform:scale(1.05); }
+        }
+        #holidayCornerBadge{
+            display:none; align-items:center; justify-content:center; width:34px; height:34px; flex:none;
+            background:linear-gradient(135deg, var(--hc1), var(--hc2) 60%, var(--hc3)); border:none; border-radius:50%;
+            cursor:pointer; font-size:16px; box-shadow:var(--shadow); animation:holidayBadgePulse 2.6s ease-in-out infinite;
+            position:relative;
+        }
+        #holidayCornerBadge .hcb-dot{
+            position:absolute; top:-2px; right:-2px; width:9px; height:9px; border-radius:50%; background:#fff;
+            border:1.5px solid var(--hc2); box-shadow:0 0 6px var(--hc2);
+        }
+        .holiday-info-card{ max-width:340px; text-align:center; }
+        .holiday-info-icon{
+            width:62px; height:62px; border-radius:50%; margin:0 auto 12px; display:flex; align-items:center; justify-content:center;
+            font-size:30px; background:linear-gradient(135deg, var(--hc1), var(--hc2) 60%, var(--hc3)); box-shadow:0 0 24px var(--hc2);
+        }
+        .holiday-countdown-row{ display:flex; justify-content:center; gap:8px; margin:14px 0 4px; }
+        .holiday-countdown-chip{
+            font-family:'Orbitron',sans-serif; font-weight:800; font-size:18px; color:#fff; min-width:52px;
+            background:linear-gradient(135deg, var(--hc1), var(--hc2)); border-radius:10px; padding:8px 4px;
+        }
+        .holiday-countdown-chip span{ display:block; font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:500; letter-spacing:.08em; opacity:.85; margin-top:2px; }
+
+        /* Bayram temalı avatar halkası */
+        html[data-holiday] #profileCorner .avatar-wrap img,
+        html[data-holiday] #profileCorner .avatar-fallback{
+            box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(--hc2), 0 0 14px var(--hc2) !important;
+        }
+        html[data-holiday] .avatar-wrap::after{
+            content:''; position:absolute; inset:-4px; border-radius:50%; pointer-events:none;
+            border:1.5px dashed var(--hc2); opacity:.6; animation:holidayRingSpin 10s linear infinite;
+        }
+        @keyframes holidayRingSpin{ to{ transform:rotate(360deg); } }
+
+        /* Zemin efektleri: hero panelin alt kenarına ince bayram şeridi */
+        html[data-holiday="newyear"] .rank-hero::after{
+            content:''; position:absolute; left:0; right:0; bottom:0; height:5px; z-index:2;
+            background:linear-gradient(90deg,#fff,#cde9ff 30%,#fff 55%,#cde9ff 80%,#fff); opacity:.55;
+        }
+        html[data-holiday="halloween"] .rank-hero::after{
+            content:''; position:absolute; left:0; right:0; bottom:0; height:5px; z-index:2;
+            background:repeating-linear-gradient(90deg, var(--hc2) 0 10px, transparent 10px 20px); opacity:.5;
+        }
+        html[data-holiday="easter"] .rank-hero::after{
+            content:''; position:absolute; left:0; right:0; bottom:0; height:5px; z-index:2;
+            background:linear-gradient(90deg,#f9a8d4,#fde68a 30%,#a7f3d0 60%,#f9a8d4 85%); opacity:.6;
+        }
     </style>
 </head>
 <body>
@@ -1983,6 +2041,7 @@
             <span class="conn-pill"><span class="conn-dot" id="connDot"></span><span id="connLabel">Bağlantı bekleniyor…</span></span>
             <button class="theme-toggle" id="accentPickerBtn" onclick="openThemeStudio()" title="Tema Stüdyosunu Aç" style="display:none;"></button>
             <input type="color" id="accentColorInput" value="#5b2ec7" oninput="onAccentColorChange(this.value)" style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;">
+            <button id="holidayCornerBadge" onclick="openHolidayInfoModal()" title="Özel gün bilgisi"><span class="hcb-dot"></span></button>
             <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Temayı değiştir"></button>
         </div>
     </div>
@@ -2695,6 +2754,16 @@
     </div>
 </div>
 
+<div id="holidayInfoModal" class="modal-overlay">
+    <div class="modal-card holiday-info-card">
+        <p class="modal-eyebrow" id="holidayInfoEyebrow">Özel Gün</p>
+        <div class="holiday-info-icon" id="holidayInfoIcon"></div>
+        <p class="modal-rankname" id="holidayInfoName" style="font-size:17px;"></p>
+        <p class="modal-sub" id="holidayInfoDesc"></p>
+        <div class="holiday-countdown-row" id="holidayCountdownRow"></div>
+        <button class="btn" style="width:100%; margin-top:16px;" onclick="closeHolidayInfoModal()">Kapat</button>
+    </div>
+</div>
 <div id="confirmModal" class="modal-overlay">
     <div class="modal-card">
         <p class="modal-eyebrow">Onay Gerekiyor</p>
@@ -2948,6 +3017,7 @@
             <button class="admin-tab-btn" id="adminTabModsBtn" onclick="switchAdminTab('mods')"></button>
             <button class="admin-tab-btn active" id="adminTabUsersBtn" onclick="switchAdminTab('users')"></button>
             <button class="admin-tab-btn" id="adminTabLiveBtn" onclick="switchAdminTab('live')"></button>
+            <button class="admin-tab-btn" id="adminTabHolidayBtn" onclick="switchAdminTab('holiday')"></button>
         </div>
         <div class="admin-tab-panel active" id="adminTabUsers">
             <div class="admin-search-wrap">
@@ -2959,6 +3029,9 @@
             <p style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-soft); margin:0 0 10px; letter-spacing:.06em; text-transform:uppercase; display:flex; align-items:center; gap:7px;"><span class="admin-live-dot"></span> Canlı akış</p>
             <div class="admin-feed" id="adminFeed"></div>
             <div id="adminModsList" style="max-height:400px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
+        </div>
+        <div class="admin-tab-panel" id="adminTabHoliday">
+            <div id="adminHolidayContent"></div>
         </div>
         <div class="modal-actions" style="margin-top:16px;">
             <button class="btn btn-ghost" onclick="closeAdminPanel()">Kapat</button>
@@ -3986,7 +4059,7 @@ ${m.audioUrl ? `
       </div>
     `}
 <div class="chat-msg-footer">
-        <button class="chat-like-btn${liked?' liked':''}" onclick="toggleChatLike('${m.id}', event)">${icon(liked?'heartFilled':'heart',13)} ${likeCount||''}</button>
+        <button class="chat-like-btn${liked?' liked':''}" onclick="toggleChatLike('${m.id}', event)">${likeGlyph(liked,13)} ${likeCount||''}</button>
         <button class="chat-like-btn" onclick="setChatReply('${m.id}')" title="Yanıtla">${icon('reply',13)}</button>
         <div class="chat-reaction-picker">
           <button class="chat-like-btn" onclick="toggleReactionMenu('${m.id}')">${icon('smilePlus',13)}</button>
@@ -4662,7 +4735,7 @@ ${m.audioUrl ? `
           <div class="chat-msg-time-row"><span>${time}${editedLabel}</span></div>
         </div>
         <div class="chat-msg-footer">
-          <button class="chat-like-btn${liked?' liked':''}" onclick="toggleDmLike('${m.id}', event)">${icon(liked?'heartFilled':'heart',13)} ${likeCount||''}</button>
+          <button class="chat-like-btn${liked?' liked':''}" onclick="toggleDmLike('${m.id}', event)">${likeGlyph(liked,13)} ${likeCount||''}</button>
           <button class="chat-like-btn" onclick="setDmReply('${m.id}')" title="Yanıtla">${icon('reply',13)}</button>
           <div class="chat-reaction-picker">
             <button class="chat-like-btn" onclick="toggleReactionMenu('${m.id}')">${icon('smilePlus',13)}</button>
@@ -4774,6 +4847,13 @@ ${m.audioUrl ? `
         if(window.innerWidth <= 720) openChatSidebarMobile();
         _chatHasRenderedOnce = false;
         renderChatMessages();
+        if(activeHolidayKey && HOLIDAYS[activeHolidayKey]){
+            const flagKey = 'holidayChatToast_'+activeHolidayKey;
+            if(!sessionStorage.getItem(flagKey)){
+                sessionStorage.setItem(flagKey, '1');
+                setTimeout(()=> showTopToast(`${HOLIDAYS[activeHolidayKey].emoji} Bugün ${HOLIDAYS[activeHolidayKey].name} kutluyoruz!`, 'info', 'sparkle'), 500);
+            }
+        }
     }
     function closeChatHub(){
         document.getElementById('chatMegaModal').classList.remove('show');
@@ -5115,7 +5195,7 @@ ${locationCardHtml(m.location)}
             <div class="chat-msg-time-row">${seenTickHtml}<span>${time}${editedLabel}</span></div>
           </div>
 <div class="chat-msg-footer">
-            <button class="chat-like-btn${liked?' liked':''}" onclick="toggleDmLike('${m.id}', event)">${icon(liked?'heartFilled':'heart',13)} ${likeCount||''}</button>
+            <button class="chat-like-btn${liked?' liked':''}" onclick="toggleDmLike('${m.id}', event)">${likeGlyph(liked,13)} ${likeCount||''}</button>
             <button class="chat-like-btn" onclick="setDmReply('${m.id}')" title="Yanıtla">${icon('reply',13)}</button>
             <div class="chat-reaction-picker">
               <button class="chat-like-btn" onclick="toggleReactionMenu('${m.id}')">${icon('smilePlus',13)}</button>
@@ -6746,6 +6826,7 @@ ${locationCardHtml(m.location)}
         document.getElementById('attachMusicIconGlobal').innerHTML = icon('music',13);
         document.getElementById('chatSendBtn').innerHTML = icon('send',18);
         document.getElementById('adminTabModsBtn').innerHTML = `${icon('shield',13)} Moderatörler`;
+        document.getElementById('adminTabHolidayBtn').innerHTML = `${icon('sparkle',13)} Özel Günler`;
         document.getElementById('startEventBtn').innerHTML = `${icon('flag',12)} Etkinlik Başlat`;
         document.getElementById('dmSendBtn').innerHTML = icon('send',18);
         document.getElementById('dmImageBtn').innerHTML = icon('camera',15);
@@ -7159,7 +7240,7 @@ ${locationCardHtml(m.location)}
         for(let i=0;i<count;i++){
             const el = document.createElement('div');
             el.className = 'heart-burst-piece';
-            el.textContent = '❤';
+            el.textContent = holidayHeartEmoji();
             const dx = (Math.random()-0.5) * 90;
             const dy = -40 - Math.random()*70;
             const rot = Math.random()*60-30;
@@ -7181,7 +7262,7 @@ ${locationCardHtml(m.location)}
         bubbleEl.style.position = 'relative';
         const overlay = document.createElement('div');
         overlay.className = 'big-heart-overlay';
-        overlay.innerHTML = icon('heartFilled', 54);
+        overlay.innerHTML = (activeHolidayKey && HOLIDAYS[activeHolidayKey]) ? `<span style="font-size:54px;">${HOLIDAYS[activeHolidayKey].likeIcon}</span>` : icon('heartFilled', 54);
         bubbleEl.appendChild(overlay);
         setTimeout(()=>overlay.remove(), 800);
         const r = bubbleEl.getBoundingClientRect();
@@ -7205,16 +7286,21 @@ ${locationCardHtml(m.location)}
     }
     function spawnConfetti(x, y, count){
         if(!siteSettings.confetti) return;
+        const holiday = activeHolidayKey && HOLIDAYS[activeHolidayKey];
         const shades = ['#ff3b3b','#ff7a7a','#c81e1e','#7a0f0f'];
         for(let i=0;i<count;i++){
             const el = document.createElement('div');
-            el.className = 'confetti-piece';
-            const color = shades[Math.floor(Math.random()*shades.length)];
             const dx = (Math.random()-0.5) * 160;
             const dy = 100 + Math.random()*140;
             const rot = Math.random()*720 - 360;
             const dur = 900 + Math.random()*700;
-            el.style.background = color;
+            if(holiday){
+                el.textContent = holiday.confettiEmojis[Math.floor(Math.random()*holiday.confettiEmojis.length)];
+                el.style.cssText = `position:fixed; z-index:90; pointer-events:none; font-size:${14+Math.random()*10}px;`;
+            } else {
+                el.className = 'confetti-piece';
+                el.style.background = shades[Math.floor(Math.random()*shades.length)];
+            }
             el.style.left = x+'px';
             el.style.top = y+'px';
             el.style.transform = 'translate(0,0) rotate(0deg)';
@@ -8715,14 +8801,18 @@ ${locationCardHtml(m.location)}
     let adminLiveRefs = [];
     let _lastPresenceSnap = {}, _lastUsersSnap = {};
 
-    function switchAdminTab(tab){
+   function switchAdminTab(tab){
         document.getElementById('adminTabUsersBtn').classList.toggle('active', tab==='users');
         document.getElementById('adminTabLiveBtn').classList.toggle('active', tab==='live');
         document.getElementById('adminTabModsBtn').classList.toggle('active', tab==='mods');
+        document.getElementById('adminTabHolidayBtn').classList.toggle('active', tab==='holiday');
         document.getElementById('adminTabUsers').classList.toggle('active', tab==='users');
         document.getElementById('adminTabLive').classList.toggle('active', tab==='live');
-        document.getElementById('adminTabMods').classList.toggle('active', tab==='mods');
+        const modsPanelEl = document.getElementById('adminTabMods');
+        if(modsPanelEl) modsPanelEl.classList.toggle('active', tab==='mods');
+        document.getElementById('adminTabHoliday').classList.toggle('active', tab==='holiday');
         if(tab==='mods') renderAdminModsList();
+        if(tab==='holiday') renderHolidayAdminPanel();
     }
 
     function openAdminPanel(){
@@ -8936,9 +9026,266 @@ ${locationCardHtml(m.location)}
         renderProfileView();
         document.getElementById('profileModal').classList.add('show');
     }
+    /* ===================== ÖZEL GÜNLER SİSTEMİ ===================== */
+    const HOLIDAYS = {
+        newyear: {
+            key:'newyear', name:'Yılbaşı', emoji:'🎄',
+            likeIcon:'🎄',
+            confettiEmojis:['🎄','🎁','⭐','❄️','🔔','🎅','✨'],
+            ambientEmojis:['❄️','✨'],
+            bannerBg:'linear-gradient(120deg,#0f5c3c,#0f9d58 55%,#2fae66)',
+            bannerText:'Yılbaşı teması aktif',
+            desc:'Panelde kar taneleri süzülüyor, konfetiler yılbaşı ruhunda patlıyor.',
+            accent:{ c1:'#2fae66', c2:'#0f9d58', c3:'#063d24' },
+            chime:[523,659,784,1046],
+            targetMonthDay:[12,25]
+        },
+        halloween: {
+            key:'halloween', name:'Cadılar Bayramı', emoji:'🎃',
+            likeIcon:'🎃',
+            confettiEmojis:['🎃','👻','🦇','🕷️','🍬','🕸️'],
+            ambientEmojis:['🦇','🕸️'],
+            bannerBg:'linear-gradient(120deg,#3a1409,#f97316 55%,#7a2e0a)',
+            bannerText:'Cadılar Bayramı teması aktif',
+            desc:'Yarasalar süzülüyor, örümcek ağları arasında ürkütücü bir hava esiyor.',
+            accent:{ c1:'#fb923c', c2:'#f97316', c3:'#431407' },
+            chime:[220,196,164,110],
+            targetMonthDay:[10,31]
+        },
+        easter: {
+            key:'easter', name:'Paskalya', emoji:'🥚',
+            likeIcon:'🥚',
+            confettiEmojis:['🥚','🐰','🌸','🐣','🌷'],
+            ambientEmojis:['🌸','🥚'],
+            bannerBg:'linear-gradient(120deg,#831843,#ec4899 55%,#f9a8d4)',
+            bannerText:'Paskalya teması aktif',
+            desc:'Çiçekler açıyor, renkli yumurtalar panelin her yerine serpiştirildi.',
+            accent:{ c1:'#f9a8d4', c2:'#ec4899', c3:'#831843' },
+            chime:[392,440,494,587],
+            targetMonthDay:null
+        }
+    };
+
+    function computeEasterDate(year){
+        const a=year%19,b=Math.floor(year/100),c=year%100,d=Math.floor(b/4),e=b%4,
+              f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,
+              i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),
+              month=Math.floor((h+l-7*m+114)/31), day=((h+l-7*m+114)%31)+1;
+        return new Date(year, month-1, day);
+    }
+    function getDateBasedHolidayKey(date){
+        date = date || new Date();
+        const m = date.getMonth()+1, d = date.getDate();
+        if((m===12 && d>=15) || (m===1 && d<=7)) return 'newyear';
+        if((m===10 && d>=20) || (m===11 && d<=2)) return 'halloween';
+        const easter = computeEasterDate(date.getFullYear());
+        const diffDays = Math.round((date - easter)/86400000);
+        if(diffDays>=-2 && diffDays<=2) return 'easter';
+        return null;
+    }
+
+    let activeHolidayKey = null;
+    let forcedHolidayKey = null; // null = otomatik, 'off' = kapalı, veya bir HOLIDAYS anahtarı
+    let holidayAmbientInterval = null;
+    let holidayListenerAttached = false;
+
+    function attachHolidayListener(){
+        if(holidayListenerAttached || !db) return;
+        holidayListenerAttached = true;
+        db.ref('developmentUsers/siteEvent/forcedKey').on('value', snap => {
+            forcedHolidayKey = snap.val();
+            recomputeActiveHoliday();
+        });
+    }
+
+    function recomputeActiveHoliday(){
+        let key;
+        if(forcedHolidayKey === 'off') key = null;
+        else if(forcedHolidayKey) key = forcedHolidayKey;
+        else key = getDateBasedHolidayKey();
+        if(key !== activeHolidayKey){
+            activeHolidayKey = key;
+            applyHolidayEffects(key);
+        }
+        renderHolidayAdminPanel();
+    }
+
+    function applyHolidayEffects(key){
+        stopHolidayAmbient();
+        const oldBanner = document.getElementById('holidayBanner');
+        if(oldBanner) oldBanner.remove();
+        setHolidayAccentVars(key);
+        updateHolidayCornerBadge(key);
+        if(key && document.documentElement.getAttribute('data-holiday') !== key){
+            document.documentElement.setAttribute('data-holiday', key);
+        } else if(!key){
+            document.documentElement.removeAttribute('data-holiday');
+        }
+        if(!key || !HOLIDAYS[key]) return;
+        const h = HOLIDAYS[key];
+        const banner = document.createElement('div');
+        banner.id = 'holidayBanner';
+        banner.style.cssText = `position:fixed; top:14px; left:50%; transform:translateX(-50%) translateY(-10px); z-index:94;
+            font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:700; color:#fff;
+            background:${h.bannerBg}; padding:8px 16px; border-radius:100px; display:flex; align-items:center; gap:8px;
+            box-shadow:0 8px 20px rgba(0,0,0,.35); opacity:0; transition:opacity .4s ease, transform .4s ease; pointer-events:none; letter-spacing:.03em;`;
+        banner.innerHTML = `<span style="font-size:15px;">${h.emoji}</span><span>${h.bannerText}</span>`;
+        document.body.appendChild(banner);
+        requestAnimationFrame(()=>{ banner.style.opacity='1'; banner.style.transform='translateX(-50%) translateY(0)'; });
+        setTimeout(()=>{
+            const b = document.getElementById('holidayBanner');
+            if(b){ b.style.opacity='0'; b.style.transform='translateX(-50%) translateY(-10px)'; setTimeout(()=>b.remove(), 450); }
+        }, 5000);
+        startHolidayAmbient(h);
+        playHolidayChime(h);
+    }
+
+    function setHolidayAccentVars(key){
+        const root = document.documentElement;
+        const h = key ? HOLIDAYS[key] : null;
+        if(h && h.accent){
+            root.style.setProperty('--hc1', h.accent.c1);
+            root.style.setProperty('--hc2', h.accent.c2);
+            root.style.setProperty('--hc3', h.accent.c3);
+        }
+    }
+
+    function updateHolidayCornerBadge(key){
+        const btn = document.getElementById('holidayCornerBadge');
+        if(!btn) return;
+        if(key && HOLIDAYS[key]){
+            btn.style.display = 'flex';
+            btn.querySelector('.hcb-dot').remove && null;
+            btn.innerHTML = `<span style="font-size:16px;">${HOLIDAYS[key].emoji}</span><span class="hcb-dot"></span>`;
+        } else {
+            btn.style.display = 'none';
+        }
+    }
+
+    function playHolidayChime(h){
+        if(!h || !h.chime) return;
+        h.chime.forEach((freq, i) => playTone(freq, 0.16, 'sine', 0.045, i*0.11));
+    }
+
+    function computeHolidayDaysParts(key){
+        // "kaç gün kaldı" yerine, aktif olduğu için "kaç gündür / ne zamana kadar" bilgisi verir
+        const now = new Date();
+        let endDate = null;
+        if(key === 'newyear'){
+            endDate = now.getMonth()===11 ? new Date(now.getFullYear()+1, 0, 7) : new Date(now.getFullYear(), 0, 7);
+        } else if(key === 'halloween'){
+            endDate = new Date(now.getFullYear(), 10, 2);
+            if(endDate < now) endDate = new Date(now.getFullYear()+1, 10, 2);
+        } else if(key === 'easter'){
+            const easter = computeEasterDate(now.getFullYear());
+            endDate = new Date(easter.getFullYear(), easter.getMonth(), easter.getDate()+2);
+        }
+        if(!endDate) return { days:0, hours:0 };
+        const diffMs = Math.max(0, endDate - now);
+        const days = Math.floor(diffMs/86400000);
+        const hours = Math.floor((diffMs%86400000)/3600000);
+        return { days, hours };
+    }
+
+    function openHolidayInfoModal(){
+        if(!activeHolidayKey || !HOLIDAYS[activeHolidayKey]) return;
+        const h = HOLIDAYS[activeHolidayKey];
+        closeAllAppModals();
+        document.getElementById('holidayInfoEyebrow').textContent = forcedHolidayKey && forcedHolidayKey!=='off' ? 'Özel Gün — Yönetici Tarafından Aktifleştirildi' : 'Özel Gün Aktif';
+        document.getElementById('holidayInfoIcon').textContent = h.emoji;
+        document.getElementById('holidayInfoName').textContent = h.name;
+        document.getElementById('holidayInfoDesc').textContent = h.desc || '';
+        const { days, hours } = computeHolidayDaysParts(activeHolidayKey);
+        document.getElementById('holidayCountdownRow').innerHTML = `
+      <div class="holiday-countdown-chip">${days}<span>GÜN</span></div>
+      <div class="holiday-countdown-chip">${hours}<span>SAAT</span></div>
+      <div class="holiday-countdown-chip" style="background:linear-gradient(135deg,var(--hc2),var(--hc3));">${Math.round(days>0? (Math.min(100, days*3)) : 100)}%<span>KALAN</span></div>`;
+        document.getElementById('holidayInfoModal').classList.add('show');
+    }
+    function closeHolidayInfoModal(){ document.getElementById('holidayInfoModal').classList.remove('show'); }
+
+    let holidayParticleCount = 0;
+    const HOLIDAY_MAX_PARTICLES = 6;
+    function startHolidayAmbient(h){
+        stopHolidayAmbient();
+        holidayParticleCount = 0;
+        holidayAmbientInterval = setInterval(()=>{
+            if(document.hidden || holidayParticleCount >= HOLIDAY_MAX_PARTICLES) return;
+            const emoji = h.ambientEmojis[Math.floor(Math.random()*h.ambientEmojis.length)];
+            const el = document.createElement('div');
+            const size = 11 + Math.random()*10;
+            const startX = Math.random()*window.innerWidth;
+            const dur = 8000 + Math.random()*6000;
+            const sway = (Math.random()-0.5) * 90;
+            holidayParticleCount++;
+            el.textContent = emoji;
+            el.style.cssText = `position:fixed; top:-40px; left:${startX}px; font-size:${size}px; z-index:3; pointer-events:none;
+                opacity:.55; filter:blur(.2px); transition:transform ${dur}ms linear, opacity ${Math.round(dur*0.15)}ms ease ${Math.round(dur*0.85)}ms;`;
+            document.body.appendChild(el);
+            requestAnimationFrame(()=>{
+                el.style.transform = `translate(${sway}px, ${window.innerHeight+60}px) rotate(${Math.random()*280}deg)`;
+                el.style.opacity='0';
+            });
+            setTimeout(()=>{ el.remove(); holidayParticleCount = Math.max(0, holidayParticleCount-1); }, dur+300);
+        }, 2200);
+    }
+    function stopHolidayAmbient(){
+        if(holidayAmbientInterval){ clearInterval(holidayAmbientInterval); holidayAmbientInterval=null; }
+        holidayParticleCount = 0;
+    }
+
+    function likeGlyph(liked, size){
+        if(activeHolidayKey && HOLIDAYS[activeHolidayKey]){
+            return `<span style="font-size:${size+2}px; line-height:1; display:inline-block; vertical-align:middle; filter:${liked?'none':'grayscale(0.7) opacity(.5)'};">${HOLIDAYS[activeHolidayKey].likeIcon}</span>`;
+        }
+        return icon(liked?'heartFilled':'heart', size);
+    }
+    function holidayHeartEmoji(){
+        return (activeHolidayKey && HOLIDAYS[activeHolidayKey]) ? HOLIDAYS[activeHolidayKey].likeIcon : '❤';
+    }
+
+    function forceHolidayForEveryone(key){
+        if(currentUid !== ADMIN_UID){ showTopToast('Bu işlem sadece yönetici içindir', 'warn', 'ban'); return; }
+        if(!db) return;
+        db.ref('developmentUsers/siteEvent/forcedKey').set(key).then(()=>{
+            const msg = key==='off' ? 'Özel gün teması herkes için kapatıldı'
+                : key ? `${HOLIDAYS[key].name} herkes için aktifleştirildi`
+                : 'Otomatik moda dönüldü';
+            showTopToast(msg, 'info', 'sparkle');
+        }).catch(err=> showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'));
+    }
+
+    function renderHolidayAdminPanel(){
+        const el = document.getElementById('adminHolidayContent');
+        if(!el) return;
+        const autoKey = getDateBasedHolidayKey();
+        const statusLabel = forcedHolidayKey === 'off' ? 'Manuel olarak kapatıldı'
+            : forcedHolidayKey ? `Manuel olarak "${(HOLIDAYS[forcedHolidayKey]||{}).name||forcedHolidayKey}" herkes için zorlanıyor`
+            : (autoKey ? `Otomatik: ${HOLIDAYS[autoKey].name} (tarih uygun)` : 'Otomatik: şu an aktif özel gün yok');
+        el.innerHTML = `
+      <div class="fx-panel" style="margin-bottom:16px;">
+        <span class="fx-panel-label">${icon('sparkle',11)} Şu Anki Durum</span>
+        <p style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--ink); margin:0;">${statusLabel}</p>
+      </div>
+      <div class="lift-grid" style="grid-template-columns:repeat(3,1fr);">
+        ${Object.values(HOLIDAYS).map(h => `
+          <button type="button" class="ts-mode-btn${forcedHolidayKey===h.key?' active':''}" style="text-align:center; align-items:center;" onclick="forceHolidayForEveryone('${h.key}')">
+            <span style="font-size:26px;">${h.emoji}</span>
+            <span class="ts-mode-name">${h.name}</span>
+            <span class="ts-mode-sub">Herkes için aktifleştir</span>
+          </button>`).join('')}
+      </div>
+      <div class="add-row" style="margin-top:14px;">
+        <button class="btn btn-ghost" style="flex:1;" onclick="forceHolidayForEveryone(null)">${icon('refresh',13)} Otomatik Moda Dön</button>
+        <button class="btn btn-ghost" style="flex:1; color:var(--neg); border-color:var(--neg);" onclick="forceHolidayForEveryone('off')">${icon('ban',13)} Temayı Kapat</button>
+      </div>`;
+    }
+
     function checkAuthOnLoad(){
         initFirebase();
         fetchMarketPrices();
+        attachHolidayListener();
+        recomputeActiveHoliday();
     }
 
     setInterval(() => {
@@ -8953,6 +9300,7 @@ ${locationCardHtml(m.location)}
     setInterval(() => autoFailExpired(false), 15000);
     setInterval(checkRecurringReset, 60000);
     setInterval(() => fetchMarketPrices(), 90000);
+    setInterval(() => recomputeActiveHoliday(), 3600000);
     loadSettings();
     initTheme();
     buildStaticUI();

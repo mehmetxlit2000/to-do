@@ -555,18 +555,22 @@
             padding:3px 9px; border-radius:100px; font-weight:700; flex:none;
             display:inline-flex; align-items:center; gap:4px;
         }
-        .chat-msg-badge.mod{ background:rgba(91,150,255,.15); color:#5b96ff; border:1px solid rgba(91,150,255,.4); }
+        .chat-msg-name .chat-msg-badge{ margin-left:7px; vertical-align:middle; }
+        .chat-msg-badges{
+            display:inline-flex; align-items:center; gap:6px; flex-wrap:wrap; vertical-align:middle;
+        }
+        .chat-msg-badge.mod{
+            background:linear-gradient(120deg, #0a2d6b, #2f6fed 55%, #6ec1ff);
+            color:#fff; border:1px solid rgba(110,193,255,.55);
+            text-shadow:0 1px 2px rgba(0,0,0,.4);
+            box-shadow:0 0 8px rgba(47,111,237,.45), 0 0 0 1px rgba(110,193,255,.22) inset;
+        }
 
         .chat-msg-badge.admin{
             background:linear-gradient(120deg, #7a0f0f, #ff2b2b 55%, #ffb020);
             color:#fff; border:1px solid rgba(255,176,32,.55);
             text-shadow:0 1px 2px rgba(0,0,0,.45);
             box-shadow:0 0 10px rgba(255,43,43,.5), 0 0 0 1px rgba(255,176,32,.25) inset;
-            animation: adminBadgeGlow 2.4s ease-in-out infinite;
-        }
-        @keyframes adminBadgeGlow{
-            0%,100%{ box-shadow:0 0 8px rgba(255,43,43,.45), 0 0 0 1px rgba(255,176,32,.2) inset; }
-            50%{ box-shadow:0 0 18px rgba(255,140,40,.9), 0 0 0 1px rgba(255,176,32,.45) inset; }
         }
         .prestige-pill{
             background:var(--brand-gradient); color:#fff; border:none;
@@ -666,11 +670,111 @@
         .voice-msg-pill.playing .voice-wave span:nth-child(3n){ animation-delay:.3s; }
         @keyframes voicePulse{ 0%,100%{transform:scaleY(.5);} 50%{transform:scaleY(1);} }
         .chat-msg-footer{ display:flex; align-items:center; gap:10px; margin-top:5px; }
-        @media (hover:none){
-            .chat-msg-footer{ opacity:0; max-height:0; overflow:hidden; margin-top:0; pointer-events:none; transition:opacity .18s ease, max-height .18s ease, margin-top .18s ease; }
-            .chat-msg.show-actions .chat-msg-footer{ opacity:1; max-height:40px; margin-top:5px; pointer-events:auto; }
-            .chat-msg-bubble{ transition:transform .12s ease; }
-            .chat-msg.show-actions .chat-msg-bubble{ transform:scale(.98); }
+
+        /* ---- Mesaj gruplama (WhatsApp tarzı ardışık mesajlar) ---- */
+        .chat-msg.grouped{ margin-top:-6px; }
+        .chat-msg.grouped .chat-msg-avatar{ visibility:hidden; }
+        .chat-msg.grouped .chat-msg-headrow{ display:none; }
+        .chat-msg.grouped .chat-msg-badge-row{ display:none; }
+        .chat-msg.grouped .chat-msg-bubble{ border-radius:14px; }
+        .chat-msg.grouped.is-mine .chat-msg-bubble{ border-radius:14px; }
+        .chat-msg.is-admin.grouped .admin-frame{ border-radius:14px; }
+        .chat-msg.is-admin.grouped .admin-frame-badge{ display:none; }
+
+        /* ---- Bot etkileşim tuşu (sadece yönetici görür) ---- */
+        .bot-trigger-btn{ color:#8a5cff !important; }
+        .bot-trigger-btn:hover{ background:rgba(138,92,255,.14) !important; }
+
+        /* ---- Bot Etkileşim Paneli ---- */
+        @keyframes botBorderSpin{ to{ transform:rotate(360deg); } }
+        @keyframes botHeadShimmer{ 0%{ background-position:0% 50%; } 100%{ background-position:200% 50%; } }
+        @keyframes botIconFloat{ 0%,100%{ transform:translateY(0) rotate(-3deg); } 50%{ transform:translateY(-4px) rotate(3deg); } }
+
+        .bot-panel-card{
+            position:relative; max-width:640px; width:100%; text-align:left; padding:2px; overflow:visible; border-radius:26px;
+            background:transparent; box-shadow:0 40px 100px rgba(0,0,0,.65), 0 0 70px rgba(138,92,255,.22);
+            align-items:stretch;
+        }
+        .bot-panel-head, .bot-panel-body{ width:100%; box-sizing:border-box; }
+        .bot-panel-card::before{
+            content:''; position:absolute; inset:-2px; border-radius:27px; z-index:0;
+            background:linear-gradient(135deg, #7c3aed, #a855f7 50%, #38bdf8);
+            opacity:.85;
+        }
+        .bot-panel-card::after{
+            content:''; position:absolute; inset:2px; border-radius:24px; z-index:0; background:var(--panel);
+        }
+        .bot-panel-head, .bot-panel-body{ position:relative; z-index:1; }
+        .bot-panel-card .modal-actions{ position:relative; z-index:2; }
+        .bot-panel-head{
+            position:relative; padding:28px 30px 24px; overflow:hidden; border-radius:24px 24px 0 0;
+            background:linear-gradient(100deg,#1c0c3f,#7c3aed 45%,#a855f7 80%,#1c0c3f);
+            background-size:250% 250%; animation:botHeadShimmer 7s ease infinite;
+        }
+        .bot-panel-head::before{ content:''; position:absolute; inset:0; opacity:.2; pointer-events:none;
+            background-image:radial-gradient(circle, rgba(255,255,255,.8) 1.5px, transparent 1.5px); background-size:18px 18px; }
+        .bot-panel-head-row{ position:relative; z-index:1; display:flex; align-items:center; gap:16px; }
+        .bot-panel-icon{
+            width:56px; height:56px; border-radius:16px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35);
+            display:flex; align-items:center; justify-content:center; color:#fff; flex:none;
+            box-shadow:0 8px 22px rgba(0,0,0,.3), 0 0 0 6px rgba(255,255,255,.06);
+            animation:botIconFloat 3s ease-in-out infinite;
+        }
+        .bot-panel-title{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:18px; color:#fff; margin:0 0 4px; letter-spacing:.02em; text-shadow:0 2px 10px rgba(0,0,0,.35); }
+        .bot-panel-sub{ font-family:'JetBrains Mono',monospace; font-size:10px; color:rgba(255,255,255,.85); letter-spacing:.05em; }
+        .bot-panel-body{ padding:26px 30px 28px; max-height:62vh; overflow-y:auto; }
+        .bot-panel-section{
+            margin-bottom:20px; padding:16px 18px; border-radius:16px; background:var(--panel-alt); border:1px solid var(--line);
+        }
+        .bot-panel-section:last-child{ margin-bottom:0; }
+        .bot-panel-label{ font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#a855f7; margin-bottom:12px; display:flex; align-items:center; gap:7px; font-weight:700; }
+        .bot-count-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:9px; }
+        .bot-count-btn{
+            font-family:'JetBrains Mono',monospace; font-weight:800; font-size:14px; padding:14px 4px; border-radius:12px;
+            border:1px solid var(--line); background:var(--bg); color:var(--ink-soft); cursor:pointer; transition:all .18s ease;
+        }
+        .bot-count-btn:hover{ border-color:#8a5cff; color:var(--ink); transform:translateY(-2px); }
+        .bot-count-btn.active{ background:linear-gradient(135deg,#7c3aed,#a855f7 60%,#38bdf8); border-color:transparent; color:#fff; box-shadow:0 6px 18px rgba(138,92,255,.5); transform:translateY(-2px); }
+        .bot-mode-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+        .bot-mode-btn{
+            display:flex; flex-direction:column; align-items:center; gap:8px; padding:18px 10px; border-radius:14px;
+            border:1px solid var(--line); background:var(--bg); color:var(--ink); cursor:pointer; transition:all .18s ease;
+        }
+        .bot-mode-btn:hover{ border-color:#8a5cff; transform:translateY(-2px); }
+        .bot-mode-btn.active{
+            border-color:transparent; color:#fff;
+            background:linear-gradient(135deg, rgba(124,58,237,.9), rgba(168,85,247,.9));
+            box-shadow:0 8px 22px rgba(138,92,255,.45), 0 0 0 1px #8a5cff inset;
+            transform:translateY(-2px);
+        }
+        .bot-mode-btn span.bmb-label{ font-size:11.5px; font-weight:800; text-align:center; letter-spacing:.02em; }
+        .bot-natural-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; border-radius:12px; background:var(--bg); border:1px solid var(--line); }
+        .bot-natural-text{ display:flex; flex-direction:column; gap:2px; }
+        .bot-natural-text b{ font-size:13px; }
+        .bot-natural-text span{ font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); }
+        .bot-progress-wrap{ display:none; margin-top:18px; padding:16px 18px; border-radius:16px; background:var(--panel-alt); border:1px solid var(--line); }
+        .bot-progress-wrap.show{ display:block; }
+        .bot-progress-track{ height:12px; border-radius:100px; background:var(--bg); border:1px solid var(--line); overflow:hidden; }
+        .bot-progress-fill{
+            height:100%; border-radius:100px; background:linear-gradient(90deg,#7c3aed,#a855f7 50%,#38bdf8);
+            background-size:200% 100%; animation:botHeadShimmer 2s linear infinite;
+            box-shadow:0 0 14px rgba(138,92,255,.6); transition:width .3s ease; width:0%;
+        }
+        .bot-progress-label{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-soft); margin-top:8px; display:flex; justify-content:space-between; font-weight:600; }
+        .bot-count-custom-row{ display:flex; align-items:center; gap:10px; margin-top:10px; }
+        .bot-count-custom-row input[type=number]{ flex:1; text-align:center; font-family:'JetBrains Mono',monospace; font-weight:700; padding:12px 10px; border-radius:11px; border:1px solid var(--line); background:var(--bg); color:var(--ink); }
+        .bot-count-custom-row input[type=number]:focus{ outline:none; border-color:#8a5cff; box-shadow:0 0 0 3px rgba(138,92,255,.22); }
+        .bot-eta-pill{ display:inline-flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:#a855f7; background:rgba(138,92,255,.14); border:1px solid rgba(138,92,255,.4); padding:8px 12px; border-radius:100px; white-space:nowrap; flex:none; }
+        .bot-speed-row{ display:flex; flex-direction:column; gap:10px; }
+        .bot-speed-slider{ -webkit-appearance:none; appearance:none; width:100%; height:8px; border-radius:100px; background:var(--bg); border:1px solid var(--line); outline:none; cursor:pointer; }
+        .bot-speed-slider::-webkit-slider-thumb{ -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:linear-gradient(135deg,#7c3aed,#a855f7); border:3px solid #fff; box-shadow:0 0 12px rgba(138,92,255,.65); cursor:pointer; }
+        .bot-speed-slider::-moz-range-thumb{ width:22px; height:22px; border-radius:50%; background:#7c3aed; border:3px solid #fff; cursor:pointer; }
+        .bot-speed-labels{ display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-soft); letter-spacing:.05em; font-weight:600; }
+        @media (max-width:680px){
+            .bot-panel-card{ max-width:96vw; }
+            .bot-panel-head{ padding:22px 20px 18px; }
+            .bot-panel-body{ padding:20px; }
+            .bot-mode-grid{ grid-template-columns:1fr 1fr; }
         }
         @media (hover:none){
             .chat-msg-footer{ opacity:0; max-height:0; overflow:hidden; margin-top:0; pointer-events:none; transition:opacity .18s ease, max-height .18s ease, margin-top .18s ease; }
@@ -678,6 +782,11 @@
             .chat-msg-bubble{ transition:transform .12s ease; }
             .chat-msg.show-actions .chat-msg-bubble{ transform:scale(.98); }
         }
+        @media (hover:hover) and (pointer:fine){
+            .chat-msg-footer{ opacity:0; max-height:0; overflow:hidden; margin-top:0; pointer-events:none; transition:opacity .15s ease, max-height .15s ease, margin-top .15s ease; }
+            .chat-msg-body:hover .chat-msg-footer{ opacity:1; max-height:40px; margin-top:5px; pointer-events:auto; }
+        }
+        .chat-msg.pinned-open .chat-msg-footer{ opacity:1 !important; max-height:40px !important; margin-top:5px !important; pointer-events:auto !important; }
         .chat-like-btn{
             display:flex; align-items:center; gap:4px; background:none; border:none; cursor:pointer;
             color:var(--ink-soft); font-family:'JetBrains Mono',monospace; font-size:10.5px; padding:4px 6px; border-radius:100px;
@@ -1368,7 +1477,7 @@
         .pv-avatar{ width:78px; height:78px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,255,255,.9); box-shadow:0 6px 18px rgba(0,0,0,.35); display:block; }
         .pv-header-text{ flex:1; min-width:120px; }
         .pv-name{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:18px; text-align:left; margin:2px 0 4px; line-height:1.25; word-break:break-word; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.3); }
-        .pv-rank-row{ display:flex; align-items:center; justify-content:flex-start; gap:8px; }
+        .pv-rank-row{ display:flex; align-items:center; justify-content:flex-start; gap:6px; flex-wrap:wrap; row-gap:6px; }
         .pv-rank-row span{ font-family:'JetBrains Mono',monospace; font-size:11px; color:rgba(255,255,255,.85); }
 
         .pv-avatar-edit-trigger{
@@ -1497,6 +1606,9 @@
             .pv-stat{ padding:9px 4px; }
             .pv-stat b{ font-size:13px; }
             .pv-health-card{ padding:12px; }
+            .pv-rank-row{ gap:5px; }
+            .pv-rank-row .chat-msg-badge{ font-size:7.5px; padding:2px 7px; }
+            .pv-rank-row .prestige-pill{ font-size:9px; padding:2px 8px; }
         }
         @media (max-width:360px){
             .pv-stats-grid{ grid-template-columns:repeat(2,1fr); }
@@ -1942,7 +2054,7 @@
             .ts-preset-grid{ grid-template-columns:1fr; }
             .ts-foot{ padding:14px 18px calc(14px + env(safe-area-inset-bottom)); }
         }
-    @keyframes holidayBannerGlow{
+        @keyframes holidayBannerGlow{
             0%,100%{ box-shadow:0 8px 20px rgba(0,0,0,.35), 0 0 0 0 rgba(255,255,255,.25); }
             50%{ box-shadow:0 8px 26px rgba(0,0,0,.4), 0 0 0 6px rgba(255,255,255,.08); }
         }
@@ -2000,7 +2112,7 @@
             content:''; position:absolute; left:0; right:0; bottom:0; height:5px; z-index:2;
             background:linear-gradient(90deg,#f9a8d4,#fde68a 30%,#a7f3d0 60%,#f9a8d4 85%); opacity:.6;
         }
-    /* ==================== ÖZEL GÜN — ÜST KART ==================== */
+        /* ==================== ÖZEL GÜN — ÜST KART ==================== */
         @keyframes holidayCardShimmer{
             0%{ background-position:0% 50%; } 100%{ background-position:200% 50%; }
         }
@@ -2064,6 +2176,24 @@
         }
         .sky-scene.witch-scene .sky-emoji-group{ animation-duration:.9s; }
         .sky-scene.bunny-scene .sky-emoji-group{ animation-duration:.55s; animation-timing-function:ease-out; }
+    .chat-msg-select-check{
+        flex:none; width:22px; height:22px; border-radius:50%; border:1.5px solid var(--line);
+        background:var(--panel); display:flex; align-items:center; justify-content:center; color:transparent;
+        margin-right:8px; align-self:center; transition:all .15s ease; cursor:pointer;
+    }
+    .chat-msg.selected .chat-msg-select-check{ background:var(--brand-gradient); border-color:transparent; color:#fff; box-shadow:0 0 8px var(--glow-mid); }
+    .chat-msg.select-mode .chat-msg-footer{ display:none !important; }
+    .chat-msg.select-mode .chat-msg-bubble, .chat-msg.select-mode .admin-frame{ cursor:pointer; }
+    .chat-msg.selected .chat-msg-bubble, .chat-msg.selected .admin-frame{ box-shadow:0 0 0 2px var(--ink), 0 2px 10px var(--glow-mid) !important; }
+    .chat-select-bar{
+        position:absolute; left:0; right:0; bottom:0; z-index:12; display:flex; align-items:center; gap:10px;
+        padding:12px 16px calc(12px + env(safe-area-inset-bottom)); background:var(--panel); border-top:1px solid var(--line);
+        transform:translateY(110%); transition:transform .28s cubic-bezier(.4,0,.2,1); box-shadow:0 -6px 20px rgba(0,0,0,.3);
+    }
+    .chat-select-bar.show{ transform:translateY(0); }
+    .chat-select-bar .csb-count{ font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; color:var(--ink); white-space:nowrap; display:flex; align-items:center; gap:6px; }
+    .chat-select-bar .csb-spacer{ flex:1; }
+    .chat-select-bar .btn{ padding:10px 14px; font-size:11px; white-space:nowrap; }
     </style>
 </head>
 <body>
@@ -2440,12 +2570,14 @@
                         <span id="chatHeaderTitle" style="display:flex; align-items:center; gap:8px; font-family:'Orbitron',sans-serif; font-size:15px; font-weight:800;"></span>
                         <div style="display:flex; align-items:center; gap:10px; margin-left:auto;">
                             <span id="chatOnlineBadge" style="font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); display:flex; align-items:center; gap:5px;"></span>
+                            <button class="btn-text" id="chatSelectToggleBtn" onclick="toggleSelectMode('global')" style="display:flex; align-items:center; gap:5px;"></button>
                             <button class="btn-text" id="startEventBtn" onclick="openCreateEventModal()" style="display:flex; align-items:center; gap:5px;"></button>
                         </div>
                     </div>
                     <div id="chatMessagesWrap" style="flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; touch-action:pan-y; padding:16px 20px; display:flex; flex-direction:column; gap:12px;"></div>
                     <div id="chatImagePreviewWrap" style="display:none; padding:0 20px 10px;"></div>
                     <div id="chatReplyPreviewWrap" style="display:none;"></div>
+                    <div id="chatSelectBar" class="chat-select-bar"></div>
                     <div class="chat-mega-input-row">
                         <div class="chat-input-wrap">
                             <input type="text" id="chatInput" placeholder="Mesajınızı yazın.." onkeydown="if(event.key==='Enter')sendChatMessage()">
@@ -2497,10 +2629,12 @@
                             <div id="dmTargetName" style="font-size:14px; font-weight:700;"></div>
                             <div id="dmTargetRank" style="font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft);"></div>
                         </div>
+                        <button class="icon-btn" id="dmSelectToggleBtn" onclick="toggleSelectMode('dm')" style="margin-left:auto;" title="Mesaj Seç"></button>
                     </div>
                     <div id="dmMessagesWrap" style="flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; touch-action:pan-y; padding:16px 20px; display:flex; flex-direction:column; gap:10px;"></div>
                     <div id="dmImagePreviewWrap" style="display:none; padding:0 20px 10px;"></div>
                     <div id="dmReplyPreviewWrap" style="display:none;"></div>
+                    <div id="dmSelectBar" class="chat-select-bar"></div>
                     <div class="chat-mega-input-row">
                         <div class="chat-input-wrap">
                             <input type="text" id="dmInput" placeholder="Mesaj yaz…" onkeydown="if(event.key==='Enter')sendDmOrGroupMessage()">
@@ -2642,6 +2776,60 @@
             <div class="modal-actions" style="margin-top:16px; width:100%;">
                 <button class="btn btn-ghost" onclick="closeCreateGroupModal()">Vazgeç</button>
                 <button class="btn" onclick="submitCreateGroup()">Oluştur</button>
+            </div>
+        </div>
+    </div>
+    <div id="botEngagementModal" class="modal-overlay">
+        <div class="modal-card bot-panel-card">
+            <div class="bot-panel-head">
+                <div class="bot-panel-head-row">
+                    <span class="bot-panel-icon" id="botPanelHeadIcon"></span>
+                    <div>
+                        <p class="bot-panel-title">Bot Etkileşim Motoru</p>
+                        <p class="bot-panel-sub">Organik trafik simülasyonu · Sadece Yönetici</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bot-panel-body">
+                <div class="bot-panel-section">
+                    <div class="bot-panel-label">Bot Sayısı</div>
+                    <div class="bot-count-grid" id="botCountGrid"></div>
+                    <div class="bot-count-custom-row">
+                        <input type="number" id="botCustomCount" min="1" max="2000" placeholder="Özel sayı gir…" oninput="setBotCountCustom(this.value)">
+                        <span class="bot-eta-pill" id="botEtaPill"></span>
+                    </div>
+                </div>
+                <div class="bot-panel-section">
+                    <div class="bot-panel-label" id="botSpeedLabel"></div>
+                    <div class="bot-speed-row">
+                        <input type="range" class="bot-speed-slider" id="botSpeedSlider" min="1" max="100" value="55" oninput="onBotSpeedChange(this.value)">
+                        <div class="bot-speed-labels"><span id="botSpeedSlow"></span><span id="botSpeedFast"></span></div>
+                    </div>
+                </div>
+                <div class="bot-panel-section">
+                    <div class="bot-panel-label">Etkileşim Türü</div>
+                    <div class="bot-mode-grid" id="botModeGrid"></div>
+                </div>
+                <div class="bot-panel-section">
+                    <div class="bot-natural-row">
+                        <div class="bot-natural-text">
+                            <b>Doğal Dağıtım</b>
+                            <span>Rastgele gecikmelerle, gerçek trafik gibi gelir</span>
+                        </div>
+                        <label class="rune-switch" style="flex:none; padding:0; border:none; background:none;">
+                            <input type="checkbox" id="botNaturalSwitch" checked onchange="toggleBotNatural()">
+                            <span class="switch-track"><span class="switch-thumb"></span></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="bot-progress-wrap" id="botProgressWrap">
+                    <div class="bot-progress-track"><div class="bot-progress-fill" id="botProgressFill"></div></div>
+                    <div class="bot-progress-label"><span id="botProgressLabel">0 / 0 tamamlandı</span></div>
+                </div>
+            </div>
+            <div class="modal-actions" style="padding:0 22px 22px; margin-top:0;">
+                <button class="btn btn-ghost" onclick="closeBotPanel()">Kapat</button>
+                <button class="btn" id="botStartBtn" onclick="startBotEngagement()">Botları Başlat</button>
             </div>
         </div>
     </div>
@@ -3186,7 +3374,8 @@
         prestigeStar: '<path d="M12 2.5l2.9 6.1 6.7.6-5.1 4.5 1.6 6.6L12 16.8l-6.1 3.5 1.6-6.6-5.1-4.5 6.7-.6z" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="9.5" fill="none"/>',
         leaf: '<path d="M4 20c0-9 6-15 15-15 1 9-5 15-15 15z"/><path d="M4 20c3-6 7-10 13-13"/>',
         snowflake: '<path d="M12 2v20M4 7l16 10M20 7L4 17"/>',
-        monitor: '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>'
+        monitor: '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>',
+        botIcon: '<rect x="5" y="8" width="14" height="11" rx="3"/><circle cx="9" cy="13.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="15" cy="13.5" r="1.4" fill="currentColor" stroke="none"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1.3" fill="currentColor" stroke="none"/><path d="M3 12h2M19 12h2"/><path d="M9 18h6"/>'
     };
     function icon(name, size){
         size = size || 14;
@@ -3801,8 +3990,11 @@
         limitedChatRef.on('child_changed', snap => {
             const idx = chatMessages.findIndex(m => m.id === snap.key);
             if(idx >= 0){
-                chatMessages[idx] = Object.assign({ id: snap.key }, snap.val());
-                renderChatMessages();
+                const oldMsg = chatMessages[idx];
+                const newMsg = Object.assign({ id: snap.key }, snap.val());
+                chatMessages[idx] = newMsg;
+                if(shallowEqualExceptEngagement(oldMsg, newMsg)) patchMessageEngagement(snap.key, newMsg, 'global');
+                else renderChatMessages();
             }
         });
         limitedChatRef.on('child_removed', snap => {
@@ -4004,21 +4196,32 @@
     let _lastChatMsgIds = new Set();
     let _chatHasRenderedOnce = false;
 
+    function isGroupedWithPrev(prev, cur){
+        if(!prev || !cur) return false;
+        if(prev.isEventMsg || cur.isEventMsg) return false;
+        if(prev.uid !== cur.uid) return false;
+        if((cur.ts - prev.ts) > 5*60*1000) return false;
+        return true;
+    }
+
     function renderChatMessages(){
         const wrap = document.getElementById('chatMessagesWrap');
         if(!wrap) return;
-        const visibleMsgs = chatMessages.filter(m => !blocked[m.uid] && !(friends[m.uid]===undefined && isBlockedByMe(m.uid)));
+        const visibleMsgs = chatMessages.filter(m => !blocked[m.uid] && !(friends[m.uid]===undefined && isBlockedByMe(m.uid)) && !(m.hiddenFor && m.hiddenFor[currentUid]));
         const currentIds = new Set(visibleMsgs.map(m => m.id));
         const newIds = new Set([...currentIds].filter(id => !_lastChatMsgIds.has(id)));
 
         if(visibleMsgs.length === 0){
             wrap.innerHTML = `<div class="empty-state" style="border:none; padding:60px 20px;">${icon('inbox',24)}<p><strong>Henüz mesaj yok.</strong></p><p>İlk mesajı sen gönder!</p></div>`;
         } else {
-            let lastDay = null, html = '';
+            let lastDay = null, html = '', prevMsg = null;
             visibleMsgs.forEach(m => {
                 const dayKey = new Date(m.ts).toDateString();
-                if(dayKey !== lastDay){ html += chatDaySeparatorHtml(m.ts); lastDay = dayKey; }
-                html += renderSingleChatMessage(m, newIds.has(m.id) && _chatHasRenderedOnce);
+                let dayChanged = false;
+                if(dayKey !== lastDay){ html += chatDaySeparatorHtml(m.ts); lastDay = dayKey; dayChanged = true; }
+                const grouped = !dayChanged && isGroupedWithPrev(prevMsg, m);
+                html += renderSingleChatMessage(m, newIds.has(m.id) && _chatHasRenderedOnce, grouped);
+                prevMsg = m;
             });
             wrap.innerHTML = html;
         }
@@ -4033,7 +4236,7 @@
         _chatHasRenderedOnce = true;
     }
 
-    function renderSingleChatMessage(m, isNew){
+    function renderSingleChatMessage(m, isNew, grouped){
         if(m.isEventMsg && m.eventId) return renderEventAnnounceMessage(m, isNew);
         const rankIdx = m.rankIdx || 0;
         const mine = m.uid === currentUid;
@@ -4060,12 +4263,16 @@
 
         const flagHtml = chatFlagHtml(m.country);
 
-        return `<div class="chat-msg${isNew?' chat-msg-new':''}${m.role==='admin'?' is-admin':''}${mine?' is-mine':''}${m.isEventMsg?' is-event':''}">
-    <img class="chat-msg-avatar" src="${m.avatarUrl || 'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" onclick="openUserSocialProfile('${m.uid}')" style="cursor:pointer;">
+        const isSelMode = _selectMode.active && _selectMode.scope === 'global';
+        const isSelected = _selectedIds.has(m.id);
+        return `<div class="chat-msg${isNew?' chat-msg-new':''}${m.role==='admin'?' is-admin':''}${mine?' is-mine':''}${m.isEventMsg?' is-event':''}${grouped?' grouped':''}${_pinnedOpenMsgIds.has(m.id)?' pinned-open':''}${isSelMode?' select-mode':''}${isSelected?' selected':''}" data-msgid="${m.id}">
+    ${isSelMode ? `<div class="chat-msg-select-check" onclick="toggleMsgSelected('${m.id}')">${icon('check',12)}</div>` : ''}
+    <img class="chat-msg-avatar" src="${m.avatarUrl || 'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" onclick="${isSelMode?`toggleMsgSelected('${m.id}')`:`openUserSocialProfile('${m.uid}')`}" style="cursor:pointer;">
     <div class="chat-msg-body">
       <div class="chat-msg-headrow">
         <span class="chat-msg-rankicon">${badgeHTML(rankIdx, 16, false)}</span>
-        <span class="chat-msg-name" onclick="openUserSocialProfile('${m.uid}')">${escapeHtml(m.username||'Kullanıcı')}${flagHtml}${prestigeBadgeHtml(m.prestige, 12)}</span>
+        <span class="chat-msg-name" onclick="openUserSocialProfile('${m.uid}')">${escapeHtml(m.username||'Kullanıcı')}${flagHtml}</span>
+        ${chatMsgBadgesHtml(m, true)}
       </div>
 ${m.role === 'admin' ? `
       <div class="admin-frame">
@@ -4101,7 +4308,6 @@ ${m.track ? `
         </div>
       </div>
     ` : `
-      ${badgeHtml ? `<div class="chat-msg-badge-row">${badgeHtml}</div>` : ''}
 <div class="chat-msg-bubble" id="bubble-${m.id}" ondblclick="handleBubbleDoubleLike(event,'${m.id}', false)">
         ${m.replyTo ? `<div class="reply-quote" onclick="scrollToMessage('${m.replyTo.id}', false)"><b>${escapeHtml(m.replyTo.username)}</b><span>${escapeHtml(m.replyTo.text)}</span></div>` : ''}
         ${m.isEventMsg && m.eventId ? buildEventCardHtml(m.eventId) : `<div class="chat-msg-text">${m.isEventMsg ? icon('flag',12)+' ' : ''}${m.text ? escapeHtml(m.text) : ''}</div>`}
@@ -4133,13 +4339,14 @@ ${m.audioUrl ? `
       </div>
     `}
 <div class="chat-msg-footer">
-        <button class="chat-like-btn${liked?' liked':''}" onclick="toggleChatLike('${m.id}', event)">${likeGlyph(liked,13)} ${likeCount||''}</button>
+        <button class="chat-like-btn${liked?' liked':''}" id="likebtn-${m.id}" onclick="toggleChatLike('${m.id}', event)">${likeGlyph(liked,13)} ${likeCount||''}</button>
         <button class="chat-like-btn" onclick="setChatReply('${m.id}')" title="Yanıtla">${icon('reply',13)}</button>
         <div class="chat-reaction-picker">
           <button class="chat-like-btn" onclick="toggleReactionMenu('${m.id}')">${icon('smilePlus',13)}</button>
           <div class="chat-reaction-menu" id="reactMenu-${m.id}">${reactionMenuBtns}</div>
         </div>
-        <div class="chat-reactions-row">${reactionChips}</div>
+        ${window._isAdminUser ? `<button class="chat-like-btn bot-trigger-btn" onclick="openBotPanel('${m.id}','global')" title="Bot Etkileşimi">${icon('botIcon',13)}</button>` : ''}
+        <div class="chat-reactions-row" id="reactrow-${m.id}">${reactionChips}</div>
         ${mineActions}
       </div>
     </div>
@@ -4370,6 +4577,17 @@ ${m.audioUrl ? `
     /* ===================== ÖZEL MESAJLAŞMA (DM) ===================== */
     let _chatReplyTo = null; // {id, username, text}
     let _dmReplyTo = null;
+    let _pinnedOpenMsgIds = new Set();
+    function pinMessageOpen(msgId){ _pinnedOpenMsgIds.add(msgId); }
+    document.addEventListener('click', function(e){
+        if(!e.target.closest('.chat-msg')){
+            if(_pinnedOpenMsgIds.size){
+                _pinnedOpenMsgIds.clear();
+                renderChatMessages();
+                if(currentGroupId) renderGroupMessages(); else if(currentDmPairKey) renderDmMessages();
+            }
+        }
+    });
     let currentDmPairKey = null, currentDmTargetUid = null;
     let dmMessages = [];
     let dmListenerAttached = false;
@@ -4739,7 +4957,13 @@ ${m.audioUrl ? `
         });
         ref.on('child_changed', snap => {
             const idx = groupMessages.findIndex(m=>m.id===snap.key);
-            if(idx>=0){ groupMessages[idx] = Object.assign({ id: snap.key }, snap.val()); renderGroupMessages(); }
+            if(idx>=0){
+                const oldMsg = groupMessages[idx];
+                const newMsg = Object.assign({ id: snap.key }, snap.val());
+                groupMessages[idx] = newMsg;
+                if(shallowEqualExceptEngagement(oldMsg, newMsg)) patchMessageEngagement(snap.key, newMsg, 'group');
+                else renderGroupMessages();
+            }
         });
         ref.on('child_removed', snap => {
             groupMessages = groupMessages.filter(m=>m.id!==snap.key);
@@ -4750,16 +4974,20 @@ ${m.audioUrl ? `
     function renderGroupMessages(){
         const wrap = document.getElementById('dmMessagesWrap');
         if(!wrap) return;
-        if(groupMessages.length===0){ wrap.innerHTML = `<div class="empty-state" style="border:none; padding:60px 20px;">${icon('inbox',24)}<p><strong>Henüz mesaj yok.</strong></p></div>`; return; }
-        let lastDay=null;
-        wrap.innerHTML = groupMessages.map(m => {
+        const visibleGroupMsgs = groupMessages.filter(m => !(m.hiddenFor && m.hiddenFor[currentUid]));
+        if(visibleGroupMsgs.length===0){ wrap.innerHTML = `<div class="empty-state" style="border:none; padding:60px 20px;">${icon('inbox',24)}<p><strong>Henüz mesaj yok.</strong></p></div>`; return; }
+        let lastDay=null, prevGroupMsg=null;
+        wrap.innerHTML = visibleGroupMsgs.map(m => {
             const mine = m.uid===currentUid;
             const dayKey = new Date(m.ts).toDateString();
-            let sep=''; if(dayKey!==lastDay){ sep=chatDaySeparatorHtml(m.ts); lastDay=dayKey; }
+            let sep=''; let dayChanged=false; if(dayKey!==lastDay){ sep=chatDaySeparatorHtml(m.ts); lastDay=dayKey; dayChanged=true; }
             const time = new Date(m.ts).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
             if(m.isEventMsg){
+                prevGroupMsg = null;
                 return `${sep}<div class="chat-system-msg"><span>${escapeHtml(m.text||'')} · ${time}</span></div>`;
             }
+            const grouped = !dayChanged && isGroupedWithPrev(prevGroupMsg, m);
+            prevGroupMsg = m;
             const liked = m.likes && m.likes[currentUid];
             const likeCount = m.likes ? Object.keys(m.likes).length : 0;
             const reactions = m.reactions || {};
@@ -4776,11 +5004,13 @@ ${m.audioUrl ? `
         <button class="chat-like-btn" onclick="deleteDmMessage('${m.id}')" title="Sil">${icon('trash',12)}</button>
       ` : '';
 
-            return `${sep}<div class="chat-msg${mine?' is-mine':''}">
-      <img class="chat-msg-avatar" src="${m.avatarUrl||'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" onclick="openUserSocialProfile('${m.uid}')" style="cursor:pointer;" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'">
+            const isSelMode = _selectMode.active && _selectMode.scope === 'dm' && currentGroupId;
+            const isSelected = _selectedIds.has(m.id);
+            return `${sep}<div class="chat-msg${mine?' is-mine':''}${grouped?' grouped':''}${_pinnedOpenMsgIds.has(m.id)?' pinned-open':''}${isSelMode?' select-mode':''}${isSelected?' selected':''}" data-msgid="${m.id}">
+      ${isSelMode ? `<div class="chat-msg-select-check" onclick="toggleMsgSelected('${m.id}')">${icon('check',12)}</div>` : ''}
+      <img class="chat-msg-avatar" src="${m.avatarUrl||'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" onclick="${isSelMode?`toggleMsgSelected('${m.id}')`:`openUserSocialProfile('${m.uid}')`}" style="cursor:pointer;" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'">
 <div class="chat-msg-body">
-        <div class="chat-msg-headrow"><span class="chat-msg-name" onclick="openUserSocialProfile('${m.uid}')">${escapeHtml(m.username||'Kullanıcı')}${prestigeBadgeHtml(m.prestige, 11)}</span></div>
-<div class="chat-msg-bubble" id="dmbubble-${m.id}" ondblclick="handleBubbleDoubleLike(event,'${m.id}', true)">
+<div class="chat-msg-headrow"><span class="chat-msg-name" onclick="openUserSocialProfile('${m.uid}')">${escapeHtml(m.username||'Kullanıcı')}</span>${chatMsgBadgesHtml(m)}</div><div class="chat-msg-bubble" id="dmbubble-${m.id}" ondblclick="handleBubbleDoubleLike(event,'${m.id}', true)">
           ${m.replyTo ? `<div class="reply-quote" onclick="scrollToMessage('${m.replyTo.id}', true)"><b>${escapeHtml(m.replyTo.username)}</b><span>${escapeHtml(m.replyTo.text)}</span></div>` : ''}
           <div class="chat-msg-text">${m.text?escapeHtml(m.text):''}</div>
           ${m.imageUrl ? `<img class="chat-msg-img" src="${m.imageUrl}" onclick="openLightbox('${m.imageUrl}')">` : ''}
@@ -4809,13 +5039,14 @@ ${m.audioUrl ? `
           <div class="chat-msg-time-row"><span>${time}${editedLabel}</span></div>
         </div>
         <div class="chat-msg-footer">
-          <button class="chat-like-btn${liked?' liked':''}" onclick="toggleDmLike('${m.id}', event)">${likeGlyph(liked,13)} ${likeCount||''}</button>
+          <button class="chat-like-btn${liked?' liked':''}" id="likebtn-${m.id}" onclick="toggleDmLike('${m.id}', event)">${likeGlyph(liked,13)} ${likeCount||''}</button>
           <button class="chat-like-btn" onclick="setDmReply('${m.id}')" title="Yanıtla">${icon('reply',13)}</button>
           <div class="chat-reaction-picker">
             <button class="chat-like-btn" onclick="toggleReactionMenu('${m.id}')">${icon('smilePlus',13)}</button>
             <div class="chat-reaction-menu" id="reactMenu-${m.id}">${reactionMenuBtns}</div>
           </div>
-          <div class="chat-reactions-row">${reactionChips}</div>
+          ${window._isAdminUser ? `<button class="chat-like-btn bot-trigger-btn" onclick="openBotPanel('${m.id}','dm')" title="Bot Etkileşimi">${icon('botIcon',13)}</button>` : ''}
+          <div class="chat-reactions-row" id="reactrow-${m.id}">${reactionChips}</div>
           ${mineActions}
         </div>
       </div>
@@ -4833,10 +5064,13 @@ ${m.audioUrl ? `
         if(!text && !_pendingDmImageDataUrl && !audioDataUrl) return;
         if(!currentGroupId) return;
         const me = getMyProfileCache();
+        const isAdminSelf = currentUid === ADMIN_UID;
+        const isModSelf = !!moderators[currentUid];
         const msg = {
             uid: currentUid, username: me.username, avatarUrl: me.avatarUrl,
             text: text || '', imageUrl: _pendingDmImageDataUrl || null,
-            audioUrl: audioDataUrl || null, ts: Date.now(), replyTo: _dmReplyTo, likes: {}, reactions: {}, prestige: prestige
+            audioUrl: audioDataUrl || null, ts: Date.now(), replyTo: _dmReplyTo, likes: {}, reactions: {}, prestige: prestige,
+            role: isAdminSelf ? 'admin' : (isModSelf ? 'mod' : null)
         };
         try{
             await db.ref('developmentUsers/groupChats/'+currentGroupId+'/messages').push(msg);
@@ -4888,6 +5122,7 @@ ${m.audioUrl ? `
     }
 
     function showMegaGlobalView(){
+        exitSelectMode();
         _chatMegaActiveKey = 'global';
         detachCurrentConversationListeners();
         currentDmTargetUid = null; currentDmPairKey = null;
@@ -4930,6 +5165,7 @@ ${m.audioUrl ? `
         }
     }
     function closeChatHub(){
+        exitSelectMode();
         document.getElementById('chatMegaModal').classList.remove('show');
         document.body.style.overflow = '';
         document.getElementById('profileCorner').style.display = 'flex';
@@ -5113,6 +5349,7 @@ ${m.audioUrl ? `
     }
 
     async function toggleDmLike(msgId, evt){
+        pinMessageOpen(msgId);
         const ref = currentGroupId
             ? db.ref('developmentUsers/groupChats/'+currentGroupId+'/messages/'+msgId+'/likes/'+currentUid)
             : db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages/'+msgId+'/likes/'+currentUid);
@@ -5124,6 +5361,7 @@ ${m.audioUrl ? `
         }
     }
     async function toggleDmReaction(msgId, emoji){
+        pinMessageOpen(msgId);
         const ref = currentGroupId
             ? db.ref('developmentUsers/groupChats/'+currentGroupId+'/messages/'+msgId+'/reactions/'+emoji+'/'+currentUid)
             : db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages/'+msgId+'/reactions/'+emoji+'/'+currentUid);
@@ -5189,7 +5427,13 @@ ${m.audioUrl ? `
         });
         dmRef.on('child_changed', snap => {
             const idx = dmMessages.findIndex(m => m.id === snap.key);
-            if(idx >= 0){ dmMessages[idx] = Object.assign({ id: snap.key }, snap.val()); renderDmMessages(); }
+            if(idx >= 0){
+                const oldMsg = dmMessages[idx];
+                const newMsg = Object.assign({ id: snap.key }, snap.val());
+                dmMessages[idx] = newMsg;
+                if(shallowEqualExceptEngagement(oldMsg, newMsg)) patchMessageEngagement(snap.key, newMsg, 'dm');
+                else renderDmMessages();
+            }
         });
         dmRef.on('child_removed', snap => {
             dmMessages = dmMessages.filter(m => m.id !== snap.key);
@@ -5206,19 +5450,22 @@ ${m.audioUrl ? `
         const wrap = document.getElementById('dmMessagesWrap');
         if(!wrap) return;
         const wasNearBottom = (wrap.scrollHeight - wrap.scrollTop - wrap.clientHeight) < 80;
-        if(dmMessages.length === 0){
+        const visibleDmMsgs = dmMessages.filter(m => !(m.hiddenFor && m.hiddenFor[currentUid]));
+        if(visibleDmMsgs.length === 0){
             wrap.innerHTML = `<div class="empty-state" style="border:none; padding:60px 20px;">${icon('inbox',24)}<p><strong>Henüz mesaj yok.</strong></p><p>Bir merhaba de!</p></div>`;
             return;
         }
         const myAvatar = document.getElementById('avatarImg').src;
         const theirAvatar = document.getElementById('dmTargetAvatar').src;
-        let lastDay = null;
-        wrap.innerHTML = dmMessages.map(m => {
+        let lastDay = null, prevDmMsg = null;
+        wrap.innerHTML = visibleDmMsgs.map(m => {
             const mine = m.uid === currentUid;
             const seenTickHtml = mine ? `<span class="chat-msg-seen-tick${m.seen?' seen':''}">${icon(m.seen?'checkDouble':'check',13)}</span>` : '';
             const dayKey = new Date(m.ts).toDateString();
-            let sep = '';
-            if(dayKey !== lastDay){ sep = chatDaySeparatorHtml(m.ts); lastDay = dayKey; }
+            let sep = ''; let dayChanged = false;
+            if(dayKey !== lastDay){ sep = chatDaySeparatorHtml(m.ts); lastDay = dayKey; dayChanged = true; }
+            const grouped = !dayChanged && isGroupedWithPrev(prevDmMsg, m);
+            prevDmMsg = m;
             const time = new Date(m.ts).toLocaleTimeString('tr-TR', { hour:'2-digit', minute:'2-digit' });
             const liked = m.likes && m.likes[currentUid];
             const likeCount = m.likes ? Object.keys(m.likes).length : 0;
@@ -5236,8 +5483,11 @@ ${m.audioUrl ? `
         <button class="chat-like-btn" onclick="deleteDmMessage('${m.id}')" title="Sil">${icon('trash',12)}</button>
       ` : '';
 
-            return `${sep}<div class="chat-msg${mine?' is-mine':''}">
-        <img class="chat-msg-avatar" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'" src="${mine?myAvatar:theirAvatar}">
+            const isSelMode = _selectMode.active && _selectMode.scope === 'dm' && !currentGroupId;
+            const isSelected = _selectedIds.has(m.id);
+            return `${sep}<div class="chat-msg${mine?' is-mine':''}${grouped?' grouped':''}${_pinnedOpenMsgIds.has(m.id)?' pinned-open':''}${isSelMode?' select-mode':''}${isSelected?' selected':''}" data-msgid="${m.id}">
+        ${isSelMode ? `<div class="chat-msg-select-check" onclick="toggleMsgSelected('${m.id}')">${icon('check',12)}</div>` : ''}
+        <img class="chat-msg-avatar" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'" src="${mine?myAvatar:theirAvatar}" onclick="${isSelMode?`toggleMsgSelected('${m.id}')`:''}" style="${isSelMode?'cursor:pointer;':''}">
         <div class="chat-msg-body">
 ${msgBadgeRowHtml(m)}
 <div class="chat-msg-bubble" id="dmbubble-${m.id}" ondblclick="handleBubbleDoubleLike(event,'${m.id}', true)">
@@ -5275,6 +5525,7 @@ ${locationCardHtml(m.location)}
               <button class="chat-like-btn" onclick="toggleReactionMenu('${m.id}')">${icon('smilePlus',13)}</button>
               <div class="chat-reaction-menu" id="reactMenu-${m.id}">${reactionMenuBtns}</div>
             </div>
+            ${window._isAdminUser ? `<button class="chat-like-btn bot-trigger-btn" onclick="openBotPanel('${m.id}','dm')" title="Bot Etkileşimi">${icon('botIcon',13)}</button>` : ''}
             <div class="chat-reactions-row">${reactionChips}</div>
             ${mineActions}
           </div>
@@ -5290,9 +5541,12 @@ ${locationCardHtml(m.location)}
         if(!text && !_pendingDmImageDataUrl && !audioDataUrl) return;
         if(!currentDmPairKey || !currentDmTargetUid){ showTopToast('Sohbet seçilmedi', 'warn', 'warn'); return; }
         const me = getMyProfileCache();
+        const isAdminSelf = currentUid === ADMIN_UID;
+        const isModSelf = !!moderators[currentUid];
         const msg = {
             uid: currentUid, text: text || '', imageUrl: _pendingDmImageDataUrl || null,
-            audioUrl: audioDataUrl || null, ts: Date.now(), replyTo: _dmReplyTo, likes: {}, reactions: {}, seen:false, prestige: prestige
+            audioUrl: audioDataUrl || null, ts: Date.now(), replyTo: _dmReplyTo, likes: {}, reactions: {}, seen:false, prestige: prestige,
+            role: isAdminSelf ? 'admin' : (isModSelf ? 'mod' : null)
         };
         try{
             await db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages').push(msg);
@@ -5325,6 +5579,7 @@ ${locationCardHtml(m.location)}
         return list.find(m => m.id === msgId);
     }
     function setChatReply(msgId){
+        pinMessageOpen(msgId);
         const m = chatMessages.find(x => x.id === msgId);
         if(!m) return;
         _chatReplyTo = { id:m.id, username:m.username||'Kullanıcı', text:(m.text || (m.imageUrl?'📷 Görsel':(m.audioUrl?'🎤 Sesli mesaj':''))).slice(0,80) };
@@ -5332,6 +5587,7 @@ ${locationCardHtml(m.location)}
         document.getElementById('chatInput').focus();
     }
     function setDmReply(msgId){
+        pinMessageOpen(msgId);
         const m = getActiveConvMessage(msgId);
         if(!m) return;
         const uname = m.username || (m.uid===currentUid ? currentUsername : document.getElementById('dmTargetName').textContent);
@@ -5363,26 +5619,32 @@ ${locationCardHtml(m.location)}
     });
     function attachLongPressActions(containerId){
         const container = document.getElementById(containerId);
-        if(!container || container._longPressAttached) return;
-        container._longPressAttached = true;
-        let pressTimer = null, moved = false;
-        const clear = () => { clearTimeout(pressTimer); pressTimer = null; };
+        if(!container || container._tapActionsAttached) return;
+        container._tapActionsAttached = true;
+        let startX = 0, startY = 0, moved = false, startT = 0, activeBubble = null;
         container.addEventListener('touchstart', e => {
             const bubble = e.target.closest('.chat-msg-bubble');
+            activeBubble = bubble;
             if(!bubble) return;
-            const msgEl = bubble.closest('.chat-msg');
-            moved = false;
-            clear();
-            pressTimer = setTimeout(() => {
-                if(moved) return;
-                document.querySelectorAll('.chat-msg.show-actions').forEach(el => { if(el !== msgEl) el.classList.remove('show-actions'); });
-                msgEl.classList.toggle('show-actions');
-                if(navigator.vibrate) navigator.vibrate(12);
-            }, 420);
+            const t = e.touches[0];
+            startX = t.clientX; startY = t.clientY; moved = false; startT = Date.now();
         }, { passive:true });
-        container.addEventListener('touchmove', () => { moved = true; clear(); }, { passive:true });
-        container.addEventListener('touchend', clear, { passive:true });
-        container.addEventListener('touchcancel', clear, { passive:true });
+        container.addEventListener('touchmove', e => {
+            if(!activeBubble) return;
+            const t = e.touches[0];
+            if(Math.abs(t.clientX-startX) > 10 || Math.abs(t.clientY-startY) > 10) moved = true;
+        }, { passive:true });
+        container.addEventListener('touchend', e => {
+            const bubble = activeBubble;
+            activeBubble = null;
+            if(!bubble || moved) return;
+            if(Date.now() - startT > 700) return;
+            const msgEl = bubble.closest('.chat-msg');
+            if(!msgEl) return;
+            document.querySelectorAll('.chat-msg.show-actions').forEach(el => { if(el !== msgEl) el.classList.remove('show-actions'); });
+            msgEl.classList.toggle('show-actions');
+            if(navigator.vibrate) navigator.vibrate(8);
+        }, { passive:true });
     }
     document.addEventListener('touchstart', e => {
         if(!e.target.closest('.chat-msg')){
@@ -5406,6 +5668,7 @@ ${locationCardHtml(m.location)}
         audioEl.onended = () => { pill.classList.remove('playing'); btn.innerHTML = icon('bolt',14); };
     }
     async function toggleChatLike(msgId, evt){
+        pinMessageOpen(msgId);
         const ref = chatRef.child(msgId+'/likes/'+currentUid);
         const snap = await ref.once('value');
         if(snap.exists()) await ref.remove();
@@ -5443,6 +5706,7 @@ ${locationCardHtml(m.location)}
         catch(err){ showTopToast('Mesaj silinemedi: '+err.message, 'warn', 'warn'); }
     }
     async function toggleReaction(msgId, emoji){
+        pinMessageOpen(msgId);
         const ref = chatRef.child(msgId+'/reactions/'+emoji+'/'+currentUid);
         const snap = await ref.once('value');
         if(snap.exists()) await ref.remove(); else await ref.set(true);
@@ -6902,6 +7166,8 @@ ${locationCardHtml(m.location)}
         document.getElementById('adminTabModsBtn').innerHTML = `${icon('shield',13)} Moderatörler`;
         document.getElementById('adminTabHolidayBtn').innerHTML = `${icon('sparkle',13)} Özel Günler`;
         document.getElementById('startEventBtn').innerHTML = `${icon('flag',12)} Etkinlik Başlat`;
+        document.getElementById('chatSelectToggleBtn').innerHTML = `${icon('check',12)} Seç`;
+        document.getElementById('dmSelectToggleBtn').innerHTML = icon('check',15);
         document.getElementById('dmSendBtn').innerHTML = icon('send',18);
         document.getElementById('dmImageBtn').innerHTML = icon('camera',15);
         document.getElementById('dmVoiceBtn').innerHTML = icon('bolt',15);
@@ -7271,7 +7537,7 @@ ${locationCardHtml(m.location)}
         html += `</div>`;
         el.innerHTML = html;
     }
-    const APP_MODAL_IDS = ['rankModal','achvModal','profileModal','settingsModal','adminModal','createEventModal','chatMegaModal','themeStudioModal'];
+    const APP_MODAL_IDS = ['rankModal','achvModal','profileModal','settingsModal','adminModal','createEventModal','chatMegaModal','themeStudioModal','botEngagementModal'];
     function closeAllAppModals(exclude){
         APP_MODAL_IDS.forEach(id => {
             if(exclude && id === exclude) return;
@@ -7895,7 +8161,121 @@ ${locationCardHtml(m.location)}
         el.addEventListener('click', e => { if(moved){ e.preventDefault(); e.stopPropagation(); } }, true);
     }
 
-    function escapeHtml(str){
+    function shallowEqualExceptEngagement(a, b){
+    const keys = new Set([...Object.keys(a||{}), ...Object.keys(b||{})]);
+    keys.delete('likes'); keys.delete('reactions');
+    for(const k of keys){
+        if(JSON.stringify(a?.[k]) !== JSON.stringify(b?.[k])) return false;
+    }
+    return true;
+}
+function patchMessageEngagement(msgId, m, ctx){
+    const likeBtn = document.getElementById('likebtn-'+msgId);
+    if(likeBtn){
+        const liked = m.likes && m.likes[currentUid];
+        const likeCount = m.likes ? Object.keys(m.likes).length : 0;
+        likeBtn.classList.toggle('liked', !!liked);
+        likeBtn.innerHTML = `${likeGlyph(liked,13)} ${likeCount||''}`;
+    }
+    const reactRow = document.getElementById('reactrow-'+msgId);
+    if(reactRow){
+        const reactions = m.reactions || {};
+        const fn = ctx === 'global' ? 'toggleReaction' : 'toggleDmReaction';
+        reactRow.innerHTML = Object.keys(reactions).filter(k=>Object.keys(reactions[k]||{}).length>0).map(k => {
+            const count = Object.keys(reactions[k]).length;
+            const mineReact = reactions[k][currentUid];
+            const def = CUSTOM_REACTIONS.find(r=>r.key===k);
+            return `<span class="chat-reaction-chip${mineReact?' mine':''}" onclick="${fn}('${msgId}','${k}')"><span class="reaction-emoji">${def?def.emoji:'✨'}</span> ${count}</span>`;
+        }).join('');
+    }
+}
+let _selectMode = { active:false, scope:null };
+let _selectedIds = new Set();
+
+function toggleSelectMode(scope){
+    if(_selectMode.active && _selectMode.scope === scope){ exitSelectMode(); return; }
+    _selectMode = { active:true, scope };
+    _selectedIds.clear();
+    document.querySelectorAll('.chat-msg.show-actions').forEach(el=>el.classList.remove('show-actions'));
+    rerenderForScope(scope);
+    updateSelectBar(scope);
+    showTopToast('Mesaj seçme modu açık — silmek istediklerine dokun', 'info', 'check');
+}
+function exitSelectMode(){
+    const scope = _selectMode.scope;
+    _selectMode = { active:false, scope:null };
+    _selectedIds.clear();
+    if(scope) rerenderForScope(scope);
+    updateSelectBar(scope);
+}
+function rerenderForScope(scope){
+    if(scope === 'global') renderChatMessages();
+    else if(currentGroupId) renderGroupMessages();
+    else renderDmMessages();
+}
+function toggleMsgSelected(msgId){
+    if(_selectedIds.has(msgId)) _selectedIds.delete(msgId);
+    else _selectedIds.add(msgId);
+    const el = document.querySelector(`.chat-msg[data-msgid="${msgId}"]`);
+    if(el) el.classList.toggle('selected', _selectedIds.has(msgId));
+    updateSelectBar(_selectMode.scope);
+}
+function updateSelectBar(scope){
+    const barId = scope === 'global' ? 'chatSelectBar' : 'dmSelectBar';
+    const otherBarId = scope === 'global' ? 'dmSelectBar' : 'chatSelectBar';
+    const otherBar = document.getElementById(otherBarId);
+    if(otherBar) otherBar.classList.remove('show');
+    const bar = document.getElementById(barId);
+    if(!bar) return;
+    if(!_selectMode.active || _selectMode.scope !== scope || _selectedIds.size === 0){
+        bar.classList.remove('show');
+        return;
+    }
+    const list = scope==='global' ? chatMessages : (currentGroupId ? groupMessages : dmMessages);
+    const canDeleteAllForEveryone = [..._selectedIds].every(id => {
+        const m = list.find(x=>x.id===id);
+        return m && (m.uid === currentUid || currentUid === ADMIN_UID);
+    });
+    bar.innerHTML = `
+      <span class="csb-count">${icon('check',13)} ${_selectedIds.size} seçili</span>
+      <span class="csb-spacer"></span>
+      <button class="btn btn-ghost" onclick="bulkDeleteMessages('${scope}', false)">${icon('trash',12)} Benden Sil</button>
+      ${canDeleteAllForEveryone ? `<button class="btn" style="background:var(--neg); color:#fff;" onclick="bulkDeleteMessages('${scope}', true)">${icon('ban',12)} Herkesten Sil</button>` : ''}
+      <button class="icon-btn" title="Vazgeç" onclick="exitSelectMode()">${icon('x',15)}</button>
+    `;
+    bar.classList.add('show');
+}
+function bulkMsgRef(scope, msgId){
+    if(scope === 'global') return chatRef.child(msgId);
+    if(currentGroupId) return db.ref('developmentUsers/groupChats/'+currentGroupId+'/messages/'+msgId);
+    return db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages/'+msgId);
+}
+async function bulkDeleteMessages(scope, forEveryone){
+    const ids = [..._selectedIds];
+    if(ids.length === 0) return;
+    const ok = await showConfirm(forEveryone
+        ? `${ids.length} mesaj HERKES için kalıcı olarak silinsin mi? Bu işlem geri alınamaz.`
+        : `${ids.length} mesaj senin ekranından gizlensin mi? (Diğer kullanıcılar hâlâ görebilir)`);
+    if(!ok) return;
+    const list = scope==='global' ? chatMessages : (currentGroupId ? groupMessages : dmMessages);
+    let successCount = 0, skipped = 0;
+    for(const id of ids){
+        const ref = bulkMsgRef(scope, id);
+        try{
+            if(forEveryone){
+                const m = list.find(x=>x.id===id);
+                if(!m || (m.uid !== currentUid && currentUid !== ADMIN_UID)){ skipped++; continue; }
+                await ref.remove();
+            } else {
+                await ref.child('hiddenFor/'+currentUid).set(true);
+            }
+            successCount++;
+        }catch(err){ skipped++; }
+    }
+    showTopToast(`${successCount} mesaj silindi${skipped?`, ${skipped} atlandı`:''}`, 'warn', 'trash');
+    exitSelectMode();
+}
+function escapeHtml(str){
         const div = document.createElement('div');
         div.textContent = str;
         return div.innerHTML;
@@ -8445,6 +8825,17 @@ ${locationCardHtml(m.location)}
         if(!p) return '';
         return `<span class="streak-pill prestige-pill" title="Prestij ${p}">${icon('prestigeStar',11)} Prestij ${p}</span>`;
     }
+    function prestigeBadgeHtml(p, size){
+        if(!p) return '';
+        return `<span class="streak-pill prestige-pill" title="Prestij ${p}">${icon('prestigeStar',11)} Prestij ${p}</span>`;
+    }
+    function chatMsgBadgesHtml(m, excludeAdmin){
+        const parts = [];
+        if(m.role === 'mod') parts.push(`<span class="chat-msg-badge mod">${icon('shield',9)} Moderatör</span>`);
+        if(!excludeAdmin && m.role === 'admin') parts.push(`<span class="chat-msg-badge admin">${icon('crown',9)} Yönetici</span>`);
+        if(m.prestige) parts.push(prestigeBadgeHtml(m.prestige, 12));
+        return parts.length ? `<span class="chat-msg-badges">${parts.join('')}</span>` : '';
+    }
     function msgBadgeRowHtml(m){
         const roleHtml = m.role === 'admin' ? `<span class="chat-msg-badge admin">${icon('crown',9)} Yönetici</span>` : (m.role === 'mod' ? `<span class="chat-msg-badge mod">${icon('shield',8)} Moderatör</span>` : '');
         const prestigeHtml = prestigeBadgeHtml(m.prestige);
@@ -8875,7 +9266,7 @@ ${locationCardHtml(m.location)}
     let adminLiveRefs = [];
     let _lastPresenceSnap = {}, _lastUsersSnap = {};
 
-   function switchAdminTab(tab){
+    function switchAdminTab(tab){
         document.getElementById('adminTabUsersBtn').classList.toggle('active', tab==='users');
         document.getElementById('adminTabLiveBtn').classList.toggle('active', tab==='live');
         document.getElementById('adminTabModsBtn').classList.toggle('active', tab==='mods');
@@ -9100,6 +9491,182 @@ ${locationCardHtml(m.location)}
         renderProfileView();
         document.getElementById('profileModal').classList.add('show');
     }
+    /* ===================== BOT ETKİLEŞİM PANELİ (yalnızca yönetici) ===================== */
+    let _botTargetMsgId = null, _botTargetScope = 'global';
+    let _botCount = 25, _botMode = 'like'; // 'like' | 'reaction' | 'both'
+    let _botNaturalTiming = true;
+    let _botRunning = false;
+    let _botSpeedFactor = 55; // 1 (yavaş) - 100 (hızlı)
+
+    function botDelayRange(){
+        const f = _botSpeedFactor / 100;
+        const min = Math.round(3200 - f*3160);
+        const max = Math.round(min + (200 - f*40));
+        return { min: Math.max(30,min), max: Math.max(60,max) };
+    }
+    function onBotSpeedChange(val){
+        _botSpeedFactor = parseInt(val,10);
+        updateBotEta();
+    }
+    function setBotCountCustom(val){
+        const n = parseInt(val,10);
+        if(n > 0){
+            _botCount = Math.min(2000, n);
+            document.querySelectorAll('#botCountGrid .bot-count-btn').forEach(b=>b.classList.remove('active'));
+        }
+        updateBotEta();
+    }
+    function updateBotEta(){
+        const pill = document.getElementById('botEtaPill');
+        if(!pill) return;
+        const { min, max } = botDelayRange();
+        const avg = (min+max)/2;
+        const totalMs = _botNaturalTiming ? _botCount*avg : _botCount*45;
+        const secs = Math.max(1, Math.round(totalMs/1000));
+        pill.innerHTML = `${icon('clock',11)} ~${secs}sn sürecek`;
+    }
+
+    function botMsgRef(msgId, scope){
+        if(scope === 'dm' && currentGroupId) return db.ref('developmentUsers/groupChats/'+currentGroupId+'/messages/'+msgId);
+        if(scope === 'dm') return db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages/'+msgId);
+        return chatRef.child(msgId);
+    }
+
+    function openBotPanel(msgId, scope){
+        if(currentUid !== ADMIN_UID){ showTopToast('Bu özellik sadece yönetici içindir', 'warn', 'ban'); return; }
+        _botTargetMsgId = msgId;
+        _botTargetScope = scope;
+        _botCount = 25; _botMode = 'like'; _botNaturalTiming = true; _botRunning = false;
+        renderBotPanel();
+        closeAllAppModals('chatMegaModal');
+        document.getElementById('botEngagementModal').classList.add('show');
+    }
+    function closeBotPanel(){
+        document.getElementById('botEngagementModal').classList.remove('show');
+    }
+    function setBotCount(n, el){
+        _botCount = n;
+        el.parentElement.querySelectorAll('.bot-count-btn').forEach(b=>b.classList.remove('active'));
+        el.classList.add('active');
+        const customInput = document.getElementById('botCustomCount');
+        if(customInput) customInput.value = '';
+        updateBotEta();
+    }
+    function setBotMode(mode, el){
+        _botMode = mode;
+        el.parentElement.querySelectorAll('.bot-mode-btn').forEach(b=>b.classList.remove('active'));
+        el.classList.add('active');
+    }
+    function renderBotPanel(){
+        const head = document.getElementById('botPanelHeadIcon');
+        if(head) head.innerHTML = icon('botIcon',22);
+        const countGrid = document.getElementById('botCountGrid');
+        if(countGrid){
+            countGrid.innerHTML = [10,25,50,100].map(n => `<button type="button" class="bot-count-btn${n===_botCount?' active':''}" onclick="setBotCount(${n},this)">${n}</button>`).join('');
+        }
+        const modeGrid = document.getElementById('botModeGrid');
+        if(modeGrid){
+            const modes = [
+                {key:'like', ic:'heartFilled', label:'Beğeni Botu'},
+                {key:'reaction', ic:'smilePlus', label:'Tepki Botu'},
+                {key:'both', ic:'sparkle', label:'Karışık'}
+            ];
+            modeGrid.innerHTML = modes.map(md => `<button type="button" class="bot-mode-btn${md.key===_botMode?' active':''}" onclick="setBotMode('${md.key}',this)">${icon(md.ic,18)}<span class="bmb-label">${md.label}</span></button>`).join('');
+        }
+        const naturalSwitch = document.getElementById('botNaturalSwitch');
+        if(naturalSwitch) naturalSwitch.checked = _botNaturalTiming;
+        const speedLabel = document.getElementById('botSpeedLabel');
+        if(speedLabel) speedLabel.innerHTML = `${icon('bolt',11)} Bot Hızı`;
+        const speedSlider = document.getElementById('botSpeedSlider');
+        if(speedSlider) speedSlider.value = _botSpeedFactor;
+        const slowLbl = document.getElementById('botSpeedSlow'); if(slowLbl) slowLbl.innerHTML = `${icon('hourglass',9)} Yavaş`;
+        const fastLbl = document.getElementById('botSpeedFast'); if(fastLbl) fastLbl.innerHTML = `Hızlı ${icon('bolt',9)}`;
+        const customInput = document.getElementById('botCustomCount');
+        if(customInput) customInput.value = '';
+        document.getElementById('botProgressWrap').classList.remove('show');
+        document.getElementById('botProgressFill').style.width = '0%';
+        document.getElementById('botProgressLabel').textContent = '0 / 0 tamamlandı';
+        const startBtn = document.getElementById('botStartBtn');
+        startBtn.disabled = false;
+        startBtn.innerHTML = `${icon('bolt',13)} Botları Başlat`;
+        updateBotEta();
+    }
+    function renderBotPanel(){
+        const head = document.getElementById('botPanelHeadIcon');
+        if(head) head.innerHTML = icon('botIcon',22);
+        const countGrid = document.getElementById('botCountGrid');
+        if(countGrid){
+            countGrid.innerHTML = [10,25,50,100].map(n => `<button type="button" class="bot-count-btn${n===_botCount?' active':''}" onclick="setBotCount(${n},this)">${n}</button>`).join('');
+        }
+        const modeGrid = document.getElementById('botModeGrid');
+        if(modeGrid){
+            const modes = [
+                {key:'like', ic:'heartFilled', label:'Beğeni Botu'},
+                {key:'reaction', ic:'smilePlus', label:'Tepki Botu'},
+                {key:'both', ic:'sparkle', label:'Karışık'}
+            ];
+            modeGrid.innerHTML = modes.map(md => `<button type="button" class="bot-mode-btn${md.key===_botMode?' active':''}" onclick="setBotMode('${md.key}',this)">${icon(md.ic,18)}<span class="bmb-label">${md.label}</span></button>`).join('');
+        }
+        const naturalSwitch = document.getElementById('botNaturalSwitch');
+        if(naturalSwitch) naturalSwitch.checked = _botNaturalTiming;
+        document.getElementById('botProgressWrap').classList.remove('show');
+        document.getElementById('botProgressFill').style.width = '0%';
+        document.getElementById('botProgressLabel').textContent = '0 / 0 tamamlandı';
+        const startBtn = document.getElementById('botStartBtn');
+        startBtn.disabled = false;
+        startBtn.innerHTML = `${icon('bolt',13)} Botları Başlat`;
+    }
+
+    function randomBotUid(){
+        return 'bot_' + Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4);
+    }
+
+    async function startBotEngagement(){
+        if(_botRunning || !_botTargetMsgId) return;
+        _botRunning = true;
+        const ref = botMsgRef(_botTargetMsgId, _botTargetScope);
+        const total = _botCount;
+        const progWrap = document.getElementById('botProgressWrap');
+        const progFill = document.getElementById('botProgressFill');
+        const progLabel = document.getElementById('botProgressLabel');
+        const startBtn = document.getElementById('botStartBtn');
+        progWrap.classList.add('show');
+        startBtn.disabled = true;
+        startBtn.innerHTML = `${icon('refresh',13)} Gönderiliyor…`;
+
+        let done = 0;
+        const reactionKeys = CUSTOM_REACTIONS.map(r => r.key);
+
+        const runOne = async () => {
+            const uid = randomBotUid();
+            const action = _botMode === 'both' ? (Math.random() < 0.5 ? 'like' : 'reaction') : _botMode;
+            try{
+                if(action === 'like'){
+                    await ref.child('likes/'+uid).set(true);
+                } else {
+                    const key = reactionKeys[Math.floor(Math.random()*reactionKeys.length)];
+                    await ref.child('reactions/'+key+'/'+uid).set(true);
+                }
+            }catch(e){ /* sessizce geç */ }
+            done++;
+            const pct = Math.round((done/total)*100);
+            if(progFill) progFill.style.width = pct+'%';
+            if(progLabel) progLabel.textContent = `${done} / ${total} tamamlandı`;
+            if(done < total){
+                const range = botDelayRange();
+                const delay = _botNaturalTiming ? (range.min + Math.random()*(range.max-range.min)) : 40;
+                setTimeout(runOne, delay);
+            } else {
+                _botRunning = false;
+                startBtn.disabled = false;
+                startBtn.innerHTML = `${icon('check',13)} Tamamlandı`;
+                showTopToast('Bot etkileşimi tamamlandı', 'info', 'botIcon');
+                setTimeout(() => { startBtn.innerHTML = `${icon('bolt',13)} Botları Başlat`; }, 2200);
+            }
+        };
+        runOne();
+    }
+
     /* ===================== ÖZEL GÜN SES SİSTEMİ ===================== */
     const HOLIDAY_SOUND_URLS = {
         newyear: {
@@ -9233,9 +9800,9 @@ ${locationCardHtml(m.location)}
 
     function computeEasterDate(year){
         const a=year%19,b=Math.floor(year/100),c=year%100,d=Math.floor(b/4),e=b%4,
-              f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,
-              i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),
-              month=Math.floor((h+l-7*m+114)/31), day=((h+l-7*m+114)%31)+1;
+            f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,
+            i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),
+            month=Math.floor((h+l-7*m+114)/31), day=((h+l-7*m+114)%31)+1;
         return new Date(year, month-1, day);
     }
     function getDateBasedHolidayKey(date){
@@ -9551,7 +10118,7 @@ ${locationCardHtml(m.location)}
         db.ref('developmentUsers/siteEvent/forcedKey').set(key).then(()=>{
             const msg = key==='off' ? 'Özel gün teması herkes için kapatıldı'
                 : key ? `${HOLIDAYS[key].name} herkes için aktifleştirildi`
-                : 'Otomatik moda dönüldü';
+                    : 'Otomatik moda dönüldü';
             showTopToast(msg, 'info', 'sparkle');
         }).catch(err=> showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'));
     }
@@ -9562,7 +10129,7 @@ ${locationCardHtml(m.location)}
         const autoKey = getDateBasedHolidayKey();
         const statusLabel = forcedHolidayKey === 'off' ? 'Manuel olarak kapatıldı'
             : forcedHolidayKey ? `Manuel olarak "${(HOLIDAYS[forcedHolidayKey]||{}).name||forcedHolidayKey}" herkes için zorlanıyor`
-            : (autoKey ? `Otomatik: ${HOLIDAYS[autoKey].name} (tarih uygun)` : 'Otomatik: şu an aktif özel gün yok');
+                : (autoKey ? `Otomatik: ${HOLIDAYS[autoKey].name} (tarih uygun)` : 'Otomatik: şu an aktif özel gün yok');
         el.innerHTML = `
       <div class="fx-panel" style="margin-bottom:16px;">
         <span class="fx-panel-label">${icon('sparkle',11)} Şu Anki Durum</span>

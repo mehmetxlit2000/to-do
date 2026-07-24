@@ -2000,6 +2000,70 @@
             content:''; position:absolute; left:0; right:0; bottom:0; height:5px; z-index:2;
             background:linear-gradient(90deg,#f9a8d4,#fde68a 30%,#a7f3d0 60%,#f9a8d4 85%); opacity:.6;
         }
+    /* ==================== ÖZEL GÜN — ÜST KART ==================== */
+        @keyframes holidayCardShimmer{
+            0%{ background-position:0% 50%; } 100%{ background-position:200% 50%; }
+        }
+        @keyframes holidayIconFloat{
+            0%,100%{ transform:translateY(0) rotate(-3deg); } 50%{ transform:translateY(-6px) rotate(3deg); }
+        }
+        .holiday-top-card{
+            display:none; position:relative; overflow:hidden; align-items:center; gap:16px;
+            padding:18px 22px; border-radius:18px; margin-bottom:14px; color:#fff;
+            background:linear-gradient(100deg, var(--hc1), var(--hc2) 45%, var(--hc3) 90%, var(--hc1));
+            background-size:250% 250%; animation:holidayCardShimmer 8s ease infinite;
+            box-shadow:0 16px 40px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.08) inset;
+        }
+        .holiday-top-card::before{
+            content:''; position:absolute; inset:0; opacity:.16; pointer-events:none;
+            background-image:radial-gradient(circle, rgba(255,255,255,.8) 1.5px, transparent 1.5px);
+            background-size:18px 18px;
+        }
+        .htc-icon{
+            flex:none; width:64px; height:64px; border-radius:18px; display:flex; align-items:center; justify-content:center;
+            font-size:34px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.3);
+            backdrop-filter:blur(3px); animation:holidayIconFloat 3.2s ease-in-out infinite; position:relative; z-index:1;
+        }
+        .htc-body{ flex:1; min-width:0; position:relative; z-index:1; }
+        .htc-eyebrow{
+            font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.14em; text-transform:uppercase;
+            opacity:.85; margin:0 0 3px; display:flex; align-items:center; gap:6px;
+        }
+        .htc-title{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:17px; margin:0 0 4px; text-shadow:0 2px 8px rgba(0,0,0,.3); }
+        .htc-sub{ font-size:12px; opacity:.9; margin:0; line-height:1.4; max-width:420px; }
+        .htc-countdown{ display:flex; gap:7px; flex:none; position:relative; z-index:1; }
+        .htc-chip{
+            background:rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.25); border-radius:10px; padding:8px 10px;
+            text-align:center; min-width:46px; backdrop-filter:blur(2px);
+        }
+        .htc-chip b{ display:block; font-family:'Orbitron',sans-serif; font-size:17px; font-weight:800; line-height:1; }
+        .htc-chip span{ font-family:'JetBrains Mono',monospace; font-size:7.5px; letter-spacing:.08em; opacity:.85; }
+        .htc-close{
+            position:absolute; top:8px; right:8px; z-index:2; width:24px; height:24px; border-radius:50%;
+            background:rgba(0,0,0,.25); border:none; color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer;
+        }
+        @media (max-width:640px){
+            .holiday-top-card{ flex-wrap:wrap; padding:16px; }
+            .htc-countdown{ width:100%; justify-content:center; }
+            .htc-sub{ max-width:100%; }
+        }
+
+        /* ==================== ÖZEL GÜN — GÖKYÜZÜ SAHNESİ (Noel Baba / Cadı / Tavşan) ==================== */
+        @keyframes holidaySkyFly{
+            0%{ transform: translateX(-260px) translateY(var(--fly-y,40px)); }
+            100%{ transform: translateX(calc(100vw + 260px)) translateY(var(--fly-y,40px)); }
+        }
+        @keyframes skyBob{ 0%,100%{ transform:translateY(0) rotate(0deg); } 50%{ transform:translateY(-10px) rotate(-2deg); } }
+        .sky-scene{
+            position:fixed; top:0; left:0; z-index:97; pointer-events:none; white-space:nowrap;
+            animation: holidaySkyFly var(--fly-duration,11s) linear forwards;
+            filter: drop-shadow(0 8px 14px rgba(0,0,0,.4));
+        }
+        .sky-scene .sky-emoji-group{
+            display:inline-block; font-size:42px; animation: skyBob 1.3s ease-in-out infinite;
+        }
+        .sky-scene.witch-scene .sky-emoji-group{ animation-duration:.9s; }
+        .sky-scene.bunny-scene .sky-emoji-group{ animation-duration:.55s; animation-timing-function:ease-out; }
     </style>
 </head>
 <body>
@@ -2046,6 +2110,16 @@
         </div>
     </div>
 
+    <div class="holiday-top-card" id="holidayTopCard">
+        <button class="htc-close" id="holidayTopCardCloseBtn" onclick="dismissHolidayTopCard()"></button>
+        <div class="htc-icon" id="htcIcon"></div>
+        <div class="htc-body">
+            <p class="htc-eyebrow" id="htcEyebrow"></p>
+            <p class="htc-title" id="htcTitle"></p>
+            <p class="htc-sub" id="htcSub"></p>
+        </div>
+        <div class="htc-countdown" id="holidayTopCardCountdown"></div>
+    </div>
     <div class="celebrate-banner" id="celebrateBanner"><span id="celebrateIcon"></span><span>Bugünkü tüm görevler tamam — harikasın!</span></div>
 
     <div class="rank-hero">
@@ -9026,6 +9100,97 @@ ${locationCardHtml(m.location)}
         renderProfileView();
         document.getElementById('profileModal').classList.add('show');
     }
+    /* ===================== ÖZEL GÜN SES SİSTEMİ ===================== */
+    const HOLIDAY_SOUND_URLS = {
+        newyear: {
+            arrival: 'https://cdn.pixabay.com/audio/2025/09/22/audio_02df0540bc.mp3',
+            ambient: 'https://cdn.pixabay.com/audio/2025/11/19/audio_8a5dad516a.mp3',
+            sky:     'https://cdn.pixabay.com/audio/2025/12/15/audio_85077e90e2.mp3'
+        },
+        halloween: {
+            arrival: 'https://cdn.pixabay.com/audio/2022/03/16/audio_4944318475.mp3',
+            ambient: 'https://cdn.pixabay.com/audio/2025/09/22/audio_d1f9720625.mp3',
+            sky:     'https://cdn.pixabay.com/audio/2023/09/05/audio_2aa25ba3ec.mp3',
+            scares: [
+                'https://cdn.pixabay.com/audio/2024/10/21/audio_f9a7ec3fff.mp3',
+                'https://cdn.pixabay.com/audio/2025/09/25/audio_fb46762b05.mp3'
+            ]
+        },
+        easter: {
+            sky: 'https://cdn.pixabay.com/audio/2025/06/19/audio_637c692da1.mp3'
+        }
+    };
+
+    function playHolidaySound(url, volume){
+        if(!siteSettings.sound || !url) return;
+        try{
+            const a = new Audio(url);
+            a.volume = volume!=null ? volume : 0.5;
+            a.play().catch(()=>{});
+        }catch(e){}
+    }
+
+    function broadcastHolidayArrivalSound(key){
+        if(!db || !key) return;
+        const ref = db.ref('developmentUsers/siteEvent/soundTriggers/'+key);
+        ref.once('value').then(snap => {
+            const last = snap.val() || 0;
+            // Birden fazla istemcinin aynı anda tekrar tetiklemesini önlemek için 15sn pencere
+            if(Date.now() - (typeof last === 'number' ? last : 0) > 15000){
+                ref.set(firebase.database.ServerValue.TIMESTAMP);
+            }
+        });
+    }
+
+    let _holidaySoundTriggerAttached = false;
+    function attachHolidaySoundListener(){
+        if(_holidaySoundTriggerAttached || !db) return;
+        _holidaySoundTriggerAttached = true;
+        Object.keys(HOLIDAY_SOUND_URLS).forEach(key => {
+            let firstSnap = true;
+            db.ref('developmentUsers/siteEvent/soundTriggers/'+key).on('value', snap => {
+                if(firstSnap){ firstSnap = false; return; } // sayfa açılışındaki eski değeri çalma
+                const url = HOLIDAY_SOUND_URLS[key] && HOLIDAY_SOUND_URLS[key].arrival;
+                if(url && activeHolidayKey === key) playHolidaySound(url, 0.6);
+            });
+        });
+    }
+
+    let holidayAmbientSoundTimer = null;
+    function scheduleHolidayAmbientSound(key){
+        clearTimeout(holidayAmbientSoundTimer);
+        const snd = HOLIDAY_SOUND_URLS[key];
+        if(!snd || !snd.ambient) return;
+        const wait = 45000 + Math.random()*60000; // 45-105sn arası ara ara
+        holidayAmbientSoundTimer = setTimeout(() => {
+            if(activeHolidayKey === key && !document.hidden) playHolidaySound(snd.ambient, 0.28);
+            scheduleHolidayAmbientSound(key);
+        }, wait);
+    }
+    function stopHolidayAmbientSound(){
+        clearTimeout(holidayAmbientSoundTimer);
+        holidayAmbientSoundTimer = null;
+    }
+
+    let holidayScareTimer = null;
+    function scheduleHalloweenScares(){
+        clearTimeout(holidayScareTimer);
+        const snd = HOLIDAY_SOUND_URLS.halloween;
+        if(!snd || !snd.scares || !snd.scares.length) return;
+        const wait = 300000 + Math.random()*600000; // 5-15 dakikada bir, çok seyrek
+        holidayScareTimer = setTimeout(() => {
+            if(activeHolidayKey === 'halloween' && !document.hidden){
+                const url = snd.scares[Math.floor(Math.random()*snd.scares.length)];
+                playHolidaySound(url, 0.18); // kısık ses
+            }
+            scheduleHalloweenScares();
+        }, wait);
+    }
+    function stopHalloweenScares(){
+        clearTimeout(holidayScareTimer);
+        holidayScareTimer = null;
+    }
+
     /* ===================== ÖZEL GÜNLER SİSTEMİ ===================== */
     const HOLIDAYS = {
         newyear: {
@@ -9088,6 +9253,9 @@ ${locationCardHtml(m.location)}
     let forcedHolidayKey = null; // null = otomatik, 'off' = kapalı, veya bir HOLIDAYS anahtarı
     let holidayAmbientInterval = null;
     let holidayListenerAttached = false;
+    let holidayTopCardInterval = null;
+    let holidaySkyTimer = null;
+    let holidayTopCardDismissed = {};
 
     function attachHolidayListener(){
         if(holidayListenerAttached || !db) return;
@@ -9096,6 +9264,7 @@ ${locationCardHtml(m.location)}
             forcedHolidayKey = snap.val();
             recomputeActiveHoliday();
         });
+        attachHolidaySoundListener();
     }
 
     function recomputeActiveHoliday(){
@@ -9106,22 +9275,27 @@ ${locationCardHtml(m.location)}
         if(key !== activeHolidayKey){
             activeHolidayKey = key;
             applyHolidayEffects(key);
+        } else if(key){
+            renderHolidayTopCard(key);
         }
         renderHolidayAdminPanel();
     }
 
     function applyHolidayEffects(key){
         stopHolidayAmbient();
+        stopHolidaySkyEvent();
         const oldBanner = document.getElementById('holidayBanner');
         if(oldBanner) oldBanner.remove();
         setHolidayAccentVars(key);
         updateHolidayCornerBadge(key);
+        renderHolidayTopCard(key);
         if(key && document.documentElement.getAttribute('data-holiday') !== key){
             document.documentElement.setAttribute('data-holiday', key);
         } else if(!key){
             document.documentElement.removeAttribute('data-holiday');
         }
         if(!key || !HOLIDAYS[key]) return;
+        broadcastHolidayArrivalSound(key);
         const h = HOLIDAYS[key];
         const banner = document.createElement('div');
         banner.id = 'holidayBanner';
@@ -9138,6 +9312,139 @@ ${locationCardHtml(m.location)}
         }, 5000);
         startHolidayAmbient(h);
         playHolidayChime(h);
+        startHolidaySkyEvent(key);
+    }
+
+    /* ---- Üst kart: geri sayım + kapatma ---- */
+    function getHolidayEndDate(key){
+        const now = new Date();
+        if(key === 'newyear'){
+            let end = new Date(now.getFullYear(), 0, 7, 23,59,59);
+            if(end < now) end = new Date(now.getFullYear()+1, 0, 7, 23,59,59);
+            return end;
+        }
+        if(key === 'halloween'){
+            let end = new Date(now.getFullYear(), 10, 2, 23,59,59);
+            if(end < now) end = new Date(now.getFullYear()+1, 10, 2, 23,59,59);
+            return end;
+        }
+        if(key === 'easter'){
+            let easter = computeEasterDate(now.getFullYear());
+            let end = new Date(easter.getFullYear(), easter.getMonth(), easter.getDate()+2, 23,59,59);
+            if(end < now){
+                easter = computeEasterDate(now.getFullYear()+1);
+                end = new Date(easter.getFullYear(), easter.getMonth(), easter.getDate()+2, 23,59,59);
+            }
+            return end;
+        }
+        return null;
+    }
+    function computeHolidayCountdownParts(key){
+        const now = new Date();
+        const endDate = getHolidayEndDate(key);
+        if(!endDate) return { days:0, hours:0, mins:0, secs:0 };
+        const diffMs = Math.max(0, endDate - now);
+        const days = Math.floor(diffMs/86400000);
+        const hours = Math.floor((diffMs%86400000)/3600000);
+        const mins = Math.floor((diffMs%3600000)/60000);
+        const secs = Math.floor((diffMs%60000)/1000);
+        return { days, hours, mins, secs };
+    }
+    function renderHolidayTopCard(key){
+        const card = document.getElementById('holidayTopCard');
+        if(!card) return;
+        clearInterval(holidayTopCardInterval);
+        if(!key || !HOLIDAYS[key] || holidayTopCardDismissed[key]){ card.style.display='none'; return; }
+        const h = HOLIDAYS[key];
+        card.style.display = 'flex';
+        card.style.setProperty('--hc1', h.accent.c1);
+        card.style.setProperty('--hc2', h.accent.c2);
+        card.style.setProperty('--hc3', h.accent.c3);
+        document.getElementById('htcIcon').textContent = h.emoji;
+        document.getElementById('htcEyebrow').innerHTML = `${icon('sparkle',10)} ÖZEL GÜN AKTİF`;
+        document.getElementById('htcTitle').textContent = h.name + ' zamanı!';
+        document.getElementById('htcSub').textContent = h.desc || '';
+        document.getElementById('holidayTopCardCloseBtn').innerHTML = icon('x',12);
+        const update = () => {
+            const { days, hours, mins, secs } = computeHolidayCountdownParts(key);
+            document.getElementById('holidayTopCardCountdown').innerHTML = `
+        <div class="htc-chip"><b>${days}</b><span>GÜN</span></div>
+        <div class="htc-chip"><b>${hours}</b><span>SAAT</span></div>
+        <div class="htc-chip"><b>${mins}</b><span>DK</span></div>
+        <div class="htc-chip"><b>${secs}</b><span>SN</span></div>`;
+        };
+        update();
+        holidayTopCardInterval = setInterval(update, 1000);
+    }
+    function dismissHolidayTopCard(){
+        if(activeHolidayKey) holidayTopCardDismissed[activeHolidayKey] = true;
+        renderHolidayTopCard(activeHolidayKey);
+    }
+
+    /* ---- Gökyüzü sahnesi: Noel Baba kızağı / Cadı süpürgesi / Tavşan sepeti ---- */
+    const HOLIDAY_SKY = {
+        newyear:   { cls:'santa-scene',  emojiTrail:'🦌🦌🎅🛷', trailEmoji:'❄️', sound:()=>playHolidaySound(HOLIDAY_SOUND_URLS.newyear.sky, 0.55) },
+        halloween: { cls:'witch-scene',  emojiTrail:'🧙‍♀️🧹',    trailEmoji:'🦇', sound:()=>playHolidaySound(HOLIDAY_SOUND_URLS.halloween.sky, 0.5) },
+        easter:    { cls:'bunny-scene',  emojiTrail:'🐰🧺',      trailEmoji:'🌸', sound:()=>playHolidaySound(HOLIDAY_SOUND_URLS.easter.sky, 0.5) }
+    };
+    function spawnTrailParticle(x, y, emoji){
+        const p = document.createElement('div');
+        p.textContent = emoji;
+        p.style.cssText = `position:fixed; left:${x}px; top:${y}px; font-size:14px; z-index:96; pointer-events:none; opacity:.85; transition:transform 1.1s ease, opacity 1.1s ease;`;
+        document.body.appendChild(p);
+        requestAnimationFrame(()=>{
+            p.style.transform = `translate(${(Math.random()-0.5)*36}px, ${28+Math.random()*26}px) rotate(${Math.random()*180}deg)`;
+            p.style.opacity = '0';
+        });
+        setTimeout(()=>p.remove(), 1200);
+    }
+    function spawnSkyEvent(key){
+        if(!key || document.hidden) return;
+        const cfg = HOLIDAY_SKY[key];
+        if(!cfg) return;
+        const el = document.createElement('div');
+        el.className = 'sky-scene ' + cfg.cls;
+        const y = 18 + Math.random()*64;
+        const dur = 10 + Math.random()*4;
+        el.style.setProperty('--fly-y', y+'px');
+        el.style.setProperty('--fly-duration', dur+'s');
+        el.innerHTML = `<span class="sky-emoji-group">${cfg.emojiTrail}</span>`;
+        document.body.appendChild(el);
+        const trailTimer = setInterval(()=>{
+            const rect = el.getBoundingClientRect();
+            if(rect.width) spawnTrailParticle(rect.left, rect.top + rect.height/2, cfg.trailEmoji);
+        }, 260);
+        setTimeout(()=>{ cfg.sound(); }, dur*1000*0.4);
+        setTimeout(()=>{ clearInterval(trailTimer); el.remove(); }, dur*1000+300);
+    }
+    function startHolidaySkyEvent(key){
+        stopHolidaySkyEvent();
+        if(!key || !HOLIDAY_SKY[key]) return;
+        const scheduleNext = () => {
+            const wait = 42000 + Math.random()*38000;
+            holidaySkyTimer = setTimeout(() => { spawnSkyEvent(activeHolidayKey); scheduleNext(); }, wait);
+        };
+        holidaySkyTimer = setTimeout(() => { spawnSkyEvent(key); scheduleNext(); }, 7000);
+    }
+    function stopHolidaySkyEvent(){
+        if(holidaySkyTimer){ clearTimeout(holidaySkyTimer); holidaySkyTimer = null; }
+    }
+
+    /* ---- Özel gün ses efektleri ---- */
+    function playSantaHoHoHo(){
+        const base = 150;
+        [0, 0.36, 0.72].forEach((delay, i) => {
+            playTone(base - i*8, 0.24, 'sawtooth', 0.055, delay);
+            playTone((base - i*8)*1.5, 0.18, 'sine', 0.03, delay+0.03);
+        });
+    }
+    function playWitchCackle(){
+        [880,760,900,700,820,650].forEach((f,i) => playTone(f, 0.09, 'square', 0.035, i*0.08));
+    }
+    function playBunnyBoing(){
+        playTone(300,0.08,'sine',0.05,0);
+        playTone(500,0.08,'sine',0.05,0.07);
+        playTone(700,0.12,'sine',0.04,0.14);
     }
 
     function setHolidayAccentVars(key){
@@ -9168,18 +9475,8 @@ ${locationCardHtml(m.location)}
     }
 
     function computeHolidayDaysParts(key){
-        // "kaç gün kaldı" yerine, aktif olduğu için "kaç gündür / ne zamana kadar" bilgisi verir
         const now = new Date();
-        let endDate = null;
-        if(key === 'newyear'){
-            endDate = now.getMonth()===11 ? new Date(now.getFullYear()+1, 0, 7) : new Date(now.getFullYear(), 0, 7);
-        } else if(key === 'halloween'){
-            endDate = new Date(now.getFullYear(), 10, 2);
-            if(endDate < now) endDate = new Date(now.getFullYear()+1, 10, 2);
-        } else if(key === 'easter'){
-            const easter = computeEasterDate(now.getFullYear());
-            endDate = new Date(easter.getFullYear(), easter.getMonth(), easter.getDate()+2);
-        }
+        const endDate = getHolidayEndDate(key);
         if(!endDate) return { days:0, hours:0 };
         const diffMs = Math.max(0, endDate - now);
         const days = Math.floor(diffMs/86400000);
@@ -9228,10 +9525,14 @@ ${locationCardHtml(m.location)}
             });
             setTimeout(()=>{ el.remove(); holidayParticleCount = Math.max(0, holidayParticleCount-1); }, dur+300);
         }, 2200);
+        scheduleHolidayAmbientSound(h.key);
+        if(h.key === 'halloween') scheduleHalloweenScares();
     }
     function stopHolidayAmbient(){
         if(holidayAmbientInterval){ clearInterval(holidayAmbientInterval); holidayAmbientInterval=null; }
         holidayParticleCount = 0;
+        stopHolidayAmbientSound();
+        stopHalloweenScares();
     }
 
     function likeGlyph(liked, size){
@@ -9300,7 +9601,8 @@ ${locationCardHtml(m.location)}
     setInterval(() => autoFailExpired(false), 15000);
     setInterval(checkRecurringReset, 60000);
     setInterval(() => fetchMarketPrices(), 90000);
-    setInterval(() => recomputeActiveHoliday(), 3600000);
+    setInterval(() => recomputeActiveHoliday(), 20000);
+    document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible') recomputeActiveHoliday(); });
     loadSettings();
     initTheme();
     buildStaticUI();

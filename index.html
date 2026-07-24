@@ -567,25 +567,27 @@
         }
 
         .chat-msg-badge.admin{
-            background:linear-gradient(120deg, #7a0f0f, #ff2b2b 55%, #ffb020);
-            color:#fff; border:1px solid rgba(255,176,32,.55);
-            text-shadow:0 1px 2px rgba(0,0,0,.45);
-            box-shadow:0 0 10px rgba(255,43,43,.5), 0 0 0 1px rgba(255,176,32,.25) inset;
+            background:linear-gradient(135deg, #4a0505 0%, #b8102f 42%, #ff4d4d 70%, #ffb020 100%);
+            color:#fff; border:1px solid rgba(255,150,60,.5);
+            text-shadow:0 1px 3px rgba(0,0,0,.55);
+            box-shadow:0 0 12px rgba(184,16,47,.55), 0 0 0 1px rgba(255,176,32,.2) inset;
         }
         .prestige-pill{
             background:var(--brand-gradient); color:#fff; border:none;
             margin-left:6px; vertical-align:middle;
         }
         .chat-msg.is-admin .admin-frame{
-            border:1.5px solid rgba(255,176,32,.55);
+            border:1.5px solid rgba(255,120,60,.45);
             border-radius:4px 16px 16px 16px;
             overflow:hidden;
             display:flex;
             flex-direction:column;
-            animation: adminFrameGlow 2.4s ease-in-out infinite;
+            animation: adminFrameGlow 3s ease-in-out infinite;
         }
         .chat-msg.is-admin .admin-frame-badge{
-            background:linear-gradient(120deg, #7a0f0f, #ff2b2b 55%, #ffb020);
+            background:linear-gradient(100deg, #3a0303 0%, #b8102f 40%, #ff5555 70%, #ffb020 100%);
+            background-size:220% 220%;
+            animation: botHeadShimmer 6s ease infinite;
             padding:5px 13px;
             display:flex;
             width:100%;
@@ -598,7 +600,7 @@
             text-transform:uppercase;
             font-weight:700;
             color:#fff;
-            text-shadow:0 1px 2px rgba(0,0,0,.45);
+            text-shadow:0 1px 2px rgba(0,0,0,.5);
         }
         .chat-msg.is-admin .admin-frame .chat-msg-bubble{
             border:none;
@@ -606,8 +608,8 @@
             box-shadow:none;
         }
         @keyframes adminFrameGlow{
-            0%,100%{ box-shadow:0 0 10px rgba(255,43,43,.35), 0 0 0 1px rgba(255,176,32,.2) inset; }
-            50%{ box-shadow:0 0 20px rgba(255,140,40,.9), 0 0 0 1px rgba(255,176,32,.45) inset; }
+            0%,100%{ box-shadow:0 0 12px rgba(184,16,47,.35), 0 0 0 1px rgba(255,150,60,.22) inset; }
+            50%{ box-shadow:0 0 22px rgba(255,90,40,.75), 0 0 0 1px rgba(255,176,32,.4) inset; }
         }
         .chat-msg-flag{ width:14px; height:10px; border-radius:2px; margin-left:5px; vertical-align:middle; box-shadow:0 0 0 1px rgba(0,0,0,.2); }
 
@@ -627,8 +629,8 @@
             box-shadow:0 1px 2px rgba(0,0,0,.15);
         }
         .chat-msg.is-admin .chat-msg-bubble{
-            background:linear-gradient(120deg, rgba(60,4,4,.94), rgba(30,2,2,.94));
-            border-color:rgba(255,43,43,.5); box-shadow:0 0 14px rgba(255,43,43,.18);
+            background:linear-gradient(135deg, rgba(58,3,3,.95), rgba(90,8,20,.92) 45%, rgba(40,2,2,.95));
+            border-color:rgba(255,120,60,.4); box-shadow:0 0 16px rgba(184,16,47,.22);
             color:#fff;
         }
         .chat-msg.is-admin .chat-msg-bubble .chat-msg-text{
@@ -794,7 +796,7 @@
         .chat-like-btn:hover{ background:var(--panel-alt); }
         .chat-like-btn.liked{ color:var(--ink); }
         .chat-like-btn svg{ width:12px; height:12px; }
-        .chat-reactions-row{ display:flex; gap:4px; flex-wrap:wrap; }
+        .chat-reactions-row{ display:flex; gap:6px; flex-wrap:wrap; padding:2px 4px 2px 2px; }
         .chat-reaction-chip{
             font-size:12px; background:var(--panel); border:1px solid var(--line); border-radius:100px;
             padding:2px 8px; cursor:pointer; display:flex; align-items:center; gap:3px;
@@ -1563,9 +1565,9 @@
         }
         .chat-msg-avatar{
             box-shadow:0 0 0 2px var(--panel), 0 0 0 3px var(--line);
-            transition:box-shadow .15s ease, transform .15s ease;
+            transition:box-shadow .15s ease;
         }
-        .chat-msg-avatar:hover{ box-shadow:0 0 0 2px var(--panel), 0 0 0 3px var(--ink); transform:scale(1.05); }
+        .chat-msg-avatar:hover{ box-shadow:0 0 0 2px var(--panel), 0 0 0 4px var(--ink); }
         .chat-msg-bubble{
             box-shadow:0 1px 3px rgba(0,0,0,.18), 0 1px 1px rgba(0,0,0,.08);
             transition:box-shadow .15s ease;
@@ -1726,8 +1728,11 @@
             position:relative; display:flex; align-items:center; gap:9px; width:100%; text-align:left; cursor:pointer;
             border:1px solid var(--line); border-radius:9px; background:var(--panel-alt); overflow:hidden;
             padding:10px 12px; font-family:'Inter',sans-serif; transition:border-color .15s ease;
+            -webkit-appearance:none; appearance:none; box-sizing:border-box; outline:none;
+            -webkit-tap-highlight-color:transparent;
         }
         .txt-poll-opt:hover{ border-color:var(--ink-soft); }
+        .txt-poll-opt:active, .txt-poll-opt:focus{ transform:none !important; outline:none; }
         .chat-msg.is-mine .txt-poll-opt{ background:rgba(0,0,0,.15); border-color:rgba(255,255,255,.2); }
         .txt-poll-fill{
             position:absolute; inset:0; background:var(--ink); opacity:.14; z-index:0;
@@ -4277,7 +4282,7 @@
 ${m.role === 'admin' ? `
       <div class="admin-frame">
         <div class="admin-frame-badge">${icon('crown',10)} Yönetici</div>
-<div class="chat-msg-bubble" id="bubble-${m.id}">
+<div class="chat-msg-bubble" id="bubble-${m.id}" onclick="${isSelMode?`toggleMsgSelected('${m.id}')`:''}">
           ${m.replyTo ? `<div class="reply-quote" onclick="scrollToMessage('${m.replyTo.id}', false)"><b>${escapeHtml(m.replyTo.username)}</b><span>${escapeHtml(m.replyTo.text)}</span></div>` : ''}
           ${m.isEventMsg && m.eventId ? buildEventCardHtml(m.eventId) : `<div class="chat-msg-text">${m.isEventMsg ? icon('flag',12)+' ' : ''}${m.text ? escapeHtml(m.text) : ''}</div>`}
           ${m.imageUrl ? `<img class="chat-msg-img" src="${m.imageUrl}" onclick="openLightbox('${m.imageUrl}')">` : ''}
@@ -4308,7 +4313,7 @@ ${m.track ? `
         </div>
       </div>
     ` : `
-<div class="chat-msg-bubble" id="bubble-${m.id}" ondblclick="handleBubbleDoubleLike(event,'${m.id}', false)">
+<div class="chat-msg-bubble" id="bubble-${m.id}" onclick="${isSelMode?`toggleMsgSelected('${m.id}')`:''}" ondblclick="${isSelMode?'':`handleBubbleDoubleLike(event,'${m.id}', false)`}">
         ${m.replyTo ? `<div class="reply-quote" onclick="scrollToMessage('${m.replyTo.id}', false)"><b>${escapeHtml(m.replyTo.username)}</b><span>${escapeHtml(m.replyTo.text)}</span></div>` : ''}
         ${m.isEventMsg && m.eventId ? buildEventCardHtml(m.eventId) : `<div class="chat-msg-text">${m.isEventMsg ? icon('flag',12)+' ' : ''}${m.text ? escapeHtml(m.text) : ''}</div>`}
         ${m.imageUrl ? `<img class="chat-msg-img" src="${m.imageUrl}" onclick="openLightbox('${m.imageUrl}')">` : ''}
@@ -5010,7 +5015,7 @@ ${m.audioUrl ? `
       ${isSelMode ? `<div class="chat-msg-select-check" onclick="toggleMsgSelected('${m.id}')">${icon('check',12)}</div>` : ''}
       <img class="chat-msg-avatar" src="${m.avatarUrl||'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" onclick="${isSelMode?`toggleMsgSelected('${m.id}')`:`openUserSocialProfile('${m.uid}')`}" style="cursor:pointer;" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'">
 <div class="chat-msg-body">
-<div class="chat-msg-headrow"><span class="chat-msg-name" onclick="openUserSocialProfile('${m.uid}')">${escapeHtml(m.username||'Kullanıcı')}</span>${chatMsgBadgesHtml(m)}</div><div class="chat-msg-bubble" id="dmbubble-${m.id}" ondblclick="handleBubbleDoubleLike(event,'${m.id}', true)">
+<div class="chat-msg-headrow"><span class="chat-msg-name" onclick="openUserSocialProfile('${m.uid}')">${escapeHtml(m.username||'Kullanıcı')}</span>${chatMsgBadgesHtml(m)}</div><div class="chat-msg-bubble" id="dmbubble-${m.id}" onclick="${isSelMode?`toggleMsgSelected('${m.id}')`:''}" ondblclick="${isSelMode?'':`handleBubbleDoubleLike(event,'${m.id}', true)`}">
           ${m.replyTo ? `<div class="reply-quote" onclick="scrollToMessage('${m.replyTo.id}', true)"><b>${escapeHtml(m.replyTo.username)}</b><span>${escapeHtml(m.replyTo.text)}</span></div>` : ''}
           <div class="chat-msg-text">${m.text?escapeHtml(m.text):''}</div>
           ${m.imageUrl ? `<img class="chat-msg-img" src="${m.imageUrl}" onclick="openLightbox('${m.imageUrl}')">` : ''}
@@ -8199,6 +8204,7 @@ function toggleSelectMode(scope){
     document.querySelectorAll('.chat-msg.show-actions').forEach(el=>el.classList.remove('show-actions'));
     rerenderForScope(scope);
     updateSelectBar(scope);
+    updateSelectToggleButtons();
     showTopToast('Mesaj seçme modu açık — silmek istediklerine dokun', 'info', 'check');
 }
 function exitSelectMode(){
@@ -8207,6 +8213,22 @@ function exitSelectMode(){
     _selectedIds.clear();
     if(scope) rerenderForScope(scope);
     updateSelectBar(scope);
+    updateSelectToggleButtons();
+}
+function updateSelectToggleButtons(){
+    const globalBtn = document.getElementById('chatSelectToggleBtn');
+    const dmBtn = document.getElementById('dmSelectToggleBtn');
+    const globalActive = _selectMode.active && _selectMode.scope === 'global';
+    const dmActive = _selectMode.active && _selectMode.scope === 'dm';
+    if(globalBtn){
+        globalBtn.innerHTML = globalActive ? `${icon('x',12)} Seçimi Bitir` : `${icon('check',12)} Seç`;
+        globalBtn.classList.toggle('liked', globalActive);
+    }
+    if(dmBtn){
+        dmBtn.innerHTML = icon(dmActive?'x':'check',15);
+        dmBtn.title = dmActive ? 'Seçimi Bitir' : 'Mesaj Seç';
+        dmBtn.classList.toggle('liked', dmActive);
+    }
 }
 function rerenderForScope(scope){
     if(scope === 'global') renderChatMessages();

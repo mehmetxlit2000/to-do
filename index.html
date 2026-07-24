@@ -643,53 +643,29 @@
         .voice-msg-pill.playing .voice-wave span:nth-child(3n){ animation-delay:.3s; }
         @keyframes voicePulse{ 0%,100%{transform:scaleY(.5);} 50%{transform:scaleY(1);} }
         .chat-msg-footer{
-            display:flex; align-items:center; gap:8px; margin-top:5px; flex-wrap:wrap; min-height:22px;
+            display:flex; align-items:center; gap:8px; margin-top:5px; flex-wrap:wrap; min-height:0;
         }
-        /* Sayacı olmayan beğen butonu: varsayılan gizli */
         .chat-msg-footer .chat-like-btn:not(.has-count){
-            opacity:0; transform:translateY(4px) scale(.85); pointer-events:none;
-            transition:opacity .22s cubic-bezier(.4,0,.2,1), transform .22s cubic-bezier(.34,1.4,.64,1);
+            display:none;
         }
-        /* Yanıtla / tepki seç / bot / düzenle-sil grubu: varsayılan gizli, hover'da genişleyerek açılır */
         .chat-msg-footer .footer-extra{
-            display:inline-flex; align-items:center; gap:8px;
-            max-width:0; opacity:0; overflow:hidden; pointer-events:none;
-            transform:translateX(-6px); margin-left:-8px;
-            transition:max-width .32s cubic-bezier(.4,0,.2,1), opacity .2s ease,
-                       transform .28s cubic-bezier(.34,1.4,.64,1), margin .32s ease;
-        }
-        .chat-msg-footer .footer-extra > *{
-            opacity:0; transform:translateY(4px) scale(.9);
-            transition:opacity .2s ease, transform .22s cubic-bezier(.34,1.4,.64,1);
+            display:none; align-items:center; gap:8px;
         }
         .chat-msg:hover .chat-msg-footer .chat-like-btn:not(.has-count),
         .chat-msg-body:hover .chat-msg-footer .chat-like-btn:not(.has-count),
         .chat-msg.show-actions .chat-msg-footer .chat-like-btn:not(.has-count){
-            opacity:1; transform:translateY(0) scale(1); pointer-events:auto;
+            display:flex;
         }
         .chat-msg:hover .chat-msg-footer .footer-extra,
         .chat-msg-body:hover .chat-msg-footer .footer-extra,
         .chat-msg.show-actions .chat-msg-footer .footer-extra{
-            max-width:220px; opacity:1; pointer-events:auto; overflow:visible; transform:translateX(0); margin-left:0;
+            display:inline-flex;
         }
-        .chat-msg:hover .chat-msg-footer .footer-extra > *,
-        .chat-msg-body:hover .chat-msg-footer .footer-extra > *,
-        .chat-msg.show-actions .chat-msg-footer .footer-extra > *{
-            opacity:1; transform:translateY(0) scale(1);
-        }
-        .chat-msg:hover .chat-msg-footer .footer-extra > *:nth-child(1),
-        .chat-msg.show-actions .chat-msg-footer .footer-extra > *:nth-child(1){ transition-delay:.02s; }
-        .chat-msg:hover .chat-msg-footer .footer-extra > *:nth-child(2),
-        .chat-msg.show-actions .chat-msg-footer .footer-extra > *:nth-child(2){ transition-delay:.06s; }
-        .chat-msg:hover .chat-msg-footer .footer-extra > *:nth-child(3),
-        .chat-msg.show-actions .chat-msg-footer .footer-extra > *:nth-child(3){ transition-delay:.1s; }
-        .chat-msg:hover .chat-msg-footer .footer-extra > *:nth-child(4),
-        .chat-msg.show-actions .chat-msg-footer .footer-extra > *:nth-child(4){ transition-delay:.14s; }
         .chat-msg.select-mode .chat-msg-footer .footer-extra,
         .chat-msg.select-mode .chat-msg-footer .chat-like-btn:not(.has-count){ display:none !important; }
 
         /* ---- Mesaj gruplama (WhatsApp tarzı ardışık mesajlar) ---- */
-        .chat-msg.grouped{ margin-top:-6px; }
+        .chat-msg.grouped{ margin-top:-14px; }
         .chat-msg.grouped .chat-msg-avatar{ visibility:hidden; }
         .chat-msg.grouped .chat-msg-headrow{ display:none; }
         .chat-msg.grouped .chat-msg-badge-row{ display:none; }
@@ -2246,6 +2222,13 @@
             <button class="theme-toggle" id="accentPickerBtn" onclick="openThemeStudio()" title="Tema Stüdyosunu Aç" style="display:none;"></button>
             <input type="color" id="accentColorInput" value="#5b2ec7" oninput="onAccentColorChange(this.value)" style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;">
             <button id="holidayCornerBadge" onclick="openHolidayInfoModal()" title="Özel gün bilgisi"><span class="hcb-dot"></span></button>
+            <div style="position:relative;">
+                <button class="theme-toggle" id="notifBellBtn" onclick="toggleNotifPanel(event)" title="Bildirimler">
+                    <span id="notifBellIcon"></span>
+                    <span id="notifBellBadge" style="display:none; position:absolute; top:6px; right:6px; width:8px; height:8px; border-radius:50%; background:var(--ink); box-shadow:0 0 6px var(--glow-mid);"></span>
+                </button>
+                <div id="notifPanel" class="profile-menu" style="min-width:300px; max-height:400px; overflow-y:auto;"></div>
+            </div>
             <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Temayı değiştir"></button>
         </div>
     </div>
@@ -2619,6 +2602,10 @@
                                             <span class="attach-opt-icon" id="attachLocationIconGlobal"></span>
                                             <span class="attach-opt-text"><span>Konum Paylaş</span><span class="attach-opt-sub">Google Maps ile paylaş</span></span>
                                         </button>
+                                        <button onclick="openGameInviteCreator('global')">
+                                            <span class="attach-opt-icon" id="attachGameIconGlobal"></span>
+                                            <span class="attach-opt-text"><span>Oyun Daveti / Düello</span><span class="attach-opt-sub">Bir oyun seç, meydan oku</span></span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -2675,6 +2662,10 @@
                                         <button onclick="shareLiveLocation('dm')">
                                             <span class="attach-opt-icon" id="attachLocationIconDm"></span>
                                             <span class="attach-opt-text"><span>Konum Paylaş</span><span class="attach-opt-sub">Google Maps ile paylaş</span></span>
+                                        </button>
+                                        <button onclick="openGameInviteCreator('dm')">
+                                            <span class="attach-opt-icon" id="attachGameIconDm"></span>
+                                            <span class="attach-opt-text"><span>Oyun Daveti / Düello</span><span class="attach-opt-sub">Bir oyun seç, meydan oku</span></span>
                                         </button>
                                     </div>
                                 </div>
@@ -2868,6 +2859,34 @@
         </div>
     </div>
 
+    <div id="gameInviteCreateModal" class="modal-overlay">
+        <div class="modal-card" style="max-width:460px; text-align:left;">
+            <p class="modal-eyebrow" style="text-align:center;">Oyun Daveti / Düello</p>
+            <div id="gameInviteStepPick">
+                <div class="seg-group" style="margin:10px 0 12px; justify-content:center;">
+                    <button type="button" class="seg-btn active" id="giModeInvite" onclick="setGameInviteMode('invite')">${'🎮'} Oyun Daveti</button>
+                    <button type="button" class="seg-btn" id="giModeDuel" onclick="setGameInviteMode('duel')">${'⚔️'} Düello</button>
+                </div>
+                <div class="bot-mode-grid" id="gameGrid" style="grid-template-columns:repeat(4,1fr); gap:8px; max-height:280px; overflow-y:auto;"></div>
+            </div>
+            <div class="auth-fields" style="width:100%; margin-top:14px;">
+                <div id="gameSelectedPreview" style="display:none; align-items:center; gap:10px; background:var(--panel-alt); border:1px solid var(--line); border-radius:12px; padding:10px;">
+                    <img id="gameSelectedImg" style="width:40px;height:40px;border-radius:8px;object-fit:cover;">
+                    <span id="gameSelectedName" style="font-weight:700; font-size:13px;"></span>
+                </div>
+                <span class="seg-label" style="margin-top:6px;" id="gameDescLabel">Açıklama / Davet mesajı</span>
+                <input type="text" id="gameInviteDesc" placeholder="örn. Hadi birkaç raunt Valorant atalım!">
+                <div id="gameDuelTopicWrap" style="display:none;">
+                    <span class="seg-label" style="margin-top:8px;">Düello Konusu</span>
+                    <input type="text" id="gameDuelTopic" placeholder="örn. En yüksek skoru kim yapacak?">
+                </div>
+            </div>
+            <div class="modal-actions" style="margin-top:16px; width:100%;">
+                <button class="btn btn-ghost" onclick="closeGameInviteCreator()">Vazgeç</button>
+                <button class="btn" onclick="submitGameInvite()">Gönder</button>
+            </div>
+        </div>
+    </div>
     <div id="textPollCreateModal" class="modal-overlay">
         <div class="modal-card" style="max-width:400px; text-align:left;">
             <p class="modal-eyebrow" style="text-align:center;">Anket Oluştur</p>
@@ -4306,6 +4325,7 @@ ${m.track ? `
     <span class="file-card-info"><span class="file-card-name">${escapeHtml(m.file.name)}</span><span class="file-card-size">${formatFileSize(m.file.size)}</span></span>
   </a>` : ''}
  ${locationCardHtml(m.location)}
+        ${m.gameInvite ? renderGameInviteCard(m, false) : ''}
         ${m.imagePoll ? renderImagePollCard(m, false) : ''}
         ${m.textPoll ? renderTextPollCard(m, false) : ''}
         <div class="chat-msg-time-row"><span>${time}${editedLabel}</span></div>
@@ -5013,7 +5033,7 @@ ${m.track ? `
           <div class="chat-msg-time-row"><span>${time}${editedLabel}</span></div>
         </div>
         <div class="chat-msg-footer">
-          <button class="chat-like-btn${liked?' liked':''}${likeCount?' has-count':''}" id="likebtn-${m.id}" onclick="toggleDmLike('${m.id}', event)">${likeGlyph(liked,13)} ${likeCount||''}</button>
+<button class="chat-like-btn${liked?' liked':''}${likeCount?' has-count':''}" id="likebtn-${m.id}" onclick="toggleDmLike('${m.id}', event)">${likeGlyph(liked,13)} ${likeCount||''}</button>
           <span class="footer-extra">
             <button class="chat-like-btn" onclick="setDmReply('${m.id}')" title="Yanıtla">${icon('reply',13)}</button>
             <div class="chat-reaction-picker">
@@ -5025,8 +5045,7 @@ ${m.track ? `
           </span>
           <div class="chat-reactions-row" id="reactrow-${m.id}">${reactionChips}</div>
         </div>
-      </div>
-    </div>`;
+      </div>`;
         }).join('');
         wrap.scrollTop = wrap.scrollHeight;
     }
@@ -5490,14 +5509,13 @@ ${m.track ? `
     <span class="file-card-info"><span class="file-card-name">${escapeHtml(m.file.name)}</span><span class="file-card-size">${formatFileSize(m.file.size)}</span></span>
   </a>` : ''}
 ${locationCardHtml(m.location)}
+            ${m.gameInvite ? renderGameInviteCard(m, true) : ''}
             ${m.imagePoll ? renderImagePollCard(m, true) : ''}
             ${m.textPoll ? renderTextPollCard(m, true) : ''}
             <div class="chat-msg-time-row">${seenTickHtml}<span>${time}${editedLabel}</span></div>
           </div>
 <div class="chat-msg-footer">
-          <button class="chat-like-btn${liked?' liked':''}${likeCount?' has-count':''}" onclick="toggleDmLike('${m.id}', event)">${likeGlyph(liked,13)} ${likeCount||''}</button>
-          <span class="footer-extra">
-            <button class="chat-like-btn" onclick="setDmReply('${m.id}')" title="Yanıtla">${icon('reply',13)}</button>
+          <button class="chat-like-btn${liked?' liked':''}${likeCount?' has-count':''}" id="likebtn-${m.id}" onclick="toggleDmLike('${m.id}', event)">${likeGlyph(liked,13)} ${likeCount||''}</button>
             <div class="chat-reaction-picker">
               <button class="chat-like-btn" onclick="toggleReactionMenu('${m.id}')">${icon('smilePlus',13)}</button>
               <div class="chat-reaction-menu" id="reactMenu-${m.id}">${reactionMenuBtns}</div>
@@ -5505,7 +5523,7 @@ ${locationCardHtml(m.location)}
             ${window._isAdminUser ? `<button class="chat-like-btn bot-trigger-btn" onclick="openBotPanel('${m.id}','dm')" title="Bot Etkileşimi">${icon('botIcon',13)}</button>` : ''}
             ${mineActions}
           </span>
-          <div class="chat-reactions-row">${reactionChips}</div>
+          <div class="chat-reactions-row" id="reactrow-${m.id}">${reactionChips}</div>
         </div>
         </div>
       </div>`;
@@ -6783,6 +6801,142 @@ ${locationCardHtml(m.location)}
         if(snap.val() === optIdx) await ref.remove(); else await ref.set(optIdx);
     }
 
+    /* ===================== OYUN DAVETİ / DÜELLO ===================== */
+    const GAME_LIST = [
+        { name: 'Minecraft', img: 'https://cdn.cloudflare.steamstatic.com/steam/apps/1672970/header.jpg' },
+        { name: 'Fortnite', img: 'https://cdn2.unrealengine.com/fortnite-chapter-4-season-4-1920x1080-1920x1080-456073167.jpg' },
+        { name: 'Roblox', img: 'https://tr.rbxcdn.com/18bf8ef2448b11c998a46e12e1f2f81d/420/420/Image/Png' },
+        { name: 'GTA V', img: 'https://cdn.cloudflare.steamstatic.com/steam/apps/271590/header.jpg' },
+        { name: 'Valorant', img: 'https://images.contentstack.io/v3/assets/bltb6530b271fca0b16/blt72004071ecbe4d19/637775791350a41f6f8bf6a8/valorant_banner.png' },
+        { name: 'League of Legends', img: 'https://rerollcdn.com/icons/lol.png' },
+        { name: 'CS2', img: 'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg' },
+        { name: 'PUBG Mobile', img: 'https://assets.pubg.com/pubg-com/other/pubg_mobile_share.jpg' },
+        { name: 'Free Fire', img: 'https://ff.garena.com/images/common/share.jpg' },
+        { name: 'Call of Duty Mobile', img: 'https://www.callofduty.com/content/dam/atvi/callofduty/cod-touch/web/common/social/codm-share-image.jpg' },
+        { name: 'EA FC 25', img: 'https://media.contentapi.ea.com/content/dam/ea/fc/fc-25/common/fc25-reveal-share-image.jpg.adapt.crop16x9.1043w.jpg' },
+        { name: 'Clash Royale', img: 'https://asset.brandfetch.io/id_X8G9u0D/idbKjR6lVj.jpeg' },
+        { name: 'Clash of Clans', img: 'https://asset.brandfetch.io/idLp40UvX-/idp_1nE9d1.jpeg' },
+        { name: 'Among Us', img: 'https://cdn.cloudflare.steamstatic.com/steam/apps/945360/header.jpg' },
+        { name: 'Brawl Stars', img: 'https://asset.brandfetch.io/idZ01bK7i1/idV9cK7k8H.jpeg' },
+        { name: 'Apex Legends', img: 'https://cdn.cloudflare.steamstatic.com/steam/apps/1172470/header.jpg' },
+        { name: 'Rocket League', img: 'https://cdn.cloudflare.steamstatic.com/steam/apps/252950/header.jpg' },
+        { name: 'Chess.com', img: 'https://images.chesscomfiles.com/uploads/v1/images_users/tiny_mce/SamCopeland/phppvkMa4.png' },
+        { name: 'Ludo King', img: 'https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/4a/02/7f/4a027fd6-80db-44c1-2292-16788db1f3ae/AppIcon-0-0-1x_U007emarketing-0-7-0-sRGB-85-220.png/1200x630wa.png' },
+        { name: '8 Ball Pool', img: 'https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/35/0f/70/350f70a7-ccfb-d96a-0402-1845f78cbfd9/AppIcon-0-0-1x_U007emarketing-0-7-0-sRGB-85-220.png/1200x630wa.png' }
+    ];
+    let _giTarget = 'global';
+    let _giMode = 'invite'; // 'invite' | 'duel'
+    let _giSelectedGame = null;
+
+    function openGameInviteCreator(target){
+        _giTarget = target;
+        _giMode = 'invite';
+        _giSelectedGame = null;
+        document.getElementById('chatAttachMenu').classList.remove('open');
+        document.getElementById('dmAttachMenu').classList.remove('open');
+        closeAllAppModals('chatMegaModal');
+        document.getElementById('gameInviteDesc').value = '';
+        document.getElementById('gameDuelTopic').value = '';
+        document.getElementById('gameSelectedPreview').style.display = 'none';
+        setGameInviteMode('invite');
+        renderGameGrid();
+        document.getElementById('gameInviteCreateModal').classList.add('show');
+    }
+    function closeGameInviteCreator(){ document.getElementById('gameInviteCreateModal').classList.remove('show'); }
+    function setGameInviteMode(mode){
+        _giMode = mode;
+        document.getElementById('giModeInvite').classList.toggle('active', mode==='invite');
+        document.getElementById('giModeDuel').classList.toggle('active', mode==='duel');
+        document.getElementById('gameDuelTopicWrap').style.display = mode==='duel' ? 'block' : 'none';
+        document.getElementById('gameDescLabel').textContent = mode==='duel' ? 'Meydan okuma mesajı' : 'Açıklama / Davet mesajı';
+    }
+    function renderGameGrid(){
+        const grid = document.getElementById('gameGrid');
+        grid.innerHTML = GAME_LIST.map((g,i) => `
+      <div class="ts-mode-btn${_giSelectedGame===i?' active':''}" style="padding:8px; align-items:center; text-align:center; cursor:pointer;" onclick="pickGame(${i})">
+        <img src="${g.img}" style="width:48px;height:48px;border-radius:10px;object-fit:cover;" onerror="this.style.opacity=.3">
+        <span class="ts-mode-name" style="font-size:10.5px; margin-top:4px;">${g.name}</span>
+      </div>`).join('');
+    }
+    function pickGame(i){
+        _giSelectedGame = i;
+        renderGameGrid();
+        const g = GAME_LIST[i];
+        document.getElementById('gameSelectedPreview').style.display = 'flex';
+        document.getElementById('gameSelectedImg').src = g.img;
+        document.getElementById('gameSelectedName').textContent = g.name;
+    }
+    async function submitGameInvite(){
+        if(_giSelectedGame==null){ showTopToast('Bir oyun seç', 'warn', 'warn'); return; }
+        const g = GAME_LIST[_giSelectedGame];
+        const desc = document.getElementById('gameInviteDesc').value.trim();
+        const duelTopic = document.getElementById('gameDuelTopic').value.trim();
+        const me = getMyProfileCache();
+        const gameInvite = {
+            gameName: g.name, gameImg: g.img, description: desc,
+            isDuel: _giMode === 'duel', duelTopic: duelTopic, status: 'pending', respondedBy: null
+        };
+        closeGameInviteCreator();
+        try{
+            if(_giTarget === 'dm' && currentGroupId){
+                await db.ref('developmentUsers/groupChats/'+currentGroupId+'/messages').push({
+                    uid: currentUid, username: me.username, avatarUrl: me.avatarUrl,
+                    text:'', gameInvite, ts: Date.now(), likes:{}, reactions:{}
+                });
+            } else if(_giTarget === 'dm'){
+                if(!currentDmPairKey || !currentDmTargetUid){ showTopToast('Sohbet seçilmedi', 'warn', 'warn'); return; }
+                await db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages').push({
+                    uid: currentUid, text:'', gameInvite, ts: Date.now(), likes:{}, reactions:{}
+                });
+                const targetProfileSnap = await db.ref('developmentUsers/'+currentDmTargetUid+'/profile').once('value');
+                const targetProfile = targetProfileSnap.val() || {};
+                const preview = (gameInvite.isDuel?'⚔️ Düello: ':'🎮 Oyun daveti: ') + g.name;
+                await db.ref('developmentUsers/dmIndex/'+currentUid+'/'+currentDmTargetUid).update({ otherUsername: targetProfile.username||'Kullanıcı', otherAvatar: targetProfile.avatarUrl||'', lastMessage: preview, ts: Date.now() });
+                await db.ref('developmentUsers/dmIndex/'+currentDmTargetUid+'/'+currentUid).update({ otherUsername: me.username, otherAvatar: me.avatarUrl, lastMessage: preview, ts: Date.now() });
+            } else {
+                const isAdmin = currentUid === ADMIN_UID, isMod = !!moderators[currentUid];
+                await chatRef.push({
+                    uid: currentUid, username: me.username, avatarUrl: me.avatarUrl,
+                    text:'', gameInvite, ts: Date.now(), rankIdx: getRankIndex(xp),
+                    role: isAdmin?'admin':(isMod?'mod':null), country: detectUserCountryCode(), likes:{}, reactions:{}
+                });
+            }
+            showTopToast(gameInvite.isDuel ? 'Düello gönderildi' : 'Oyun daveti gönderildi', 'info', 'trophy');
+        }catch(err){ showTopToast('Gönderilemedi: '+err.message, 'warn', 'warn'); }
+    }
+    async function respondGameInvite(msgId, isDm, response){
+        const ref = pollMsgRef(msgId, isDm).child('gameInvite');
+        try{
+            await ref.update({ status: response, respondedBy: currentUid });
+            showTopToast(response==='accepted' ? 'Davet kabul edildi' : 'Davet reddedildi', response==='accepted'?'info':'warn', response==='accepted'?'check':'x');
+        }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
+    }
+    function renderGameInviteCard(m, isDm){
+        const gi = m.gameInvite;
+        if(!gi) return '';
+        const isMine = m.uid === currentUid;
+        const statusHtml = gi.status === 'accepted'
+            ? `<div style="display:flex; align-items:center; gap:6px; color:var(--pos); font-weight:700; font-size:11.5px;">${icon('check',13)} Kabul edildi</div>`
+            : gi.status === 'declined'
+                ? `<div style="display:flex; align-items:center; gap:6px; color:var(--neg); font-weight:700; font-size:11.5px;">${icon('x',13)} Reddedildi</div>`
+                : (!isMine ? `<div style="display:flex; gap:8px; margin-top:8px;">
+             <button class="btn" style="flex:1; padding:9px; font-size:11px;" onclick="respondGameInvite('${m.id}',${isDm},'accepted')">${icon('check',12)} Kabul Et</button>
+             <button class="btn btn-ghost" style="flex:1; padding:9px; font-size:11px;" onclick="respondGameInvite('${m.id}',${isDm},'declined')">${icon('x',12)} Reddet</button>
+           </div>` : `<div style="font-size:11px; color:var(--ink-soft); font-family:'JetBrains Mono',monospace;">${icon('clock',11)} Yanıt bekleniyor…</div>`);
+        return `<div class="fx-panel" style="padding:12px; min-width:230px; max-width:260px; margin-top:4px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <img src="${gi.gameImg}" style="width:44px;height:44px;border-radius:10px;object-fit:cover;" onerror="this.style.opacity=.3">
+        <div style="min-width:0;">
+          <div style="font-weight:800; font-size:12.5px; display:flex; align-items:center; gap:5px;">${gi.isDuel?icon('bolt',12):icon('trophy',12)} ${escapeHtml(gi.gameName)}</div>
+          <div style="font-size:10px; color:var(--ink-soft); font-family:'JetBrains Mono',monospace;">${gi.isDuel?'DÜELLO DAVETİ':'OYUN DAVETİ'}</div>
+        </div>
+      </div>
+      ${gi.description ? `<div style="font-size:12px; margin-bottom:6px;">${escapeHtml(gi.description)}</div>` : ''}
+      ${gi.isDuel && gi.duelTopic ? `<div style="font-size:11px; color:var(--ink-soft); margin-bottom:6px;">${icon('flag',10)} Konu: ${escapeHtml(gi.duelTopic)}</div>` : ''}
+      ${statusHtml}
+    </div>`;
+    }
+
     function renderTextPollCard(m, isDm){
         const poll = m.textPoll;
         if(!poll) return '';
@@ -7162,6 +7316,9 @@ ${locationCardHtml(m.location)}
         document.getElementById('groupLeaveBtn').innerHTML = `${icon('logout',13)} Gruptan Ayrıl`;
         document.getElementById('attachLocationIconGlobal').innerHTML = icon('compass',13);
         document.getElementById('attachLocationIconDm').innerHTML = icon('compass',13);
+        document.getElementById('notifBellIcon').innerHTML = icon('inbox',15);
+        document.getElementById('attachGameIconGlobal').innerHTML = icon('trophy',13);
+        document.getElementById('attachGameIconDm').innerHTML = icon('trophy',13);
         resetVsPollSlot('A'); resetVsPollSlot('B');
     }
     function toggleAddCard(){
@@ -8773,10 +8930,6 @@ function escapeHtml(str){
         const isAdmin = !!window._isAdminUser;
         let html = `
     <button class="ps-nav-item" onclick="closeProfileSidebar(); openProfilePanel();">${icon('user',15)} Profil</button>
-    <button class="ps-nav-item" onclick="closeProfileSidebar(); openFriendRequestsModal();">
-  ${icon('inbox',15)} Arkadaşlık İstekleri
-  <span id="friendReqBadge" class="tag tag-xp" style="display:none; margin-left:auto;"></span>
-</button>
     <button class="ps-nav-item" onclick="closeProfileSidebar(); openChatHub();">${icon('inbox',15)} Mesajlarım</button>
     <button class="ps-nav-item" onclick="closeProfileSidebar(); openSettingsPanel();">${icon('palette',15)} Site Ayarları</button>`;
         if(isAdmin){
@@ -8858,15 +9011,57 @@ function escapeHtml(str){
         db.ref('developmentUsers/'+currentUid+'/friendRequests').on('value', snap => {
             incomingFriendRequests = snap.val() || {};
             updateFriendRequestsBadge();
-            if(document.getElementById('friendRequestsModal').classList.contains('show')) renderFriendRequestsModal();
+            renderNotifPanel();
         });
+        db.ref('developmentUsers/'+currentUid+'/friendRequests').on('child_added', snap => {
+            if(!window._notifFirstLoadDone) return;
+            const r = snap.val() || {};
+            fireBrowserNotification('Yeni arkadaşlık isteği', (r.username||'Biri') + ' sana arkadaşlık isteği gönderdi');
+        });
+        setTimeout(()=>{ window._notifFirstLoadDone = true; }, 1500);
+        if('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
     }
     function updateFriendRequestsBadge(){
         const count = Object.keys(incomingFriendRequests).length;
-        const badge = document.getElementById('friendReqBadge');
-        if(!badge) return;
-        badge.style.display = count>0 ? 'inline-flex' : 'none';
-        badge.textContent = '+' + count;
+        const bellBadge = document.getElementById('notifBellBadge');
+        if(bellBadge) bellBadge.style.display = count>0 ? 'block' : 'none';
+    }
+    function fireBrowserNotification(title, body){
+        if('Notification' in window && Notification.permission === 'granted'){
+            try{ new Notification(title, { body, icon:'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif' }); }catch(e){}
+        }
+        showTopToast(body, 'info', 'inbox');
+    }
+    function toggleNotifPanel(e){
+        if(e) e.stopPropagation();
+        const panel = document.getElementById('notifPanel');
+        const willOpen = !panel.classList.contains('open');
+        panel.classList.toggle('open', willOpen);
+        if(willOpen) renderNotifPanel();
+    }
+    document.addEventListener('click', e => {
+        if(!e.target.closest('#notifPanel') && !e.target.closest('#notifBellBtn')){
+            const panel = document.getElementById('notifPanel');
+            if(panel) panel.classList.remove('open');
+        }
+    });
+    function renderNotifPanel(){
+        const panel = document.getElementById('notifPanel');
+        if(!panel) return;
+        const uids = Object.keys(incomingFriendRequests);
+        if(uids.length===0){
+            panel.innerHTML = `<div style="padding:22px; text-align:center; color:var(--ink-soft); font-size:12px;">${icon('inbox',18)}<p style="margin-top:8px;">Bildirim yok</p></div>`;
+            return;
+        }
+        panel.innerHTML = uids.map(uid => {
+            const r = incomingFriendRequests[uid];
+            return `<div class="profile-menu-item" style="cursor:default; gap:10px;">
+          <img src="${r.avatarUrl||'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;flex:none;">
+          <span style="flex:1; min-width:0; font-weight:500;">${escapeHtml(r.username)} arkadaşlık isteği gönderdi</span>
+          <button class="icon-btn" style="width:28px;height:28px;padding:0;" title="Kabul et" onclick="acceptFriendRequest('${uid}')">${icon('check',13)}</button>
+          <button class="icon-btn" style="width:28px;height:28px;padding:0;" title="Reddet" onclick="rejectFriendRequest('${uid}')">${icon('x',13)}</button>
+        </div>`;
+        }).join('');
     }
 
     async function sendFriendRequest(targetUid, targetUsername, targetAvatarUrl){

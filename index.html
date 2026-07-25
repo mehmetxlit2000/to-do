@@ -2499,6 +2499,12 @@
             .htc-countdown{ width:100%; justify-content:center; }
             .htc-sub{ max-width:100%; }
         }
+        .event-top-card{
+            background:linear-gradient(100deg, var(--ec3,#7a0000), var(--ec1,#ff8a8a) 45%, var(--ec2,#ff2b2b) 90%, var(--ec3,#7a0000));
+            background-size:250% 250%; animation:holidayCardShimmer 8s ease infinite;
+        }
+        .event-top-card-progress{ height:6px; border-radius:100px; background:rgba(0,0,0,.25); overflow:hidden; margin-top:10px; max-width:320px; }
+        .event-top-card-progress-fill{ height:100%; border-radius:100px; background:#fff; opacity:.9; transition:width .6s ease; width:0%; }
 
         /* ==================== ÖZEL GÜN — GÖKYÜZÜ SAHNESİ (Noel Baba / Cadı / Tavşan) ==================== */
         @keyframes holidaySkyFly{
@@ -2596,6 +2602,17 @@
             <p class="htc-sub" id="htcSub"></p>
         </div>
         <div class="htc-countdown" id="holidayTopCardCountdown"></div>
+    </div>
+    <div class="holiday-top-card event-top-card" id="eventTopCard" style="display:none;">
+        <button class="htc-close" id="eventTopCardCloseBtn" onclick="dismissEventTopCard()"></button>
+        <div class="htc-icon" id="etcIcon"></div>
+        <div class="htc-body">
+            <p class="htc-eyebrow" id="etcEyebrow"></p>
+            <p class="htc-title" id="etcTitle"></p>
+            <p class="htc-sub" id="etcSub"></p>
+            <div class="event-top-card-progress"><div class="event-top-card-progress-fill" id="etcProgressFill"></div></div>
+        </div>
+        <div class="htc-countdown" id="eventTopCardCountdown"></div>
     </div>
     <div class="celebrate-banner" id="celebrateBanner"><span id="celebrateIcon"></span><span>Bugünkü tüm görevler tamam — harikasın!</span></div>
 
@@ -3082,6 +3099,8 @@
                 <input type="number" id="eventGoalInput" placeholder="Hedef miktar" min="1">
                 <span class="seg-label" style="margin-top:8px;">Etkinlik adı</span>
                 <input type="text" id="eventNameInput" placeholder="örn. Yaz Su İçme Yarışı">
+                <span class="seg-label" style="margin-top:8px;">Etkinlik süresi</span>
+                <div class="seg-group" id="eventDurationGroup"></div>
             </div>
             <div class="modal-actions" style="margin-top:18px; width:100%;">
                 <button class="btn btn-ghost" onclick="closeCreateEventModal()">Vazgeç</button>
@@ -4781,6 +4800,94 @@ ${m.track ? `
     };
     let communityEvents = {};
     let eventsListenerAttached = false;
+    const EVENT_TYPE_COLORS = {
+        water:    { c1:'#38bdf8', c2:'#0ea5e9', c3:'#075985' },
+        steps:    { c1:'#4ade80', c2:'#0f9d58', c3:'#053b21' },
+        tasks:    { c1:'#ff8a8a', c2:'#ff2b2b', c3:'#7a0000' },
+        bench:    { c1:'#fb923c', c2:'#f97316', c3:'#7c2d12' },
+        deadlift: { c1:'#c084fc', c2:'#a855f7', c3:'#3b0764' }
+    };
+    const EVENT_DURATIONS = [
+        { label:'6 Saat', ms: 6*3600000 },
+        { label:'24 Saat', ms: 24*3600000 },
+        { label:'3 Gün', ms: 3*24*3600000 },
+        { label:'7 Gün', ms: 7*24*3600000 },
+        { label:'Süresiz', ms: null }
+    ];
+    let _eventDurationMs = EVENT_DURATIONS[1].ms;
+    let eventTopCardDismissed = {};
+    let eventTopCardInterval = null;
+
+    function renderEventDurationGroup(){
+        const grp = document.getElementById('eventDurationGroup');
+        if(!grp) return;
+        grp.innerHTML = EVENT_DURATIONS.map(d => `<button type="button" class="seg-btn small${d.ms===_eventDurationMs?' active':''}" onclick="pickEventDuration(${d.ms},this)">${d.label}</button>`).join('');
+    }
+    function pickEventDuration(ms, el){
+        _eventDurationMs = ms;
+        el.parentElement.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    function pickHeroEvent(){
+        const ids = Object.keys(communityEvents);
+        const active = ids.filter(id => !communityEvents[id].completed && (!communityEvents[id].endAt || communityEvents[id].endAt > Date.now()));
+        if(active.length === 0) return null;
+        active.sort((a,b) => (communityEvents[b].createdAt||0) - (communityEvents[a].createdAt||0));
+        return active[0];
+    }
+
+    function renderEventTopCard(){
+        const card = document.getElementById('eventTopCard');
+        if(!card) return;
+        clearInterval(eventTopCardInterval);
+        const id = pickHeroEvent();
+        if(!id || eventTopCardDismissed[id]){ card.style.display = 'none'; return; }
+        const ev = communityEvents[id];
+        const type = EVENT_TYPES[ev.type] || EVENT_TYPES.water;
+        const col = EVENT_TYPE_COLORS[ev.type] || EVENT_TYPE_COLORS.tasks;
+        card.style.display = 'flex';
+        card.style.setProperty('--ec1', col.c1);
+        card.style.setProperty('--ec2', col.c2);
+        card.style.setProperty('--ec3', col.c3);
+        document.getElementById('etcIcon').innerHTML = icon(type.ic, 28);
+        document.getElementById('etcEyebrow').innerHTML = `${icon('sparkle',10)} TOPLULUK ETKİNLİĞİ`;
+        document.getElementById('etcTitle').textContent = ev.name;
+        document.getElementById('eventTopCardCloseBtn').innerHTML = icon('x',12);
+        const participantCount = Object.keys(ev.participants||{}).length;
+        document.getElementById('etcSub').textContent = `${ev.creatorName} başlattı · ${participantCount} katılımcı · Hedef: ${ev.goal} ${type.unit}`;
+        const update = () => {
+            const stillExists = communityEvents[id];
+            if(!stillExists){ clearInterval(eventTopCardInterval); renderEventTopCard(); return; }
+            const progress = computeEventProgress(stillExists);
+            const pct = Math.min(100, Math.round((progress/stillExists.goal)*100));
+            const fill = document.getElementById('etcProgressFill');
+            if(fill) fill.style.width = pct+'%';
+            const countdownEl = document.getElementById('eventTopCardCountdown');
+            if(stillExists.endAt){
+                const rem = Math.max(0, stillExists.endAt - Date.now());
+                const days = Math.floor(rem/86400000);
+                const hours = Math.floor((rem%86400000)/3600000);
+                const mins = Math.floor((rem%3600000)/60000);
+                const secs = Math.floor((rem%60000)/1000);
+                countdownEl.innerHTML = `
+          <div class="htc-chip"><b>${days}</b><span>GÜN</span></div>
+          <div class="htc-chip"><b>${hours}</b><span>SAAT</span></div>
+          <div class="htc-chip"><b>${mins}</b><span>DK</span></div>
+          <div class="htc-chip"><b>${secs}</b><span>SN</span></div>`;
+                if(rem<=0){ clearInterval(eventTopCardInterval); renderEventTopCard(); }
+            } else {
+                countdownEl.innerHTML = `<div class="htc-chip" style="min-width:70px;"><b>%${pct}</b><span>TAMAM</span></div>`;
+            }
+        };
+        update();
+        eventTopCardInterval = setInterval(update, 1000);
+    }
+    function dismissEventTopCard(){
+        const id = pickHeroEvent();
+        if(id) eventTopCardDismissed[id] = true;
+        renderEventTopCard();
+    }
 
     function attachEventsListener(){
         if(eventsListenerAttached || !eventsRef2) return;
@@ -4788,6 +4895,7 @@ ${m.track ? `
         eventsRef2.on('value', snap => {
             communityEvents = snap.val() || {};
             renderChatMessages();
+            renderEventTopCard();
         });
     }
 
@@ -4797,6 +4905,8 @@ ${m.track ? `
         document.getElementById('eventTypeSelect').value = 'water';
         document.getElementById('eventGoalInput').value = '';
         document.getElementById('eventNameInput').value = '';
+        _eventDurationMs = EVENT_DURATIONS[1].ms;
+        renderEventDurationGroup();
         onEventTypeChange();
         document.getElementById('createEventModal').classList.add('show');
     }
@@ -4815,13 +4925,16 @@ ${m.track ? `
         const me = getMyProfileCache();
         const isAdmin = currentUid === ADMIN_UID;
         const isMod = !!moderators[currentUid];
+        const createdAt = Date.now();
         const ev = {
             type, goal,
             name: name || EVENT_TYPES[type].label,
             creatorUid: currentUid,
             creatorName: me.username,
             creatorRole: isAdmin ? 'admin' : (isMod ? 'mod' : null),
-            createdAt: Date.now(),
+            createdAt,
+            durationMs: _eventDurationMs || null,
+            endAt: _eventDurationMs ? (createdAt + _eventDurationMs) : null,
             completed: false,
             participants: {}
         };
@@ -4940,7 +5053,7 @@ ${m.track ? `
         <div class="ec2-eyebrow">${icon('sparkle',9)} TOPLULUK ETKİNLİĞİ</div>
         <div class="ec2-title">${escapeHtml(ev.name)}</div>
       </div>
-      <span class="ec2-time-chip">${icon('clock',9)} ${timeAgoTr(ev.createdAt||Date.now())}</span>
+      <span class="ec2-time-chip">${icon('clock',9)} ${ev.endAt ? (Date.now()<ev.endAt ? formatCountdown(ev.endAt-Date.now()) : 'Süre doldu') : timeAgoTr(ev.createdAt||Date.now())}</span>
     </div>
     <div class="event-card-body">
       ${completed ? `<div class="event-card-complete-banner">${icon('trophy',16)} HEDEFE ULAŞILDI!</div>` : `
@@ -5927,6 +6040,8 @@ ${locationCardHtml(m.location)}
           </div>
 <div class="chat-msg-footer">
           <button class="chat-like-btn${liked?' liked':''}${likeCount?' has-count':''}" id="likebtn-${m.id}" onclick="toggleDmLike('${m.id}', event)">${likeGlyph(liked,13)} ${likeCount||''}</button>
+          <span class="footer-extra">
+            <button class="chat-like-btn" onclick="setDmReply('${m.id}')" title="Yanıtla">${icon('reply',13)}</button>
             <div class="chat-reaction-picker">
               <button class="chat-like-btn" onclick="toggleReactionMenu('${m.id}')">${icon('smilePlus',13)}</button>
               <div class="chat-reaction-menu" id="reactMenu-${m.id}">${reactionMenuBtns}</div>
@@ -7054,11 +7169,18 @@ ${locationCardHtml(m.location)}
         try{
             if(response === 'declined'){
                 await db.ref('developmentUsers/duels/'+duelId).update({ status:'declined' });
+                d.status = 'declined';
+                myDuels[duelId] = d;
+                renderChatMessages(); renderDmMessages(); renderGroupMessages && renderGroupMessages();
                 showTopToast('Düello reddedildi', 'warn', 'x');
                 return;
             }
             const now = Date.now();
-            await db.ref('developmentUsers/duels/'+duelId).update({ status:'active', startAt: now, endAt: now + (d.durationMs||86400000) });
+            const updated = { status:'active', startAt: now, endAt: now + (d.durationMs||86400000) };
+            await db.ref('developmentUsers/duels/'+duelId).update(updated);
+            Object.assign(d, updated);
+            myDuels[duelId] = d;
+            renderChatMessages(); renderDmMessages(); renderGroupMessages && renderGroupMessages();
             showTopToast('Düello başladı! Adımların otomatik işlenecek', 'info', 'bolt');
         }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
     }
@@ -7589,6 +7711,16 @@ ${locationCardHtml(m.location)}
         const ref = pollMsgRef(msgId, isDm).child('gameInvite/responses/'+currentUid);
         try{
             await ref.set(response);
+            // Dinleyici gecikmesini beklemeden arayüzü anında tazele
+            const list = currentGroupId ? groupMessages : (isDm ? dmMessages : chatMessages);
+            const m = list.find(x => x.id === msgId);
+            if(m && m.gameInvite){
+                if(!m.gameInvite.responses) m.gameInvite.responses = {};
+                m.gameInvite.responses[currentUid] = response;
+                if(currentGroupId) renderGroupMessages();
+                else if(isDm) renderDmMessages();
+                else renderChatMessages();
+            }
             showTopToast(response==='accepted' ? 'Davete katıldın' : 'Daveti reddettin', response==='accepted'?'info':'warn', response==='accepted'?'check':'x');
         }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
     }

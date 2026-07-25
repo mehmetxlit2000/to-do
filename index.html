@@ -985,6 +985,100 @@
         .gi-msg-status.declined{ color:var(--neg); background:rgba(224,70,63,.14); }
         .gi-msg-status.pending{ color:var(--ink-soft); }
         .gi-pending-dot{ width:5px; height:5px; border-radius:50%; background:var(--ink-soft); flex:none; }
+
+        /* ==================== ADIM DÜELLOSU KARTI ==================== */
+        @keyframes sdPulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(15,157,88,.4);} 50%{ box-shadow:0 0 0 8px rgba(15,157,88,0);} }
+        .step-duel-card{
+            width:290px; max-width:100%; margin-top:6px; border-radius:18px; overflow:hidden;
+            background:var(--panel); border:1px solid var(--line); box-shadow:0 8px 22px rgba(0,0,0,.16); position:relative;
+        }
+        .step-duel-card::before{
+            content:''; position:absolute; top:0; left:0; right:0; height:3px; z-index:2;
+            background:linear-gradient(90deg,#0f9d58,#2fae66,#0f5c3c);
+        }
+        .sd-head{ display:flex; align-items:center; gap:10px; padding:14px 14px 10px; }
+        .sd-head-icon{
+            flex:none; width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center;
+            background:linear-gradient(135deg,#0f9d58,#2fae66); color:#fff; box-shadow:0 4px 12px rgba(15,157,88,.35);
+        }
+        .sd-head-text{ flex:1; min-width:0; }
+        .sd-kicker{ font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.1em; color:var(--ink-soft); text-transform:uppercase; }
+        .sd-title{ font-weight:800; font-size:13.5px; }
+        .sd-status-chip{
+            flex:none; font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; padding:4px 9px; border-radius:100px;
+        }
+        .sd-status-chip.pending{ background:var(--panel-alt); color:var(--ink-soft); }
+        .sd-status-chip.active{ background:rgba(15,157,88,.15); color:#0f9d58; animation:sdPulse 2s infinite; }
+        .sd-status-chip.done{ background:var(--panel-alt); color:var(--ink); }
+        .sd-body{ padding:0 14px 14px; }
+        .sd-desc{ font-size:11.5px; color:var(--ink-soft); margin-bottom:10px; }
+        .sd-timer-row{
+            display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:10.5px;
+            color:#0f9d58; font-weight:700; background:rgba(15,157,88,.1); border:1px solid rgba(15,157,88,.25);
+            padding:7px 10px; border-radius:10px; margin-bottom:10px;
+        }
+        .sd-vs-row{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+        .sd-side{ flex:1; min-width:0; text-align:center; background:var(--panel-alt); border:1px solid var(--line); border-radius:12px; padding:10px 8px; }
+        .sd-side.winner{ border-color:#0f9d58; box-shadow:0 0 0 1px #0f9d58 inset; }
+        .sd-side-avatar{ width:32px; height:32px; border-radius:50%; object-fit:cover; margin:0 auto 6px; display:block; border:1.5px solid var(--line); }
+        .sd-side-name{ font-size:10px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .sd-side-value{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:16px; margin-top:4px; }
+        .sd-side-hidden{ font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-faint); margin-top:4px; display:flex; align-items:center; justify-content:center; gap:3px; }
+        .sd-vs-mid{
+            flex:none; width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#0f9d58,#2fae66); color:#fff;
+            display:flex; align-items:center; justify-content:center; font-family:'Orbitron',sans-serif; font-size:9px; font-weight:800;
+        }
+        .sd-actions{ display:flex; gap:8px; }
+        .sd-btn{ flex:1; padding:9px 6px; border-radius:11px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; border:none; cursor:pointer; }
+        .sd-btn.accept{ background:linear-gradient(135deg,#0f9d58,#2fae66); color:#fff; }
+        .sd-btn.decline{ background:var(--panel-alt); color:var(--ink-soft); border:1px solid var(--line); }
+        .sd-input-row{ display:flex; gap:6px; margin-bottom:10px; }
+        .sd-input-row input{ flex:1; font-family:'JetBrains Mono',monospace; font-weight:700; text-align:center; }
+        .sd-result-banner{
+            display:flex; align-items:center; justify-content:center; gap:7px; padding:10px; border-radius:11px;
+            font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:800; letter-spacing:.03em;
+        }
+        .sd-result-banner.win{ background:linear-gradient(120deg,#0f9d58,#4be08a); color:#fff; }
+        .sd-result-banner.lose{ background:var(--panel-alt); color:var(--ink-soft); }
+        .sd-streak-pill{
+            display:inline-flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
+            background:linear-gradient(120deg,#0f9d58,#2fae66); color:#fff; padding:4px 10px; border-radius:100px; margin-left:6px;
+        }
+        /* ==================== DÜELLO TÜR SEÇİCİ ==================== */
+        .duel-type-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+        .duel-type-tile{
+            display:flex; align-items:center; gap:10px; padding:12px; border-radius:14px;
+            border:1px solid var(--line); background:var(--panel-alt); cursor:pointer; transition:all .18s ease;
+        }
+        .duel-type-tile:hover{ border-color:var(--dt-color, #0f9d58); transform:translateY(-1px); }
+        .duel-type-tile.active{
+            border-color:transparent; color:#fff;
+            background:linear-gradient(135deg, var(--dt-color1,#0f9d58), var(--dt-color2,#2fae66));
+            box-shadow:0 8px 20px rgba(0,0,0,.25);
+        }
+        .duel-type-icon{ flex:none; width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; background:var(--bg); border:1px solid var(--line); color:var(--dt-color,#0f9d58); }
+        .duel-type-tile.active .duel-type-icon{ background:rgba(255,255,255,.2); border-color:transparent; color:#fff; }
+        .duel-type-name{ font-size:12px; font-weight:700; }
+        .duel-type-unit{ font-family:'JetBrains Mono',monospace; font-size:9px; opacity:.75; margin-top:2px; }
+
+        /* ==================== PROFİL — DÜELLO SİCİLİ KARTI ==================== */
+        .duel-record-card{
+            display:flex; align-items:center; gap:16px; background:var(--panel-alt); border:1px solid var(--line);
+            border-radius:16px; padding:14px 16px; margin-bottom:18px; position:relative; overflow:hidden;
+        }
+        .duel-record-card::before{
+            content:''; position:absolute; top:0; left:0; right:0; height:3px;
+            background:linear-gradient(90deg,#0f9d58,#f97316,#a855f7,#ff2b2b,#38bdf8);
+        }
+        .duel-record-ring-wrap{ flex:none; }
+        .duel-record-body{ flex:1; min-width:0; }
+        .duel-record-title{ font-size:12.5px; font-weight:700; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+        .duel-record-stats{ display:flex; gap:8px; flex-wrap:wrap; }
+        .duel-record-chip{ display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700; padding:6px 11px; border-radius:100px; }
+        .duel-record-chip.win{ background:rgba(15,157,88,.15); color:#0f9d58; }
+        .duel-record-chip.lose{ background:rgba(224,70,63,.15); color:var(--neg); }
+        .duel-record-chip.streak{ background:linear-gradient(120deg,#0f9d58,#2fae66); color:#fff; box-shadow:0 0 10px rgba(15,157,88,.35); }
+        .duel-record-empty{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-soft); }
         .chat-reactions-row:empty{ display:none; }
         .chat-reactions-row{ transition:transform .18s cubic-bezier(.34,1.4,.64,1); }
         .chat-msg:hover .chat-reactions-row:not(:empty){ transform:translateY(-1px); }
@@ -2057,6 +2151,28 @@
             font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.06em;
             box-shadow:0 8px 20px rgba(47,174,102,.38);
         }
+        /* ==== ETKİNLİK KARTI v2 — daha gelişmiş, kurucu bilgisi yok ==== */
+        .event-card-v2{ max-width:290px; }
+        .ec2-head{
+            position:relative; z-index:1; display:flex; align-items:center; gap:12px;
+            padding:20px 20px 16px;
+        }
+        .ec2-icon-ring{
+            flex:none; width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+            background:var(--brand-gradient); color:#fff; box-shadow:0 6px 16px var(--glow-mid), 0 0 0 5px var(--glow-soft);
+            animation:eventIconPulse 2.6s ease-in-out infinite;
+        }
+        .ec2-head-text{ flex:1; min-width:0; }
+        .ec2-eyebrow{
+            font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.12em; color:var(--ink-soft);
+            display:flex; align-items:center; gap:5px; margin-bottom:3px;
+        }
+        .ec2-title{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:14px; line-height:1.3; }
+        .ec2-time-chip{
+            flex:none; font-family:'JetBrains Mono',monospace; font-size:8.5px; font-weight:700; color:var(--ink);
+            background:var(--panel-alt); border:1px solid var(--line); padding:5px 8px; border-radius:100px;
+            display:flex; align-items:center; gap:4px; white-space:nowrap;
+        }
         /* ==================== GRUP BİLGİ PANELİ ==================== */
         .group-info-panel{
             position:absolute; top:0; right:0; height:100%; width:380px; max-width:88%;
@@ -2400,24 +2516,24 @@
         }
         .sky-scene.witch-scene .sky-emoji-group{ animation-duration:.9s; }
         .sky-scene.bunny-scene .sky-emoji-group{ animation-duration:.55s; animation-timing-function:ease-out; }
-    .chat-msg-select-check{
-        flex:none; width:22px; height:22px; border-radius:50%; border:1.5px solid var(--line);
-        background:var(--panel); display:flex; align-items:center; justify-content:center; color:transparent;
-        margin-right:8px; align-self:center; transition:all .15s ease; cursor:pointer;
-    }
-    .chat-msg.selected .chat-msg-select-check{ background:var(--brand-gradient); border-color:transparent; color:#fff; box-shadow:0 0 8px var(--glow-mid); }
-    .chat-msg.select-mode .chat-msg-footer{ display:none !important; }
-    .chat-msg.select-mode .chat-msg-bubble{ cursor:pointer; }
-    .chat-msg.selected .chat-msg-bubble{ box-shadow:0 0 0 2px var(--ink), 0 2px 10px var(--glow-mid) !important; }
-    .chat-select-bar{
-        position:absolute; left:0; right:0; bottom:0; z-index:12; display:flex; align-items:center; gap:10px;
-        padding:12px 16px calc(12px + env(safe-area-inset-bottom)); background:var(--panel); border-top:1px solid var(--line);
-        transform:translateY(110%); transition:transform .28s cubic-bezier(.4,0,.2,1); box-shadow:0 -6px 20px rgba(0,0,0,.3);
-    }
-    .chat-select-bar.show{ transform:translateY(0); }
-    .chat-select-bar .csb-count{ font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; color:var(--ink); white-space:nowrap; display:flex; align-items:center; gap:6px; }
-    .chat-select-bar .csb-spacer{ flex:1; }
-    .chat-select-bar .btn{ padding:10px 14px; font-size:11px; white-space:nowrap; }
+        .chat-msg-select-check{
+            flex:none; width:22px; height:22px; border-radius:50%; border:1.5px solid var(--line);
+            background:var(--panel); display:flex; align-items:center; justify-content:center; color:transparent;
+            margin-right:8px; align-self:center; transition:all .15s ease; cursor:pointer;
+        }
+        .chat-msg.selected .chat-msg-select-check{ background:var(--brand-gradient); border-color:transparent; color:#fff; box-shadow:0 0 8px var(--glow-mid); }
+        .chat-msg.select-mode .chat-msg-footer{ display:none !important; }
+        .chat-msg.select-mode .chat-msg-bubble{ cursor:pointer; }
+        .chat-msg.selected .chat-msg-bubble{ box-shadow:0 0 0 2px var(--ink), 0 2px 10px var(--glow-mid) !important; }
+        .chat-select-bar{
+            position:absolute; left:0; right:0; bottom:0; z-index:12; display:flex; align-items:center; gap:10px;
+            padding:12px 16px calc(12px + env(safe-area-inset-bottom)); background:var(--panel); border-top:1px solid var(--line);
+            transform:translateY(110%); transition:transform .28s cubic-bezier(.4,0,.2,1); box-shadow:0 -6px 20px rgba(0,0,0,.3);
+        }
+        .chat-select-bar.show{ transform:translateY(0); }
+        .chat-select-bar .csb-count{ font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; color:var(--ink); white-space:nowrap; display:flex; align-items:center; gap:6px; }
+        .chat-select-bar .csb-spacer{ flex:1; }
+        .chat-select-bar .btn{ padding:10px 14px; font-size:11px; white-space:nowrap; }
     </style>
 </head>
 <body>
@@ -2904,6 +3020,10 @@
                                             <span class="attach-opt-icon" id="attachGameIconDm"></span>
                                             <span class="attach-opt-text"><span>Oyun Daveti / Düello</span><span class="attach-opt-sub">Bir oyun seç, meydan oku</span></span>
                                         </button>
+                                        <button onclick="openStepDuelCreator()">
+                                            <span class="attach-opt-icon" id="attachStepDuelIconDm"></span>
+                                            <span class="attach-opt-text"><span>Düello Gönder</span><span class="attach-opt-sub">Adım, su, bench, deadlift veya görev</span></span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -2956,6 +3076,7 @@
                     <option value="steps">Toplam Adım Atma</option>
                     <option value="tasks">Toplam Görev Bitirme</option>
                     <option value="bench">Bench Rekoru Kıran Kişi Sayısı</option>
+                    <option value="deadlift">Deadlift Rekoru Kıran Kişi Sayısı</option>
                 </select>
                 <span class="seg-label" style="margin-top:8px;" id="eventGoalLabel">Hedef (litre)</span>
                 <input type="number" id="eventGoalInput" placeholder="Hedef miktar" min="1">
@@ -3134,6 +3255,36 @@
                 <div class="gi-footer">
                     <button class="btn btn-ghost" onclick="closeGameInviteCreator()">Vazgeç</button>
                     <button class="btn gi-send-btn" onclick="submitGameInvite()">Gönder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="stepDuelCreateModal" class="modal-overlay">
+        <div class="modal-card gi-card">
+            <div class="gi-inner">
+                <button class="icon-btn gi-close-btn" onclick="closeStepDuelCreator()">${''}</button>
+                <div class="gi-head" id="stepDuelHead" style="background:linear-gradient(100deg,#0f5c3c,#0f9d58 45%,#2fae66 80%,#0f5c3c); background-size:250% 250%;">
+                    <div class="gi-head-row">
+                        <span class="gi-head-icon" id="stepDuelHeadIcon"></span>
+                        <div>
+                            <p class="gi-title" id="stepDuelTitle">Düello Gönder</p>
+                            <p class="gi-sub" id="stepDuelSub">Bir tür seç, süre içinde daha iyi olan kazanır</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="gi-body">
+                    <div class="gi-section-label" id="stepDuelTypeLabel"></div>
+                    <div class="duel-type-grid" id="stepDuelTypeGrid" style="margin-bottom:16px;"></div>
+                    <div class="gi-section-label" id="stepDuelDurationLabel"></div>
+                    <div class="seg-group" id="stepDuelDurationGroup" style="margin-bottom:14px;"></div>
+                    <div class="auth-fields" style="width:100%;">
+                        <span class="seg-label">Meydan okuma mesajı (opsiyonel)</span>
+                        <input type="text" id="stepDuelMsgInput" placeholder="örn. Bakalım kim daha iyi olacak!">
+                    </div>
+                </div>
+                <div class="gi-footer">
+                    <button class="btn btn-ghost" onclick="closeStepDuelCreator()">Vazgeç</button>
+                    <button class="btn gi-send-btn" id="stepDuelSendBtn" style="background:linear-gradient(135deg,#0f9d58,#2fae66) !important;" onclick="submitStepDuel()">Düelloya Davet Et</button>
                 </div>
             </div>
         </div>
@@ -3375,6 +3526,8 @@
                 <div class="pv-xp-label" id="pvXpLabel"></div>
                 <div class="pv-social-actions" id="pvSocialActions" style="display:none;"></div>
                 <div class="pv-stats-grid" id="pvStatsGrid"></div>
+                <div class="pv-section-label" id="pvDuelLabel"></div>
+                <div id="pvDuelRecord"></div>
                 <div class="pv-section-label" id="pvHealthLabel"></div>
                 <div class="pv-health-grid" id="pvHealthGrid"></div>
                 <div class="pv-section-label" id="pvCatLabel"></div>
@@ -3881,6 +4034,10 @@
     let prestige = 0;
     let totalFailed = 0, highPriorityCompleted = 0, timedCompleted = 0, categoryCompletions = {};
     let nightOwlCompletions = 0, morningCompletions = 0, weekendCompletions = 0, totalCreated = 0;
+    let duelWins = 0, duelLosses = 0, duelStreak = 0;
+    let myDuels = {};
+    let _activeDuelListeners = new Set();
+    let _duelFinalizeTimer = null;
     let filter = 'all';
     let draggedId = null;
     let lastRemoved = null;
@@ -4616,10 +4773,11 @@ ${m.track ? `
     }
     /* ===================== ÖZEL ETKİNLİKLER ===================== */
     const EVENT_TYPES = {
-        water:  { label:'Toplam Su İçme', unit:'litre', ic:'droplet', goalUnit:'litre' },
-        steps:  { label:'Toplam Adım Atma', unit:'adım', ic:'bolt', goalUnit:'adım' },
-        tasks:  { label:'Toplam Görev Bitirme', unit:'görev', ic:'check', goalUnit:'görev' },
-        bench:  { label:'Bench Rekoru Kıran Kişi', unit:'kişi', ic:'benchPress', goalUnit:'kişi' }
+        water:    { label:'Toplam Su İçme', unit:'litre', ic:'droplet', goalUnit:'litre' },
+        steps:    { label:'Toplam Adım Atma', unit:'adım', ic:'bolt', goalUnit:'adım' },
+        tasks:    { label:'Toplam Görev Bitirme', unit:'görev', ic:'check', goalUnit:'görev' },
+        bench:    { label:'Bench Rekoru Kıran Kişi', unit:'kişi', ic:'benchPress', goalUnit:'kişi' },
+        deadlift: { label:'Deadlift Rekoru Kıran Kişi', unit:'kişi', ic:'deadliftIc', goalUnit:'kişi' }
     };
     let communityEvents = {};
     let eventsListenerAttached = false;
@@ -4771,20 +4929,18 @@ ${m.track ? `
         const joined = ev.participants && ev.participants[currentUid];
         const participantCount = Object.keys(ev.participants||{}).length;
         const completed = pct >= 100;
-        const creatorBadge = ev.creatorRole === 'admin'
-            ? `<span class="chat-msg-badge admin">${icon('crown',9)} Yönetici</span>`
-            : (ev.creatorRole === 'mod' ? `<span class="chat-msg-badge mod">${icon('shield',9)} Moderatör</span>` : '');
         const deleteBtnHtml = currentUid === ADMIN_UID
             ? `<button class="icon-btn" style="position:absolute; top:10px; right:10px; z-index:2; background:rgba(0,0,0,.22); color:#fff; width:30px; height:30px;" title="Etkinliği sil" onclick="deleteCommunityEvent('${eventId}')">${icon('trash',13)}</button>`
             : '';
-        return `<div class="event-card${completed?' event-card-complete':''}">
+        return `<div class="event-card event-card-v2${completed?' event-card-complete':''}">
     ${deleteBtnHtml}
-    <div class="event-card-top">
-      <span class="event-card-icon-badge">${icon(type.ic,26)}</span>
-      <div>
-        <div class="event-card-title">${escapeHtml(ev.name)}</div>
-        <div class="event-card-sub">${icon('flag',10)} ${escapeHtml(ev.creatorName)} başlattı ${creatorBadge}</div>
+    <div class="ec2-head">
+      <span class="ec2-icon-ring">${icon(type.ic,24)}</span>
+      <div class="ec2-head-text">
+        <div class="ec2-eyebrow">${icon('sparkle',9)} TOPLULUK ETKİNLİĞİ</div>
+        <div class="ec2-title">${escapeHtml(ev.name)}</div>
       </div>
+      <span class="ec2-time-chip">${icon('clock',9)} ${timeAgoTr(ev.createdAt||Date.now())}</span>
     </div>
     <div class="event-card-body">
       ${completed ? `<div class="event-card-complete-banner">${icon('trophy',16)} HEDEFE ULAŞILDI!</div>` : `
@@ -4795,7 +4951,6 @@ ${m.track ? `
       </div>`}
       <div class="event-card-stats-row">
         <span>${icon('user',11)} ${participantCount} katılımcı</span>
-        <span>${time}</span>
       </div>
       ${!completed ? (joined
             ? `<button class="btn btn-ghost event-card-cta" disabled style="opacity:.7; cursor:default;">${icon('check',13)} Katıldın</button>`
@@ -5765,6 +5920,7 @@ ${m.track ? `
   </a>` : ''}
 ${locationCardHtml(m.location)}
             ${m.gameInvite ? renderGameInviteCard(m, true) : ''}
+            ${m.duelId ? renderStepDuelCard(m.duelId, true) : ''}
             ${m.imagePoll ? renderImagePollCard(m, true) : ''}
             ${m.textPoll ? renderTextPollCard(m, true) : ''}
             <div class="chat-msg-time-row">${seenTickHtml}<span>${time}${editedLabel}</span></div>
@@ -6067,6 +6223,7 @@ ${locationCardHtml(m.location)}
         if(b>0) fitness.lifts.bench = b;
         if(b>0) contributeToEvents('bench', 1);
         if(d>0) fitness.lifts.deadlift = d;
+        if(d>0) contributeToEvents('deadlift', 1);
         if(l>0) fitness.lifts.lat = l;
         if(lr>0) fitness.lifts.lateral = lr;
 
@@ -6780,6 +6937,249 @@ ${locationCardHtml(m.location)}
     let allUsersCache = {};
     const ADMIN_UID = "H9AUmUsiasfV9yGD5WLwIMDscfz1";
 
+    /* ===================== DÜELLO SİSTEMİ (Adım / Su / Bench / Deadlift / Görev) ===================== */
+    const DUEL_TYPES = {
+        steps:    { label:'Adım Düellosu',        sub:'Süre içinde en çok adım atan kazanır',          unit:'adım',  ic:'bolt',       c1:'#0f9d58', c2:'#2fae66', c3:'#0f5c3c', getCurrent:()=> (fitness.steps ? fitness.steps.count : 0) },
+        water:    { label:'Su İçme Düellosu',      sub:'Süre içinde en çok su içen kazanır',            unit:'ml',    ic:'droplet',    c1:'#0ea5e9', c2:'#38bdf8', c3:'#075985', getCurrent:()=> (fitness.waterConsumed||0) },
+        bench:    { label:'Bench Press Düellosu',  sub:'Süre içinde en yüksek bench yapan kazanır',     unit:'kg',    ic:'benchPress', c1:'#f97316', c2:'#fb923c', c3:'#7c2d12', getCurrent:()=> (fitness.lifts.bench||0) },
+        deadlift: { label:'Deadlift Düellosu',     sub:'Süre içinde en yüksek deadlift yapan kazanır',  unit:'kg',    ic:'deadliftIc', c1:'#a855f7', c2:'#c084fc', c3:'#4c1d95', getCurrent:()=> (fitness.lifts.deadlift||0) },
+        tasks:    { label:'Görev Düellosu',        sub:'Süre içinde en çok görev tamamlayan kazanır',   unit:'görev', ic:'check',      c1:'#ff2b2b', c2:'#ff6a6a', c3:'#7a0000', getCurrent:()=> totalCompleted }
+    };
+    const STEP_DUEL_DURATIONS = [
+        { label:'1 Saat', ms: 3600000 },
+        { label:'3 Saat', ms: 3*3600000 },
+        { label:'24 Saat', ms: 24*3600000 },
+        { label:'3 Gün', ms: 3*24*3600000 }
+    ];
+    let _stepDuelDurationMs = STEP_DUEL_DURATIONS[2].ms;
+    let _duelType = 'steps';
+
+    function renderDuelTypeGrid(){
+        const grid = document.getElementById('stepDuelTypeGrid');
+        if(!grid) return;
+        grid.innerHTML = Object.keys(DUEL_TYPES).map(key => {
+            const d = DUEL_TYPES[key];
+            const active = key === _duelType;
+            return `<div class="duel-type-tile${active?' active':''}" style="--dt-color:${d.c2}; --dt-color1:${d.c1}; --dt-color2:${d.c2};" onclick="pickDuelType('${key}')">
+        <span class="duel-type-icon">${icon(d.ic,17)}</span>
+        <div><div class="duel-type-name">${d.label.replace(' Düellosu','')}</div><div class="duel-type-unit">${d.unit} bazlı</div></div>
+      </div>`;
+        }).join('');
+    }
+    function pickDuelType(key){
+        _duelType = key;
+        renderDuelTypeGrid();
+        const d = DUEL_TYPES[key];
+        document.getElementById('stepDuelTitle').textContent = d.label;
+        document.getElementById('stepDuelSub').textContent = d.sub;
+        document.getElementById('stepDuelHeadIcon').innerHTML = icon(d.ic,24);
+        const head = document.getElementById('stepDuelHead');
+        if(head) head.style.background = `linear-gradient(100deg,${d.c3},${d.c1} 45%,${d.c2} 80%,${d.c3})`;
+        const sendBtn = document.getElementById('stepDuelSendBtn');
+        if(sendBtn) sendBtn.style.background = `linear-gradient(135deg,${d.c1},${d.c2}) !important`;
+    }
+
+    function openStepDuelCreator(){
+        if(!currentDmTargetUid || currentGroupId){ showTopToast('Düello sadece özel sohbette gönderilebilir', 'warn', 'warn'); return; }
+        document.getElementById('dmAttachMenu').classList.remove('open');
+        closeAllAppModals('chatMegaModal');
+        document.getElementById('stepDuelTypeLabel').innerHTML = `${icon('grid',11)} Düello Türü`;
+        document.getElementById('stepDuelDurationLabel').innerHTML = `${icon('hourglass',11)} Düello Süresi`;
+        document.getElementById('stepDuelMsgInput').value = '';
+        _stepDuelDurationMs = STEP_DUEL_DURATIONS[2].ms;
+        const grp = document.getElementById('stepDuelDurationGroup');
+        grp.innerHTML = STEP_DUEL_DURATIONS.map((d,i) => `<button type="button" class="seg-btn${d.ms===_stepDuelDurationMs?' active':''}" onclick="pickStepDuelDuration(${d.ms},this)">${d.label}</button>`).join('');
+        pickDuelType('steps');
+        document.getElementById('stepDuelCreateModal').classList.add('show');
+    }
+    function closeStepDuelCreator(){ document.getElementById('stepDuelCreateModal').classList.remove('show'); }
+    function pickStepDuelDuration(ms, el){
+        _stepDuelDurationMs = ms;
+        el.parentElement.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    async function submitStepDuel(){
+        if(!currentDmTargetUid){ showTopToast('Hedef bulunamadı', 'warn', 'warn'); return; }
+        const d = DUEL_TYPES[_duelType];
+        const me = getMyProfileCache();
+        const msgText = document.getElementById('stepDuelMsgInput').value.trim();
+        closeStepDuelCreator();
+        try{
+            const duelRef = db.ref('developmentUsers/duels').push();
+            const duelId = duelRef.key;
+            const now = Date.now();
+            await duelRef.set({
+                type:_duelType, status:'pending', durationMs:_stepDuelDurationMs,
+                creatorUid: currentUid, targetUid: currentDmTargetUid,
+                startAt: null, endAt: null, createdAt: now,
+                participants:{
+                    [currentUid]: { username: me.username, avatarUrl: me.avatarUrl, contribution:0 },
+                    [currentDmTargetUid]: { contribution:0 }
+                }
+            });
+            await db.ref('developmentUsers/'+currentUid+'/duelIndex/'+duelId).set(true);
+            await db.ref('developmentUsers/'+currentDmTargetUid+'/duelIndex/'+duelId).set(true);
+            await db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages').push({
+                uid: currentUid, text: msgText || '', duelId, ts: now, likes:{}, reactions:{}
+            });
+            const targetProfileSnap = await db.ref('developmentUsers/'+currentDmTargetUid+'/profile').once('value');
+            const targetProfile = targetProfileSnap.val() || {};
+            await db.ref('developmentUsers/dmIndex/'+currentUid+'/'+currentDmTargetUid).update({ otherUsername: targetProfile.username||'Kullanıcı', otherAvatar: targetProfile.avatarUrl||'', lastMessage:'⚔️ '+d.label, ts: now });
+            await db.ref('developmentUsers/dmIndex/'+currentDmTargetUid+'/'+currentUid).update({ otherUsername: me.username, otherAvatar: me.avatarUrl, lastMessage:'⚔️ '+d.label, ts: now });
+            showTopToast(d.label+' gönderildi', 'info', d.ic);
+        }catch(err){ showTopToast('Gönderilemedi: '+err.message, 'warn', 'warn'); }
+    }
+
+    function attachMyDuelsListener(){
+        if(!currentUid) return;
+        db.ref('developmentUsers/'+currentUid+'/duelIndex').on('value', snap => {
+            const ids = Object.keys(snap.val() || {});
+            ids.forEach(id => {
+                if(_activeDuelListeners.has(id)) return;
+                _activeDuelListeners.add(id);
+                db.ref('developmentUsers/duels/'+id).on('value', dsnap => {
+                    myDuels[id] = dsnap.val();
+                    renderChatMessages(); renderDmMessages(); renderGroupMessages && renderGroupMessages();
+                });
+            });
+        });
+        if(_duelFinalizeTimer) clearInterval(_duelFinalizeTimer);
+        _duelFinalizeTimer = setInterval(checkAndFinalizeDuels, 20000);
+    }
+
+    async function respondStepDuel(duelId, response){
+        const d = myDuels[duelId];
+        if(!d) return;
+        try{
+            if(response === 'declined'){
+                await db.ref('developmentUsers/duels/'+duelId).update({ status:'declined' });
+                showTopToast('Düello reddedildi', 'warn', 'x');
+                return;
+            }
+            const now = Date.now();
+            await db.ref('developmentUsers/duels/'+duelId).update({ status:'active', startAt: now, endAt: now + (d.durationMs||86400000) });
+            showTopToast('Düello başladı! Adımların otomatik işlenecek', 'info', 'bolt');
+        }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
+    }
+
+    async function submitStepDuelContribution(duelId){
+        const d = myDuels[duelId];
+        if(!d || d.status !== 'active') return;
+        const typeDef = DUEL_TYPES[d.type] || DUEL_TYPES.steps;
+        const input = document.getElementById('sdInput-'+duelId);
+        const val = input ? parseFloat(input.value) : typeDef.getCurrent();
+        if(val===undefined || val===null || isNaN(val) || val < 0) return;
+        try{
+            await db.ref('developmentUsers/duels/'+duelId+'/participants/'+currentUid+'/contribution').set(val);
+            showTopToast(typeDef.unit+' değerin kaydedildi', 'info', 'check');
+        }catch(err){ showTopToast('Kaydedilemedi: '+err.message, 'warn', 'warn'); }
+    }
+
+    async function checkAndFinalizeDuels(){
+        const now = Date.now();
+        for(const id of Object.keys(myDuels)){
+            const d = myDuels[id];
+            if(!d || d.status !== 'active' || !d.endAt || now < d.endAt) continue;
+            const ref = db.ref('developmentUsers/duels/'+id);
+            try{
+                await ref.transaction(cur => {
+                    if(!cur || cur.status !== 'active') return cur;
+                    const uids = Object.keys(cur.participants||{});
+                    if(uids.length < 2) return cur;
+                    const [uidA, uidB] = uids;
+                    const cA = (cur.participants[uidA]||{}).contribution || 0;
+                    const cB = (cur.participants[uidB]||{}).contribution || 0;
+                    cur.status = 'completed';
+                    cur.winnerUid = cA===cB ? null : (cA>cB ? uidA : uidB);
+                    return cur;
+                });
+                const finalSnap = await ref.once('value');
+                const finalD = finalSnap.val();
+                if(finalD && finalD.status === 'completed') await applyDuelResultStats(finalD);
+            }catch(e){ /* çakışan transaction'lar diğer istemcide de tamamlanır */ }
+        }
+    }
+
+    async function applyDuelResultStats(d){
+        if(d._statsApplied) return;
+        const uids = Object.keys(d.participants||{});
+        for(const uid of uids){
+            if(uid !== currentUid) continue;
+            const won = d.winnerUid === uid;
+            const lost = d.winnerUid && d.winnerUid !== uid;
+            if(won){
+                duelWins += 1; duelStreak += 1;
+            } else if(lost){
+                duelLosses += 1; duelStreak = 0;
+            }
+            saveState();
+        }
+        await db.ref('developmentUsers/duels/'+Object.keys(myDuels).find(k=>myDuels[k]===d || (myDuels[k]&&myDuels[k].createdAt===d.createdAt))+'/_statsApplied').set(true).catch(()=>{});
+    }
+
+    function renderStepDuelCard(duelId, isDm){
+        const d = myDuels[duelId];
+        if(!d) return `<div class="step-duel-card"><div class="sd-body" style="padding-top:14px;"><span style="font-size:11px; color:var(--ink-soft);">${icon('warn',11)} Düello yükleniyor…</span></div></div>`;
+        const typeDef = DUEL_TYPES[d.type] || DUEL_TYPES.steps;
+        const uids = Object.keys(d.participants||{});
+        const meP = d.participants[currentUid] || {};
+        const otherUid = uids.find(u=>u!==currentUid);
+        const otherP = d.participants[otherUid] || {};
+        const meName = currentUsername, meAvatar = document.getElementById('avatarImg').src;
+        const otherName = otherP.username || document.getElementById('dmTargetName').textContent || 'Rakip';
+        const otherAvatar = otherP.avatarUrl || document.getElementById('dmTargetAvatar').src;
+        const headStyle = `background:linear-gradient(120deg,${typeDef.c3},${typeDef.c1} 55%,${typeDef.c2});`;
+
+        let statusChip, body;
+        if(d.status === 'declined'){
+            statusChip = `<span class="sd-status-chip done">${icon('x',9)} Reddedildi</span>`;
+            body = `<div class="sd-desc">Bu düello reddedildi.</div>`;
+        } else if(d.status === 'pending'){
+            statusChip = `<span class="sd-status-chip pending">${icon('clock',9)} Bekliyor</span>`;
+            const isTarget = d.targetUid === currentUid;
+            body = `<div class="sd-desc">${(STEP_DUEL_DURATIONS.find(x=>x.ms===d.durationMs)||{}).label||''} sürecek — ${typeDef.sub.toLowerCase()}.</div>
+        ${isTarget ? `<div class="sd-actions">
+          <button class="sd-btn accept" onclick="respondStepDuel('${duelId}','accepted')">${icon('check',12)} Kabul Et</button>
+          <button class="sd-btn decline" onclick="respondStepDuel('${duelId}','declined')">${icon('x',12)} Reddet</button>
+        </div>` : `<div class="sd-timer-row">${icon('hourglass',11)} Yanıt bekleniyor…</div>`}`;
+        } else if(d.status === 'active'){
+            statusChip = `<span class="sd-status-chip active">${icon('bolt',9)} Aktif</span>`;
+            const rem = Math.max(0, d.endAt - Date.now());
+            body = `
+        <div class="sd-timer-row">${icon('hourglass',11)} ${formatCountdown(rem)}</div>
+        <div class="sd-input-row">
+          <input type="number" id="sdInput-${duelId}" placeholder="${typeDef.unit} değerin" value="${meP.contribution||''}">
+          <button class="btn" style="padding:9px 12px; font-size:11px; background:linear-gradient(135deg,${typeDef.c1},${typeDef.c2}) !important;" onclick="submitStepDuelContribution('${duelId}')">${icon('check',12)} Gönder</button>
+        </div>
+        <div class="sd-vs-row">
+          <div class="sd-side"><img class="sd-side-avatar" src="${meAvatar}"><div class="sd-side-name">Sen</div><div class="sd-side-hidden">${icon('lock',9)} Gizli</div></div>
+          <span class="sd-vs-mid" style="background:linear-gradient(135deg,${typeDef.c1},${typeDef.c2});">VS</span>
+          <div class="sd-side"><img class="sd-side-avatar" src="${otherAvatar}" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'"><div class="sd-side-name">${escapeHtml(otherName)}</div><div class="sd-side-hidden">${icon('lock',9)} Gizli</div></div>
+        </div>`;
+        } else {
+            statusChip = `<span class="sd-status-chip done">${icon('trophy',9)} Sonuçlandı</span>`;
+            const won = d.winnerUid === currentUid;
+            const draw = !d.winnerUid;
+            body = `
+        <div class="sd-vs-row">
+          <div class="sd-side${won?' winner':''}"><img class="sd-side-avatar" src="${meAvatar}"><div class="sd-side-name">Sen</div><div class="sd-side-value">${meP.contribution||0}<span style="font-size:9px; font-weight:600; margin-left:2px;">${typeDef.unit}</span></div></div>
+          <span class="sd-vs-mid" style="background:linear-gradient(135deg,${typeDef.c1},${typeDef.c2});">VS</span>
+          <div class="sd-side${!won&&!draw?' winner':''}"><img class="sd-side-avatar" src="${otherAvatar}" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'"><div class="sd-side-name">${escapeHtml(otherName)}</div><div class="sd-side-value">${otherP.contribution||0}<span style="font-size:9px; font-weight:600; margin-left:2px;">${typeDef.unit}</span></div></div>
+        </div>
+        <div class="sd-result-banner ${draw?'lose':(won?'win':'lose')}">${draw?icon('flag',13)+' Berabere':(won?icon('trophy',13)+' Kazandın!':icon('x',13)+' Kaybettin')}</div>`;
+        }
+
+        return `<div class="step-duel-card" style="--sd-accent:${typeDef.c2};">
+      <div class="sd-head" style="${headStyle} border-radius:14px 14px 0 0; margin:-1px -1px 0; padding:12px 14px 10px;">
+        <span class="sd-head-icon" style="background:rgba(255,255,255,.22); color:#fff; box-shadow:none;">${icon(typeDef.ic,18)}</span>
+        <div class="sd-head-text"><div class="sd-kicker" style="color:rgba(255,255,255,.85);">${typeDef.label.toUpperCase()}</div><div class="sd-title" style="color:#fff;">${meName} vs ${escapeHtml(otherName)}</div></div>
+        ${statusChip}
+      </div>
+      <div class="sd-body">${body}</div>
+    </div>`;
+    }
+
     /* ===================== SPOTIFY MÜZİK PAYLAŞIMI ===================== */
     const SPOTIFY_CLIENT_ID = 'fbd713c817d34c4e8f209b431687c90e';
     const SPOTIFY_CLIENT_SECRET = '37cef861e5864e2c8d4e7e65b1244f6c';
@@ -7402,6 +7802,9 @@ ${locationCardHtml(m.location)}
             morningCompletions = p.morningCompletions || 0;
             weekendCompletions = p.weekendCompletions || 0;
             totalCreated = p.totalCreated || 0;
+            duelWins = p.duelWins || 0;
+            duelLosses = p.duelLosses || 0;
+            duelStreak = p.duelStreak || 0;
             portfolio = p.portfolio || {};
             portfolioHistory = p.portfolioHistory || [];
             portfolioCostBasis = p.portfolioCostBasis || {};
@@ -7444,6 +7847,7 @@ ${locationCardHtml(m.location)}
         attachPresenceListener();
         attachFriendRequestsListener();
         attachGroupIndexListener();
+        attachMyDuelsListener();
     }
 
     async function saveState(){
@@ -8600,142 +9004,142 @@ ${locationCardHtml(m.location)}
     }
 
     function shallowEqualExceptEngagement(a, b){
-    const keys = new Set([...Object.keys(a||{}), ...Object.keys(b||{})]);
-    keys.delete('likes'); keys.delete('reactions');
-    for(const k of keys){
-        if(JSON.stringify(a?.[k]) !== JSON.stringify(b?.[k])) return false;
+        const keys = new Set([...Object.keys(a||{}), ...Object.keys(b||{})]);
+        keys.delete('likes'); keys.delete('reactions');
+        for(const k of keys){
+            if(JSON.stringify(a?.[k]) !== JSON.stringify(b?.[k])) return false;
+        }
+        return true;
     }
-    return true;
-}
-function patchMessageEngagement(msgId, m, ctx){
-    const likeBtn = document.getElementById('likebtn-'+msgId);
-    if(likeBtn){
-        const liked = m.likes && m.likes[currentUid];
-        const likeCount = m.likes ? Object.keys(m.likes).length : 0;
-        const hadCount = likeBtn.classList.contains('has-count');
-        likeBtn.classList.toggle('liked', !!liked);
-        likeBtn.classList.toggle('has-count', likeCount>0);
-        likeBtn.innerHTML = `${likeGlyph(liked,13)} ${likeCount||''}`;
-        if(likeCount>0 && !hadCount){
-            likeBtn.style.animation = 'none';
-            requestAnimationFrame(()=>{ likeBtn.style.animation = 'likePop .4s ease'; });
+    function patchMessageEngagement(msgId, m, ctx){
+        const likeBtn = document.getElementById('likebtn-'+msgId);
+        if(likeBtn){
+            const liked = m.likes && m.likes[currentUid];
+            const likeCount = m.likes ? Object.keys(m.likes).length : 0;
+            const hadCount = likeBtn.classList.contains('has-count');
+            likeBtn.classList.toggle('liked', !!liked);
+            likeBtn.classList.toggle('has-count', likeCount>0);
+            likeBtn.innerHTML = `${likeGlyph(liked,13)} ${likeCount||''}`;
+            if(likeCount>0 && !hadCount){
+                likeBtn.style.animation = 'none';
+                requestAnimationFrame(()=>{ likeBtn.style.animation = 'likePop .4s ease'; });
+            }
+        }
+        const reactRow = document.getElementById('reactrow-'+msgId);
+        if(reactRow){
+            const reactions = m.reactions || {};
+            const fn = ctx === 'global' ? 'toggleReaction' : 'toggleDmReaction';
+            reactRow.innerHTML = Object.keys(reactions).filter(k=>Object.keys(reactions[k]||{}).length>0).map(k => {
+                const count = Object.keys(reactions[k]).length;
+                const mineReact = reactions[k][currentUid];
+                const def = CUSTOM_REACTIONS.find(r=>r.key===k);
+                return `<span class="chat-reaction-chip${mineReact?' mine':''}" onclick="${fn}('${msgId}','${k}')"><span class="reaction-emoji">${def?def.emoji:'✨'}</span> ${count}</span>`;
+            }).join('');
         }
     }
-    const reactRow = document.getElementById('reactrow-'+msgId);
-    if(reactRow){
-        const reactions = m.reactions || {};
-        const fn = ctx === 'global' ? 'toggleReaction' : 'toggleDmReaction';
-        reactRow.innerHTML = Object.keys(reactions).filter(k=>Object.keys(reactions[k]||{}).length>0).map(k => {
-            const count = Object.keys(reactions[k]).length;
-            const mineReact = reactions[k][currentUid];
-            const def = CUSTOM_REACTIONS.find(r=>r.key===k);
-            return `<span class="chat-reaction-chip${mineReact?' mine':''}" onclick="${fn}('${msgId}','${k}')"><span class="reaction-emoji">${def?def.emoji:'✨'}</span> ${count}</span>`;
-        }).join('');
-    }
-}
-let _selectMode = { active:false, scope:null };
-let _selectedIds = new Set();
+    let _selectMode = { active:false, scope:null };
+    let _selectedIds = new Set();
 
-function toggleSelectMode(scope){
-    if(_selectMode.active && _selectMode.scope === scope){ exitSelectMode(); return; }
-    _selectMode = { active:true, scope };
-    _selectedIds.clear();
-    document.querySelectorAll('.chat-msg.show-actions').forEach(el=>el.classList.remove('show-actions'));
-    rerenderForScope(scope);
-    updateSelectBar(scope);
-    updateSelectToggleButtons();
-    showTopToast('Mesaj seçme modu açık — silmek istediklerine dokun', 'info', 'check');
-}
-function exitSelectMode(){
-    const scope = _selectMode.scope;
-    _selectMode = { active:false, scope:null };
-    _selectedIds.clear();
-    if(scope) rerenderForScope(scope);
-    updateSelectBar(scope);
-    updateSelectToggleButtons();
-}
-function updateSelectToggleButtons(){
-    const globalBtn = document.getElementById('chatSelectToggleBtn');
-    const dmBtn = document.getElementById('dmSelectToggleBtn');
-    const globalActive = _selectMode.active && _selectMode.scope === 'global';
-    const dmActive = _selectMode.active && _selectMode.scope === 'dm';
-    if(globalBtn){
-        globalBtn.innerHTML = globalActive ? `${icon('x',12)} Seçimi Bitir` : `${icon('check',12)} Seç`;
-        globalBtn.classList.toggle('liked', globalActive);
+    function toggleSelectMode(scope){
+        if(_selectMode.active && _selectMode.scope === scope){ exitSelectMode(); return; }
+        _selectMode = { active:true, scope };
+        _selectedIds.clear();
+        document.querySelectorAll('.chat-msg.show-actions').forEach(el=>el.classList.remove('show-actions'));
+        rerenderForScope(scope);
+        updateSelectBar(scope);
+        updateSelectToggleButtons();
+        showTopToast('Mesaj seçme modu açık — silmek istediklerine dokun', 'info', 'check');
     }
-    if(dmBtn){
-        dmBtn.innerHTML = dmActive ? `${icon('x',12)} Seçimi Bitir` : `${icon('check',12)} Seç`;
-        dmBtn.classList.toggle('liked', dmActive);
+    function exitSelectMode(){
+        const scope = _selectMode.scope;
+        _selectMode = { active:false, scope:null };
+        _selectedIds.clear();
+        if(scope) rerenderForScope(scope);
+        updateSelectBar(scope);
+        updateSelectToggleButtons();
     }
-}
-function rerenderForScope(scope){
-    if(scope === 'global') renderChatMessages();
-    else if(currentGroupId) renderGroupMessages();
-    else renderDmMessages();
-}
-function toggleMsgSelected(msgId){
-    if(_selectedIds.has(msgId)) _selectedIds.delete(msgId);
-    else _selectedIds.add(msgId);
-    const el = document.querySelector(`.chat-msg[data-msgid="${msgId}"]`);
-    if(el) el.classList.toggle('selected', _selectedIds.has(msgId));
-    updateSelectBar(_selectMode.scope);
-}
-function updateSelectBar(scope){
-    const barId = scope === 'global' ? 'chatSelectBar' : 'dmSelectBar';
-    const otherBarId = scope === 'global' ? 'dmSelectBar' : 'chatSelectBar';
-    const otherBar = document.getElementById(otherBarId);
-    if(otherBar) otherBar.classList.remove('show');
-    const bar = document.getElementById(barId);
-    if(!bar) return;
-    if(!_selectMode.active || _selectMode.scope !== scope || _selectedIds.size === 0){
-        bar.classList.remove('show');
-        return;
+    function updateSelectToggleButtons(){
+        const globalBtn = document.getElementById('chatSelectToggleBtn');
+        const dmBtn = document.getElementById('dmSelectToggleBtn');
+        const globalActive = _selectMode.active && _selectMode.scope === 'global';
+        const dmActive = _selectMode.active && _selectMode.scope === 'dm';
+        if(globalBtn){
+            globalBtn.innerHTML = globalActive ? `${icon('x',12)} Seçimi Bitir` : `${icon('check',12)} Seç`;
+            globalBtn.classList.toggle('liked', globalActive);
+        }
+        if(dmBtn){
+            dmBtn.innerHTML = dmActive ? `${icon('x',12)} Seçimi Bitir` : `${icon('check',12)} Seç`;
+            dmBtn.classList.toggle('liked', dmActive);
+        }
     }
-    const list = scope==='global' ? chatMessages : (currentGroupId ? groupMessages : dmMessages);
-    const canDeleteAllForEveryone = [..._selectedIds].every(id => {
-        const m = list.find(x=>x.id===id);
-        return m && (m.uid === currentUid || currentUid === ADMIN_UID);
-    });
-    bar.innerHTML = `
+    function rerenderForScope(scope){
+        if(scope === 'global') renderChatMessages();
+        else if(currentGroupId) renderGroupMessages();
+        else renderDmMessages();
+    }
+    function toggleMsgSelected(msgId){
+        if(_selectedIds.has(msgId)) _selectedIds.delete(msgId);
+        else _selectedIds.add(msgId);
+        const el = document.querySelector(`.chat-msg[data-msgid="${msgId}"]`);
+        if(el) el.classList.toggle('selected', _selectedIds.has(msgId));
+        updateSelectBar(_selectMode.scope);
+    }
+    function updateSelectBar(scope){
+        const barId = scope === 'global' ? 'chatSelectBar' : 'dmSelectBar';
+        const otherBarId = scope === 'global' ? 'dmSelectBar' : 'chatSelectBar';
+        const otherBar = document.getElementById(otherBarId);
+        if(otherBar) otherBar.classList.remove('show');
+        const bar = document.getElementById(barId);
+        if(!bar) return;
+        if(!_selectMode.active || _selectMode.scope !== scope || _selectedIds.size === 0){
+            bar.classList.remove('show');
+            return;
+        }
+        const list = scope==='global' ? chatMessages : (currentGroupId ? groupMessages : dmMessages);
+        const canDeleteAllForEveryone = [..._selectedIds].every(id => {
+            const m = list.find(x=>x.id===id);
+            return m && (m.uid === currentUid || currentUid === ADMIN_UID);
+        });
+        bar.innerHTML = `
       <span class="csb-count">${icon('check',13)} ${_selectedIds.size} seçili</span>
       <span class="csb-spacer"></span>
       <button class="btn btn-ghost" onclick="bulkDeleteMessages('${scope}', false)">${icon('trash',12)} Benden Sil</button>
       ${canDeleteAllForEveryone ? `<button class="btn" style="background:var(--neg); color:#fff;" onclick="bulkDeleteMessages('${scope}', true)">${icon('ban',12)} Herkesten Sil</button>` : ''}
       <button class="icon-btn" title="Vazgeç" onclick="exitSelectMode()">${icon('x',15)}</button>
     `;
-    bar.classList.add('show');
-}
-function bulkMsgRef(scope, msgId){
-    if(scope === 'global') return chatRef.child(msgId);
-    if(currentGroupId) return db.ref('developmentUsers/groupChats/'+currentGroupId+'/messages/'+msgId);
-    return db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages/'+msgId);
-}
-async function bulkDeleteMessages(scope, forEveryone){
-    const ids = [..._selectedIds];
-    if(ids.length === 0) return;
-    const ok = await showConfirm(forEveryone
-        ? `${ids.length} mesaj HERKES için kalıcı olarak silinsin mi? Bu işlem geri alınamaz.`
-        : `${ids.length} mesaj senin ekranından gizlensin mi? (Diğer kullanıcılar hâlâ görebilir)`);
-    if(!ok) return;
-    const list = scope==='global' ? chatMessages : (currentGroupId ? groupMessages : dmMessages);
-    let successCount = 0, skipped = 0;
-    for(const id of ids){
-        const ref = bulkMsgRef(scope, id);
-        try{
-            if(forEveryone){
-                const m = list.find(x=>x.id===id);
-                if(!m || (m.uid !== currentUid && currentUid !== ADMIN_UID)){ skipped++; continue; }
-                await ref.remove();
-            } else {
-                await ref.child('hiddenFor/'+currentUid).set(true);
-            }
-            successCount++;
-        }catch(err){ skipped++; }
+        bar.classList.add('show');
     }
-    showTopToast(`${successCount} mesaj silindi${skipped?`, ${skipped} atlandı`:''}`, 'warn', 'trash');
-    exitSelectMode();
-}
-function escapeHtml(str){
+    function bulkMsgRef(scope, msgId){
+        if(scope === 'global') return chatRef.child(msgId);
+        if(currentGroupId) return db.ref('developmentUsers/groupChats/'+currentGroupId+'/messages/'+msgId);
+        return db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages/'+msgId);
+    }
+    async function bulkDeleteMessages(scope, forEveryone){
+        const ids = [..._selectedIds];
+        if(ids.length === 0) return;
+        const ok = await showConfirm(forEveryone
+            ? `${ids.length} mesaj HERKES için kalıcı olarak silinsin mi? Bu işlem geri alınamaz.`
+            : `${ids.length} mesaj senin ekranından gizlensin mi? (Diğer kullanıcılar hâlâ görebilir)`);
+        if(!ok) return;
+        const list = scope==='global' ? chatMessages : (currentGroupId ? groupMessages : dmMessages);
+        let successCount = 0, skipped = 0;
+        for(const id of ids){
+            const ref = bulkMsgRef(scope, id);
+            try{
+                if(forEveryone){
+                    const m = list.find(x=>x.id===id);
+                    if(!m || (m.uid !== currentUid && currentUid !== ADMIN_UID)){ skipped++; continue; }
+                    await ref.remove();
+                } else {
+                    await ref.child('hiddenFor/'+currentUid).set(true);
+                }
+                successCount++;
+            }catch(err){ skipped++; }
+        }
+        showTopToast(`${successCount} mesaj silindi${skipped?`, ${skipped} atlandı`:''}`, 'warn', 'trash');
+        exitSelectMode();
+    }
+    function escapeHtml(str){
         const div = document.createElement('div');
         div.textContent = str;
         return div.innerHTML;
@@ -9579,6 +9983,33 @@ function escapeHtml(str){
         renderProfileView();
         openProfileModalShell();
     }
+    function renderDuelRecordCard(){
+        const el = document.getElementById('pvDuelRecord');
+        if(!el) return;
+        const wins = duelWins, losses = duelLosses, total = wins+losses;
+        if(total === 0){
+            el.innerHTML = `<div class="duel-record-card"><div class="duel-record-empty">${icon('bolt',13)} Henüz düello yapılmadı — bir arkadaşına meydan oku!</div></div>`;
+            return;
+        }
+        const winRate = Math.round((wins/total)*100);
+        const gaugeColor = winRate>=50 ? 'var(--pos)' : 'var(--neg)';
+        const gauge = buildRadialGauge({
+            value: winRate, max: 100, size: 64, strokeWidth: 6,
+            color: gaugeColor, bigLabel: winRate+'%', subLabel: 'KAZANMA'
+        });
+        el.innerHTML = `
+    <div class="duel-record-card">
+      <div class="duel-record-ring-wrap">${gauge}</div>
+      <div class="duel-record-body">
+        <div class="duel-record-title">${icon('trophy',13)} Toplam ${total} Düello</div>
+        <div class="duel-record-stats">
+          <span class="duel-record-chip win">${icon('trophy',10)} ${wins} Galibiyet</span>
+          <span class="duel-record-chip lose">${icon('x',10)} ${losses} Mağlubiyet</span>
+          ${duelStreak>=2 ? `<span class="duel-record-chip streak">${icon('flame',10)} ${duelStreak} Seri</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+    }
     function renderProfileView(){
         const ov = _profileViewOverride;
         const idx = ov ? getRankIndex(ov.xp) : getRankIndex(xp);
@@ -9613,7 +10044,13 @@ function escapeHtml(str){
     <div class="pv-stat"><b>${displayXp}</b><span>Toplam XP</span></div>
     <div class="pv-stat"><b>${stats.categoriesTouched}/5</b><span>Kategori</span></div>
     <div class="pv-stat"><b>${stats.totalCreated}</b><span>Oluşturulan</span></div>
-  `;
+    `;
+        const rankRowEl = document.getElementById('pvRankRow');
+        if(rankRowEl && duelStreak >= 5){
+            rankRowEl.insertAdjacentHTML('beforeend', `<span class="sd-streak-pill">${icon('bolt',10)} ${duelStreak} Düello Serisi</span>`);
+        }
+        document.getElementById('pvDuelLabel').innerHTML = `${icon('bolt',11)} Düello Sicili`;
+        renderDuelRecordCard();
 
         const fitSrc = ov ? (ov.fitness||{}) : fitness;
         if(!ov) checkWaterDayReset();

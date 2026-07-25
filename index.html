@@ -814,19 +814,34 @@
             .bot-panel-body{ padding:20px; }
             .bot-mode-grid{ grid-template-columns:1fr 1fr; }
         }
-        /* ==================== OYUN DAVETİ / DÜELLO PANELİ (v2) ==================== */
+        /* ==================== OYUN DAVETİ / DÜELLO PANELİ (v3) ==================== */
+        @keyframes giBorderFlow{ 0%{background-position:0% 50%;} 100%{background-position:200% 50%;} }
+        @keyframes giSelectedPulse{
+            0%,100%{ box-shadow:0 0 0 2px #ec4899, 0 8px 20px rgba(236,72,153,.4); }
+            50%{ box-shadow:0 0 0 3px #f97316, 0 10px 26px rgba(249,115,22,.55); }
+        }
         .gi-card{
-            position:relative; max-width:520px; width:100%; text-align:left; padding:2px; overflow:visible; border-radius:26px;
-            background:transparent; box-shadow:0 40px 100px rgba(0,0,0,.65), 0 0 70px rgba(249,115,22,.22);
+            position:relative; max-width:540px; width:100%; text-align:left; padding:2px; overflow:visible; border-radius:26px;
+            background:transparent; box-shadow:0 40px 100px rgba(0,0,0,.65), 0 0 70px rgba(249,115,22,.24);
         }
         .gi-card::before{
             content:''; position:absolute; inset:-2px; border-radius:27px; z-index:0;
-            background:linear-gradient(135deg, #f97316, #ec4899 50%, #7c3aed); opacity:.9;
+            background:linear-gradient(120deg, #f97316, #ec4899 45%, #7c3aed 80%, #f97316);
+            background-size:250% 250%; animation:giBorderFlow 6s ease infinite; opacity:.95;
         }
-        .gi-card::after{ content:''; position:absolute; inset:2px; border-radius:24px; z-index:0; background:var(--panel); }
+        .gi-inner{
+            position:relative; z-index:1; background:var(--panel); border-radius:24px; overflow:hidden;
+            display:flex; flex-direction:column; width:100%; max-height:calc(var(--app-vh, 1vh) * 88);
+        }
+        .gi-close-btn{
+            position:absolute; top:14px; right:14px; z-index:3;
+            background:rgba(0,0,0,.28); color:#fff; width:32px; height:32px; padding:0;
+            border:1px solid rgba(255,255,255,.25); backdrop-filter:blur(3px);
+        }
+        .gi-close-btn:hover{ background:rgba(0,0,0,.45); color:#fff; }
         .gi-head, .gi-body{ position:relative; z-index:1; }
         .gi-head{
-            position:relative; padding:26px 26px 20px; overflow:hidden; border-radius:24px 24px 0 0;
+            position:relative; padding:26px 30px 22px; overflow:hidden; border-radius:24px 24px 0 0; flex:none;
             background:linear-gradient(100deg,#7c2d12,#f97316 45%,#ec4899 80%,#7c2d12);
             background-size:250% 250%; animation:botHeadShimmer 7s ease infinite;
         }
@@ -834,105 +849,142 @@
             background-image:radial-gradient(circle, rgba(255,255,255,.8) 1.5px, transparent 1.5px); background-size:18px 18px; }
         .gi-head-row{ position:relative; z-index:1; display:flex; align-items:center; gap:14px; }
         .gi-head-icon{
-            width:52px; height:52px; border-radius:15px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35);
+            width:54px; height:54px; border-radius:16px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35);
             display:flex; align-items:center; justify-content:center; color:#fff; flex:none;
             box-shadow:0 8px 22px rgba(0,0,0,.3), 0 0 0 6px rgba(255,255,255,.06); animation:botIconFloat 3s ease-in-out infinite;
         }
-        .gi-title{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:17px; color:#fff; margin:0 0 3px; text-shadow:0 2px 10px rgba(0,0,0,.35); }
-        .gi-sub{ font-family:'JetBrains Mono',monospace; font-size:9.5px; color:rgba(255,255,255,.85); letter-spacing:.05em; }
-        .gi-body{ padding:22px 26px 26px; max-height:64vh; overflow-y:auto; }
-        .gi-mode-toggle{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+        .gi-title{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:18px; color:#fff; margin:0 0 4px; text-shadow:0 2px 10px rgba(0,0,0,.35); }
+        .gi-sub{ font-family:'JetBrains Mono',monospace; font-size:10px; color:rgba(255,255,255,.88); letter-spacing:.05em; }
+        .gi-body{ padding:22px 30px 28px; flex:1; min-height:0; overflow-y:auto; }
+        .gi-mode-toggle{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px; }
         .gi-mode-btn{
-            display:flex; align-items:center; justify-content:center; gap:8px; padding:13px; border-radius:13px;
+            display:flex; align-items:center; justify-content:center; gap:8px; padding:13px; border-radius:14px;
             border:1px solid var(--line); background:var(--panel-alt); color:var(--ink-soft); font-weight:800; font-size:12.5px; cursor:pointer;
             transition:all .18s ease;
         }
+        .gi-mode-btn:hover{ border-color:#f97316; transform:translateY(-1px); }
         .gi-mode-btn.active{
             border-color:transparent; color:#fff;
             background:linear-gradient(135deg,#f97316,#ec4899); box-shadow:0 8px 20px rgba(236,72,153,.4);
             transform:translateY(-1px);
         }
-        .gi-section-label{ font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:#ec4899; margin-bottom:10px; display:flex; align-items:center; gap:7px; font-weight:700; }
-        .gi-game-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:9px; max-height:270px; overflow-y:auto; margin-bottom:6px; }
+        .gi-section-label{ font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:#ec4899; margin-bottom:11px; display:flex; align-items:center; gap:7px; font-weight:700; }
+        .gi-game-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; max-height:280px; overflow-y:auto; margin-bottom:8px; padding:2px; }
         .gi-game-tile{
-            position:relative; display:flex; flex-direction:column; align-items:center; gap:6px; padding:9px 6px; border-radius:14px;
+            position:relative; display:flex; flex-direction:column; align-items:center; gap:7px; padding:10px 6px; border-radius:15px;
             border:1px solid var(--line); background:var(--panel-alt); cursor:pointer; transition:all .18s ease;
         }
-        .gi-game-tile:hover{ border-color:#f97316; transform:translateY(-2px); }
+        .gi-game-tile:hover{ border-color:#f97316; transform:translateY(-2px); box-shadow:0 6px 16px rgba(249,115,22,.18); }
         .gi-game-tile.active{
-            border-color:transparent; box-shadow:0 0 0 2px #ec4899, 0 8px 20px rgba(236,72,153,.4); transform:translateY(-2px);
+            border-color:transparent; transform:translateY(-2px);
+            animation:giSelectedPulse 1.8s ease-in-out infinite;
         }
-        .gi-game-tile img{ width:50px; height:50px; border-radius:11px; object-fit:cover; }
+        .gi-game-tile img{ width:52px; height:52px; border-radius:12px; object-fit:cover; }
         .gi-game-tile span{ font-size:10px; font-weight:700; text-align:center; line-height:1.2; }
         .gi-game-tile .gi-check{
-            position:absolute; top:4px; right:4px; width:18px; height:18px; border-radius:50%;
+            position:absolute; top:4px; right:4px; width:19px; height:19px; border-radius:50%;
             background:linear-gradient(135deg,#f97316,#ec4899); color:#fff; display:flex; align-items:center; justify-content:center;
             box-shadow:0 2px 6px rgba(0,0,0,.35);
         }
         .gi-preview{
-            display:flex; align-items:center; gap:12px; background:linear-gradient(120deg, rgba(249,115,22,.12), rgba(236,72,153,.06));
-            border:1px solid rgba(236,72,153,.35); border-radius:14px; padding:12px; margin-bottom:14px;
+            display:flex; align-items:center; gap:13px; background:linear-gradient(120deg, rgba(249,115,22,.14), rgba(236,72,153,.07));
+            border:1px solid rgba(236,72,153,.4); border-radius:15px; padding:13px; margin-bottom:16px;
+            box-shadow:0 4px 16px rgba(236,72,153,.12);
         }
-        .gi-preview img{ width:46px; height:46px; border-radius:11px; object-fit:cover; box-shadow:0 4px 12px rgba(0,0,0,.3); }
-        .gi-preview b{ font-size:13.5px; }
-        .gi-preview span{ display:block; font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-soft); margin-top:2px; letter-spacing:.05em; }
-        /* ==================== SOHBETTEKİ OYUN DAVETİ KARTI (v2) ==================== */
+        .gi-preview img{ width:50px; height:50px; border-radius:12px; object-fit:cover; box-shadow:0 4px 12px rgba(0,0,0,.3); flex:none; }
+        .gi-preview b{ font-size:14px; }
+        .gi-preview span{ display:block; font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); margin-top:3px; letter-spacing:.06em; }
+        .gi-footer{
+            position:relative; z-index:2; display:flex; gap:10px; padding:16px 26px calc(16px + env(safe-area-inset-bottom));
+            border-top:1px solid var(--line); background:var(--panel); flex:none;
+        }
+        .gi-footer .btn{ flex:1; }
+        .gi-send-btn{ background:linear-gradient(135deg,#f97316,#ec4899) !important; box-shadow:0 8px 20px rgba(236,72,153,.35); }
+        @media (max-width:560px){
+            #gameInviteCreateModal{ align-items:flex-end; padding:0; }
+            .gi-card{ max-width:100%; }
+            .gi-inner{ border-radius:20px 20px 0 0; }
+            .gi-head{ padding:22px 20px 18px; border-radius:20px 20px 0 0; }
+            .gi-body{ padding:18px 20px 22px; }
+            .gi-footer{ padding:14px 18px calc(14px + env(safe-area-inset-bottom)); }
+        }
+        /* ==================== SOHBETTEKİ OYUN DAVETİ KARTI (v6 — minimal/modern) ==================== */
         .game-invite-msg-card{
-            position:relative; width:264px; max-width:100%; margin-top:6px; border-radius:19px; padding:1.5px; overflow:hidden;
-            background:linear-gradient(135deg, #f97316, #ec4899 55%, #7c3aed);
-            box-shadow:0 12px 30px rgba(0,0,0,.22), 0 0 24px rgba(236,72,153,.16);
+            width:280px; max-width:100%; margin-top:6px; border-radius:16px; overflow:hidden;
+            background:var(--panel); border:1px solid var(--line);
+            box-shadow:0 6px 20px rgba(0,0,0,.14);
+            position:relative;
         }
-        .chat-msg.is-mine .game-invite-msg-card{ box-shadow:0 12px 30px rgba(0,0,0,.3), 0 0 26px rgba(236,72,153,.28); }
-        .gi-msg-inner{ position:relative; background:var(--panel); border-radius:17.5px; overflow:hidden; }
-        .gi-msg-head{
-            position:relative; padding:14px 14px 34px; overflow:hidden;
-            background:linear-gradient(120deg,#7c2d12,#f97316 45%,#ec4899 85%,#7c2d12);
-            background-size:220% 220%; animation:botHeadShimmer 6s ease infinite;
+        .game-invite-msg-card::before{
+            content:''; position:absolute; top:0; left:0; right:0; height:3px; z-index:2;
+            background:linear-gradient(90deg,#f97316,#ec4899,#7c3aed);
         }
-        .gi-msg-head::before{ content:''; position:absolute; inset:0; opacity:.18; pointer-events:none;
-            background-image:radial-gradient(circle, rgba(255,255,255,.85) 1.3px, transparent 1.3px); background-size:14px 14px; }
-        .gi-msg-headrow{ position:relative; z-index:1; display:flex; align-items:center; }
+
+        .gi-msg-cover{ position:relative; height:88px; overflow:hidden; }
+        .gi-msg-cover > img{
+            position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+            filter:blur(10px) brightness(.5) saturate(1.25); transform:scale(1.3);
+        }
+        .gi-msg-cover-overlay{
+            position:relative; z-index:1; height:100%; display:flex; align-items:flex-end; gap:10px;
+            padding:10px 12px; background:linear-gradient(180deg, rgba(0,0,0,.05) 0%, rgba(0,0,0,.6) 100%);
+        }
+        .gi-msg-cover-thumb{
+            flex:none; width:42px; height:42px; border-radius:11px; overflow:hidden;
+            border:1.5px solid rgba(255,255,255,.55); box-shadow:0 4px 12px rgba(0,0,0,.4);
+        }
+        .gi-msg-cover-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+        .gi-msg-cover-text{ min-width:0; flex:1; padding-bottom:1px; }
         .gi-msg-kicker{
-            font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:800; letter-spacing:.1em; color:#fff;
-            background:rgba(0,0,0,.24); border:1px solid rgba(255,255,255,.32); padding:4px 10px; border-radius:100px;
-            display:inline-flex; align-items:center; gap:5px; backdrop-filter:blur(2px);
-            text-shadow:0 1px 3px rgba(0,0,0,.4);
+            font-family:'JetBrains Mono',monospace; font-size:8.5px; font-weight:800; letter-spacing:.12em;
+            color:rgba(255,255,255,.88); text-transform:uppercase; display:flex; align-items:center; gap:5px;
+            text-shadow:0 1px 3px rgba(0,0,0,.5);
         }
-        .gi-msg-cover{
-            position:absolute; left:14px; right:14px; bottom:-26px; z-index:2;
-            display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:15px;
-            background:var(--panel); border:1px solid var(--line); box-shadow:0 12px 22px rgba(0,0,0,.28);
+        .gi-msg-name{
+            font-weight:800; font-size:14px; color:#fff; text-shadow:0 1px 4px rgba(0,0,0,.5);
+            white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;
         }
-        .gi-msg-cover img{ width:44px; height:44px; border-radius:12px; object-fit:cover; flex:none; box-shadow:0 4px 10px rgba(0,0,0,.3); }
-        .gi-msg-name{ font-weight:800; font-size:13px; line-height:1.25; color:var(--ink); }
-        .gi-msg-sub{ font-family:'JetBrains Mono',monospace; font-size:8.5px; color:var(--ink-soft); letter-spacing:.06em; margin-top:2px; }
-        .gi-msg-body{ padding:34px 14px 14px; }
-        .gi-msg-desc{ font-size:12px; color:var(--ink); line-height:1.45; margin-bottom:9px; }
+
+        .gi-msg-body{ padding:12px 13px 13px; }
+        .gi-msg-desc{ font-size:12px; color:var(--ink-soft); line-height:1.5; margin-bottom:10px; }
         .gi-msg-topic{
-            display:flex; align-items:center; gap:6px; font-size:10.5px; color:var(--ink-soft);
-            background:var(--panel-alt); border:1px solid var(--line); border-radius:9px; padding:7px 10px; margin-bottom:10px;
+            font-size:11px; color:var(--ink); background:var(--panel-alt); border-radius:9px;
+            padding:8px 10px; margin-bottom:10px; display:flex; align-items:center; gap:7px;
+            border:1px solid var(--line);
         }
+
+        .gi-msg-participants{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+        .gi-msg-pcount{
+            font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; letter-spacing:.02em;
+            padding:4px 9px; border-radius:100px; background:var(--panel-alt); color:var(--ink-soft);
+        }
+        .gi-msg-pcount.accepted-c{ color:var(--pos); background:rgba(47,174,102,.14); }
+        .gi-msg-pcount.declined-c{ color:var(--neg); background:rgba(224,70,63,.14); }
+
         .gi-msg-actions{ display:flex; gap:8px; }
         .gi-msg-btn{
-            flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:9px 6px; border-radius:11px;
-            font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:800; letter-spacing:.02em; cursor:pointer; border:none;
-            transition:transform .12s ease, box-shadow .2s ease;
+            flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
+            padding:9px 6px; border-radius:11px; font-family:'JetBrains Mono',monospace;
+            font-size:11px; font-weight:700; letter-spacing:.01em; cursor:pointer; border:none;
+            transition:transform .12s ease, opacity .15s ease, box-shadow .15s ease;
         }
-        .gi-msg-btn:hover{ transform:translateY(-1px); }
         .gi-msg-btn:active{ transform:scale(.96); }
-        .gi-msg-btn.accept{ background:linear-gradient(135deg,#16a34a,#22c55e); color:#fff; box-shadow:0 6px 16px rgba(34,197,94,.35); }
-        .gi-msg-btn.decline{ background:var(--panel-alt); color:var(--ink); border:1px solid var(--line); }
+        .gi-msg-btn.accept{
+            background:linear-gradient(135deg,#f97316,#ec4899); color:#fff;
+            box-shadow:0 4px 14px rgba(236,72,153,.32);
+        }
+        .gi-msg-btn.accept:hover{ opacity:.9; box-shadow:0 6px 18px rgba(236,72,153,.42); }
+        .gi-msg-btn.decline{ background:var(--panel-alt); color:var(--ink-soft); border:1px solid var(--line); }
+        .gi-msg-btn.decline:hover{ color:var(--ink); border-color:var(--ink-soft); }
+
         .gi-msg-status{
-            display:flex; align-items:center; gap:7px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:800;
-            padding:9px 10px; border-radius:11px; letter-spacing:.02em;
+            display:flex; align-items:center; gap:7px; font-family:'JetBrains Mono',monospace;
+            font-size:11.5px; font-weight:700; padding:9px 11px; border-radius:11px; background:var(--panel-alt);
         }
-        .gi-msg-status.accepted{ background:rgba(34,197,94,.14); color:#16a34a; border:1px solid rgba(34,197,94,.35); }
-        .gi-msg-status.declined{ background:rgba(239,68,68,.12); color:var(--neg); border:1px solid rgba(239,68,68,.3); }
-        .gi-msg-status.pending{ background:var(--panel-alt); color:var(--ink-soft); border:1px dashed var(--line); }
-        .gi-pending-dot{
-            width:6px; height:6px; border-radius:50%; background:#f97316; box-shadow:0 0 6px #f97316; flex:none;
-            animation:fxBlip 1.5s ease-in-out infinite;
-        }
+        .gi-msg-status.accepted{ color:var(--pos); background:rgba(47,174,102,.14); }
+        .gi-msg-status.declined{ color:var(--neg); background:rgba(224,70,63,.14); }
+        .gi-msg-status.pending{ color:var(--ink-soft); }
+        .gi-pending-dot{ width:5px; height:5px; border-radius:50%; background:var(--ink-soft); flex:none; }
         .chat-reactions-row:empty{ display:none; }
         .chat-reactions-row{ transition:transform .18s cubic-bezier(.34,1.4,.64,1); }
         .chat-msg:hover .chat-reactions-row:not(:empty){ transform:translateY(-1px); }
@@ -1035,7 +1087,7 @@
         .modal-card.chat-mega-card{
             flex-direction:row; width:96vw; max-width:1280px; height:760px; max-height:92vh;
             padding:0; overflow:hidden; align-items:stretch; text-align:left; border-radius:20px;
-            box-shadow:0 30px 80px rgba(0,0,0,.6), 0 0 50px var(--glow-soft);
+            box-shadow:0 30px 80px rgba(0,0,0,.6), 0 0 50px var(--glow-soft); position:relative;
         }
         .chat-mega-sidebar{
             width:340px; flex:none; display:flex; flex-direction:column;
@@ -1051,7 +1103,7 @@
         .chat-mega-list{ flex:1; overflow-y:auto; padding:8px 10px; }
 
         .chat-mega-main{ flex:1; min-width:0; display:flex; flex-direction:column; position:relative; background:var(--bg); }
-        .chat-mega-close{ position:absolute; top:12px; right:12px; z-index:3; }
+        .chat-mega-close{ position:absolute; top:12px; right:12px; z-index:21; }
         .chat-mega-back{ display:none; }
         .chat-mega-header{
             display:flex; align-items:center; gap:10px; padding:14px 52px 14px 20px;
@@ -1082,22 +1134,19 @@
                 border-radius:0; position:relative; overflow:hidden;
             }
 
-            /* Sidebar artık kayan bir çekmece (drawer) — tam ekranı kaplamıyor */
+            /* Sohbet artık sayfa geçişli: önce liste tam ekran gelir, bir sohbet seçilince tam ekran kayarak açılır */
             .chat-mega-sidebar{
-                position:absolute; top:0; left:0; z-index:20;
-                width:86%; max-width:340px; height:100%;
-                transform:translateX(-105%);
-                transition:transform .3s cubic-bezier(.4,0,.2,1);
-                box-shadow:14px 0 34px rgba(0,0,0,.4);
+                position:absolute; inset:0; z-index:2;
+                width:100%; max-width:100%; height:100%;
+                transform:translateX(0); opacity:1;
+                transition:transform .32s cubic-bezier(.4,0,.2,1), opacity .28s ease;
+                box-shadow:none;
             }
-            .chat-mega-card.sidebar-open .chat-mega-sidebar{ transform:translateX(0); }
+            .chat-mega-card.chat-mode .chat-mega-sidebar{
+                transform:translateX(-100%); opacity:0; pointer-events:none;
+            }
 
-            .chat-mega-sidebar-backdrop{
-                position:absolute; inset:0; z-index:19;
-                background:rgba(0,0,0,.5); opacity:0; pointer-events:none;
-                transition:opacity .25s ease;
-            }
-            .chat-mega-card.sidebar-open .chat-mega-sidebar-backdrop{ opacity:1; pointer-events:auto; }
+            .chat-mega-sidebar-backdrop{ display:none; }
 
             .chat-mega-sidebar-head{ padding:calc(14px + env(safe-area-inset-top)) 16px 12px; }
             .chat-mega-me-avatar{ width:38px; height:38px; }
@@ -1107,8 +1156,17 @@
             .chat-hub-row{ padding:13px 10px; gap:11px; }
             .chat-hub-avatar, .chat-hub-icon-circle{ width:42px; height:42px; }
 
-            /* Ana sohbet paneli artık her zaman görünür */
-            .chat-mega-main{ display:flex !important; width:100%; min-height:0; }
+            /* Sohbet paneli: liste seçilene kadar sağda bekler, seçilince sayfa gibi kayarak içeri girer */
+            .chat-mega-main{
+                position:absolute; inset:0; z-index:3;
+                display:flex !important; width:100%; min-height:0;
+                transform:translateX(100%); opacity:0; pointer-events:none;
+                transition:transform .32s cubic-bezier(.4,0,.2,1), opacity .28s ease;
+                background:var(--bg);
+            }
+            .chat-mega-card.chat-mode .chat-mega-main{
+                transform:translateX(0); opacity:1; pointer-events:auto;
+            }
 
             .chat-mega-header{
                 padding:calc(12px + env(safe-area-inset-top)) 46px 12px 8px;
@@ -2716,6 +2774,7 @@
 
     <div id="chatMegaModal" class="modal-overlay">
         <div class="modal-card chat-mega-card">
+            <button class="icon-btn chat-mega-close" id="chatMegaCloseBtn" onclick="closeChatHub()"></button>
             <div class="chat-mega-sidebar-backdrop" onclick="closeChatSidebarMobile()"></div>
             <div class="chat-mega-sidebar">
                 <div class="chat-mega-sidebar-head">
@@ -2735,8 +2794,6 @@
             </div>
 
             <div class="chat-mega-main">
-                <button class="icon-btn chat-mega-close" id="chatMegaCloseBtn" onclick="closeChatHub()"></button>
-
                 <div id="megaGlobalView" style="display:flex; flex-direction:column; height:100%;">
                     <div class="chat-mega-header">
                         <button class="icon-btn chat-mega-back" onclick="showChatMegaSidebar()"></button>
@@ -3041,40 +3098,43 @@
 
     <div id="gameInviteCreateModal" class="modal-overlay">
         <div class="modal-card gi-card">
-            <div class="gi-head">
-                <div class="gi-head-row">
-                    <span class="gi-head-icon" id="giHeadIcon"></span>
-                    <div>
-                        <p class="gi-title">Oyun Daveti / Düello</p>
-                        <p class="gi-sub">Bir oyun seç, arkadaşını meydan oku</p>
+            <div class="gi-inner">
+                <button class="icon-btn gi-close-btn" id="giCloseBtn" onclick="closeGameInviteCreator()"></button>
+                <div class="gi-head">
+                    <div class="gi-head-row">
+                        <span class="gi-head-icon" id="giHeadIcon"></span>
+                        <div>
+                            <p class="gi-title">Oyun Daveti / Düello</p>
+                            <p class="gi-sub">Bir oyun seç, arkadaşını meydan oku</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="gi-body">
-                <div class="gi-mode-toggle">
-                    <button type="button" class="gi-mode-btn active" id="giModeInvite" onclick="setGameInviteMode('invite')"></button>
-                    <button type="button" class="gi-mode-btn" id="giModeDuel" onclick="setGameInviteMode('duel')"></button>
-                </div>
-                <div id="gameInviteStepPick">
-                    <div class="gi-section-label" id="giGamesLabel"></div>
-                    <div class="gi-game-grid" id="gameGrid"></div>
-                </div>
-                <div id="gameSelectedPreview" class="gi-preview" style="display:none;">
-                    <img id="gameSelectedImg" src="" alt="">
-                    <div><b id="gameSelectedName"></b><span id="gameSelectedTag"></span></div>
-                </div>
-                <div class="auth-fields" style="width:100%; margin-top:4px;">
-                    <span class="seg-label" id="gameDescLabel">Açıklama / Davet mesajı</span>
-                    <input type="text" id="gameInviteDesc" placeholder="örn. Hadi birkaç raunt Valorant atalım!">
-                    <div id="gameDuelTopicWrap" style="display:none;">
-                        <span class="seg-label" style="margin-top:8px;">Düello Konusu</span>
-                        <input type="text" id="gameDuelTopic" placeholder="örn. En yüksek skoru kim yapacak?">
+                <div class="gi-body">
+                    <div class="gi-mode-toggle">
+                        <button type="button" class="gi-mode-btn active" id="giModeInvite" onclick="setGameInviteMode('invite')"></button>
+                        <button type="button" class="gi-mode-btn" id="giModeDuel" onclick="setGameInviteMode('duel')"></button>
+                    </div>
+                    <div id="gameInviteStepPick">
+                        <div class="gi-section-label" id="giGamesLabel"></div>
+                        <div class="gi-game-grid" id="gameGrid"></div>
+                    </div>
+                    <div id="gameSelectedPreview" class="gi-preview" style="display:none;">
+                        <img id="gameSelectedImg" src="" alt="">
+                        <div><b id="gameSelectedName"></b><span id="gameSelectedTag"></span></div>
+                    </div>
+                    <div class="auth-fields" style="width:100%; margin-top:4px;">
+                        <span class="seg-label" id="gameDescLabel">Açıklama / Davet mesajı</span>
+                        <input type="text" id="gameInviteDesc" placeholder="örn. Hadi birkaç raunt Valorant atalım!">
+                        <div id="gameDuelTopicWrap" style="display:none;">
+                            <span class="seg-label" style="margin-top:8px;">Düello Konusu</span>
+                            <input type="text" id="gameDuelTopic" placeholder="örn. En yüksek skoru kim yapacak?">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-actions" style="padding:0 26px 24px; margin-top:0;">
-                <button class="btn btn-ghost" onclick="closeGameInviteCreator()">Vazgeç</button>
-                <button class="btn" style="background:linear-gradient(135deg,#f97316,#ec4899);" onclick="submitGameInvite()">Gönder</button>
+                <div class="gi-footer">
+                    <button class="btn btn-ghost" onclick="closeGameInviteCreator()">Vazgeç</button>
+                    <button class="btn gi-send-btn" onclick="submitGameInvite()">Gönder</button>
+                </div>
             </div>
         </div>
     </div>
@@ -5302,11 +5362,11 @@ ${m.track ? `
 
     function openChatSidebarMobile(){
         const card = document.querySelector('#chatMegaModal .chat-mega-card');
-        if(card) card.classList.add('sidebar-open');
+        if(card) card.classList.remove('chat-mode');
     }
     function closeChatSidebarMobile(){
         const card = document.querySelector('#chatMegaModal .chat-mega-card');
-        if(card) card.classList.remove('sidebar-open');
+        if(card) card.classList.add('chat-mode');
     }
 
     function showMegaGlobalView(){
@@ -7053,6 +7113,7 @@ ${locationCardHtml(m.location)}
         document.getElementById('gameDuelTopic').value = '';
         document.getElementById('gameSelectedPreview').style.display = 'none';
         document.getElementById('giHeadIcon').innerHTML = icon('trophy',24);
+        document.getElementById('giCloseBtn').innerHTML = icon('x',15);
         document.getElementById('giGamesLabel').innerHTML = `${icon('grid',11)} Bir Oyun Seç`;
         setGameInviteMode('invite');
         renderGameGrid();
@@ -7094,7 +7155,7 @@ ${locationCardHtml(m.location)}
         const me = getMyProfileCache();
         const gameInvite = {
             gameName: g.name, gameImg: g.img, description: desc,
-            isDuel: _giMode === 'duel', duelTopic: duelTopic, status: 'pending', respondedBy: null
+            isDuel: _giMode === 'duel', duelTopic: duelTopic, responses: {}
         };
         closeGameInviteCreator();
         try{
@@ -7125,48 +7186,56 @@ ${locationCardHtml(m.location)}
         }catch(err){ showTopToast('Gönderilemedi: '+err.message, 'warn', 'warn'); }
     }
     async function respondGameInvite(msgId, isDm, response){
-        const ref = pollMsgRef(msgId, isDm).child('gameInvite');
+        const ref = pollMsgRef(msgId, isDm).child('gameInvite/responses/'+currentUid);
         try{
-            await ref.update({ status: response, respondedBy: currentUid });
-            showTopToast(response==='accepted' ? 'Davet kabul edildi' : 'Davet reddedildi', response==='accepted'?'info':'warn', response==='accepted'?'check':'x');
+            await ref.set(response);
+            showTopToast(response==='accepted' ? 'Davete katıldın' : 'Daveti reddettin', response==='accepted'?'info':'warn', response==='accepted'?'check':'x');
         }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
     }
     function renderGameInviteCard(m, isDm){
         const gi = m.gameInvite;
         if(!gi) return '';
         const isMine = m.uid === currentUid;
-        let statusHtml;
-        if(gi.status === 'accepted'){
-            statusHtml = `<div class="gi-msg-status accepted">${icon('check',13)} Davet kabul edildi</div>`;
-        } else if(gi.status === 'declined'){
-            statusHtml = `<div class="gi-msg-status declined">${icon('x',13)} Davet reddedildi</div>`;
+        const responses = gi.responses || {};
+        const myResponse = responses[currentUid];
+        const acceptedCount = Object.values(responses).filter(r=>r==='accepted').length;
+        const declinedCount = Object.values(responses).filter(r=>r==='declined').length;
+
+        let actionsHtml;
+        if(myResponse === 'accepted'){
+            actionsHtml = `<div class="gi-msg-status accepted">${icon('check',13)} Katıldın</div>`;
+        } else if(myResponse === 'declined'){
+            actionsHtml = `<div class="gi-msg-status declined">${icon('x',13)} Reddettin</div>`;
         } else if(!isMine){
-            statusHtml = `<div class="gi-msg-actions">
+            actionsHtml = `<div class="gi-msg-actions">
         <button class="gi-msg-btn accept" onclick="respondGameInvite('${m.id}',${isDm},'accepted')">${icon('check',12)} Kabul Et</button>
         <button class="gi-msg-btn decline" onclick="respondGameInvite('${m.id}',${isDm},'declined')">${icon('x',12)} Reddet</button>
       </div>`;
         } else {
-            statusHtml = `<div class="gi-msg-status pending"><span class="gi-pending-dot"></span> Yanıt bekleniyor…</div>`;
+            actionsHtml = `<div class="gi-msg-status pending"><span class="gi-pending-dot"></span> Davet gönderildi</div>`;
         }
+
+        const participantsHtml = (acceptedCount>0 || declinedCount>0) ? `<div class="gi-msg-participants">
+        ${acceptedCount>0?`<span class="gi-msg-pcount accepted-c">${icon('check',10)} ${acceptedCount} katıldı</span>`:''}
+        ${declinedCount>0?`<span class="gi-msg-pcount declined-c">${icon('x',10)} ${declinedCount} reddetti</span>`:''}
+      </div>` : '';
+
         return `<div class="game-invite-msg-card">
-      <div class="gi-msg-inner">
-        <div class="gi-msg-head">
-          <div class="gi-msg-headrow">
-            <span class="gi-msg-kicker">${gi.isDuel?icon('bolt',10):icon('trophy',10)} ${gi.isDuel?'DÜELLO DAVETİ':'OYUN DAVETİ'}</span>
-          </div>
-          <div class="gi-msg-cover">
-            <img src="${gi.gameImg}" onerror="this.style.opacity=.3">
-            <div style="min-width:0;">
-              <div class="gi-msg-name">${escapeHtml(gi.gameName)}</div>
-              <div class="gi-msg-sub">${gi.isDuel?'MEYDAN OKUMA':'BİRLİKTE OYNAMA DAVETİ'}</div>
-            </div>
+      <div class="gi-msg-cover">
+        <img src="${gi.gameImg}" onerror="this.style.display='none'">
+        <div class="gi-msg-cover-overlay">
+          <div class="gi-msg-cover-thumb"><img src="${gi.gameImg}" onerror="this.style.opacity=.3"></div>
+          <div class="gi-msg-cover-text">
+            <div class="gi-msg-kicker">${gi.isDuel?icon('bolt',9):icon('trophy',9)} ${gi.isDuel?'DÜELLO':'OYUN DAVETİ'}</div>
+            <div class="gi-msg-name">${escapeHtml(gi.gameName)}</div>
           </div>
         </div>
-        <div class="gi-msg-body">
-          ${gi.description ? `<div class="gi-msg-desc">${escapeHtml(gi.description)}</div>` : ''}
-          ${gi.isDuel && gi.duelTopic ? `<div class="gi-msg-topic">${icon('flag',11)} Konu: ${escapeHtml(gi.duelTopic)}</div>` : ''}
-          ${statusHtml}
-        </div>
+      </div>
+      <div class="gi-msg-body">
+        ${gi.description ? `<div class="gi-msg-desc">${escapeHtml(gi.description)}</div>` : ''}
+        ${gi.isDuel && gi.duelTopic ? `<div class="gi-msg-topic">${icon('flag',11)} ${escapeHtml(gi.duelTopic)}</div>` : ''}
+        ${participantsHtml}
+        ${actionsHtml}
       </div>
     </div>`;
     }
@@ -9290,21 +9359,30 @@ function escapeHtml(str){
         }
     });
     window.addEventListener('resize', () => { if(document.getElementById('notifPanel').classList.contains('open')) positionNotifPanel(); });
+    if(window.visualViewport){
+        window.visualViewport.addEventListener('resize', () => { if(document.getElementById('notifPanel').classList.contains('open')) positionNotifPanel(); });
+        window.visualViewport.addEventListener('scroll', () => { if(document.getElementById('notifPanel').classList.contains('open')) positionNotifPanel(); });
+    }
 
     function positionNotifPanel(){
         const btn = document.getElementById('notifBellBtn');
         const panel = document.getElementById('notifPanel');
         if(!btn || !panel) return;
         const r = btn.getBoundingClientRect();
-        const panelWidth = Math.min(340, window.innerWidth*0.92);
-        let left = r.left + r.width/2 - panelWidth/2;
-        left = Math.max(10, Math.min(left, window.innerWidth - panelWidth - 10));
-        const top = r.bottom + 12;
+        const vv = window.visualViewport;
+        const vvOffsetTop = vv ? vv.offsetTop : 0;
+        const vvOffsetLeft = vv ? vv.offsetLeft : 0;
+        const viewportWidth = vv ? vv.width : window.innerWidth;
+        const panelWidth = Math.min(340, viewportWidth*0.92);
+        const bellCenter = r.left + vvOffsetLeft + r.width/2;
+        let left = bellCenter - panelWidth/2;
+        left = Math.max(10, Math.min(left, viewportWidth + vvOffsetLeft - panelWidth - 10));
+        const top = r.bottom + vvOffsetTop + 10;
         panel.style.left = left+'px';
         panel.style.top = top+'px';
         const arrow = panel.querySelector('.notif-panel-arrow');
         if(arrow){
-            const arrowLeft = Math.max(16, Math.min(panelWidth-30, (r.left + r.width/2) - left - 7));
+            const arrowLeft = Math.max(16, Math.min(panelWidth-30, bellCenter - left - 7));
             arrow.style.left = arrowLeft+'px';
         }
     }

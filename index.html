@@ -544,6 +544,133 @@
         .asset-logo img{width:100%; height:100%; object-fit:contain; padding:6px;}
         .qty-edit-input{width:78px; font-size:12.5px; padding:6px 8px; border-radius:6px; border:1px solid var(--ink); background:var(--bg); color:var(--ink); font-family:'JetBrains Mono',monospace;}
 
+        /* ==================== PORTFÖY — HOLOGRAFİK TASARIM (site temasından bağımsız, ayrı bir görünüm) ==================== */
+        @keyframes holoBgShift{ 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
+        @keyframes holoRingSpinCW{ to{ transform:rotate(360deg);} }
+        @keyframes holoPulse{ 0%,100%{ box-shadow:0 0 40px rgba(124,58,237,.32), 0 0 0 1px rgba(255,255,255,.06) inset; } 50%{ box-shadow:0 0 60px rgba(124,58,237,.5), 0 0 0 1px rgba(255,255,255,.1) inset; } }
+        .holo-portfolio{
+            position:relative; overflow:hidden; border-radius:26px; padding:26px 22px 22px; margin-bottom:14px;
+            background:
+                    radial-gradient(circle at 15% 15%, color-mix(in srgb, var(--ink) 38%, transparent), transparent 45%),
+                    radial-gradient(circle at 85% 10%, color-mix(in srgb, var(--ink) 20%, transparent), transparent 50%),
+                    radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--ink) 16%, transparent), transparent 55%),
+                    linear-gradient(160deg, #0a0505, #050202 70%);
+            border:1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+            animation:holoPulse 5s ease-in-out infinite;
+            isolation:isolate;
+        }
+        .holo-pf-bg{
+            position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.5;
+            background:linear-gradient(120deg, var(--grad-1), var(--grad-2), var(--grad-3), var(--grad-1));
+            background-size:300% 300%; animation:holoBgShift 12s ease infinite;
+            mix-blend-mode:overlay;
+        }
+        .holo-portfolio > *{ position:relative; z-index:1; }
+        .holo-pf-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:20px; }
+        .holo-pf-head-left{ display:flex; align-items:center; gap:12px; }
+        .holo-pf-badge{
+            width:42px; height:42px; border-radius:14px; flex:none; display:flex; align-items:center; justify-content:center;
+            background:var(--brand-gradient); box-shadow:0 6px 18px var(--glow-mid), inset 0 1px 0 rgba(255,255,255,.25);
+            font-family:'Georgia', serif; font-weight:700; font-size:20px; color:#fff;
+            text-shadow:0 1px 2px rgba(0,0,0,.35);
+        }
+        .holo-pf-eyebrow{
+            margin:0; font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.16em; text-transform:uppercase;
+            color:#ffb3b3; opacity:.9;
+        }
+        .holo-pf-title{
+            margin:2px 0 0; font-family:'Orbitron',sans-serif; font-weight:800; font-size:16px; letter-spacing:.02em; color:#fff;
+            text-shadow:0 0 18px var(--glow-mid);
+        }
+        .holo-portfolio #portfolioRefreshBtn{ color:#ffb3b3; cursor:default; }
+        .holo-portfolio #portfolioRefreshBtn:hover{ color:#fff; }
+
+        .holo-pf-total-wrap{
+            position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;
+            padding:26px 10px; margin-bottom:20px; border-radius:20px; overflow:hidden;
+            background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.07);
+            backdrop-filter:blur(6px);
+        }
+        .holo-pf-ring{
+            position:absolute; width:150px; height:150px; border-radius:50%;
+            border:1.5px dashed color-mix(in srgb, var(--ink) 45%, transparent); animation:holoRingSpinCW 18s linear infinite;
+        }
+        .holo-pf-total{
+            position:relative; z-index:1; font-family:'Orbitron',sans-serif; font-weight:800; font-size:32px;
+            background:var(--brand-gradient); -webkit-background-clip:text; background-clip:text; color:transparent;
+            letter-spacing:.01em;
+        }
+        .holo-pf-live-badge{
+            position:absolute; top:4px; right:4px; z-index:2; display:flex; align-items:center; gap:5px;
+            font-family:'JetBrains Mono',monospace; font-size:8.5px; font-weight:800; letter-spacing:.08em; color:#ffb3b3;
+            background:rgba(0,0,0,.28); padding:4px 9px; border-radius:100px; border:1px solid rgba(255,255,255,.12);
+        }
+        .holo-pf-live-dot{ width:6px; height:6px; border-radius:50%; background:var(--ink); box-shadow:0 0 7px var(--ink); animation:fxBlip 1.5s ease-in-out infinite; }
+        .holo-pf-live-chart{ width:100%; margin-top:10px; position:relative; z-index:1; }
+        .holo-pf-meta{
+            position:relative; z-index:1; font-family:'JetBrains Mono',monospace; font-size:10px; color:#94a3b8; margin-top:6px; text-align:center;
+        }
+
+        .holo-pf-holdings{ display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+        .holo-pf-item{
+            display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:16px;
+            background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+            transition:border-color .18s ease, transform .12s ease, background .18s ease;
+        }
+        .holo-pf-item:hover{ border-color:color-mix(in srgb, var(--ink) 55%, transparent); background:rgba(255,255,255,.06); transform:translateY(-1px); }
+        .holo-pf-item-logo{
+            width:40px; height:40px; border-radius:12px; flex:none; display:flex; align-items:center; justify-content:center;
+            background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); overflow:hidden; color:#c4b5fd;
+        }
+        .holo-pf-item-logo img{ width:100%; height:100%; object-fit:contain; padding:5px; }
+        .holo-pf-item-info{ flex:1; min-width:0; }
+        .holo-pf-item-name{ font-size:13px; font-weight:700; color:#fff; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+        .holo-pf-qty{ font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:500; color:#94a3b8; cursor:pointer; display:inline-flex; align-items:center; gap:3px; }
+        .holo-pf-qty:hover{ color:#c4b5fd; }
+        .holo-pf-item-sub{ font-family:'JetBrains Mono',monospace; font-size:9.5px; color:#64748b; margin-top:2px; }
+        .holo-pf-item-right{ flex:none; text-align:right; }
+        .holo-pf-item-value{ font-family:'Orbitron',sans-serif; font-weight:700; font-size:13px; color:#fff; }
+        .holo-pf-pl{ font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:700; margin-top:3px; display:flex; align-items:center; gap:3px; justify-content:flex-end; }
+        .holo-pf-pl.pos{ color:#4ade80; }
+        .holo-pf-pl.neg{ color:#f87171; }
+        .holo-pf-item-actions{ display:flex; flex-direction:column; gap:4px; flex:none; }
+        .holo-pf-icon-btn{
+            width:26px; height:26px; border-radius:8px; border:none; background:rgba(255,255,255,.06); color:#94a3b8;
+            display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .15s ease;
+        }
+        .holo-pf-icon-btn:hover{ background:rgba(124,58,237,.3); color:#fff; }
+
+        .holo-pf-add{ display:flex; gap:8px; align-items:center; }
+        .holo-pf-select{
+            flex:1; min-width:0; font-family:'Inter',sans-serif; font-size:12.5px; font-weight:500; color:#fff;
+            background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); border-radius:100px; padding:11px 34px 11px 14px;
+            appearance:none; -webkit-appearance:none; cursor:pointer; color-scheme:dark;
+            background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffb3b3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+            background-repeat:no-repeat; background-position:right 14px center; background-size:11px;
+        }
+        .holo-pf-select option{ color:#111; background:#fff; }
+        .holo-pf-input{
+            flex:none; width:110px; display:flex; align-items:center; gap:6px; background:rgba(255,255,255,.05);
+            border:1px solid rgba(255,255,255,.12); border-radius:100px; padding:0 12px;
+        }
+        .holo-pf-input svg{ color:#c4b5fd; flex:none; width:13px; height:13px; }
+        .holo-pf-input input{
+            border:none; background:none; color:#fff; padding:11px 0; width:100%; font-family:'JetBrains Mono',monospace; font-size:12.5px;
+        }
+        .holo-pf-input input::placeholder{ color:#64748b; }
+        .holo-pf-add-btn{
+            flex:none; width:44px; height:44px; border-radius:50%; border:none; cursor:pointer;
+            background:var(--brand-gradient); color:#fff; display:flex; align-items:center; justify-content:center;
+            box-shadow:0 6px 16px var(--glow-mid); transition:transform .15s ease;
+        }
+        .holo-pf-add-btn:hover{ transform:scale(1.08) rotate(90deg); }
+        .holo-pf-add-btn:active{ transform:scale(.92); }
+        @media (max-width:480px){
+            .holo-pf-add{ flex-wrap:wrap; }
+            .holo-pf-select{ flex:1 1 100%; }
+            .holo-pf-input{ flex:1; width:auto; }
+        }
+
         /* ---- leaderboard ---- */
         .lb-controls{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; flex-wrap:wrap;}
         .lb-list{display:flex; flex-direction:column; gap:7px; max-height:520px; overflow-y:auto; scrollbar-width:thin; cursor:grab;}
@@ -591,7 +718,7 @@
         .chat-msg{ display:flex; gap:10px; padding:5px 6px; border-radius:12px; transition:background .12s ease; animation:chatIn .22s ease; }
         .chat-msg:hover{ background:var(--panel-alt); }
         .chat-msg-footer{ opacity:1; }
-        .chat-msg-avatar{ width:36px; height:36px; border-radius:50%; object-fit:cover; border:1.5px solid var(--line); flex:none; cursor:pointer; }
+        .chat-msg-avatar{ width:40px; height:40px; border-radius:50%; object-fit:cover; border:1.5px solid var(--line); flex:none; cursor:pointer; }
         .chat-msg-body{ flex:0 1 auto; min-width:0; max-width:78%; }
         .chat-msg-headrow{ display:flex; align-items:center; justify-content:center; gap:7px; flex-wrap:wrap; margin-bottom:2px; }
         .chat-msg-name{ font-size:12.5px; font-weight:700; cursor:pointer; }
@@ -627,6 +754,12 @@
             margin-left:6px; vertical-align:middle;
         }
         .chat-msg-flag{ width:14px; height:10px; border-radius:2px; margin-left:5px; vertical-align:middle; box-shadow:0 0 0 1px rgba(0,0,0,.2); }
+        .chat-msg-avatar-flag-wrap{ position:relative; flex:none; }
+        .chat-msg-avatar-flag{
+            position:absolute; top:-2px; right:-2px; width:13px; height:10px; border-radius:3px;
+            border:1.5px solid var(--panel); object-fit:cover; z-index:2;
+            box-shadow:0 0 0 1px rgba(0,0,0,.25), 0 2px 5px rgba(0,0,0,.45);
+        }
 
         .chat-msg-bubble{ display:flex; flex-direction:column; min-width:58px; }
         .chat-msg-text{ margin-bottom:2px; }
@@ -986,63 +1119,110 @@
         .gi-msg-status.pending{ color:var(--ink-soft); }
         .gi-pending-dot{ width:5px; height:5px; border-radius:50%; background:var(--ink-soft); flex:none; }
 
-        /* ==================== ADIM DÜELLOSU KARTI ==================== */
-        @keyframes sdPulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(15,157,88,.4);} 50%{ box-shadow:0 0 0 8px rgba(15,157,88,0);} }
+        /* ==================== ADIM DÜELLOSU KARTI (v2 — yüksek kontrast, dinamik renk) ==================== */
+        @keyframes sdPulse{
+            0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb, var(--sd-accent,#0f9d58) 40%, transparent);}
+            50%{ box-shadow:0 0 0 8px transparent;}
+        }
         .step-duel-card{
             width:290px; max-width:100%; margin-top:6px; border-radius:18px; overflow:hidden;
-            background:var(--panel); border:1px solid var(--line); box-shadow:0 8px 22px rgba(0,0,0,.16); position:relative;
+            background:var(--panel); border:1px solid var(--line);
+            box-shadow:0 10px 26px rgba(0,0,0,.18), 0 0 0 1px color-mix(in srgb, var(--sd-accent,#0f9d58) 12%, transparent);
+            position:relative;
         }
         .step-duel-card::before{
             content:''; position:absolute; top:0; left:0; right:0; height:3px; z-index:2;
-            background:linear-gradient(90deg,#0f9d58,#2fae66,#0f5c3c);
+            background:linear-gradient(90deg, var(--sd-accent,#0f9d58), color-mix(in srgb, var(--sd-accent,#0f9d58) 55%, white), var(--sd-accent,#0f9d58));
         }
-        .sd-head{ display:flex; align-items:center; gap:10px; padding:14px 14px 10px; }
+        .sd-head{ display:flex; align-items:center; gap:10px; padding:14px 14px 10px; position:relative; }
         .sd-head-icon{
-            flex:none; width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center;
-            background:linear-gradient(135deg,#0f9d58,#2fae66); color:#fff; box-shadow:0 4px 12px rgba(15,157,88,.35);
+            flex:none; width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+            background:rgba(255,255,255,.18); color:#fff;
+            box-shadow:0 4px 12px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.25);
+            border:1px solid rgba(255,255,255,.3);
         }
-        .sd-head-text{ flex:1; min-width:0; }
-        .sd-kicker{ font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.1em; color:var(--ink-soft); text-transform:uppercase; }
-        .sd-title{ font-weight:800; font-size:13.5px; }
+        .sd-head-text{ flex:1; min-width:0; position:relative; z-index:1; }
+        .sd-kicker{ font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.12em; color:rgba(255,255,255,.85); text-transform:uppercase; font-weight:700; }
+        .sd-title{ font-weight:800; font-size:13.5px; color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.3); }
         .sd-status-chip{
-            flex:none; font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; padding:4px 9px; border-radius:100px;
+            position:relative; z-index:1; flex:none; font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:800;
+            padding:5px 10px; border-radius:100px; background:rgba(0,0,0,.22); color:#fff; border:1px solid rgba(255,255,255,.25);
         }
-        .sd-status-chip.pending{ background:var(--panel-alt); color:var(--ink-soft); }
-        .sd-status-chip.active{ background:rgba(15,157,88,.15); color:#0f9d58; animation:sdPulse 2s infinite; }
-        .sd-status-chip.done{ background:var(--panel-alt); color:var(--ink); }
-        .sd-body{ padding:0 14px 14px; }
-        .sd-desc{ font-size:11.5px; color:var(--ink-soft); margin-bottom:10px; }
+        .sd-status-chip.active{ background:rgba(255,255,255,.22); color:#fff; animation:sdPulse 2s infinite; }
+        .sd-body{ padding:14px 14px 14px; background:var(--panel); }
+        .sd-desc{ font-size:11.5px; color:var(--ink); opacity:.75; margin-bottom:10px; font-weight:500; }
         .sd-timer-row{
             display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:10.5px;
-            color:#0f9d58; font-weight:700; background:rgba(15,157,88,.1); border:1px solid rgba(15,157,88,.25);
-            padding:7px 10px; border-radius:10px; margin-bottom:10px;
+            color:var(--sd-accent,#0f9d58); font-weight:800;
+            background:color-mix(in srgb, var(--sd-accent,#0f9d58) 12%, var(--panel-alt));
+            border:1px solid color-mix(in srgb, var(--sd-accent,#0f9d58) 35%, transparent);
+            padding:8px 10px; border-radius:10px; margin-bottom:10px;
         }
         .sd-vs-row{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
-        .sd-side{ flex:1; min-width:0; text-align:center; background:var(--panel-alt); border:1px solid var(--line); border-radius:12px; padding:10px 8px; }
-        .sd-side.winner{ border-color:#0f9d58; box-shadow:0 0 0 1px #0f9d58 inset; }
+        .sd-side{
+            flex:1; min-width:0; text-align:center; background:var(--panel-alt);
+            border:1.5px solid var(--line); border-radius:12px; padding:11px 8px;
+            box-shadow:inset 0 1px 2px rgba(0,0,0,.06);
+        }
+        .sd-side.winner{
+            border-color:var(--sd-accent,#0f9d58);
+            box-shadow:0 0 0 1px var(--sd-accent,#0f9d58) inset, 0 4px 12px color-mix(in srgb, var(--sd-accent,#0f9d58) 25%, transparent);
+            background:color-mix(in srgb, var(--sd-accent,#0f9d58) 8%, var(--panel-alt));
+        }
         .sd-side-avatar{ width:32px; height:32px; border-radius:50%; object-fit:cover; margin:0 auto 6px; display:block; border:1.5px solid var(--line); }
-        .sd-side-name{ font-size:10px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-        .sd-side-value{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:16px; margin-top:4px; }
-        .sd-side-hidden{ font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-faint); margin-top:4px; display:flex; align-items:center; justify-content:center; gap:3px; }
+        .sd-side-name{ font-size:10px; font-weight:800; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .sd-side-value{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:16px; margin-top:4px; color:var(--ink); }
+        .sd-side-hidden{ font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-soft); font-weight:600; margin-top:4px; display:flex; align-items:center; justify-content:center; gap:3px; }
         .sd-vs-mid{
-            flex:none; width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#0f9d58,#2fae66); color:#fff;
+            flex:none; width:28px; height:28px; border-radius:50%; background:var(--sd-accent,#0f9d58); color:#fff;
             display:flex; align-items:center; justify-content:center; font-family:'Orbitron',sans-serif; font-size:9px; font-weight:800;
+            box-shadow:0 3px 10px color-mix(in srgb, var(--sd-accent,#0f9d58) 45%, transparent);
         }
         .sd-actions{ display:flex; gap:8px; }
-        .sd-btn{ flex:1; padding:9px 6px; border-radius:11px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; border:none; cursor:pointer; }
-        .sd-btn.accept{ background:linear-gradient(135deg,#0f9d58,#2fae66); color:#fff; }
-        .sd-btn.decline{ background:var(--panel-alt); color:var(--ink-soft); border:1px solid var(--line); }
+        .sd-btn{ flex:1; padding:10px 6px; border-radius:11px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:800; border:none; cursor:pointer; transition:transform .12s ease, box-shadow .15s ease; }
+        .sd-btn:active{ transform:scale(.96); }
+        .sd-btn.accept{ background:var(--sd-accent,#0f9d58); color:#fff; box-shadow:0 4px 14px color-mix(in srgb, var(--sd-accent,#0f9d58) 40%, transparent); }
+        .sd-btn.accept:hover{ box-shadow:0 6px 18px color-mix(in srgb, var(--sd-accent,#0f9d58) 55%, transparent); }
+        .sd-btn.decline{ background:var(--panel-alt); color:var(--ink); border:1.5px solid var(--line); }
         .sd-input-row{ display:flex; gap:6px; margin-bottom:10px; }
-        .sd-input-row input{ flex:1; font-family:'JetBrains Mono',monospace; font-weight:700; text-align:center; }
+        .sd-input-row input{ flex:1; font-family:'JetBrains Mono',monospace; font-weight:800; text-align:center; color:var(--ink); }
         .sd-result-banner{
-            display:flex; align-items:center; justify-content:center; gap:7px; padding:10px; border-radius:11px;
+            display:flex; align-items:center; justify-content:center; gap:7px; padding:11px; border-radius:11px;
             font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:800; letter-spacing:.03em;
         }
-        .sd-result-banner.win{ background:linear-gradient(120deg,#0f9d58,#4be08a); color:#fff; }
-        .sd-result-banner.lose{ background:var(--panel-alt); color:var(--ink-soft); }
+        .sd-result-banner.win{ background:var(--sd-accent,#0f9d58); color:#fff; box-shadow:0 4px 14px color-mix(in srgb, var(--sd-accent,#0f9d58) 40%, transparent); }
+        .sd-result-banner.lose{ background:var(--panel-alt); color:var(--ink); border:1.5px solid var(--line); }
         .sd-streak-pill{
-            display:inline-flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
-            background:linear-gradient(120deg,#0f9d58,#2fae66); color:#fff; padding:4px 10px; border-radius:100px; margin-left:6px;
+            display:inline-flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:800;
+            background:var(--sd-accent,#0f9d58); color:#fff; padding:4px 10px; border-radius:100px; margin-left:6px;
+            box-shadow:0 2px 8px color-mix(in srgb, var(--sd-accent,#0f9d58) 45%, transparent);
+        }
+        /* ==================== VS KAHRAMANI — avatarlı şimşek ayracı (v2) ==================== */
+        @keyframes sdBoltPulse{ 0%,100%{ filter:drop-shadow(0 0 4px var(--sd-accent,#0f9d58)); transform:scale(1); } 50%{ filter:drop-shadow(0 0 12px var(--sd-accent,#0f9d58)); transform:scale(1.12); } }
+        .sd-hero-vs{ position:relative; display:flex; align-items:center; justify-content:center; gap:0; padding:16px 12px 8px; overflow:hidden; background:var(--panel); }
+        .sd-hero-zap-line{
+            position:absolute; top:32px; left:6%; right:6%; height:2px; z-index:1;
+            background:repeating-linear-gradient(90deg, var(--sd-accent,#0f9d58) 0 7px, transparent 7px 14px); opacity:.4;
+        }
+        .sd-hero-side{ position:relative; z-index:2; flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; min-width:0; }
+        .sd-hero-avatar-wrap{ position:relative; width:58px; height:58px; }
+        .sd-hero-avatar{
+            width:58px; height:58px; border-radius:50%; object-fit:cover; display:block;
+            border:2.5px solid var(--line); box-shadow:0 4px 14px rgba(0,0,0,.22); background:var(--panel-alt);
+        }
+        .sd-hero-side.winner .sd-hero-avatar{
+            border-color:var(--sd-accent,#0f9d58);
+            box-shadow:0 0 0 3px color-mix(in srgb, var(--sd-accent,#0f9d58) 30%, transparent), 0 6px 16px color-mix(in srgb, var(--sd-accent,#0f9d58) 35%, transparent);
+        }
+        .sd-hero-name{ font-size:11px; font-weight:800; color:var(--ink); text-align:center; max-width:92px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .sd-hero-value{ font-family:'Orbitron',sans-serif; font-size:15px; font-weight:800; color:var(--sd-accent,#0f9d58); }
+        .sd-hero-bolt{
+            flex:none; width:36px; height:36px; display:flex; align-items:center; justify-content:center; position:relative; z-index:3;
+            margin:0 -8px; color:var(--sd-accent,#0f9d58); animation:sdBoltPulse 2.2s ease-in-out infinite;
+        }
+        .sd-hidden-note{
+            font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-soft); font-weight:600; text-align:center; margin-top:6px;
+            display:flex; align-items:center; justify-content:center; gap:4px;
         }
         /* ==================== DÜELLO TÜR SEÇİCİ ==================== */
         .duel-type-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
@@ -1278,7 +1458,7 @@
                 padding:12px 14px; gap:10px; min-height:0;
                 -webkit-overflow-scrolling:touch; overscroll-behavior:contain; touch-action:pan-y;
             }
-            .chat-msg-avatar{ width:32px; height:32px; }
+            .chat-msg-avatar{ width:34px; height:34px; }
             .chat-msg-body{ max-width:82%; }
             .chat-msg-bubble{ padding:9px 12px; font-size:13.5px; }
             .chat-msg-img{ max-width:170px; max-height:170px; }
@@ -2673,32 +2853,37 @@
     </div>
 
 
-    <div class="panel gallery-panel" id="portfolioPanel" style="margin-bottom:14px;">
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:4px; flex-wrap:wrap;">
-            <h3 style="margin:0;">Portföyüm</h3>
+    <div class="panel gallery-panel" id="portfolioPanel">
+        <div class="fx-head" style="margin-bottom:14px;">
+            <h3 style="margin:0; font-size:14px; letter-spacing:.08em; text-transform:uppercase; display:flex; align-items:center; gap:8px;">
+                <span id="portfolioHeadIcon"></span>Varlıklarım
+            </h3>
             <button class="btn-text" id="portfolioRefreshBtn" onclick="fetchMarketPrices()" style="display:flex; align-items:center; gap:5px;"></button>
         </div>
-        <div style="margin-bottom:14px;">
-            <div id="portfolioTotal" style="font-family:'Orbitron',sans-serif; font-size:26px; font-weight:800; text-shadow:0 0 14px var(--glow-mid);">₺0,00</div>
-            <div id="portfolioMeta" style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); margin-top:3px;"></div>
+
+        <div class="fx-panel" style="text-align:center; padding:22px 16px; margin-bottom:16px;">
+            <span class="fx-panel-label" id="pf2TotalLabel" style="justify-content:center; border-bottom:none; margin-bottom:6px;"></span>
+            <div id="portfolioTotal" style="font-family:'Orbitron',sans-serif; font-weight:800; font-size:30px; color:var(--ink); text-shadow:0 0 14px var(--glow-mid);">₺0,00</div>
+            <div id="portfolioMeta" style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-soft); margin-top:6px; display:flex; align-items:center; justify-content:center; gap:6px;"></div>
         </div>
-        <div id="portfolioHoldings" style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;"></div>
-        <div class="fx-panel" style="margin-bottom:14px;">
-            <span class="fx-panel-label">Değer Geçmişi (90 gün)</span>
-            <div id="portfolioHistoryChart"></div>
-        </div>
+
+        <div id="portfolioHoldings" style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;"></div>
+
         <div class="add-row" style="margin-bottom:0;">
-            <select id="portfolioAssetSelect" style="flex:1;"></select>
-            <label class="field-icon-input">
+            <select id="portfolioAssetSelect" style="flex:1; min-width:0;"></select>
+            <label class="field-icon-input" style="width:128px; flex:none;">
                 <span id="portfolioQtyIcon"></span>
                 <input type="number" id="portfolioQtyInput" min="0" step="any" placeholder="Miktar">
             </label>
-            <label class="field-icon-input">
-                <span id="portfolioPriceIcon"></span>
-                <input type="number" id="portfolioBuyPriceInput" min="0" step="any" placeholder="Alış fiyatı (TL, boş=güncel)">
-            </label>
-            <button class="btn" id="portfolioAddBtn" onclick="addPortfolioQty()" style="min-width:110px;"></button>
+            <button class="icon-btn" id="portfolioAddBtn" style="background:var(--brand-gradient); color:#fff; width:46px; height:46px; flex:none;" onclick="addPortfolioQty()"></button>
         </div>
+    </div>
+
+    <div class="panel gallery-panel" id="portfolioHistoryPanel">
+        <h3 style="margin:0 0 14px; font-size:14px; letter-spacing:.08em; text-transform:uppercase; display:flex; align-items:center; gap:8px;">
+            <span id="portfolioHistoryIcon"></span>Portföy Geçmişi
+        </h3>
+        <div id="portfolioHistoryChart"></div>
     </div>
 
     <div class="panel gallery-panel" id="fitnessPanel" style="margin-bottom:14px;">
@@ -3079,7 +3264,26 @@
         </div>
     </div>
 
-    <div id="imgLightbox" class="modal-overlay" onclick="closeLightbox()" style="cursor:zoom-out; padding:20px;">
+    <div class="chat-attach-menu" id="convoContextMenu" style="min-width:210px;">
+        <button onclick="ctxArchiveConvo()">
+            <span class="attach-opt-icon" id="ctxArchiveIcon"></span>
+            <span class="attach-opt-text"><span>Sohbeti Arşivle</span><span class="attach-opt-sub">Listede en alta gizlenir</span></span>
+        </button>
+        <button onclick="ctxBlockConvo()">
+            <span class="attach-opt-icon" id="ctxBlockIcon"></span>
+            <span class="attach-opt-text"><span>Engelle</span><span class="attach-opt-sub">Sadece kişiler için</span></span>
+        </button>
+        <button onclick="ctxClearConvo()">
+            <span class="attach-opt-icon" id="ctxClearIcon"></span>
+            <span class="attach-opt-text"><span>Sohbeti Temizle</span><span class="attach-opt-sub">Mesajlar senden gizlenir</span></span>
+        </button>
+        <button onclick="ctxDeleteConvo()">
+            <span class="attach-opt-icon" id="ctxDeleteIcon" style="background:var(--neg);"></span>
+            <span class="attach-opt-text"><span>Sohbeti Sil</span><span class="attach-opt-sub">Listenden kaldırılır</span></span>
+        </button>
+    </div>
+
+    return `<div class="chat-hub-row${_chatMegaActiveKey==='group_'+gid?' active':''}${isUnread?' unread':''}" onclick="openGroupChat('${gid}')">
         <img id="lightboxImg" src="" style="max-width:92vw; max-height:88vh; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,.6);">
     </div>
 
@@ -3281,7 +3485,7 @@
     <div id="stepDuelCreateModal" class="modal-overlay">
         <div class="modal-card gi-card">
             <div class="gi-inner">
-                <button class="icon-btn gi-close-btn" onclick="closeStepDuelCreator()">${''}</button>
+                <button class="icon-btn gi-close-btn" onclick="closeStepDuelCreator()">x</button>
                 <div class="gi-head" id="stepDuelHead" style="background:linear-gradient(100deg,#0f5c3c,#0f9d58 45%,#2fae66 80%,#0f5c3c); background-size:250% 250%;">
                     <div class="gi-head-row">
                         <span class="gi-head-icon" id="stepDuelHeadIcon"></span>
@@ -3846,7 +4050,7 @@
         if(!code) return '';
         const myCode = detectUserCountryCode();
         if(code.toLowerCase() === myCode.toLowerCase()) return '';
-        return `<img class="chat-msg-flag" src="https://flagcdn.com/w20/${code.toLowerCase()}.png" alt="" loading="lazy" onerror="this.remove()">`;
+        return `<img class="chat-msg-avatar-flag" src="https://flagcdn.com/w20/${code.toLowerCase()}.png" alt="" loading="lazy" onerror="this.remove()">`;
     }
     const CATEGORY_ICON = { 'İş':'briefcase', 'Kişisel':'compass', 'Sağlık':'cross', 'Eğitim':'book', 'Diğer':'grid' };
     const PRIORITY_ICON = { 'Düşük':'circleEmpty', 'Orta':'circleHalf', 'Yüksek':'chevUp2' };
@@ -4090,6 +4294,7 @@
     };
     let portfolio = {};
     let portfolioHistory = [];      // [{date, value}]
+    let portfolioLiveHistory = [];  // [{t, v}] — oturum içi anlık takip (kalıcı değil)
     let portfolioCostBasis = {};    // {assetId: {totalCost, qty}}
     let priceAlerts = [];   // [{id, assetId, target, direction, triggered}]
     let _alertTargetAssetId = null;
@@ -4158,23 +4363,23 @@
             marketPrices.try_ = 1;
         }
         marketLoading = false;
+        snapshotLivePoint();
         renderPortfolio();
     }
 
     function addPortfolioQty(){
         const assetId = document.getElementById('portfolioAssetSelect').value;
         const qtyInput = document.getElementById('portfolioQtyInput');
-        const priceInput = document.getElementById('portfolioBuyPriceInput');
         const qty = parseFloat(qtyInput.value);
         if(!assetId || !qty || qty <= 0) return;
-        const buyPrice = parseFloat(priceInput.value) || marketPrices[assetId] || 0;
+        const buyPrice = marketPrices[assetId] || 0;
         portfolio[assetId] = (portfolio[assetId] || 0) + qty;
         if(!portfolioCostBasis[assetId]) portfolioCostBasis[assetId] = { totalCost:0, qty:0 };
         portfolioCostBasis[assetId].totalCost += qty*buyPrice;
         portfolioCostBasis[assetId].qty += qty;
         qtyInput.value = '';
-        priceInput.value = '';
         saveState();
+        snapshotLivePoint();
         renderPortfolio();
         showTopToast(`${ASSET_DEFS[assetId].label} eklendi`, 'info', 'wallet');
     }
@@ -4183,6 +4388,7 @@
         delete portfolio[assetId];
         delete portfolioCostBasis[assetId];
         saveState();
+        snapshotLivePoint();
         renderPortfolio();
     }
 
@@ -4191,7 +4397,7 @@
         if(!span || span.querySelector('input')) return;
         const def = ASSET_DEFS[assetId];
         const current = portfolio[assetId];
-        span.innerHTML = `<input type="number" min="0" step="any" class="qty-edit-input" value="${current}"> ${def.unit}`;
+        span.innerHTML = `<input type="number" min="0" step="any" class="qty-edit-input" value="${current}" style="width:70px;"> ${def.unit}`;
         const input = span.querySelector('input');
         input.focus();
         input.select();
@@ -4209,6 +4415,7 @@
                 delete portfolioCostBasis[assetId];
             }
             saveState();
+            snapshotLivePoint();
             renderPortfolio();
         };
         input.addEventListener('blur', commit);
@@ -4228,9 +4435,15 @@
             ).join('')}</optgroup>`
         ).join('');
         document.getElementById('portfolioQtyIcon').innerHTML = icon('coins',14);
-        document.getElementById('portfolioPriceIcon').innerHTML = icon('dollar',14);
-        document.getElementById('portfolioAddBtn').innerHTML = `${icon('plus',14)} Ekle`;
-        document.getElementById('portfolioRefreshBtn').innerHTML = `${icon('refresh',11)} Yenile`;
+        document.getElementById('portfolioAddBtn').innerHTML = icon('plus',16);
+        document.getElementById('portfolioRefreshBtn').innerHTML = `<span class="admin-live-dot"></span> Canlı takip`;
+        document.getElementById('portfolioRefreshBtn').onclick = null;
+        const headIcon = document.getElementById('portfolioHeadIcon');
+        if(headIcon) headIcon.innerHTML = icon('wallet',16);
+        const totalLabel = document.getElementById('pf2TotalLabel');
+        if(totalLabel) totalLabel.innerHTML = `${icon('refresh',10)} Anlık Toplam Değer`;
+        const histIcon = document.getElementById('portfolioHistoryIcon');
+        if(histIcon) histIcon.innerHTML = icon('layers',15);
     }
 
     function assetLogoFallback(imgEl, assetId){
@@ -4250,6 +4463,46 @@
         else portfolioHistory.push({ date: today, value: total });
         portfolioHistory = portfolioHistory.slice(-90);
         saveState();
+    }
+    function snapshotLivePoint(){
+        const total = computePortfolioTotal();
+        portfolioLiveHistory.push({ t: Date.now(), v: total });
+        if(portfolioLiveHistory.length > 40) portfolioLiveHistory = portfolioLiveHistory.slice(-40);
+        renderPortfolioHistoryChart();
+    }
+    function renderPortfolioLiveChart(){
+        const el = document.getElementById('portfolioLiveChart');
+        if(!el) return;
+        const pts = portfolioLiveHistory;
+        if(pts.length < 2){
+            el.innerHTML = `<div style="height:56px; display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono',monospace; font-size:9.5px; color:rgba(255,255,255,.5);">Veri toplanıyor…</div>`;
+            return;
+        }
+        const values = pts.map(p=>p.v);
+        const min = Math.min(...values), max = Math.max(...values);
+        const span = Math.max(0.01, max-min);
+        const padY = span*0.25;
+        const W = 300, H = 56, padX = 4;
+        const stepX = (W-padX*2) / (pts.length-1);
+        const yFor = v => H - 6 - ((v-(min-padY))/(span+padY*2))*(H-12);
+        const coords = pts.map((p,i)=>[padX+i*stepX, yFor(p.v)]);
+        const line = coords.map((c,i)=>(i===0?'M':'L')+c[0].toFixed(1)+' '+c[1].toFixed(1)).join(' ');
+        const area = line + ` L${coords[coords.length-1][0].toFixed(1)} ${H} L${coords[0][0].toFixed(1)} ${H} Z`;
+        const last = values[values.length-1], prev = values[values.length-2];
+        const up = last >= prev;
+        const lineColor = up ? 'var(--pos)' : 'var(--neg)';
+        el.innerHTML = `
+      <svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="pfLiveGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${lineColor}" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="${lineColor}" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path d="${area}" fill="url(#pfLiveGrad)" stroke="none"/>
+        <path d="${line}" fill="none" stroke="${lineColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="${coords[coords.length-1][0].toFixed(1)}" cy="${coords[coords.length-1][1].toFixed(1)}" r="3" fill="${lineColor}"/>
+      </svg>`;
     }
     function openPriceAlertModal(assetId){
         _alertTargetAssetId = assetId;
@@ -4371,9 +4624,9 @@
         let total = 0;
 
         if(ids.length === 0){
-            holdingsEl.innerHTML = `<div class="empty-state" style="padding:26px 16px;">
+            holdingsEl.innerHTML = `<div class="empty-state" style="padding:26px 16px; border-color:rgba(255,255,255,.14); color:#94a3b8;">
         ${icon('wallet',22)}
-        <p><strong>Henüz varlık eklenmedi.</strong></p>
+        <p style="color:#fff;"><strong>Henüz varlık eklenmedi.</strong></p>
         <p>Aşağıdan birim seçip elindeki miktarı ekle.</p>
       </div>`;
         } else {
@@ -4387,24 +4640,28 @@
                 const pl = (avgBuy != null && price) ? (price - avgBuy) * qty : null;
                 const plPct = (avgBuy != null && avgBuy > 0 && price) ? ((price - avgBuy) / avgBuy * 100) : null;
                 const plColor = pl == null ? 'var(--ink-soft)' : (pl >= 0 ? 'var(--pos)' : 'var(--neg)');
-                const plLabel = pl == null ? '' : `<span class="tag" style="color:${plColor}; border-color:${plColor};">${icon(pl>=0?'chevUp2':'circleEmpty',10)} ${pl>=0?'+':''}${formatTRY(pl)} (${plPct.toFixed(1)}%)</span>`;
+                const plLabel = pl == null ? '' : `<div style="font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:${plColor}; margin-top:3px; display:flex; align-items:center; gap:3px; justify-content:flex-end;">${icon(pl>=0?'chevUp2':'circleEmpty',9)} ${pl>=0?'+':''}${formatTRY(pl)} (${plPct.toFixed(1)}%)</div>`;
                 total += value || 0;
                 const priceLabel = id==='try_' ? '1,00 TL sabit' : (marketLoading ? 'yükleniyor…' : (price ? formatTRY(price) + ' / ' + def.unit : 'alınamadı'));
                 const logoInner = def.logo
-                    ? `<img src="${def.logo}" alt="" onerror="assetLogoFallback(this,'${id}')">`
+                    ? `<img src="${def.logo}" alt="" onerror="assetLogoFallback(this,'${id}')" style="width:100%; height:100%; object-fit:contain; padding:6px;">`
                     : icon(def.ic,17);
-                return `<div class="task-item" style="border-left-color:var(--line);">
-          <div class="asset-logo">${logoInner}</div>
-          <div class="task-body">
-            <div class="task-text">${def.label} <span class="qty-display" id="qtydisp-${id}" style="color:var(--ink-soft); font-weight:400; cursor:pointer;" title="Miktarı düzenlemek için tıkla" onclick="editHoldingQty('${id}')">· ${qty} ${def.unit} ${icon('edit',10)}</span></div>
-             <div class="task-meta">
-              <span class="tag">${icon('coins',10)} ${priceLabel}</span>
-              <span class="tag tag-xp">${value!=null ? formatTRY(value) : '—'}</span>
-              ${plLabel}
-              <button class="icon-btn" style="width:26px;height:26px;padding:0;" title="Fiyat Alarmı Kur" onclick="openPriceAlertModal('${id}')">${icon('flag',13)}</button>
+                return `<div class="lift-card" style="align-items:flex-start;">
+          <div class="lift-card-icon" style="overflow:hidden;">${logoInner}</div>
+          <div class="lift-card-body" style="gap:5px; flex:1; min-width:0;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <span style="font-size:13px; font-weight:700; color:var(--ink);">${def.label}</span>
+              <span style="font-family:'Orbitron',sans-serif; font-size:13.5px; font-weight:700; color:var(--ink); flex:none;">${value!=null ? formatTRY(value) : '—'}</span>
             </div>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <span class="lift-card-name" style="cursor:pointer;" title="Miktarı düzenle" onclick="editHoldingQty('${id}')" id="qtydisp-${id}">${qty} ${def.unit} ${icon('edit',9)} · ${priceLabel}</span>
+            </div>
+            ${plLabel}
           </div>
-          <button class="icon-btn" title="Kaldır" onclick="removePortfolioAsset('${id}')">${icon('trash',15)}</button>
+          <div style="display:flex; flex-direction:column; gap:4px; flex:none;">
+            <button class="icon-btn" style="width:28px; height:28px; padding:0;" title="Fiyat Alarmı Kur" onclick="openPriceAlertModal('${id}')">${icon('flag',13)}</button>
+            <button class="icon-btn" style="width:28px; height:28px; padding:0;" title="Kaldır" onclick="removePortfolioAsset('${id}')">${icon('trash',13)}</button>
+          </div>
         </div>`;
             }).join('');
         }
@@ -4421,20 +4678,101 @@
         } else if(marketLastUpdated){
             metaEl.innerHTML = `${icon('refresh',10)} Son güncelleme: ${new Date(marketLastUpdated).toLocaleTimeString('tr-TR')} · TL cinsinden`;
         }
-        renderPortfolioHistoryChart();
         renderPriceAlertsList();
+        renderPortfolioLiveChart();
     }
     /* ===================== KÜRESEL SOHBET ===================== */
     let chatListenerAttached = false;
     let _pendingChatImageDataUrl = null;
     let mediaRecorderRef = null, recordedChunks = [], isRecordingVoice = false;
 
+    let _loadingOlderGlobal = false, _allGlobalLoaded = false;
+    let _loadingOlderDm = false, _allDmLoaded = false;
+    let _loadingOlderGroup = false, _allGroupLoaded = false;
+
+    async function loadOlderGlobalMessages(){
+        if(_loadingOlderGlobal || _allGlobalLoaded || chatMessages.length===0 || !chatRef) return;
+        _loadingOlderGlobal = true;
+        const oldestTs = chatMessages[0].ts;
+        try{
+            const snap = await chatRef.orderByChild('ts').endBefore(oldestTs).limitToLast(40).once('value');
+            const older = [];
+            snap.forEach(child => older.push(Object.assign({ id: child.key }, child.val())));
+            if(older.length < 40) _allGlobalLoaded = true;
+            if(older.length){
+                const wrap = document.getElementById('chatMessagesWrap');
+                const prevHeight = wrap ? wrap.scrollHeight : 0;
+                older.forEach(m => { if(!chatMessages.some(x=>x.id===m.id)) chatMessages.push(m); });
+                chatMessages.sort((a,b)=>a.ts-b.ts);
+                _globalRenderLimit += older.length;
+                _suppressChatAutoScroll = true;
+                renderChatMessages();
+                _suppressChatAutoScroll = false;
+                if(wrap) wrap.scrollTop = wrap.scrollHeight - prevHeight;
+            }
+        }catch(e){ console.error('Eski mesajlar yüklenemedi', e); }
+        _loadingOlderGlobal = false;
+    }
+
+    async function loadOlderDmMessages(){
+        if(_loadingOlderDm || _allDmLoaded || dmMessages.length===0 || !currentDmPairKey) return;
+        _loadingOlderDm = true;
+        const oldestTs = dmMessages[0].ts;
+        try{
+            const snap = await db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages').orderByChild('ts').endBefore(oldestTs).limitToLast(40).once('value');
+            const older = [];
+            snap.forEach(child => older.push(Object.assign({ id: child.key }, child.val())));
+            if(older.length < 40) _allDmLoaded = true;
+            if(older.length){
+                const wrap = document.getElementById('dmMessagesWrap');
+                const prevHeight = wrap ? wrap.scrollHeight : 0;
+                older.forEach(m => { if(!dmMessages.some(x=>x.id===m.id)) dmMessages.push(m); });
+                dmMessages.sort((a,b)=>a.ts-b.ts);
+                _dmRenderLimit += older.length;
+                renderDmMessages();
+                if(wrap) wrap.scrollTop = wrap.scrollHeight - prevHeight;
+            }
+        }catch(e){ console.error('Eski mesajlar yüklenemedi', e); }
+        _loadingOlderDm = false;
+    }
+
+    async function loadOlderGroupMessages(){
+        if(_loadingOlderGroup || _allGroupLoaded || groupMessages.length===0 || !currentGroupId) return;
+        _loadingOlderGroup = true;
+        const oldestTs = groupMessages[0].ts;
+        try{
+            const snap = await db.ref('developmentUsers/groupChats/'+currentGroupId+'/messages').orderByChild('ts').endBefore(oldestTs).limitToLast(40).once('value');
+            const older = [];
+            snap.forEach(child => older.push(Object.assign({ id: child.key }, child.val())));
+            if(older.length < 40) _allGroupLoaded = true;
+            if(older.length){
+                const wrap = document.getElementById('dmMessagesWrap');
+                const prevHeight = wrap ? wrap.scrollHeight : 0;
+                older.forEach(m => { if(!groupMessages.some(x=>x.id===m.id)) groupMessages.push(m); });
+                groupMessages.sort((a,b)=>a.ts-b.ts);
+                _groupRenderLimit += older.length;
+                renderGroupMessages();
+                if(wrap) wrap.scrollTop = wrap.scrollHeight - prevHeight;
+            }
+        }catch(e){ console.error('Eski mesajlar yüklenemedi', e); }
+        _loadingOlderGroup = false;
+    }
+
+    function attachInfiniteScroll(wrapId, loaderFn){
+        const el = document.getElementById(wrapId);
+        if(!el || el._infiniteAttached) return;
+        el._infiniteAttached = true;
+        el.addEventListener('scroll', () => { if(el.scrollTop < 90) loaderFn(); });
+    }
+
+    let _suppressChatAutoScroll = false;
+
     function attachChatListener(){
         if(chatListenerAttached || !chatRef) return;
         chatListenerAttached = true;
         modsRef.on('value', snap => { moderators = snap.val() || {}; renderChatMessages(); });
 
-        const limitedChatRef = chatRef.limitToLast(150);
+        const limitedChatRef = chatRef.limitToLast(100);
         limitedChatRef.on('child_added', snap => {
             const msg = Object.assign({ id: snap.key }, snap.val());
             if(!chatMessages.some(m => m.id === msg.id)){
@@ -4638,16 +4976,17 @@
             likes: {},
             reactions: {}
         };
+        if(input) input.value = '';
+        _chatReplyTo = null; renderReplyPreview('global');
+        cancelChatImage();
+        const vbtn = document.getElementById('chatVoiceBtn');
+        if(vbtn) vbtn.innerHTML = icon('bolt',15);
         try{
             await chatRef.push(msg);
-            if(input) input.value = '';
-            _chatReplyTo = null; renderReplyPreview('global');
-            cancelChatImage();
-            const vbtn = document.getElementById('chatVoiceBtn');
-            if(vbtn) vbtn.innerHTML = icon('bolt',15);
         }catch(err){
             console.error('Mesaj gönderilemedi', err);
             showTopToast('Mesaj gönderilemedi: ' + (err && err.message ? err.message : 'bilinmeyen hata'), 'warn', 'warn');
+            if(input && !input.value) input.value = text;
         }
     }
     let _lastChatMsgIds = new Set();
@@ -4664,7 +5003,14 @@
     function renderChatMessages(){
         const wrap = document.getElementById('chatMessagesWrap');
         if(!wrap) return;
-        const visibleMsgs = chatMessages.filter(m => !blocked[m.uid] && !(friends[m.uid]===undefined && isBlockedByMe(m.uid)) && !(m.hiddenFor && m.hiddenFor[currentUid]));
+        let visibleMsgs = chatMessages.filter(m => {
+            if(blocked[m.uid]) return false;
+            if(friends[m.uid]===undefined && isBlockedByMe(m.uid)) return false;
+            if(m.hiddenFor && m.hiddenFor[currentUid]) return false;
+            if(m.isEventMsg && m.eventId && !communityEvents[m.eventId]) return false; // etkinlik silindiyse mesaj da görünmesin
+            return true;
+        });
+        if(visibleMsgs.length > _globalRenderLimit) visibleMsgs = visibleMsgs.slice(-_globalRenderLimit);
         const currentIds = new Set(visibleMsgs.map(m => m.id));
         const newIds = new Set([...currentIds].filter(id => !_lastChatMsgIds.has(id)));
 
@@ -4685,7 +5031,7 @@
 
         const lastMsg = visibleMsgs[visibleMsgs.length - 1];
         const iJustSent = lastMsg && newIds.has(lastMsg.id) && lastMsg.uid === currentUid;
-        if(!_chatHasRenderedOnce || iJustSent){
+        if(!_suppressChatAutoScroll && (!_chatHasRenderedOnce || iJustSent)){
             wrap.scrollTop = wrap.scrollHeight;
         }
 
@@ -4721,11 +5067,14 @@
         const isSelected = _selectedIds.has(m.id);
         return `<div class="chat-msg${isNew?' chat-msg-new':''}${m.role==='admin'?' is-admin':''}${mine?' is-mine':''}${m.isEventMsg?' is-event':''}${grouped?' grouped':''}${_pinnedOpenMsgIds.has(m.id)?' pinned-open':''}${isSelMode?' select-mode':''}${isSelected?' selected':''}" data-msgid="${m.id}" onclick="${isSelMode?`toggleMsgSelected('${m.id}')`:''}">
     ${isSelMode ? `<div class="chat-msg-select-check">${icon('check',12)}</div>` : ''}
-    <img class="chat-msg-avatar" src="${m.avatarUrl || 'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" onclick="${isSelMode?'':`openUserSocialProfile('${m.uid}')`}" style="cursor:pointer;">
+    <div class="chat-msg-avatar-flag-wrap">
+      <img class="chat-msg-avatar" src="${m.avatarUrl || 'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" onclick="${isSelMode?'':`openUserSocialProfile('${m.uid}')`}" style="cursor:pointer;">
+      ${flagHtml}
+    </div>
     <div class="chat-msg-body">
       <div class="chat-msg-headrow">
         <span class="chat-msg-rankicon">${badgeHTML(rankIdx, 16, false)}</span>
-        <span class="chat-msg-name" onclick="${isSelMode?'':`openUserSocialProfile('${m.uid}')`}">${escapeHtml(m.username||'Kullanıcı')}${flagHtml}</span>
+        <span class="chat-msg-name" onclick="${isSelMode?'':`openUserSocialProfile('${m.uid}')`}">${escapeHtml(m.username||'Kullanıcı')}</span>
         ${chatMsgBadgesHtml(m)}
       </div>
 <div class="chat-msg-bubble" id="bubble-${m.id}" ondblclick="${isSelMode?'':`handleBubbleDoubleLike(event,'${m.id}', false)`}">
@@ -5435,6 +5784,8 @@ ${m.track ? `
         document.getElementById('dmTargetOnlineDot').style.display = 'none';
         closeGroupInfoPanel();
         groupMessages = [];
+        _groupRenderLimit = CHAT_RENDER_LIMIT;
+        _allGroupLoaded = false;
         renderGroupMessages(); // ESKİ MESAJLARI HEMEN TEMİZLE — yeni veri gelene kadar boş görünsün
         attachGroupMessagesListener(groupId);
         _chatMegaActiveKey = 'group_'+groupId;
@@ -5464,7 +5815,7 @@ ${m.track ? `
         }
         _activeGroupMessagesPath = 'developmentUsers/groupChats/'+groupId+'/messages';
 
-        const ref = db.ref(_activeGroupMessagesPath).limitToLast(150);
+        const ref = db.ref(_activeGroupMessagesPath).limitToLast(100);
         ref.on('child_added', snap => {
             const msg = Object.assign({ id: snap.key }, snap.val());
             if(!groupMessages.some(m=>m.id===msg.id)){ groupMessages.push(msg); groupMessages.sort((a,b)=>a.ts-b.ts); renderGroupMessages(); }
@@ -5486,9 +5837,11 @@ ${m.track ? `
     }
 
     function renderGroupMessages(){
+        if(!currentGroupId) return; // şu an bir DM açıksa grup render'ı bu kutuyu ezmesin
         const wrap = document.getElementById('dmMessagesWrap');
         if(!wrap) return;
-        const visibleGroupMsgs = groupMessages.filter(m => !(m.hiddenFor && m.hiddenFor[currentUid]));
+        let visibleGroupMsgs = groupMessages.filter(m => !(m.hiddenFor && m.hiddenFor[currentUid]));
+        if(visibleGroupMsgs.length > _groupRenderLimit) visibleGroupMsgs = visibleGroupMsgs.slice(-_groupRenderLimit);
         if(visibleGroupMsgs.length===0){ wrap.innerHTML = `<div class="empty-state" style="border:none; padding:60px 20px;">${icon('inbox',24)}<p><strong>Henüz mesaj yok.</strong></p></div>`; return; }
         let lastDay=null, prevGroupMsg=null;
         wrap.innerHTML = visibleGroupMsgs.map(m => {
@@ -5588,6 +5941,11 @@ ${m.track ? `
             audioUrl: audioDataUrl || null, ts: Date.now(), replyTo: _dmReplyTo, likes: {}, reactions: {}, prestige: prestige,
             role: isAdminSelf ? 'admin' : (isModSelf ? 'mod' : null)
         };
+        if(input) input.value = '';
+        _dmReplyTo = null; renderReplyPreview('dm');
+        cancelDmImage();
+        const vbtn = document.getElementById('dmVoiceBtn');
+        if(vbtn) vbtn.innerHTML = icon('bolt',15);
         try{
             await db.ref('developmentUsers/groupChats/'+currentGroupId+'/messages').push(msg);
             const preview = text || (msg.imageUrl ? '📷 Görsel' : (msg.audioUrl ? '🎤 Sesli mesaj' : ''));
@@ -5595,13 +5953,9 @@ ${m.track ? `
             if(groupsCache[currentGroupId]){ groupsCache[currentGroupId].lastMessageTs = msg.ts; groupsCache[currentGroupId].lastMessagePreview = preview; groupsCache[currentGroupId].lastMessageUid = currentUid; }
             await db.ref('developmentUsers/'+currentUid+'/groupReads/'+currentGroupId).set(msg.ts);
             groupReadsCache[currentGroupId] = msg.ts;
-            if(input) input.value = '';
-            _dmReplyTo = null; renderReplyPreview('dm');
-            cancelDmImage();
-            const vbtn = document.getElementById('dmVoiceBtn');
-            if(vbtn) vbtn.innerHTML = icon('bolt',15);
         }catch(err){
             showTopToast('Mesaj gönderilemedi: ' + (err && err.message ? err.message : 'bilinmeyen hata'), 'warn', 'warn');
+            if(input && !input.value) input.value = text;
         }
     }
     function attachDmIndexListener(){
@@ -5643,6 +5997,9 @@ ${m.track ? `
         detachCurrentConversationListeners();
         currentDmTargetUid = null; currentDmPairKey = null;
         currentGroupId = null;
+        _dmRenderLimit = CHAT_RENDER_LIMIT;
+        _groupRenderLimit = CHAT_RENDER_LIMIT;
+        _allDmLoaded = false; _allGroupLoaded = false;
         document.getElementById('megaGlobalView').style.display = 'flex';
         document.getElementById('megaDmView').style.display = 'none';
         closeChatSidebarMobile();
@@ -5660,20 +6017,41 @@ ${m.track ? `
 
     function openChatHub(){
         closeAllAppModals();
-        showMegaGlobalView();
+        const isMobile = window.innerWidth <= 720;
+
+        if(isMobile){
+            // Mobilde önce sadece sohbet listesini göster — küresel sohbeti arkada render etmeyerek performans koru
+            exitSelectMode();
+            closeGroupInfoPanel();
+            detachCurrentConversationListeners();
+            currentDmTargetUid = null; currentDmPairKey = null; currentGroupId = null;
+            _chatMegaActiveKey = null;
+            document.getElementById('megaGlobalView').style.display = 'none';
+            document.getElementById('megaDmView').style.display = 'none';
+        } else {
+            showMegaGlobalView();
+        }
+
         renderChatHub();
         attachLongPressActions('chatMessagesWrap');
         attachLongPressActions('dmMessagesWrap');
         attachBubbleHoverActions('chatMessagesWrap');
         attachBubbleHoverActions('dmMessagesWrap');
+        attachInfiniteScroll('chatMessagesWrap', loadOlderGlobalMessages);
+        attachInfiniteScroll('dmMessagesWrap', () => currentGroupId ? loadOlderGroupMessages() : loadOlderDmMessages());
         document.getElementById('chatMegaModal').classList.add('show');
         document.body.style.overflow = 'hidden';
         document.getElementById('profileCorner').style.display = 'none';
         document.getElementById('chatFab').style.display = 'none';
         setAppVh();
-        if(window.innerWidth <= 720) openChatSidebarMobile();
-        _chatHasRenderedOnce = false;
-        renderChatMessages();
+
+        if(isMobile){
+            openChatSidebarMobile();
+        } else {
+            _chatHasRenderedOnce = false;
+            renderChatMessages();
+        }
+
         if(activeHolidayKey && HOLIDAYS[activeHolidayKey]){
             const flagKey = 'holidayChatToast_'+activeHolidayKey;
             if(!sessionStorage.getItem(flagKey)){
@@ -5692,7 +6070,12 @@ ${m.track ? `
         closeGroupInfoPanel();
     }
 
-    function openGlobalChat(){ showMegaGlobalView(); renderChatHub(); }
+    function openGlobalChat(){
+        showMegaGlobalView();
+        renderChatHub();
+        _chatHasRenderedOnce = false;
+        renderChatMessages();
+    }
     function closeGlobalChat(){ showChatMegaSidebar(); }
 
     function renderChatHub(){
@@ -5735,7 +6118,13 @@ ${m.track ? `
     </div>`;
             }).join('');
         }
-        const friendUids = Object.keys(friends || {}).filter(uid => !q || (friends[uid].username||'').toLowerCase().includes(q));
+        const friendUids = Object.keys(friends || {}).filter(uid => {
+            if(q && !(friends[uid].username||'').toLowerCase().includes(q)) return false;
+            const conv = dmConversations[uid];
+            if(conv && conv.archived) return false;
+            if(conv && conv.deletedAt && (!conv.ts || conv.ts <= conv.deletedAt)) return false;
+            return true;
+        });
 
         if(friendUids.length === 0){
             html += `<div class="empty-state" style="padding:24px 14px;"><p>${q?'Eşleşen arkadaş yok.':'Henüz arkadaşın yok.'}</p>${q?'':'<p>Bir kullanıcının profiline gidip arkadaş ekleyebilirsin.</p>'}</div>`;
@@ -5746,7 +6135,7 @@ ${m.track ? `
                 const conv = dmConversations[uid];
                 const isUnread = conv && conv.unread && _chatMegaActiveKey !== uid;
                 const sub = conv ? escapeHtml((conv.lastMessage||'').slice(0,40)) : 'Henüz mesaj yok';
-                return `<div class="chat-hub-row${isUnread?' unread':''}${_chatMegaActiveKey===uid?' active':''}" onclick="openDMWithUser('${uid}')">
+                return `<div class="chat-hub-row${isUnread?' unread':''}${_chatMegaActiveKey===uid?' active':''}" onclick="openDMWithUser('${uid}')" oncontextmenu="openConvoContextMenu(event,'dm','${uid}')">
     <div class="chat-hub-avatar-wrap">
       <img class="chat-hub-avatar" src="${f.avatarUrl || 'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'">
       ${isUserOnline(uid)?'<span class="chat-online-dot"></span>':''}
@@ -5764,6 +6153,9 @@ ${m.track ? `
 
     async function openDMWithUser(uid){
         if(!uid || uid === currentUid) return;
+        if(blocked[uid]){ showTopToast('Bu kullanıcıyı engellediniz', 'warn', 'ban'); return; }
+        const blockedByThemSnap = await db.ref('developmentUsers/'+currentUid+'/blockedBy/'+uid).once('value');
+        if(blockedByThemSnap.exists()){ showTopToast('Bu kullanıcı sizi engellemiş', 'warn', 'ban'); return; }
         closeAllAppModals('chatMegaModal');
 
         // ESKİ DM VEYA ESKİ GRUP DİNLEYİCİSİNİ KAPAT — yoksa eski sohbetin mesajları yeni açılan sohbete karışır
@@ -5774,6 +6166,8 @@ ${m.track ? `
         currentDmTargetUid = uid;
         currentDmPairKey = pairKeyFor(currentUid, uid);
         dmMessages = [];
+        _dmRenderLimit = CHAT_RENDER_LIMIT;
+        _allDmLoaded = false;
         renderDmMessages(); // ESKİ MESAJLARI HEMEN TEMİZLE — yeni veri gelene kadar boş görünsün
 
         const snap = await db.ref('developmentUsers/'+uid+'/profile').once('value');
@@ -5931,7 +6325,7 @@ ${m.track ? `
 
     function attachDmMessagesListener(){
         if(!currentDmPairKey) return;
-        const dmRef = db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages').limitToLast(100);
+        const dmRef = db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages').limitToLast(80);
         dmRef.on('child_added', snap => {
             const msg = Object.assign({ id: snap.key }, snap.val());
             if(!dmMessages.some(m => m.id === msg.id)){
@@ -5960,6 +6354,7 @@ ${m.track ? `
     }
 
     function renderDmMessages(){
+        if(currentGroupId) return; // şu an bir grup açıksa DM render'ı bu kutuyu ezmesin
         dmMessages.forEach(m => {
             if(m.uid !== currentUid && m.seen === false){
                 db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages/'+m.id+'/seen').set(true);
@@ -5968,7 +6363,8 @@ ${m.track ? `
         const wrap = document.getElementById('dmMessagesWrap');
         if(!wrap) return;
         const wasNearBottom = (wrap.scrollHeight - wrap.scrollTop - wrap.clientHeight) < 80;
-        const visibleDmMsgs = dmMessages.filter(m => !(m.hiddenFor && m.hiddenFor[currentUid]));
+        let visibleDmMsgs = dmMessages.filter(m => !(m.hiddenFor && m.hiddenFor[currentUid]));
+        if(visibleDmMsgs.length > _dmRenderLimit) visibleDmMsgs = visibleDmMsgs.slice(-_dmRenderLimit);
         if(visibleDmMsgs.length === 0){
             wrap.innerHTML = `<div class="empty-state" style="border:none; padding:60px 20px;">${icon('inbox',24)}<p><strong>Henüz mesaj yok.</strong></p><p>Bir merhaba de!</p></div>`;
             return;
@@ -6062,6 +6458,9 @@ ${locationCardHtml(m.location)}
         const text = input ? input.value.trim() : '';
         if(!text && !_pendingDmImageDataUrl && !audioDataUrl) return;
         if(!currentDmPairKey || !currentDmTargetUid){ showTopToast('Sohbet seçilmedi', 'warn', 'warn'); return; }
+        if(blocked[currentDmTargetUid]){ showTopToast('Bu kullanıcıyı engellediniz', 'warn', 'ban'); return; }
+        const blockedByThemSnap = await db.ref('developmentUsers/'+currentUid+'/blockedBy/'+currentDmTargetUid).once('value');
+        if(blockedByThemSnap.exists()){ showTopToast('Bu kullanıcı sizi engellemiş', 'warn', 'ban'); return; }
         const me = getMyProfileCache();
         const isAdminSelf = currentUid === ADMIN_UID;
         const isModSelf = !!moderators[currentUid];
@@ -6070,6 +6469,11 @@ ${locationCardHtml(m.location)}
             audioUrl: audioDataUrl || null, ts: Date.now(), replyTo: _dmReplyTo, likes: {}, reactions: {}, seen:false, prestige: prestige,
             role: isAdminSelf ? 'admin' : (isModSelf ? 'mod' : null)
         };
+        if(input) input.value = '';
+        _dmReplyTo = null; renderReplyPreview('dm');
+        cancelDmImage();
+        const vbtn = document.getElementById('dmVoiceBtn');
+        if(vbtn) vbtn.innerHTML = icon('bolt',15);
         try{
             await db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages').push(msg);
             await db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/participants').update({ [currentUid]: true, [currentDmTargetUid]: true });
@@ -6087,13 +6491,9 @@ ${locationCardHtml(m.location)}
                 otherUsername: me.username, otherAvatar: me.avatarUrl,
                 lastMessage: lastMsgPreview, ts: Date.now(), unread:true
             });
-            if(input) input.value = '';
-            _dmReplyTo = null; renderReplyPreview('dm');
-            cancelDmImage();
-            const vbtn = document.getElementById('dmVoiceBtn');
-            if(vbtn) vbtn.innerHTML = icon('bolt',15);
         }catch(err){
             showTopToast('Mesaj gönderilemedi: ' + (err && err.message ? err.message : 'bilinmeyen hata'), 'warn', 'warn');
+            if(input && !input.value) input.value = text;
         }
     }
     function getActiveConvMessage(msgId){
@@ -6437,6 +6837,7 @@ ${locationCardHtml(m.location)}
                 fitness.steps.count += 1;
                 renderStepCounter();
                 contributeToEvents('steps', 1);
+                syncActiveAutoDuels();
                 if(fitness.steps.count % 10 === 0) saveState();
             }
         }
@@ -6904,6 +7305,7 @@ ${locationCardHtml(m.location)}
         fitness.waterConsumed = Math.min(target*1.5, (fitness.waterConsumed||0) + ml);
         saveState();
         contributeToEvents('water', ml/1000);
+        syncActiveAutoDuels();
         renderWaterJug();
         showTopToast(`+${ml}ml su eklendi`, 'info', 'droplet');
     }
@@ -7036,6 +7438,10 @@ ${locationCardHtml(m.location)}
     }
     let chatMessages = [];
     const MAX_CHAT_MESSAGES = 200;
+    const CHAT_RENDER_LIMIT = 60; // performans için aynı anda DOM'a bu kadar mesaj basılır
+    let _globalRenderLimit = CHAT_RENDER_LIMIT;
+    let _dmRenderLimit = CHAT_RENDER_LIMIT;
+    let _groupRenderLimit = CHAT_RENDER_LIMIT;
 
     const CUSTOM_REACTIONS = [
         { key:'fire', emoji:'🔥' },
@@ -7160,7 +7566,7 @@ ${locationCardHtml(m.location)}
             });
         });
         if(_duelFinalizeTimer) clearInterval(_duelFinalizeTimer);
-        _duelFinalizeTimer = setInterval(checkAndFinalizeDuels, 20000);
+        _duelFinalizeTimer = setInterval(()=>{ checkAndFinalizeDuels(); syncActiveAutoDuels(); }, 20000);
     }
 
     async function respondStepDuel(duelId, response){
@@ -7180,6 +7586,7 @@ ${locationCardHtml(m.location)}
             await db.ref('developmentUsers/duels/'+duelId).update(updated);
             Object.assign(d, updated);
             myDuels[duelId] = d;
+            syncActiveAutoDuels();
             renderChatMessages(); renderDmMessages(); renderGroupMessages && renderGroupMessages();
             showTopToast('Düello başladı! Adımların otomatik işlenecek', 'info', 'bolt');
         }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
@@ -7244,6 +7651,7 @@ ${locationCardHtml(m.location)}
         const d = myDuels[duelId];
         if(!d) return `<div class="step-duel-card"><div class="sd-body" style="padding-top:14px;"><span style="font-size:11px; color:var(--ink-soft);">${icon('warn',11)} Düello yükleniyor…</span></div></div>`;
         const typeDef = DUEL_TYPES[d.type] || DUEL_TYPES.steps;
+        const autoType = (d.type === 'steps' || d.type === 'water');
         const uids = Object.keys(d.participants||{});
         const meP = d.participants[currentUid] || {};
         const otherUid = uids.find(u=>u!==currentUid);
@@ -7252,6 +7660,28 @@ ${locationCardHtml(m.location)}
         const otherName = otherP.username || document.getElementById('dmTargetName').textContent || 'Rakip';
         const otherAvatar = otherP.avatarUrl || document.getElementById('dmTargetAvatar').src;
         const headStyle = `background:linear-gradient(120deg,${typeDef.c3},${typeDef.c1} 55%,${typeDef.c2});`;
+
+        const isCompleted = d.status === 'completed';
+        const won = isCompleted && d.winnerUid === currentUid;
+        const draw = isCompleted && !d.winnerUid;
+        const meVal = isCompleted ? (meP.contribution||0) : null;
+        const otherVal = isCompleted ? (otherP.contribution||0) : null;
+
+        const heroRow = `
+      <div class="sd-hero-vs" style="--sd-accent:${typeDef.c2};">
+        <div class="sd-hero-zap-line"></div>
+        <div class="sd-hero-side${won?' winner':''}">
+          <div class="sd-hero-avatar-wrap"><img class="sd-hero-avatar" src="${meAvatar}"></div>
+          <span class="sd-hero-name">Sen</span>
+          ${isCompleted ? `<span class="sd-hero-value">${meVal}<span style="font-size:9px; font-weight:600; margin-left:2px;">${typeDef.unit}</span></span>` : ''}
+        </div>
+        <span class="sd-hero-bolt">${icon('bolt',24)}</span>
+        <div class="sd-hero-side${isCompleted && !won && !draw ? ' winner':''}">
+          <div class="sd-hero-avatar-wrap"><img class="sd-hero-avatar" src="${otherAvatar}" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'"></div>
+          <span class="sd-hero-name">${escapeHtml(otherName)}</span>
+          ${isCompleted ? `<span class="sd-hero-value">${otherVal}<span style="font-size:9px; font-weight:600; margin-left:2px;">${typeDef.unit}</span></span>` : ''}
+        </div>
+      </div>`;
 
         let statusChip, body;
         if(d.status === 'declined'){
@@ -7268,28 +7698,19 @@ ${locationCardHtml(m.location)}
         } else if(d.status === 'active'){
             statusChip = `<span class="sd-status-chip active">${icon('bolt',9)} Aktif</span>`;
             const rem = Math.max(0, d.endAt - Date.now());
-            body = `
-        <div class="sd-timer-row">${icon('hourglass',11)} ${formatCountdown(rem)}</div>
-        <div class="sd-input-row">
+            const manualRow = autoType
+                ? `<div class="sd-timer-row" style="background:var(--panel-alt); color:var(--ink-soft); border-color:var(--line);">${icon(typeDef.ic,11)} Spor panelinden otomatik güncellenir</div>`
+                : `<div class="sd-input-row">
           <input type="number" id="sdInput-${duelId}" placeholder="${typeDef.unit} değerin" value="${meP.contribution||''}">
           <button class="btn" style="padding:9px 12px; font-size:11px; background:linear-gradient(135deg,${typeDef.c1},${typeDef.c2}) !important;" onclick="submitStepDuelContribution('${duelId}')">${icon('check',12)} Gönder</button>
-        </div>
-        <div class="sd-vs-row">
-          <div class="sd-side"><img class="sd-side-avatar" src="${meAvatar}"><div class="sd-side-name">Sen</div><div class="sd-side-hidden">${icon('lock',9)} Gizli</div></div>
-          <span class="sd-vs-mid" style="background:linear-gradient(135deg,${typeDef.c1},${typeDef.c2});">VS</span>
-          <div class="sd-side"><img class="sd-side-avatar" src="${otherAvatar}" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'"><div class="sd-side-name">${escapeHtml(otherName)}</div><div class="sd-side-hidden">${icon('lock',9)} Gizli</div></div>
         </div>`;
+            body = `
+        <div class="sd-timer-row">${icon('hourglass',11)} ${formatCountdown(rem)}</div>
+        ${manualRow}
+        <div class="sd-hidden-note">${icon('lock',10)} Rakibinin değeri süre bitene kadar gizli</div>`;
         } else {
             statusChip = `<span class="sd-status-chip done">${icon('trophy',9)} Sonuçlandı</span>`;
-            const won = d.winnerUid === currentUid;
-            const draw = !d.winnerUid;
-            body = `
-        <div class="sd-vs-row">
-          <div class="sd-side${won?' winner':''}"><img class="sd-side-avatar" src="${meAvatar}"><div class="sd-side-name">Sen</div><div class="sd-side-value">${meP.contribution||0}<span style="font-size:9px; font-weight:600; margin-left:2px;">${typeDef.unit}</span></div></div>
-          <span class="sd-vs-mid" style="background:linear-gradient(135deg,${typeDef.c1},${typeDef.c2});">VS</span>
-          <div class="sd-side${!won&&!draw?' winner':''}"><img class="sd-side-avatar" src="${otherAvatar}" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'"><div class="sd-side-name">${escapeHtml(otherName)}</div><div class="sd-side-value">${otherP.contribution||0}<span style="font-size:9px; font-weight:600; margin-left:2px;">${typeDef.unit}</span></div></div>
-        </div>
-        <div class="sd-result-banner ${draw?'lose':(won?'win':'lose')}">${draw?icon('flag',13)+' Berabere':(won?icon('trophy',13)+' Kazandın!':icon('x',13)+' Kaybettin')}</div>`;
+            body = `<div class="sd-result-banner ${draw?'lose':(won?'win':'lose')}">${draw?icon('flag',13)+' Berabere':(won?icon('trophy',13)+' Kazandın!':icon('x',13)+' Kaybettin')}</div>`;
         }
 
         return `<div class="step-duel-card" style="--sd-accent:${typeDef.c2};">
@@ -7298,8 +7719,25 @@ ${locationCardHtml(m.location)}
         <div class="sd-head-text"><div class="sd-kicker" style="color:rgba(255,255,255,.85);">${typeDef.label.toUpperCase()}</div><div class="sd-title" style="color:#fff;">${meName} vs ${escapeHtml(otherName)}</div></div>
         ${statusChip}
       </div>
+      ${heroRow}
       <div class="sd-body">${body}</div>
     </div>`;
+    }
+
+    function syncActiveAutoDuels(){
+        if(!currentUid || !db) return;
+        Object.keys(myDuels).forEach(id => {
+            const d = myDuels[id];
+            if(!d || d.status !== 'active') return;
+            if(d.type !== 'steps' && d.type !== 'water') return;
+            const typeDef = DUEL_TYPES[d.type];
+            if(!typeDef) return;
+            const val = typeDef.getCurrent();
+            const current = (d.participants && d.participants[currentUid] && d.participants[currentUid].contribution) || 0;
+            if(val !== current){
+                db.ref('developmentUsers/duels/'+id+'/participants/'+currentUid+'/contribution').set(val).catch(()=>{});
+            }
+        });
     }
 
     /* ===================== SPOTIFY MÜZİK PAYLAŞIMI ===================== */
@@ -8158,6 +8596,7 @@ ${locationCardHtml(m.location)}
         document.getElementById('notifBellIcon').innerHTML = icon('bell',16);
         document.getElementById('attachGameIconGlobal').innerHTML = icon('trophy',13);
         document.getElementById('attachGameIconDm').innerHTML = icon('trophy',13);
+        document.getElementById('attachStepDuelIconDm').innerHTML = icon('bolt',13);
         resetVsPollSlot('A'); resetVsPollSlot('B');
     }
     function toggleAddCard(){
@@ -9254,20 +9693,33 @@ ${locationCardHtml(m.location)}
             : `${ids.length} mesaj senin ekranından gizlensin mi? (Diğer kullanıcılar hâlâ görebilir)`);
         if(!ok) return;
         const list = scope==='global' ? chatMessages : (currentGroupId ? groupMessages : dmMessages);
+
+        let basePath;
+        if(scope === 'global') basePath = 'developmentUsers/globalChat';
+        else if(currentGroupId) basePath = 'developmentUsers/groupChats/'+currentGroupId+'/messages';
+        else basePath = 'developmentUsers/directMessages/'+currentDmPairKey+'/messages';
+
+        const updates = {};
         let successCount = 0, skipped = 0;
-        for(const id of ids){
-            const ref = bulkMsgRef(scope, id);
-            try{
-                if(forEveryone){
-                    const m = list.find(x=>x.id===id);
-                    if(!m || (m.uid !== currentUid && currentUid !== ADMIN_UID)){ skipped++; continue; }
-                    await ref.remove();
-                } else {
-                    await ref.child('hiddenFor/'+currentUid).set(true);
-                }
-                successCount++;
-            }catch(err){ skipped++; }
+        ids.forEach(id => {
+            if(forEveryone){
+                const m = list.find(x=>x.id===id);
+                if(!m || (m.uid !== currentUid && currentUid !== ADMIN_UID)){ skipped++; return; }
+                updates[basePath+'/'+id] = null; // tek update ile toplu silme
+            } else {
+                updates[basePath+'/'+id+'/hiddenFor/'+currentUid] = true;
+            }
+            successCount++;
+        });
+
+        try{
+            if(Object.keys(updates).length > 0) await db.ref().update(updates);
+        }catch(err){
+            showTopToast('Silinemedi: '+err.message, 'warn', 'warn');
+            exitSelectMode();
+            return;
         }
+
         showTopToast(`${successCount} mesaj silindi${skipped?`, ${skipped} atlandı`:''}`, 'warn', 'trash');
         exitSelectMode();
     }
@@ -9686,15 +10138,27 @@ ${locationCardHtml(m.location)}
         renderThemeStudio();
     }
     function initTheme(){
+        const isFirstVisit = !localStorage.getItem(THEME_KEY);
         const savedTheme = localStorage.getItem(THEME_KEY);
         if(!localStorage.getItem(THEME_ACCENT_KEY)) localStorage.setItem(THEME_ACCENT_KEY, '#ff2b2b');
+
+        if(isFirstVisit){
+            // ilk ziyaret: her zaman açık mod + Kızıl Alev vurgusuyla başla
+            localStorage.setItem(THEME_KEY, 'light');
+            localStorage.setItem(THEME_MODE_KEY, 'manual');
+            themeMode = 'manual';
+            applyTheme('light');
+            applyGradientState(deriveGradientFromHex('#ff2b2b', 120), { persist:true, render:false });
+            return;
+        }
+
         if(themeMode === 'system'){
             startSystemThemeSync();
         } else if(themeMode === 'season'){
-            applyTheme(savedTheme === 'light' ? 'light' : 'dark');
+            applyTheme(savedTheme || 'light');
             startSeasonWatch();
         } else {
-            applyTheme(savedTheme === 'light' ? 'light' : 'dark');
+            applyTheme(savedTheme || 'light');
         }
     }
 
@@ -9969,6 +10433,9 @@ ${locationCardHtml(m.location)}
     async function sendFriendRequest(targetUid, targetUsername, targetAvatarUrl){
         if(!currentUid || targetUid === currentUid) return;
         if(friends[targetUid]){ showTopToast('Zaten arkadaşsınız', 'info', 'check'); return; }
+        if(blocked[targetUid]){ showTopToast('Bu kullanıcıyı engellediniz, önce engeli kaldırın', 'warn', 'ban'); return; }
+        const blockedByThemSnap = await db.ref('developmentUsers/'+currentUid+'/blockedBy/'+targetUid).once('value');
+        if(blockedByThemSnap.exists()){ showTopToast('Bu kullanıcı sizi engellemiş', 'warn', 'ban'); return; }
         const existing = await db.ref('developmentUsers/'+targetUid+'/friendRequests/'+currentUid).once('value');
         if(existing.exists()){ showTopToast('İstek zaten gönderilmiş', 'info', 'clock'); return; }
         const meSnap = await userRef.child('profile').once('value');
@@ -9993,8 +10460,12 @@ ${locationCardHtml(m.location)}
         await db.ref('developmentUsers/'+currentUid+'/friendRequests/'+fromUid).remove();
         friends[fromUid] = myEntry;
         showTopToast('Arkadaşlık isteği kabul edildi', 'info', 'check');
+        closeNotifPanel();
+        closeFriendRequestsModal();
         renderFriendRequestsModal();
         renderChatHub();
+        openChatHub();
+        await openDMWithUser(fromUid);
     }
     async function rejectFriendRequest(fromUid){
         await db.ref('developmentUsers/'+currentUid+'/friendRequests/'+fromUid).remove();
@@ -10038,18 +10509,25 @@ ${locationCardHtml(m.location)}
     async function toggleBlockUser(targetUid, targetUsername, targetAvatarUrl){
         if(isBlockedByMe(targetUid)){
             delete blocked[targetUid];
+            try{ await db.ref('developmentUsers/'+targetUid+'/blockedBy/'+currentUid).remove(); }catch(e){}
             showTopToast('Engel kaldırıldı', 'info', 'check');
         } else {
             blocked[targetUid] = true;
+            try{ await db.ref('developmentUsers/'+targetUid+'/blockedBy/'+currentUid).set(true); }catch(e){}
             if(friends[targetUid]){
                 await db.ref('developmentUsers/'+currentUid+'/friends/'+targetUid).remove();
                 await db.ref('developmentUsers/'+targetUid+'/friends/'+currentUid).remove();
                 delete friends[targetUid];
             }
+            if(dmConversations[targetUid]){
+                await db.ref('developmentUsers/dmIndex/'+currentUid+'/'+targetUid).remove().catch(()=>{});
+                delete dmConversations[targetUid];
+            }
             showTopToast('Kullanıcı engellendi', 'warn', 'ban');
         }
         saveState();
         renderProfileSocialActions();
+        renderChatHub();
     }
 
     async function renderProfileSocialActions(){
@@ -11273,6 +11751,91 @@ ${locationCardHtml(m.location)}
       </div>`;
     }
 
+    let _ctxTarget = null; // { type:'dm'|'group', id }
+
+    function openConvoContextMenu(evt, type, id){
+        evt.preventDefault();
+        evt.stopPropagation();
+        _ctxTarget = { type, id };
+        const menu = document.getElementById('convoContextMenu');
+        document.getElementById('ctxArchiveIcon').innerHTML = icon('layers',15);
+        document.getElementById('ctxBlockIcon').innerHTML = icon('ban',15);
+        document.getElementById('ctxClearIcon').innerHTML = icon('trash',15);
+        document.getElementById('ctxDeleteIcon').innerHTML = icon('x',15);
+        document.getElementById('ctxBlockIcon').parentElement.style.display = type==='dm' ? 'flex' : 'none';
+        if(menu.parentElement !== document.body) document.body.appendChild(menu);
+        menu.classList.add('open');
+        const menuW = 210, menuH = 190;
+        const x = Math.min(evt.clientX, window.innerWidth - menuW - 10);
+        const y = Math.min(evt.clientY, window.innerHeight - menuH - 10);
+        menu.style.left = x+'px';
+        menu.style.top = y+'px';
+        menu.style.bottom = 'auto';
+    }
+    document.addEventListener('click', e => {
+        if(!e.target.closest('#convoContextMenu')) document.getElementById('convoContextMenu')?.classList.remove('open');
+    });
+    document.addEventListener('contextmenu', e => {
+        if(!e.target.closest('.chat-hub-row')) document.getElementById('convoContextMenu')?.classList.remove('open');
+    });
+
+    async function ctxArchiveConvo(){
+        if(!_ctxTarget) return;
+        try{
+            if(_ctxTarget.type==='dm') await db.ref('developmentUsers/dmIndex/'+currentUid+'/'+_ctxTarget.id+'/archived').set(true);
+            else await db.ref('developmentUsers/'+currentUid+'/groupArchived/'+_ctxTarget.id).set(true);
+            showTopToast('Sohbet arşivlendi', 'info', 'layers');
+        }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
+        document.getElementById('convoContextMenu').classList.remove('open');
+        renderChatHub();
+    }
+    async function ctxBlockConvo(){
+        if(!_ctxTarget || _ctxTarget.type!=='dm'){ document.getElementById('convoContextMenu').classList.remove('open'); return; }
+        await toggleBlockUser(_ctxTarget.id, '', '');
+        document.getElementById('convoContextMenu').classList.remove('open');
+        renderChatHub();
+    }
+    async function ctxClearConvo(){
+        if(!_ctxTarget) return;
+        const ok = await showConfirm('Bu sohbetteki tüm mesajlar senin ekranından temizlensin mi? (Karşı taraf hâlâ görebilir)');
+        if(!ok){ document.getElementById('convoContextMenu').classList.remove('open'); return; }
+        try{
+            let path;
+            if(_ctxTarget.type==='dm') path = 'developmentUsers/directMessages/'+pairKeyFor(currentUid,_ctxTarget.id)+'/messages';
+            else path = 'developmentUsers/groupChats/'+_ctxTarget.id+'/messages';
+            const snap = await db.ref(path).once('value');
+            const updates = {};
+            snap.forEach(c => { updates[c.key+'/hiddenFor/'+currentUid] = true; });
+            if(Object.keys(updates).length) await db.ref(path).update(updates);
+            showTopToast('Sohbet temizlendi', 'warn', 'trash');
+            if(_ctxTarget.type==='dm' && currentDmTargetUid===_ctxTarget.id) renderDmMessages();
+            if(_ctxTarget.type==='group' && currentGroupId===_ctxTarget.id) renderGroupMessages();
+        }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
+        document.getElementById('convoContextMenu').classList.remove('open');
+    }
+    async function ctxDeleteConvo(){
+        if(!_ctxTarget) return;
+        const ok = await showConfirm('Bu sohbet listenden tamamen silinsin mi?');
+        if(!ok){ document.getElementById('convoContextMenu').classList.remove('open'); return; }
+        try{
+            if(_ctxTarget.type==='dm'){
+                const deletedAt = Date.now();
+                await db.ref('developmentUsers/dmIndex/'+currentUid+'/'+_ctxTarget.id+'/deletedAt').set(deletedAt);
+                if(dmConversations[_ctxTarget.id]) dmConversations[_ctxTarget.id].deletedAt = deletedAt;
+                if(currentDmTargetUid === _ctxTarget.id) showMegaGlobalView();
+            } else {
+                await db.ref('developmentUsers/groups/'+_ctxTarget.id+'/members/'+currentUid).remove();
+                await db.ref('developmentUsers/'+currentUid+'/groupIndex/'+_ctxTarget.id).remove();
+                delete myGroups[_ctxTarget.id];
+                delete groupsCache[_ctxTarget.id];
+                if(currentGroupId === _ctxTarget.id) showMegaGlobalView();
+            }
+            showTopToast('Sohbet silindi', 'warn', 'trash');
+        }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
+        document.getElementById('convoContextMenu').classList.remove('open');
+        renderChatHub();
+    }
+
     function checkAuthOnLoad(){
         initFirebase();
         fetchMarketPrices();
@@ -11291,7 +11854,7 @@ ${locationCardHtml(m.location)}
     }, 1000);
     setInterval(() => autoFailExpired(false), 15000);
     setInterval(checkRecurringReset, 60000);
-    setInterval(() => fetchMarketPrices(), 90000);
+    setInterval(() => fetchMarketPrices(), 12000);
     setInterval(() => recomputeActiveHoliday(), 20000);
     document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible') recomputeActiveHoliday(); });
     loadSettings();

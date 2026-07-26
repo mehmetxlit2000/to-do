@@ -2628,159 +2628,212 @@
         .reply-quote{ cursor:pointer; }
         .reply-quote:hover{ filter:brightness(1.15); }
 
-        /* ==================== TEMA STÜDYOSU ==================== */
-        .theme-studio-card{ max-width:520px; width:100%; text-align:left; padding:0; max-height:90vh; overflow:hidden; display:flex; flex-direction:column; border-radius:22px; box-shadow:0 30px 80px rgba(0,0,0,.6), 0 0 60px var(--glow-soft); }
-        .ts-scroll{ overflow-y:auto; padding:26px 26px 22px; }
-        .ts-head{ padding:22px 26px 0; }
-        .ts-head .modal-eyebrow{ text-align:left; margin-bottom:2px; }
-        .ts-head-title{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--ink-soft); margin:2px 0 0; line-height:1.4; }
+        /* ==================== TEMA STÜDYOSU — v3 (sıfırdan) ==================== */
+        .theme-studio-card{
+            max-width:500px; width:100%; text-align:left; padding:0; max-height:88vh; overflow:hidden;
+            display:flex; flex-direction:column; border-radius:24px; position:relative;
+            background:var(--panel); border:1px solid var(--line);
+            box-shadow:0 26px 70px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.03) inset;
+        }
+
+        .ts-close-btn{
+            position:absolute; top:14px; right:14px; z-index:5; width:30px; height:30px; border-radius:50%;
+            background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.14); color:#fff;
+            display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .15s ease;
+        }
+        .ts-close-btn:hover{ background:rgba(0,0,0,.32); }
+        html[data-theme="light"] .ts-close-btn{ background:rgba(255,255,255,.35); border-color:rgba(255,255,255,.55); color:#fff; }
 
         .ts-hero-preview{
-            position:relative; margin:16px 26px 0; border-radius:16px; padding:20px; overflow:hidden;
-            background:var(--brand-gradient); display:flex; align-items:center; gap:14px; box-shadow:0 10px 30px var(--glow-mid);
+            width: 100%; position:relative; border-top-left-radius: 15px; border-top-right-radius: 15px; padding:16px 25px; overflow:hidden;
+            background:var(--brand-gradient); display:flex; align-items:center; gap:13px;
+            box-shadow:0 10px 26px var(--glow-mid), inset 0 1px 0 rgba(255,255,255,.16);
         }
         .ts-hero-preview::before{
-            content:''; position:absolute; inset:0; opacity:.18; pointer-events:none;
-            background-image:radial-gradient(circle, rgba(255,255,255,.7) 1px, transparent 1px); background-size:14px 14px;
+            content:''; position:absolute; inset:0; opacity:.14; pointer-events:none;
+            background-image:radial-gradient(circle, rgba(255,255,255,.9) 1px, transparent 1px); background-size:15px 15px;
         }
         .ts-hero-badge{
-            position:relative; z-index:1; flex:none; width:46px; height:46px; border-radius:13px; background:rgba(255,255,255,.18);
-            border:1px solid rgba(255,255,255,.35); display:flex; align-items:center; justify-content:center; color:#fff;
-            backdrop-filter:blur(4px);
+            position:relative; z-index:1; flex:none; width:38px; height:38px; border-radius:11px; background:rgba(255,255,255,.16);
+            border:1px solid rgba(255,255,255,.3); display:flex; align-items:center; justify-content:center; color:#fff;
         }
         .ts-hero-text{ position:relative; z-index:1; flex:1; min-width:0; }
-        .ts-hero-title{ display:block; font-family:'Orbitron',sans-serif; font-weight:800; font-size:13px; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.3); }
-        .ts-hero-sub{ display:block; font-family:'JetBrains Mono',monospace; font-size:9.5px; color:rgba(255,255,255,.85); margin-top:2px; }
-        .ts-hero-btn{
-            position:relative; z-index:1; flex:none; font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700;
-            padding:9px 14px; border-radius:100px; background:rgba(255,255,255,.22); border:1px solid rgba(255,255,255,.4);
-            color:#fff; backdrop-filter:blur(4px);
+        .ts-hero-title{ display:block; font-family:'Orbitron',sans-serif; font-weight:800; font-size:12px; color:#fff; letter-spacing:.02em; }
+        .ts-hero-sub{ display:block; font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(255,255,255,.82); margin-top:2px; }
+        /* ---- İçerik alanı ---- */
+        .ts-scroll{ overflow-y:auto; padding:20px 22px 20px; flex:1; min-height:0; }
+
+        .ts-section{ margin-top:22px; }
+        .ts-section:first-of-type{ margin-top:0; }
+        .ts-section-title{
+            display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:9.5px;
+            letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px; font-weight:700;
         }
 
-        .ts-section{ margin-top:20px; }
-        .ts-section:first-of-type{ margin-top:18px; }
-        .ts-section-title{ display:flex; align-items:center; gap:7px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px; }
+        /* ---- Tema modu kartları ---- */
         .ts-mode-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
         .ts-mode-btn{
-            position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:6px; padding:13px 14px;
-            border-radius:12px; border:1px solid var(--line); background:var(--panel-alt); color:var(--ink); cursor:pointer;
-            transition:border-color .15s ease, box-shadow .2s ease, transform .1s ease; text-align:left;
+            position:relative; display:flex; align-items:flex-start; gap:10px; padding:12px 13px;
+            border-radius:13px; border:1px solid var(--line); background:var(--bg); color:var(--ink); cursor:pointer;
+            transition:border-color .15s ease, background .15s ease; text-align:left;
         }
-        .ts-mode-btn:hover{ border-color:var(--ink-soft); transform:translateY(-1px); }
-        .ts-mode-btn.active{ border-color:var(--ink); box-shadow:0 0 0 1px var(--ink) inset, 0 0 16px var(--glow-mid); background:linear-gradient(120deg, var(--glow-soft), transparent); }
-        .ts-mode-icon{ width:30px; height:30px; border-radius:9px; background:var(--bg); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color:var(--ink); }
+        .ts-mode-btn-wide{ grid-column:1 / -1; }
+        .ts-mode-btn:hover{ border-color:var(--ink-soft); }
+        .ts-mode-btn.active{
+            border-color:var(--ink); background:var(--glow-soft);
+        }
+        .ts-mode-icon{
+            flex:none; width:32px; height:32px; border-radius:10px; background:var(--panel-alt); border:1px solid var(--line);
+            display:flex; align-items:center; justify-content:center; color:var(--ink-soft); transition:all .15s ease;
+        }
         .ts-mode-btn.active .ts-mode-icon{ background:var(--brand-gradient); color:#fff; border-color:transparent; }
+        .ts-mode-text{ display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; }
         .ts-mode-name{ font-size:12.5px; font-weight:700; }
-        .ts-mode-sub{ font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-soft); line-height:1.4; }
-        .ts-mode-check{ position:absolute; top:10px; right:10px; width:16px; height:16px; border-radius:50%; background:var(--ink); color:#fff; display:none; align-items:center; justify-content:center; font-size:10px; }
-        .ts-mode-check::before{ content:'✓'; }
-        .ts-mode-btn.active .ts-mode-check{ display:flex; }
-
-        .ts-tabs{ display:flex; gap:6px; background:var(--panel-alt); border:1px solid var(--line); border-radius:11px; padding:4px; margin-top:18px; }
-        .ts-tab-btn{
-            flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
-            font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; letter-spacing:.03em; color:var(--ink-soft);
-            background:none; border:none; border-radius:8px; padding:10px 6px; cursor:pointer;
+        .ts-mode-sub{ font-size:10.5px; color:var(--ink-soft); line-height:1.35; }
+        .ts-mode-check{
+            flex:none; width:16px; height:16px; border-radius:50%; border:1.5px solid var(--line); margin-top:2px;
         }
-        .ts-tab-btn.active{ color:#fff; background:var(--brand-gradient); box-shadow:0 0 10px var(--glow-mid); }
-        .ts-tab-panel{ display:none; margin-top:16px; }
+        .ts-mode-btn.active .ts-mode-check{
+            border-color:transparent; background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; font-size:9px;
+        }
+        .ts-mode-btn.active .ts-mode-check::before{ content:'✓'; }
+
+        /* ---- Sekmeler ---- */
+        .ts-tabs{
+            position:relative; display:flex; gap:2px; background:var(--bg); border:1px solid var(--line);
+            border-radius:100px; padding:3px; margin-top:22px;
+        }
+        .ts-tab-btn{
+            position:relative; z-index:1; flex:1; display:flex; align-items:center; justify-content:center;
+            font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; letter-spacing:.02em; color:var(--ink-soft);
+            background:none; border:none; border-radius:100px; padding:9px 6px; cursor:pointer; transition:color .2s ease;
+        }
+        .ts-tab-btn.active{ color:#fff; }
+        .ts-tabs-glider{
+            position:absolute; top:3px; bottom:3px; left:3px; width:calc(50% - 3px); border-radius:100px;
+            background:var(--brand-gradient); box-shadow:0 2px 8px var(--glow-mid); transition:transform .25s cubic-bezier(.4,0,.2,1);
+        }
+        .ts-tabs:has(#tsTabCustomBtn.active) .ts-tabs-glider{ transform:translateX(100%); }
+
+        .ts-tab-panel{ display:none; margin-top:18px; }
         .ts-tab-panel.active{ display:block; }
 
-        .ts-swatch-grid{ display:grid; grid-template-columns:repeat(6,1fr); gap:9px; }
-        .ts-swatch{
-            position:relative; aspect-ratio:1; border-radius:50%; cursor:pointer; border:2px solid var(--line);
-            box-shadow:0 1px 3px rgba(0,0,0,.25); transition:transform .12s ease, border-color .15s ease;
-        }
-        .ts-swatch:hover{ transform:scale(1.1); }
-        .ts-swatch.active{ border-color:var(--ink); box-shadow:0 0 0 2px var(--panel), 0 0 0 4px var(--ink); }
-        .ts-swatch.active::after{ content:''; position:absolute; inset:0; border-radius:50%; box-shadow:0 0 10px var(--glow-mid); }
-        .ts-custom-row{ display:flex; align-items:center; gap:10px; margin-top:12px; }
-        .ts-custom-swatch{
-            width:38px; height:38px; border-radius:50%; flex:none; cursor:pointer; border:2px dashed var(--line);
-            display:flex; align-items:center; justify-content:center; color:var(--ink-soft); background:var(--panel-alt);
-        }
-        .ts-custom-swatch:hover{ border-color:var(--ink); color:var(--ink); }
-
-        .ts-preset-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        /* ---- Hazır gradyan kartları ---- */
+        .ts-preset-grid{ display:grid; grid-template-columns:1fr 1fr; gap:9px; }
         .ts-preset-card{
-            position:relative; border-radius:13px; overflow:hidden; cursor:pointer; height:64px; border:2px solid transparent;
-            transition:transform .12s ease, border-color .15s ease; display:flex; align-items:flex-end; padding:8px 10px;
+            position:relative; border-radius:12px; overflow:hidden; cursor:pointer; height:58px;
+            border:1px solid var(--line); transition:transform .15s ease, border-color .15s ease; display:flex; align-items:flex-end; padding:8px 10px;
         }
         .ts-preset-card:hover{ transform:translateY(-2px); }
-        .ts-preset-card.active{ border-color:#fff; box-shadow:0 0 0 2px var(--ink), 0 6px 18px rgba(0,0,0,.35); }
+        .ts-preset-card.active{ border-color:transparent; box-shadow:0 0 0 2px var(--panel), 0 0 0 3.5px var(--ink); }
         .ts-preset-card span{
-            position:relative; z-index:1; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:#fff;
-            text-shadow:0 1px 4px rgba(0,0,0,.6);
+            position:relative; z-index:1; font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:700; color:#fff;
+            text-shadow:0 1px 3px rgba(0,0,0,.55);
         }
-        .ts-preset-card::before{ content:''; position:absolute; inset:0; background:linear-gradient(0deg, rgba(0,0,0,.45), transparent 60%); }
+        .ts-preset-card::before{ content:''; position:absolute; inset:0; background:linear-gradient(0deg, rgba(0,0,0,.4), transparent 65%); }
 
-        .ts-stop-row{ display:flex; align-items:center; gap:12px; margin-bottom:12px; }
-        .ts-stop-row:last-child{ margin-bottom:0; }
+        /* ---- Tek renk paleti ---- */
+        .ts-swatch-grid{ display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
+        .ts-swatch{
+            position:relative; aspect-ratio:1; border-radius:50%; cursor:pointer; border:2px solid var(--panel);
+            box-shadow:0 0 0 1px var(--line); transition:transform .15s cubic-bezier(.34,1.4,.64,1);
+        }
+        .ts-swatch:hover{ transform:scale(1.12); }
+        .ts-swatch.active{ box-shadow:0 0 0 2px var(--ink); }
+
+        .ts-custom-row{
+            display:flex; align-items:center; gap:10px; margin-top:12px; padding-top:12px; border-top:1px dashed var(--line);
+        }
+        .ts-custom-swatch{
+            width:32px; height:32px; border-radius:50%; flex:none; cursor:pointer; border:1.5px dashed var(--ink-faint);
+            display:flex; align-items:center; justify-content:center; color:var(--ink-soft); background:var(--bg);
+            transition:border-color .15s ease, color .15s ease;
+        }
+        .ts-custom-swatch:hover{ border-color:var(--ink); color:var(--ink); }
+        .ts-custom-label{ font-size:11px; color:var(--ink-soft); }
+
+        /* ---- Özel gradyan sekmesi ---- */
+        .ts-stop-row{
+            display:flex; align-items:center; gap:11px; padding:8px; border-radius:11px;
+            background:var(--bg); border:1px solid var(--line); margin-bottom:8px;
+        }
+        .ts-stop-row:last-of-type{ margin-bottom:0; }
+        .ts-stop-swatch-wrap{ position:relative; flex:none; width:36px; height:36px; cursor:pointer; }
+        .ts-stop-swatch-ring{
+            position:absolute; inset:0; border-radius:50%; border:1.5px solid var(--line); pointer-events:none;
+        }
         input.ts-stop-input[type=color]{
-            -webkit-appearance:none; appearance:none; width:42px; height:42px; border-radius:50%; border:2px solid var(--line);
-            padding:0; cursor:pointer; flex:none; box-shadow:0 1px 3px rgba(0,0,0,.25); background:none;
+            -webkit-appearance:none; appearance:none; width:36px; height:36px; border-radius:50%; border:none;
+            padding:0; cursor:pointer; background:none;
         }
         input.ts-stop-input[type=color]::-webkit-color-swatch-wrapper{ padding:0; border-radius:50%; }
         input.ts-stop-input[type=color]::-webkit-color-swatch{ border:none; border-radius:50%; }
         .ts-stop-info{ flex:1; min-width:0; }
-        .ts-stop-label{ display:block; font-size:12px; font-weight:700; color:var(--ink); }
-        .ts-stop-hex{ display:block; font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); text-transform:uppercase; margin-top:1px; }
+        .ts-stop-label{ display:block; font-size:11.5px; font-weight:700; color:var(--ink); }
+        .ts-stop-hex{ display:block; font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-soft); text-transform:uppercase; margin-top:1px; }
 
-        .ts-angle-row{ display:flex; align-items:center; gap:14px; margin-top:16px; }
+        .ts-angle-row{
+            display:flex; align-items:center; gap:14px; margin-top:14px; padding:12px; border-radius:12px;
+            background:var(--bg); border:1px solid var(--line);
+        }
         .ts-angle-dial{
-            position:relative; flex:none; width:52px; height:52px; border-radius:50%; background:var(--panel-alt);
+            position:relative; flex:none; width:44px; height:44px; border-radius:50%; background:var(--panel-alt);
             border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
         }
-        .ts-angle-dial-arrow{
-            position:absolute; top:6px; left:50%; width:2px; height:16px; background:var(--ink); transform-origin:50% 20px;
-            border-radius:2px; box-shadow:0 0 6px var(--glow-mid);
+        .ts-angle-dial-track{
+            position:absolute; inset:-1px; border-radius:50%; border:1px dashed var(--line); opacity:.6;
         }
-        .ts-angle-dial-center{ width:8px; height:8px; border-radius:50%; background:var(--ink); box-shadow:0 0 6px var(--glow-mid); }
+        .ts-angle-dial-arrow{
+            position:absolute; top:5px; left:50%; width:2px; height:13px; background:var(--ink); transform-origin:50% 17px;
+            border-radius:2px;
+        }
+        .ts-angle-dial-center{ width:6px; height:6px; border-radius:50%; background:var(--ink); }
         .ts-angle-slider-wrap{ flex:1; min-width:0; }
-        .ts-angle-label-row{ display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); margin-bottom:6px; }
+        .ts-angle-label-row{
+            display:flex; justify-content:space-between; align-items:center; font-family:'JetBrains Mono',monospace;
+            font-size:9.5px; color:var(--ink-soft); margin-bottom:8px;
+        }
+        .ts-angle-value-pill{
+            font-weight:700; color:var(--ink); background:var(--panel-alt); border:1px solid var(--line);
+            padding:2px 8px; border-radius:100px;
+        }
         .ts-angle-slider{
-            -webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:100px;
-            background:var(--panel-alt); border:1px solid var(--line); outline:none; cursor:pointer;
+            -webkit-appearance:none; appearance:none; width:100%; height:4px; border-radius:100px;
+            background:var(--line); outline:none; cursor:pointer;
         }
         .ts-angle-slider::-webkit-slider-thumb{
-            -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--brand-gradient);
-            border:2px solid #fff; box-shadow:0 0 8px var(--glow-mid); cursor:pointer;
+            -webkit-appearance:none; width:15px; height:15px; border-radius:50%; background:var(--ink);
+            border:2px solid var(--panel); box-shadow:0 0 0 1px var(--line); cursor:pointer;
         }
         .ts-angle-slider::-moz-range-thumb{
-            width:18px; height:18px; border-radius:50%; background:var(--ink); border:2px solid #fff; box-shadow:0 0 8px var(--glow-mid); cursor:pointer;
+            width:15px; height:15px; border-radius:50%; background:var(--ink); border:2px solid var(--panel); cursor:pointer;
         }
 
-        .ts-reset-btn{ margin-top:16px; width:100%; }
+        .ts-reset-btn{ margin-top:14px; width:100%; font-size:11.5px; }
 
+        /* ---- Durum çubuğu ---- */
         .ts-status-bar{
-            display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:10px; background:var(--panel-alt);
-            border:1px solid var(--line); font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); margin-top:18px;
+            display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:11px; background:var(--bg);
+            border:1px solid var(--line); font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-soft); margin-top:20px;
         }
-        .ts-status-bar .ts-dot{ width:7px; height:7px; border-radius:50%; background:var(--ink); box-shadow:0 0 7px var(--glow-mid); flex:none; animation:fxBlip 1.6s ease-in-out infinite; }
+        .ts-status-bar .ts-dot{ width:6px; height:6px; border-radius:50%; background:var(--ink); flex:none; animation:fxBlip 1.6s ease-in-out infinite; }
         .ts-season-badge{
-            display:inline-flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:9.5px;
-            padding:4px 10px; border-radius:100px; background:var(--panel-alt); border:1px solid var(--line); color:var(--ink);
+            display:inline-flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:700;
+            padding:3px 9px; border-radius:100px; background:var(--panel-alt); border:1px solid var(--line); color:var(--ink);
         }
-        .ts-preview-strip{ display:flex; height:14px; border-radius:100px; overflow:hidden; margin-top:14px; border:1px solid var(--line); }
-        .ts-preview-strip span{ flex:1; }
-        .ts-foot{ padding:16px 26px calc(16px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); flex:none; background:var(--panel); }
+        .ts-preview-strip{ display:none; }
+
+        .ts-foot{ padding:14px 22px calc(14px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); flex:none; background:var(--panel); }
 
         @media (max-width:560px){
             #themeStudioModal{ align-items:flex-end; padding:0; }
-            .theme-studio-card{ max-width:100%; border-radius:20px 20px 0 0; max-height:calc(var(--app-vh, 1vh) * 92); }
-            .ts-scroll{ padding:20px 18px 18px; }
-            .ts-head{ padding:calc(18px + env(safe-area-inset-top)) 18px 0; }
-            .ts-hero-preview{ margin:14px 18px 0; padding:16px; }
+            .theme-studio-card{ max-width:100%; border-radius:20px 20px 0 0; max-height:calc(var(--app-vh, 1vh) * 90); }
+            .ts-scroll{ padding:18px 18px; }
             .ts-mode-grid{ grid-template-columns:1fr; }
             .ts-swatch-grid{ grid-template-columns:repeat(5,1fr); }
             .ts-preset-grid{ grid-template-columns:1fr; }
-            .ts-foot{ padding:14px 18px calc(14px + env(safe-area-inset-bottom)); }
+            .ts-foot{ padding:12px 18px calc(12px + env(safe-area-inset-bottom)); }
         }
-        @keyframes holidayBannerGlow{
-            0%,100%{ box-shadow:0 8px 20px rgba(0,0,0,.35), 0 0 0 0 rgba(255,255,255,.25); }
-            50%{ box-shadow:0 8px 26px rgba(0,0,0,.4), 0 0 0 6px rgba(255,255,255,.08); }
-        }
-        #holidayBanner{ animation: holidayBannerGlow 2.4s ease-in-out infinite; }
 
         /* ==================== ÖZEL GÜN — KÖŞE ROZETİ & DETAYLAR ==================== */
         :root{ --hc1:#ff2b2b; --hc2:#ff2b2b; --hc3:#7a0000; }
@@ -4129,33 +4182,21 @@
         </div>
         <div class="settings-foot">
             <button class="btn btn-ghost" style="width:100%;" onclick="closeSettingsPanel()">Kapat</button>
-        </div></div>
-                    </div>
-                    <label class="rune-switch" style="flex:none; padding:0; border:none; background:none;">
-                        <input type="checkbox" id="settingHideOnline" onchange="onSettingsToggle()">
-                        <span class="switch-track"><span class="switch-thumb"></span></span>
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="settings-foot">
-            <button class="btn btn-ghost" style="width:100%;" onclick="closeSettingsPanel()">Kapat</button>
         </div>
     </div>
 </div>
 <div id="themeStudioModal" class="modal-overlay">
     <div class="modal-card theme-studio-card">
-        <div class="ts-head">
-            <p class="modal-eyebrow">Tema Stüdyosu</p>
-            <p class="ts-head-title" id="tsHeadTitle"></p>
-        </div>
+        <button type="button" class="ts-close-btn" onclick="closeThemeStudio()" aria-label="Kapat">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+
         <div class="ts-hero-preview" id="tsHeroPreview">
             <span class="ts-hero-badge" id="tsHeroBadge"></span>
             <div class="ts-hero-text">
                 <span class="ts-hero-title">Canlı Önizleme</span>
                 <span class="ts-hero-sub">Değişiklikler anında uygulanır</span>
             </div>
-            <span class="ts-hero-btn">Örnek</span>
         </div>
         <div class="ts-scroll">
             <div class="ts-section" style="margin-top:0;">
@@ -4163,20 +4204,26 @@
                 <div class="ts-mode-grid">
                     <button type="button" class="ts-mode-btn" id="tsModeManual" onclick="setThemeMode('manual')">
                         <span class="ts-mode-icon" id="tsModeManualIcon"></span>
-                        <span class="ts-mode-name">Manuel</span>
-                        <span class="ts-mode-sub">Kendi rengini ve gradyanını seç</span>
+                        <span class="ts-mode-text">
+                                <span class="ts-mode-name">Manuel</span>
+                                <span class="ts-mode-sub">Kendi rengini ve gradyanını seç</span>
+                            </span>
                         <span class="ts-mode-check"></span>
                     </button>
                     <button type="button" class="ts-mode-btn" id="tsModeSystem" onclick="setThemeMode('system')">
                         <span class="ts-mode-icon" id="tsModeSystemIcon"></span>
-                        <span class="ts-mode-name">Cihaza Uy</span>
-                        <span class="ts-mode-sub">Sistem koyu/açık moduna göre değişir</span>
+                        <span class="ts-mode-text">
+                                <span class="ts-mode-name">Cihaza Uy</span>
+                                <span class="ts-mode-sub">Sistem koyu/açık moduna göre değişir</span>
+                            </span>
                         <span class="ts-mode-check"></span>
                     </button>
-                    <button type="button" class="ts-mode-btn" id="tsModeSeason" onclick="setThemeMode('season')" style="grid-column:1 / -1;">
+                    <button type="button" class="ts-mode-btn ts-mode-btn-wide" id="tsModeSeason" onclick="setThemeMode('season')">
                         <span class="ts-mode-icon" id="tsModeSeasonIcon"></span>
-                        <span class="ts-mode-name">Mevsime Göre</span>
-                        <span class="ts-mode-sub">Konumundan mevsimi algılar, rengi otomatik uygular</span>
+                        <span class="ts-mode-text">
+                                <span class="ts-mode-name">Mevsime Göre</span>
+                                <span class="ts-mode-sub">Konumundan mevsimi algılar, rengi otomatik uygular</span>
+                            </span>
                         <span class="ts-mode-check"></span>
                     </button>
                 </div>
@@ -4185,6 +4232,7 @@
             <div class="ts-tabs">
                 <button type="button" class="ts-tab-btn active" id="tsTabPresetsBtn" onclick="switchTsTab('presets')"></button>
                 <button type="button" class="ts-tab-btn" id="tsTabCustomBtn" onclick="switchTsTab('custom')"></button>
+                <div class="ts-tabs-glider"></div>
             </div>
 
             <div class="ts-tab-panel active" id="tsTabPresets">
@@ -4197,7 +4245,7 @@
                     <div class="ts-swatch-grid" id="tsSwatchGrid"></div>
                     <div class="ts-custom-row">
                         <div class="ts-custom-swatch" id="tsCustomSwatch" onclick="document.getElementById('accentColorInput').click()"></div>
-                        <span style="font-size:11.5px; color:var(--ink-soft);" id="tsCustomLabel">Kendi rengini seç</span>
+                        <span class="ts-custom-label" id="tsCustomLabel">Kendi rengini seç</span>
                     </div>
                 </div>
             </div>
@@ -4205,40 +4253,57 @@
             <div class="ts-tab-panel" id="tsTabCustom">
                 <div class="ts-section" style="margin-top:0;">
                     <div class="ts-section-title" id="tsStopsTitle"></div>
+
                     <div class="ts-stop-row">
-                        <input type="color" class="ts-stop-input" id="tsStop1" oninput="onGradStopChange()">
+                        <label class="ts-stop-swatch-wrap">
+                            <input type="color" class="ts-stop-input" id="tsStop1" oninput="onGradStopChange()">
+                            <span class="ts-stop-swatch-ring"></span>
+                        </label>
                         <div class="ts-stop-info">
                             <span class="ts-stop-label" id="tsStop1Label">Başlangıç Rengi</span>
                             <span class="ts-stop-hex" id="tsStop1Hex">#FF2B2B</span>
                         </div>
                     </div>
                     <div class="ts-stop-row">
-                        <input type="color" class="ts-stop-input" id="tsStop2" oninput="onGradStopChange()">
+                        <label class="ts-stop-swatch-wrap">
+                            <input type="color" class="ts-stop-input" id="tsStop2" oninput="onGradStopChange()">
+                            <span class="ts-stop-swatch-ring"></span>
+                        </label>
                         <div class="ts-stop-info">
                             <span class="ts-stop-label" id="tsStop2Label">Ana Renk</span>
                             <span class="ts-stop-hex" id="tsStop2Hex">#FF2B2B</span>
                         </div>
                     </div>
                     <div class="ts-stop-row">
-                        <input type="color" class="ts-stop-input" id="tsStop3" oninput="onGradStopChange()">
+                        <label class="ts-stop-swatch-wrap">
+                            <input type="color" class="ts-stop-input" id="tsStop3" oninput="onGradStopChange()">
+                            <span class="ts-stop-swatch-ring"></span>
+                        </label>
                         <div class="ts-stop-info">
                             <span class="ts-stop-label" id="tsStop3Label">Bitiş Rengi</span>
                             <span class="ts-stop-hex" id="tsStop3Hex">#FF2B2B</span>
                         </div>
                     </div>
+
                     <div class="ts-angle-row">
-                        <div class="ts-angle-dial" id="tsAngleDial"><div class="ts-angle-dial-arrow" id="tsAngleArrow"></div><div class="ts-angle-dial-center"></div></div>
+                        <div class="ts-angle-dial" id="tsAngleDial">
+                            <div class="ts-angle-dial-track"></div>
+                            <div class="ts-angle-dial-arrow" id="tsAngleArrow"></div>
+                            <div class="ts-angle-dial-center"></div>
+                        </div>
                         <div class="ts-angle-slider-wrap">
-                            <div class="ts-angle-label-row"><span id="tsAngleLabel">Gradyan Açısı</span><span id="tsAngleValue">120°</span></div>
+                            <div class="ts-angle-label-row"><span id="tsAngleLabel">Gradyan Açısı</span><span class="ts-angle-value-pill" id="tsAngleValue">120°</span></div>
                             <input type="range" class="ts-angle-slider" id="tsAngleSlider" min="0" max="360" value="120" oninput="onGradAngleChange(this.value)">
                         </div>
                     </div>
+
                     <button type="button" class="btn btn-ghost ts-reset-btn" id="tsResetBtn" onclick="resetGradientCustom()"></button>
                 </div>
             </div>
 
             <div class="ts-status-bar" id="tsStatusBar"></div>
         </div>
+
         <div class="ts-foot">
             <button class="btn btn-ghost" style="width:100%;" onclick="closeThemeStudio()">Kapat</button>
         </div>
@@ -10593,7 +10658,6 @@ ${locationCardHtml(m.location)}
     function renderThemeStudio(){
         const modeTitle = document.getElementById('tsModeTitle');
         if(!modeTitle) return;
-        document.getElementById('tsHeadTitle').textContent = 'Rengini, gradyanını ve modunu tamamen sen belirle';
         document.getElementById('tsHeroBadge').innerHTML = icon('palette',20);
         modeTitle.innerHTML = `${icon('sparkle',11)} Tema Modu`;
         document.getElementById('tsModeManualIcon').innerHTML = icon('palette',15);

@@ -49,15 +49,15 @@
             --hero-blob-opacity: .16;
         }
         html[data-theme="dracula"]{
-            --bg:#020203; --panel:#000000; --panel-alt:#0a0a0c; --line:#1c1c20; --line-soft:#141416;
-            --ink:#ff2b2b; --ink-soft:#b23636; --ink-faint:#5c2020;
-            --glow:#ff2b2b; --glow-soft:rgba(255,40,40,.07); --glow-mid:rgba(255,40,40,.14);
-            --shadow: 0 1px 2px rgba(0,0,0,.85), 0 18px 44px rgba(0,0,0,.7);
-            --pos:#2fae66; --neg:#e0463f;
-            --grad-1:#ff6b6b; --grad-2:#ff2b2b; --grad-3:#7a0000; --grad-angle:120deg;
+            --bg:#000000; --panel:#000000; --panel-alt:#070707; --line:#1a0000; --line-soft:#120000;
+            --ink:#ff2b2b; --ink-soft:#a83030; --ink-faint:#4d1414;
+            --glow:#ff2b2b; --glow-soft:rgba(255,43,43,.08); --glow-mid:rgba(255,43,43,.18);
+            --shadow: 0 1px 2px rgba(0,0,0,.95), 0 18px 44px rgba(0,0,0,.85);
+            --pos:#2fae66; --neg:#ff4d4d;
+            --grad-1:#ff5c5c; --grad-2:#ff2b2b; --grad-3:#5c0000; --grad-angle:120deg;
             --brand-gradient: linear-gradient(var(--grad-angle), var(--grad-1), var(--grad-2) 55%, var(--grad-3));
-            --hero-blob: radial-gradient(circle at 72% 20%, var(--ink) 0%, rgba(120,10,10,.55) 32%, rgba(20,2,2,.15) 62%, transparent 78%);
-            --hero-blob-opacity: .55;
+            --hero-blob: radial-gradient(circle at 72% 20%, var(--ink) 0%, rgba(140,10,10,.6) 32%, rgba(10,0,0,.2) 62%, transparent 78%);
+            --hero-blob-opacity: .6;
         }
         body{ transition:background-color .25s ease, color .25s ease; }
         *{box-sizing:border-box;}
@@ -107,7 +107,6 @@
             cursor:pointer; box-shadow:var(--shadow); transition:color .15s ease, border-color .15s ease;
         }
         .theme-toggle:hover{color:var(--ink); border-color:var(--ink);}
-        .theme-toggle.active{ color:#ff2b2b; border-color:#ff2b2b; box-shadow:0 0 10px rgba(255,43,43,.4); }
         .theme-toggle svg{width:15px; height:15px;}
 
         /* ==================== BİLDİRİM ZİLİ + PANELİ (v2) ==================== */
@@ -455,8 +454,10 @@
             display:flex; align-items:center; gap:8px; flex:none; background:var(--bg); border:1px solid var(--line);
             border-radius:8px; padding:0 12px;
         }
+        .field-icon-input:hover{border-color: var(--ink);box-shadow: 0 0 0 3px var(--glow-soft);}
         .field-icon-input svg{flex:none; width:14px; height:14px; opacity:.75;}
         .field-icon-input input{border:none; background:none; padding:10px 0; flex:1; min-width:0; width:100%; font-size:13px;}
+        .field-icon-input input:focus{border: none; box-shadow: none;}
         .field-icon-input span.suffix{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); flex:none;}
 
         .rune-switch{
@@ -617,6 +618,8 @@
         .holo-portfolio > *{ position:relative; z-index:1; }
         .holo-pf-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:20px; }
         .holo-pf-head-left{ display:flex; align-items:center; gap:12px; }
+        .holo-portfolio #portfolioRefreshBtn{ color:#ffb3b3; cursor:pointer; transition:transform .3s ease, color .15s ease; }
+        .holo-portfolio #portfolioRefreshBtn:hover{ color:#fff; transform:rotate(180deg); }
         .holo-pf-badge{
             width:42px; height:42px; border-radius:14px; flex:none; display:flex; align-items:center; justify-content:center;
             background:var(--brand-gradient); box-shadow:0 6px 18px var(--glow-mid), inset 0 1px 0 rgba(255,255,255,.25);
@@ -2682,8 +2685,8 @@
         .ts-section{ margin-top:22px; }
         .ts-section:first-of-type{ margin-top:0; }
         .ts-section-title{
-            display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:9.5px;
-            letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px; font-weight:700;
+            display:flex; align-items:center; gap:9px; font-family:'JetBrains Mono',monospace; font-size:9.5px;
+            letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:12px; padding-bottom:9px; border-bottom:1px solid var(--line-soft);
         }
 
         /* ---- Tema modu kartları ---- */
@@ -3030,7 +3033,7 @@
         </div>
         <div class="top-actions">
             <span class="conn-pill"><span class="conn-dot" id="connDot"></span><span id="connLabel">Bağlantı bekleniyor…</span></span>
-            <button class="theme-toggle" id="accentPickerBtn" onclick="openThemeStudio()" title="Tema Stüdyosunu Aç" style="display:none;"></button>
+            <button class="theme-toggle" id="accentPickerBtn" onclick="openThemeStudio()" title="Tema & Görünüm Ayarları"></button>
             <input type="color" id="accentColorInput" value="#5b2ec7" oninput="onAccentColorChange(this.value)" style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;">
             <button id="holidayCornerBadge" onclick="openHolidayInfoModal()" title="Özel gün bilgisi"><span class="hcb-dot"></span></button>
             <div style="position:relative;" id="notifWrap">
@@ -3040,8 +3043,6 @@
                 </button>
                 <div id="notifPanel" class="notif-panel"></div>
             </div>
-            <button class="theme-toggle" id="draculaToggleBtn" onclick="toggleDracula()" title="Dracula Modu (Kırmızı Tema)"></button>
-            <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Temayı değiştir"></button>
         </div>
     </div>
 
@@ -4235,14 +4236,30 @@
                             </span>
                         <span class="ts-mode-check"></span>
                     </button>
-                    <button type="button" class="ts-mode-btn ts-mode-btn-wide" id="tsModeSeason" onclick="setThemeMode('season')">
+                    <button type="button" class="ts-mode-btn" id="tsModeSeason" onclick="setThemeMode('season')">
                         <span class="ts-mode-icon" id="tsModeSeasonIcon"></span>
                         <span class="ts-mode-text">
                                 <span class="ts-mode-name">Mevsime Göre</span>
-                                <span class="ts-mode-sub">Konumundan mevsimi algılar, rengi otomatik uygular</span>
+                                <span class="ts-mode-sub">Konuma göre mevsimi algılar</span>
                             </span>
                         <span class="ts-mode-check"></span>
                     </button>
+                    <button type="button" class="ts-mode-btn" id="tsModeDracula" onclick="setThemeMode('dracula')">
+                        <span class="ts-mode-icon" id="tsModeDraculaIcon"></span>
+                        <span class="ts-mode-text">
+                                <span class="ts-mode-name">Dracula Modu</span>
+                                <span class="ts-mode-sub">Tam siyah zemin, kızıl vurgu</span>
+                            </span>
+                        <span class="ts-mode-check"></span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="ts-section">
+                <div class="ts-section-title" id="tsSchemeTitle"></div>
+                <div class="seg-group" id="tsSchemeGroup" style="width:100%;">
+                    <button type="button" class="seg-btn" id="tsSchemeLight" style="flex:1; justify-content:center;" onclick="setColorScheme('light')"></button>
+                    <button type="button" class="seg-btn" id="tsSchemeDark" style="flex:1; justify-content:center;" onclick="setColorScheme('dark')"></button>
                 </div>
             </div>
 
@@ -4441,11 +4458,15 @@
         botIcon: '<rect x="5" y="8" width="14" height="11" rx="3"/><circle cx="9" cy="13.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="15" cy="13.5" r="1.4" fill="currentColor" stroke="none"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1.3" fill="currentColor" stroke="none"/><path d="M3 12h2M19 12h2"/><path d="M9 18h6"/>',
         bell: '<path d="M18 8a6 6 0 0 0-12 0c0 4.5-1.2 6.7-2.1 7.8-.4.5 0 1.2.6 1.2h15c.6 0 1-.7.6-1.2-.9-1.1-2.1-3.3-2.1-7.8z"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
         calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
-        gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>'
+        gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+        blood: '<path d="M12 2C12 2 5 11.2 5 15.8A7 7 0 0 0 19 15.8C19 11.2 12 2 12 2Z"/><path d="M8.6 15.3a3.4 3.4 0 0 0 3.4 3.4" stroke-linecap="round"/>'
     };
     function icon(name, size){
         size = size || 14;
         return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]||''}</svg>`;
+    }
+    function iconLabel(name, size, text){
+        return `<span style="display:inline-flex; align-items:center; vertical-align:middle;">${icon(name,size)}</span><span style="margin-left:7px; vertical-align:middle;">${text}</span>`;
     }
     function detectUserCountryCode(){
         try{
@@ -4493,7 +4514,9 @@
     function getGroupPalette(gi){
         const t = gi/(GROUP_NAMES.length-1);
         const theme = GROUP_THEME[gi] || GROUP_THEME[0];
-        if(currentTheme()==='light'){
+        const themeAttr = document.documentElement.getAttribute('data-theme');
+
+        if(themeAttr === 'light'){
             if(theme.forceDarkRed){
                 return { c1:'#9c1a1a', c2:'#3f0505', text:'#ffffff' };
             }
@@ -4505,9 +4528,18 @@
             const text = L1 > 46 ? '#20101c' : '#ffffff';
             return { c1:`hsl(${theme.lightHue}, ${theme.lightSat}%, ${L2}%)`, c2:`hsl(${theme.lightHue}, ${theme.lightSat}%, ${L1}%)`, text };
         }
-        const L1 = 12 + t*42, L2 = Math.min(64, L1+15), S = 55+t*45;
-        const hue = ((theme.darkHueShift||0) + 360) % 360;
-        return { c1:`hsl(${hue}, ${S}%, ${L1}%)`, c2:`hsl(${hue}, ${S}%, ${L2}%)`, text: L1>38 ? '#2b0808' : '#ffbcbc' };
+
+        if(themeAttr === 'dracula'){
+            // Dracula modu: tüm rütbeler kızıl tonlarında parlar
+            const L1 = 12 + t*42, L2 = Math.min(64, L1+15), S = 60+t*40;
+            return { c1:`hsl(0, ${S}%, ${L1}%)`, c2:`hsl(0, ${S}%, ${L2}%)`, text: L1>38 ? '#2b0808' : '#ffbcbc' };
+        }
+
+        // Normal koyu tema: her klan kendi doğal rengini korur, kırmızıya kilitlenmez
+        const L1 = 16 + t*38, L2 = Math.min(66, L1+16), S = 42 + t*38;
+        const hue = theme.lightHue;
+        const text = L1 > 40 ? '#1a1024' : '#ffffff';
+        return { c1:`hsl(${hue}, ${S}%, ${L2}%)`, c2:`hsl(${hue}, ${S}%, ${L1}%)`, text };
     }
     const SUB_LABEL = ['I','II','III'];
     const RANKS = [];
@@ -8047,7 +8079,7 @@ ${locationCardHtml(m.location)}
     let currentUid = null;
     let currentUsername = 'Kullanıcı';
     let allUsersCache = {};
-    const ADMIN_UID = "H9AUmUsiasfV9yGD5WLwIMDscfz1";
+    const ADMIN_UID = "ACEeWsNxMihTEGOwHcPkkJHpjju1";
 
     /* ===================== DÜELLO SİSTEMİ (Adım / Su / Bench / Deadlift / Görev) ===================== */
     const DUEL_TYPES = {
@@ -10598,14 +10630,25 @@ ${locationCardHtml(m.location)}
             startSystemThemeSync();
         } else if(mode === 'season'){
             startSeasonWatch();
+        } else if(mode === 'dracula'){
+            localStorage.setItem(THEME_KEY, 'dracula');
+            applyTheme('dracula');
+            render();
+            if(document.getElementById('rankGalleryPanel').classList.contains('open')) buildRankGallery();
+            if(document.getElementById('lbPanel').classList.contains('open')) buildLeaderboard();
         } else {
+            const cur = document.documentElement.getAttribute('data-theme');
+            if(cur === 'dracula'){
+                localStorage.setItem(THEME_KEY, 'dark');
+                applyTheme('dark');
+            }
             applyGradientState(currentGradient(), { persist:false, render:true });
         }
         renderThemeStudio();
         showTopToast(
-            mode==='system' ? 'Tema artık cihazına uyacak' : (mode==='season' ? 'Tema mevsime göre ayarlanacak' : 'Manuel tema modu aktif'),
+            mode==='system' ? 'Tema artık cihazına uyacak' : (mode==='season' ? 'Tema mevsime göre ayarlanacak' : (mode==='dracula' ? 'Dracula Modu aktif' : 'Manuel tema modu aktif')),
             'info',
-            mode==='system' ? 'monitor' : (mode==='season' ? 'compass' : 'palette')
+            mode==='system' ? 'monitor' : (mode==='season' ? 'compass' : (mode==='dracula' ? 'blood' : 'palette'))
         );
     }
 
@@ -10679,23 +10722,32 @@ ${locationCardHtml(m.location)}
         const modeTitle = document.getElementById('tsModeTitle');
         if(!modeTitle) return;
         document.getElementById('tsHeroBadge').innerHTML = icon('palette',20);
-        modeTitle.innerHTML = `${icon('sparkle',11)} Tema Modu`;
+        modeTitle.innerHTML = iconLabel('sparkle', 11, 'Tema Modu');
         document.getElementById('tsModeManualIcon').innerHTML = icon('palette',15);
         document.getElementById('tsModeSystemIcon').innerHTML = icon('monitor',15);
         const currentSeason = getSeasonForDate(new Date(), false);
         document.getElementById('tsModeSeasonIcon').innerHTML = icon(SEASON_PALETTES[currentSeason].ic, 15);
-        document.getElementById('tsTabPresetsBtn').innerHTML = `${icon('gem',12)} Hazır Temalar`;
-        document.getElementById('tsTabCustomBtn').innerHTML = `${icon('palette',12)} Özel Gradyan`;
-        document.getElementById('tsGradPresetTitle').innerHTML = `${icon('layers',11)} Gradyan Temaları`;
-        document.getElementById('tsPaletteTitle').innerHTML = `${icon('gem',11)} Tek Renk Paleti`;
+        document.getElementById('tsModeDraculaIcon').innerHTML = icon('blood',15);
+
+        document.getElementById('tsSchemeTitle').innerHTML = iconLabel('circleHalf', 11, 'Görünüm');
+        document.getElementById('tsSchemeLight').innerHTML = iconLabel('sun', 13, 'Açık Mod');
+        document.getElementById('tsSchemeDark').innerHTML = iconLabel('moon', 13, 'Koyu Mod');
+        const attrNow = document.documentElement.getAttribute('data-theme');
+        document.getElementById('tsSchemeLight').classList.toggle('active', attrNow === 'light');
+        document.getElementById('tsSchemeDark').classList.toggle('active', attrNow === 'dark' || attrNow === 'dracula');
+
+        document.getElementById('tsTabPresetsBtn').innerHTML = iconLabel('gem', 12, 'Hazır Temalar');
+        document.getElementById('tsTabCustomBtn').innerHTML = iconLabel('palette', 12, 'Özel Gradyan');
+        document.getElementById('tsGradPresetTitle').innerHTML = iconLabel('layers', 11, 'Gradyan Temaları');
+        document.getElementById('tsPaletteTitle').innerHTML = iconLabel('gem', 11, 'Tek Renk Paleti');
         document.getElementById('tsCustomSwatch').innerHTML = icon('plus',15);
-        document.getElementById('tsStopsTitle').innerHTML = `${icon('gem',11)} Gradyan Renkleri`;
+        document.getElementById('tsStopsTitle').innerHTML = iconLabel('gem', 11, 'Gradyan Renkleri');
         document.getElementById('tsAngleLabel').textContent = 'Gradyan Açısı';
-        document.getElementById('tsResetBtn').innerHTML = `${icon('refresh',13)} Varsayılana Sıfırla`;
+        document.getElementById('tsResetBtn').innerHTML = iconLabel('refresh', 13, 'Varsayılana Sıfırla');
         switchTsTab(tsActiveTab);
 
-        ['tsModeManual','tsModeSystem','tsModeSeason'].forEach(id => document.getElementById(id).classList.remove('active'));
-        const activeId = themeMode==='system' ? 'tsModeSystem' : (themeMode==='season' ? 'tsModeSeason' : 'tsModeManual');
+        ['tsModeManual','tsModeSystem','tsModeSeason','tsModeDracula'].forEach(id => document.getElementById(id).classList.remove('active'));
+        const activeId = themeMode==='system' ? 'tsModeSystem' : (themeMode==='season' ? 'tsModeSeason' : (themeMode==='dracula' ? 'tsModeDracula' : 'tsModeManual'));
         document.getElementById(activeId).classList.add('active');
 
         const statusBar = document.getElementById('tsStatusBar');
@@ -10704,6 +10756,8 @@ ${locationCardHtml(m.location)}
         } else if(themeMode==='season'){
             const pal = SEASON_PALETTES[currentSeason];
             statusBar.innerHTML = `<span class="ts-dot"></span> Algılanan mevsim: <span class="ts-season-badge" style="margin-left:4px;">${icon(pal.ic,11)} ${pal.name}</span>`;
+        } else if(themeMode==='dracula'){
+            statusBar.innerHTML = `<span class="ts-dot"></span> Dracula Modu aktif — tam siyah zemin, kızıl vurgu`;
         } else {
             statusBar.innerHTML = `<span class="ts-dot"></span> Manuel mod — rengi, gradyanı ve modu istediğin an değiştirebilirsin`;
         }
@@ -10803,18 +10857,10 @@ ${locationCardHtml(m.location)}
 
     function applyTheme(theme){
         document.documentElement.setAttribute('data-theme', theme);
-        const btn = document.getElementById('themeToggleBtn');
-        if(btn) btn.innerHTML = theme === 'light' ? icon('moon',15) : icon('sun',15);
         const accentBtn = document.getElementById('accentPickerBtn');
         if(accentBtn){
-            accentBtn.style.display = theme === 'light' ? 'flex' : 'none';
+            accentBtn.style.display = 'flex';
             accentBtn.innerHTML = icon('palette',15);
-        }
-        const draculaBtn = document.getElementById('draculaToggleBtn');
-        if(draculaBtn){
-            draculaBtn.innerHTML = icon('flame',15);
-            draculaBtn.classList.toggle('active', theme === 'dracula');
-            draculaBtn.title = theme === 'dracula' ? 'Dracula Modundan Çık' : 'Dracula Modu (Kırmızı Tema)';
         }
         if(theme === 'light'){
             applyGradientState(currentGradient(), { persist:false, render:false });
@@ -10838,21 +10884,20 @@ ${locationCardHtml(m.location)}
         if(document.getElementById('lbPanel').classList.contains('open')) buildLeaderboard();
         renderThemeStudio();
     }
-    function toggleDracula(){
-        const current = document.documentElement.getAttribute('data-theme');
-        const next = current === 'dracula' ? 'dark' : 'dracula';
-        localStorage.setItem(THEME_KEY, next);
+    function setColorScheme(scheme){
+        const attr = document.documentElement.getAttribute('data-theme');
+        if(attr === scheme) return;
+        localStorage.setItem(THEME_KEY, scheme);
         if(themeMode !== 'manual'){
             themeMode = 'manual';
             localStorage.setItem(THEME_MODE_KEY, 'manual');
             stopSystemThemeSync(); stopSeasonWatch();
         }
-        applyTheme(next);
+        applyTheme(scheme);
         render();
         if(document.getElementById('rankGalleryPanel').classList.contains('open')) buildRankGallery();
         if(document.getElementById('lbPanel').classList.contains('open')) buildLeaderboard();
         renderThemeStudio();
-        showTopToast(next === 'dracula' ? 'Dracula Modu aktif — kızıl tema' : 'Dracula Modundan çıkıldı', 'info', 'flame');
     }
     function initTheme(){
         const isFirstVisit = !localStorage.getItem(THEME_KEY);
@@ -10874,6 +10919,8 @@ ${locationCardHtml(m.location)}
         } else if(themeMode === 'season'){
             applyTheme(savedTheme || 'light');
             startSeasonWatch();
+        } else if(themeMode === 'dracula'){
+            applyTheme('dracula');
         } else {
             applyTheme(savedTheme || 'light');
         }

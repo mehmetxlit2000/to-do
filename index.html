@@ -10,11 +10,15 @@
                 var t = localStorage.getItem('tc_theme_v1');
                 if(t === 'light'){
                     document.documentElement.setAttribute('data-theme','light');
-                    var accent = localStorage.getItem('tc_light_accent_v1');
+                    var g = localStorage.getItem('tc_theme_gradient_v1');
+                    var accent = null;
+                    if(g){ try{ accent = JSON.parse(g).c2; }catch(e2){} }
+                    if(!accent) accent = localStorage.getItem('tc_theme_accent_v2') || localStorage.getItem('tc_light_accent_v1');
                     if(accent){
-                        // basit ön uygulama — tam gradient hesaplaması sayfa scriptinde initTheme() ile tekrar yapılacak
                         document.documentElement.style.setProperty('--ink', accent);
                     }
+                } else if(t === 'dracula'){
+                    document.documentElement.setAttribute('data-theme','dracula');
                 }
             }catch(e){}
         })();
@@ -23,15 +27,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root{
-            --bg:#020203; --panel:#000000; --panel-alt:#0a0a0c; --line:#1c1c20; --line-soft:#141416;
-            --ink:#ff2b2b; --ink-soft:#b23636; --ink-faint:#5c2020;
-            --glow:#ff2b2b; --glow-soft:rgba(255,40,40,.07); --glow-mid:rgba(255,40,40,.14);
-            --shadow: 0 1px 2px rgba(0,0,0,.85), 0 18px 44px rgba(0,0,0,.7);
+            --bg:#0a0a10; --panel:#111119; --panel-alt:#16161f; --line:#242430; --line-soft:#1b1b24;
+            --ink:#8b7cf6; --ink-soft:#6d63b0; --ink-faint:#332f5c;
+            --glow:#8b7cf6; --glow-soft:rgba(139,124,246,.08); --glow-mid:rgba(139,124,246,.16);
+            --shadow: 0 1px 2px rgba(0,0,0,.6), 0 18px 44px rgba(0,0,0,.55);
             --pos:#2fae66; --neg:#e0463f;
-            --grad-1:#ff2b2b; --grad-2:#ff2b2b; --grad-3:#ff2b2b; --grad-angle:120deg;
+            --grad-1:#a78bfa; --grad-2:#6366f1; --grad-3:#312e81; --grad-angle:120deg;
             --brand-gradient: linear-gradient(var(--grad-angle), var(--grad-1), var(--grad-2) 55%, var(--grad-3));
-            --hero-blob: radial-gradient(circle at 72% 20%, var(--ink) 0%, rgba(120,10,10,.55) 32%, rgba(20,2,2,.15) 62%, transparent 78%);
-            --hero-blob-opacity: .55;
+            --hero-blob: radial-gradient(circle at 72% 20%, var(--ink) 0%, rgba(90,70,200,.5) 32%, rgba(20,15,50,.15) 62%, transparent 78%);
+            --hero-blob-opacity: .5;
         }
         html[data-theme="light"]{
             --bg:#f6f5fb; --panel:#ffffff; --panel-alt:#f1eefb; --line:#e4e0f5; --line-soft:#ece8fa;
@@ -43,6 +47,17 @@
             --brand-gradient: linear-gradient(var(--grad-angle), var(--grad-1), var(--grad-2) 55%, var(--grad-3));
             --hero-blob: conic-gradient(from 200deg, var(--grad-1), var(--grad-2), var(--grad-3), var(--grad-1));
             --hero-blob-opacity: .16;
+        }
+        html[data-theme="dracula"]{
+            --bg:#020203; --panel:#000000; --panel-alt:#0a0a0c; --line:#1c1c20; --line-soft:#141416;
+            --ink:#ff2b2b; --ink-soft:#b23636; --ink-faint:#5c2020;
+            --glow:#ff2b2b; --glow-soft:rgba(255,40,40,.07); --glow-mid:rgba(255,40,40,.14);
+            --shadow: 0 1px 2px rgba(0,0,0,.85), 0 18px 44px rgba(0,0,0,.7);
+            --pos:#2fae66; --neg:#e0463f;
+            --grad-1:#ff6b6b; --grad-2:#ff2b2b; --grad-3:#7a0000; --grad-angle:120deg;
+            --brand-gradient: linear-gradient(var(--grad-angle), var(--grad-1), var(--grad-2) 55%, var(--grad-3));
+            --hero-blob: radial-gradient(circle at 72% 20%, var(--ink) 0%, rgba(120,10,10,.55) 32%, rgba(20,2,2,.15) 62%, transparent 78%);
+            --hero-blob-opacity: .55;
         }
         body{ transition:background-color .25s ease, color .25s ease; }
         *{box-sizing:border-box;}
@@ -92,6 +107,7 @@
             cursor:pointer; box-shadow:var(--shadow); transition:color .15s ease, border-color .15s ease;
         }
         .theme-toggle:hover{color:var(--ink); border-color:var(--ink);}
+        .theme-toggle.active{ color:#ff2b2b; border-color:#ff2b2b; box-shadow:0 0 10px rgba(255,43,43,.4); }
         .theme-toggle svg{width:15px; height:15px;}
 
         /* ==================== BİLDİRİM ZİLİ + PANELİ (v2) ==================== */
@@ -2645,7 +2661,7 @@
         html[data-theme="light"] .ts-close-btn{ background:rgba(255,255,255,.35); border-color:rgba(255,255,255,.55); color:#fff; }
 
         .ts-hero-preview{
-            width: 100%; position:relative; border-top-left-radius: 15px; border-top-right-radius: 15px; padding:16px 25px; overflow:hidden;
+            width: 100%; position:relative; border-top-left-radius: 15px; border-top-right-radius: 15px; padding:30px 20px; overflow:hidden;
             background:var(--brand-gradient); display:flex; align-items:center; gap:13px;
             box-shadow:0 10px 26px var(--glow-mid), inset 0 1px 0 rgba(255,255,255,.16);
         }
@@ -3024,6 +3040,7 @@
                 </button>
                 <div id="notifPanel" class="notif-panel"></div>
             </div>
+            <button class="theme-toggle" id="draculaToggleBtn" onclick="toggleDracula()" title="Dracula Modu (Kırmızı Tema)"></button>
             <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Temayı değiştir"></button>
         </div>
     </div>
@@ -4395,7 +4412,7 @@
         coins: '<circle cx="9" cy="9" r="6"/><path d="M14.5 8a6 6 0 1 1 0 9.9"/>',
         dollar: '<path d="M12 2v20"/><path d="M17 6.5c0-1.9-2.2-3-5-3s-5 1.1-5 3 2.2 2.6 5 3 5 1.1 5 3-2.2 3-5 3-5-1.1-5-3"/>',
         wallet: '<path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v3"/><path d="M3 7v10a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1h-4a2 2 0 0 0 0 4h5"/>',
-        palette: '<circle cx="12" cy="12" r="9"/><circle cx="8.5" cy="10" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="8" r="1.3" fill="currentColor" stroke="none"/><circle cx="15.5" cy="10" r="1.3" fill="currentColor" stroke="none"/><circle cx="10" cy="14" r="1.3" fill="currentColor" stroke="none"/><path d="M12 3a9 9 0 0 0 0 18c1.2 0 1.8-.9 1.3-1.9-.3-.6-.1-1.3.5-1.6.4-.2.9-.2 1.3 0 1.4.7 2.9-.4 2.9-2 0-6.9-2.8-12.5-6-12.5z"/>',
+        palette: '<path d="M12 2C6.5 2 2 6.1 2 11.2c0 3.2 2.7 4.8 5 4.8h1.3c.9 0 1.6.7 1.6 1.6 0 .4-.2.8-.4 1.1-.3.4-.5.9-.5 1.4 0 1.1 1 1.9 2.2 1.9C17.9 22 22 17.6 22 12.2 22 6.6 17.5 2 12 2z"/><circle cx="7.2" cy="12.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="9.2" cy="8" r="1.4" fill="currentColor" stroke="none"/><circle cx="14.5" cy="7.2" r="1.4" fill="currentColor" stroke="none"/><circle cx="17.3" cy="11" r="1.4" fill="currentColor" stroke="none"/>',
         user: '<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/>',
         male: '<circle cx="10" cy="14" r="6"/><path d="M14.5 9.5 20 4M14 4h6v6"/>',
         female: '<circle cx="12" cy="9" r="6"/><path d="M12 15v7M8.5 19h7"/>',
@@ -10546,21 +10563,24 @@ ${locationCardHtml(m.location)}
         const persist = opts.persist !== false;
         const doRender = opts.render !== false;
         const root = document.documentElement;
-        root.style.setProperty('--grad-1', g.c1);
-        root.style.setProperty('--grad-2', g.c2);
-        root.style.setProperty('--grad-3', g.c3);
-        root.style.setProperty('--grad-angle', (g.angle!=null?g.angle:120)+'deg');
-        root.style.setProperty('--glow', g.c2);
-        root.style.setProperty('--ink', g.c2);
-        root.style.setProperty('--glow-soft', hexToRgba(g.c2, .07));
-        root.style.setProperty('--glow-mid', hexToRgba(g.c2, .14));
+        const isLightNow = root.getAttribute('data-theme') === 'light';
+        if(isLightNow){
+            root.style.setProperty('--grad-1', g.c1);
+            root.style.setProperty('--grad-2', g.c2);
+            root.style.setProperty('--grad-3', g.c3);
+            root.style.setProperty('--grad-angle', (g.angle!=null?g.angle:120)+'deg');
+            root.style.setProperty('--glow', g.c2);
+            root.style.setProperty('--ink', g.c2);
+            root.style.setProperty('--glow-soft', hexToRgba(g.c2, .07));
+            root.style.setProperty('--glow-mid', hexToRgba(g.c2, .14));
+        }
         const input = document.getElementById('accentColorInput');
         if(input) input.value = g.c2;
         if(persist){
             localStorage.setItem(THEME_GRADIENT_KEY, JSON.stringify(g));
             localStorage.setItem(THEME_ACCENT_KEY, g.c2);
         }
-        if(doRender){
+        if(doRender && isLightNow){
             render();
             if(document.getElementById('rankGalleryPanel').classList.contains('open')) buildRankGallery();
             if(document.getElementById('lbPanel').classList.contains('open')) buildLeaderboard();
@@ -10787,10 +10807,21 @@ ${locationCardHtml(m.location)}
         if(btn) btn.innerHTML = theme === 'light' ? icon('moon',15) : icon('sun',15);
         const accentBtn = document.getElementById('accentPickerBtn');
         if(accentBtn){
-            accentBtn.style.display = 'flex';
+            accentBtn.style.display = theme === 'light' ? 'flex' : 'none';
             accentBtn.innerHTML = icon('palette',15);
         }
-        applyGradientState(currentGradient(), { persist:false, render:false });
+        const draculaBtn = document.getElementById('draculaToggleBtn');
+        if(draculaBtn){
+            draculaBtn.innerHTML = icon('flame',15);
+            draculaBtn.classList.toggle('active', theme === 'dracula');
+            draculaBtn.title = theme === 'dracula' ? 'Dracula Modundan Çık' : 'Dracula Modu (Kırmızı Tema)';
+        }
+        if(theme === 'light'){
+            applyGradientState(currentGradient(), { persist:false, render:false });
+        } else {
+            const root = document.documentElement;
+            ['--grad-1','--grad-2','--grad-3','--grad-angle','--glow','--ink','--glow-soft','--glow-mid'].forEach(p => root.style.removeProperty(p));
+        }
     }
     function toggleTheme(){
         const current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
@@ -10806,6 +10837,22 @@ ${locationCardHtml(m.location)}
         if(document.getElementById('rankGalleryPanel').classList.contains('open')) buildRankGallery();
         if(document.getElementById('lbPanel').classList.contains('open')) buildLeaderboard();
         renderThemeStudio();
+    }
+    function toggleDracula(){
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dracula' ? 'dark' : 'dracula';
+        localStorage.setItem(THEME_KEY, next);
+        if(themeMode !== 'manual'){
+            themeMode = 'manual';
+            localStorage.setItem(THEME_MODE_KEY, 'manual');
+            stopSystemThemeSync(); stopSeasonWatch();
+        }
+        applyTheme(next);
+        render();
+        if(document.getElementById('rankGalleryPanel').classList.contains('open')) buildRankGallery();
+        if(document.getElementById('lbPanel').classList.contains('open')) buildLeaderboard();
+        renderThemeStudio();
+        showTopToast(next === 'dracula' ? 'Dracula Modu aktif — kızıl tema' : 'Dracula Modundan çıkıldı', 'info', 'flame');
     }
     function initTheme(){
         const isFirstVisit = !localStorage.getItem(THEME_KEY);

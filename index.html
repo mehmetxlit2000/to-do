@@ -671,6 +671,71 @@
             .holo-pf-input{ flex:1; width:auto; }
         }
 
+        /* ==================== VARLIK TRENDİ (canlı portföy grafiği) ==================== */
+        .atp-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin:20px 0 16px; flex-wrap:wrap; }
+        .atp-head-left{ display:flex; align-items:flex-start; gap:12px; }
+        .atp-head-icon{
+            flex:none; width:44px; height:44px; border-radius:12px; background:var(--brand-gradient); color:#fff;
+            display:flex; align-items:center; justify-content:center; box-shadow:0 6px 16px var(--glow-mid);
+        }
+        .atp-title{ font-family:'Orbitron',sans-serif; font-size:15px; font-weight:800; margin:0 0 2px; letter-spacing:.02em; text-transform:uppercase; }
+        .atp-sub{ font-size:11.5px; color:var(--ink-soft); margin:0; }
+        .atp-head-right{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+        .atp-tabs{ display:flex; gap:3px; background:var(--panel-alt); border:1px solid var(--line); border-radius:10px; padding:3px; }
+        .atp-tab-btn{
+            font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; letter-spacing:.02em; padding:8px 14px;
+            border-radius:7px; border:none; background:none; color:var(--ink-soft); cursor:pointer; transition:all .15s ease;
+        }
+        .atp-tab-btn.active{ background:var(--brand-gradient); color:#fff; box-shadow:0 0 10px var(--glow-mid); }
+        .atp-calendar-btn{
+            width:38px; height:38px; border-radius:10px; border:1px solid var(--line); background:var(--panel-alt); color:var(--ink-soft);
+            display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none; transition:all .15s ease;
+        }
+        .atp-calendar-btn:hover{ color:var(--ink); border-color:var(--ink-soft); }
+        .atp-card{ background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:20px; box-shadow:var(--shadow); }
+        .atp-card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:6px; flex-wrap:wrap; }
+        .atp-card-label{ font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 6px; }
+        .atp-total-value{ font-family:'Orbitron',sans-serif; font-size:30px; font-weight:800; color:var(--ink); }
+        .atp-change-row{ display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:700; margin-top:4px; }
+        .atp-change-row.pos{ color:var(--pos); }
+        .atp-change-row.neg{ color:var(--neg); }
+        .atp-live-pill{
+            display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.04em;
+            color:var(--pos); background:rgba(47,174,102,.12); border:1px solid rgba(47,174,102,.35); padding:6px 11px; border-radius:100px; flex:none;
+        }
+        .atp-live-dot{ width:6px; height:6px; border-radius:50%; background:var(--pos); box-shadow:0 0 6px var(--pos); animation:fxBlip 1.5s ease-in-out infinite; }
+        .atp-chart-area{ position:relative; margin:18px 0 8px; }
+        .atp-tooltip-bubble{
+            position:absolute; z-index:2; transform:translate(-50%,-115%); background:var(--brand-gradient); color:#fff;
+            padding:7px 11px; border-radius:10px 10px 10px 3px; font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700;
+            box-shadow:0 8px 18px var(--glow-mid); white-space:nowrap; text-align:center; line-height:1.3; pointer-events:none;
+        }
+        .atp-chart-axis-x{ display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-soft); margin-top:2px; }
+        .atp-range-strip{ height:34px; margin-top:14px; border-radius:8px; overflow:hidden; background:var(--panel-alt); border:1px solid var(--line); display:flex; align-items:flex-end; gap:1px; padding:2px; opacity:.7; }
+        .atp-range-bar{ flex:1; background:var(--ink-faint); border-radius:2px 2px 0 0; min-height:2px; }
+        .atp-stats-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:18px; }
+        @media (max-width:680px){ .atp-stats-grid{ grid-template-columns:repeat(2,1fr); } }
+        .atp-stat-card{
+            display:flex; align-items:center; gap:11px; padding:13px 14px; border-radius:13px; background:var(--panel-alt); border:1px solid var(--line);
+        }
+        .atp-stat-icon{
+            flex:none; width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+            background:color-mix(in srgb, var(--atp-color, var(--ink)) 16%, transparent); color:var(--atp-color, var(--ink));
+        }
+        .atp-stat-label{ font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); letter-spacing:.04em; }
+        .atp-stat-value{ font-family:'Orbitron',sans-serif; font-size:14px; font-weight:800; color:var(--ink); margin-top:1px; }
+        .atp-stat-time{ font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-soft); margin-top:2px; display:flex; align-items:center; gap:4px; }
+        .atp-stat-dot{ width:6px; height:6px; border-radius:50%; background:var(--atp-color, var(--ink)); flex:none; }
+
+        /* ---- arşiv butonu: minimal, whatsapp tarzı ---- */
+        .archive-toggle-btn{
+            display:inline-flex; align-items:center; gap:7px; background:none; border:none; cursor:pointer;
+            padding:8px 10px; margin:4px 10px 2px; font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:600;
+            color:var(--ink-soft); border-radius:8px; transition:background .15s ease, color .15s ease; width:fit-content;
+        }
+        .archive-toggle-btn:hover{ background:var(--panel-alt); color:var(--ink); }
+        .archive-toggle-count{ font-size:9.5px; color:var(--ink-faint); }
+
         /* ---- leaderboard ---- */
         .lb-controls{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; flex-wrap:wrap;}
         .lb-list{display:flex; flex-direction:column; gap:7px; max-height:520px; overflow-y:auto; scrollbar-width:thin; cursor:grab;}
@@ -1754,11 +1819,61 @@
         .ps-nav-sep{ height:1px; background:var(--line); margin:8px 12px; }
         .ps-foot{ padding:14px 20px; font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-faint); letter-spacing:.06em; border-top:1px solid var(--line); }
 
-        /* ==================== AYARLAR MODALI ==================== */
+        /* ==================== AYARLAR MODALI v2 ==================== */
         .settings-row{ display:flex; align-items:center; justify-content:space-between; gap:14px; padding:13px 4px; border-bottom:1px solid var(--line-soft); text-align:left; }
         .settings-row:last-child{border-bottom:none;}
         .settings-row-label{ font-size:13px; font-weight:600; color:var(--ink); }
         .settings-row-sub{ font-size:11px; color:var(--ink-soft); margin-top:2px; }
+
+        .settings-card{ max-width:460px; width:100%; text-align:left; padding:0; overflow:hidden; border-radius:22px; box-shadow:0 30px 80px rgba(0,0,0,.6), 0 0 50px var(--glow-soft); }
+        .settings-head{ position:relative; padding:26px 26px 20px; background:var(--brand-gradient); overflow:hidden; }
+        .settings-head::before{ content:''; position:absolute; inset:0; opacity:.18; pointer-events:none; background-image:radial-gradient(circle, rgba(255,255,255,.7) 1px, transparent 1px); background-size:16px 16px; }
+        .settings-head-row{ position:relative; z-index:1; display:flex; align-items:center; gap:14px; }
+        .settings-head-icon{ flex:none; width:46px; height:46px; border-radius:14px; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.35); color:#fff; display:flex; align-items:center; justify-content:center; }
+        .settings-head-title{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:15px; color:#fff; margin:0 0 3px; text-shadow:0 2px 8px rgba(0,0,0,.3); }
+        .settings-head-sub{ font-family:'JetBrains Mono',monospace; font-size:10px; color:rgba(255,255,255,.85); }
+        .settings-body{ padding:20px 22px 6px; max-height:60vh; overflow-y:auto; }
+        .settings-section{ margin-bottom:18px; }
+        .settings-section-title{ display:flex; align-items:center; gap:7px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px; }
+        .settings-row-v2{
+            display:flex; align-items:center; gap:12px; padding:12px 13px; border-radius:13px;
+            background:var(--panel-alt); border:1px solid var(--line); margin-bottom:8px; transition:border-color .15s ease;
+        }
+        .settings-row-v2:hover{ border-color:var(--ink-faint); }
+        .settings-row-v2:last-child{ margin-bottom:0; }
+        .settings-row-icon{
+            flex:none; width:34px; height:34px; border-radius:10px; background:var(--bg); border:1px solid var(--line);
+            color:var(--ink); display:flex; align-items:center; justify-content:center;
+        }
+        .settings-row-text{ flex:1; min-width:0; }
+        .settings-foot{ padding:16px 22px calc(16px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); }
+        @media (max-width:480px){
+            #settingsModal{ align-items:flex-end; padding:0; }
+            .settings-card{ max-width:100%; border-radius:20px 20px 0 0; max-height:92vh; }
+            .settings-head{ padding:calc(20px + env(safe-area-inset-top)) 18px 16px; }
+        }
+        html.force-reduce-motion *{ transition:none !important; animation:none !important; }
+
+        /* ==================== ENGELLENEN KULLANICILAR v2 ==================== */
+        .blocked-card{ max-width:420px; width:100%; text-align:left; padding:0; overflow:hidden; border-radius:20px; box-shadow:0 26px 70px rgba(0,0,0,.55); }
+        .blocked-head{ display:flex; align-items:center; gap:12px; padding:22px 22px 16px; border-bottom:1px solid var(--line); }
+        .blocked-head-icon{ flex:none; width:42px; height:42px; border-radius:12px; background:linear-gradient(135deg,#7a1010,#c0392b); color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 16px rgba(192,57,43,.35); }
+        .blocked-head-title{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:14.5px; margin:0 0 2px; }
+        .blocked-head-sub{ font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-soft); }
+        .blocked-count-pill{ margin-left:auto; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; padding:4px 10px; border-radius:100px; background:var(--panel-alt); border:1px solid var(--line); color:var(--ink-soft); flex:none; }
+        .blocked-body{ padding:16px 18px; max-height:50vh; overflow-y:auto; display:flex; flex-direction:column; gap:8px; }
+        .blocked-user-card{
+            display:flex; align-items:center; gap:11px; padding:11px 12px; border-radius:13px;
+            background:var(--panel-alt); border:1px solid var(--line);
+        }
+        .blocked-user-avatar{ width:38px; height:38px; border-radius:50%; object-fit:cover; flex:none; border:1.5px solid var(--line); }
+        .blocked-user-name{ font-size:12.5px; font-weight:700; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .blocked-unblock-btn{
+            flex:none; display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
+            padding:7px 11px; border-radius:100px; background:var(--bg); border:1px solid var(--line); color:var(--ink); cursor:pointer;
+        }
+        .blocked-unblock-btn:hover{ border-color:var(--pos); color:var(--pos); }
+        .blocked-foot{ padding:14px 18px calc(14px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); }
 
         /* ==================== YÖNETİM PANELİ ==================== */
         .admin-close-btn{ position:absolute; top:14px; right:14px; z-index:3; }
@@ -2877,6 +2992,7 @@
             </label>
             <button class="icon-btn" id="portfolioAddBtn" style="background:var(--brand-gradient); color:#fff; width:46px; height:46px; flex:none;" onclick="addPortfolioQty()"></button>
         </div>
+
     </div>
 
     <div class="panel gallery-panel" id="portfolioHistoryPanel">
@@ -3105,6 +3221,11 @@
                     </div>
                     <button class="btn-text" id="createGroupBtn" onclick="openCreateGroupModal()" style="margin-top:10px; width:100%; justify-content:center; display:flex; align-items:center; gap:6px; border:1px dashed var(--line); border-radius:8px; padding:9px;"></button>
                 </div>
+                <button class="archive-toggle-btn" id="archivedBar" onclick="toggleArchivedView()" style="display:none;">
+                    <span id="archivedBarIcon"></span>
+                    <span id="archivedBarTitle">Arşivlenmiş</span>
+                    <span class="archive-toggle-count" id="archivedBarSub"></span>
+                </button>
                 <div class="chat-mega-search">
                     <label class="field-icon-input"><span id="megaSearchIcon"></span><input type="text" id="megaFriendSearch" placeholder="Arkadaş ara.." oninput="renderChatHub()"></label>
                 </div>
@@ -3283,7 +3404,7 @@
         </button>
     </div>
 
-    return `<div class="chat-hub-row${_chatMegaActiveKey==='group_'+gid?' active':''}${isUnread?' unread':''}" onclick="openGroupChat('${gid}')">
+    <div id="imgLightbox" class="modal-overlay" onclick="closeLightbox()">
         <img id="lightboxImg" src="" style="max-width:92vw; max-height:88vh; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,.6);">
     </div>
 
@@ -3345,6 +3466,22 @@
             <div id="friendRequestsList" style="max-height:360px; overflow-y:auto; margin-top:12px; display:flex; flex-direction:column; gap:8px;"></div>
             <div class="modal-actions" style="margin-top:16px; width:100%;">
                 <button class="btn btn-ghost" style="width:100%;" onclick="closeFriendRequestsModal()">Kapat</button>
+            </div>
+        </div>
+    </div>
+    <div id="blockedUsersModal" class="modal-overlay">
+        <div class="modal-card blocked-card">
+            <div class="blocked-head">
+                <span class="blocked-head-icon" id="blockedHeadIcon"></span>
+                <div>
+                    <p class="blocked-head-title">Engellenen Kullanıcılar</p>
+                    <p class="blocked-head-sub">Engellediğin kişiler sana mesaj gönderemez</p>
+                </div>
+                <span class="blocked-count-pill" id="blockedCountPill">0</span>
+            </div>
+            <div id="blockedUsersList" class="blocked-body"></div>
+            <div class="blocked-foot">
+                <button class="btn btn-ghost" style="width:100%;" onclick="closeBlockedUsersModal()">Kapat</button>
             </div>
         </div>
     </div>
@@ -3789,32 +3926,91 @@
     </div>
 </div>
 <div id="settingsModal" class="modal-overlay">
-    <div class="modal-card" style="max-width:380px; text-align:left;">
-        <p class="modal-eyebrow" style="text-align:center;">Site Ayarları</p>
-        <div style="margin-top:6px;">
-            <div class="settings-row">
-                <div><div class="settings-row-label">Ses Efektleri</div><div class="settings-row-sub">Tıklama, tamamlama ve rütbe sesleri</div></div>
-                <label class="rune-switch" style="flex:none; padding:0; border:none; background:none;">
-                    <input type="checkbox" id="settingSound" onchange="onSettingsToggle()">
-                    <span class="switch-track"><span class="switch-thumb"></span></span>
-                </label>
-            </div>
-            <div class="settings-row">
-                <div><div class="settings-row-label">Bildirimler</div><div class="settings-row-sub">Üstte beliren küçük bildirimler</div></div>
-                <label class="rune-switch" style="flex:none; padding:0; border:none; background:none;">
-                    <input type="checkbox" id="settingToasts" onchange="onSettingsToggle()">
-                    <span class="switch-track"><span class="switch-thumb"></span></span>
-                </label>
-            </div>
-            <div class="settings-row">
-                <div><div class="settings-row-label">Konfeti Efekti</div><div class="settings-row-sub">Görev tamamlarken ve rütbe atlarken</div></div>
-                <label class="rune-switch" style="flex:none; padding:0; border:none; background:none;">
-                    <input type="checkbox" id="settingConfetti" onchange="onSettingsToggle()">
-                    <span class="switch-track"><span class="switch-thumb"></span></span>
-                </label>
+    <div class="modal-card settings-card">
+        <div class="settings-head">
+            <div class="settings-head-row">
+                <span class="settings-head-icon" id="settingsHeadIcon"></span>
+                <div>
+                    <p class="settings-head-title">Site Ayarları</p>
+                    <p class="settings-head-sub">Deneyimini kendine göre özelleştir</p>
+                </div>
             </div>
         </div>
-        <div class="modal-actions" style="margin-top:20px;">
+        <div class="settings-body">
+            <div class="settings-section">
+                <div class="settings-section-title" id="settingsSectionFx"></div>
+                <div class="settings-row-v2">
+                    <span class="settings-row-icon" id="settingSoundIcon"></span>
+                    <div class="settings-row-text">
+                        <div class="settings-row-label">Ses Efektleri</div>
+                        <div class="settings-row-sub">Tıklama, tamamlama ve rütbe sesleri</div>
+                    </div>
+                    <label class="rune-switch" style="flex:none; padding:0; border:none; background:none;">
+                        <input type="checkbox" id="settingSound" onchange="onSettingsToggle()">
+                        <span class="switch-track"><span class="switch-thumb"></span></span>
+                    </label>
+                </div>
+                <div class="settings-row-v2">
+                    <span class="settings-row-icon" id="settingToastsIcon"></span>
+                    <div class="settings-row-text">
+                        <div class="settings-row-label">Bildirimler</div>
+                        <div class="settings-row-sub">Üstte beliren küçük bildirimler</div>
+                    </div>
+                    <label class="rune-switch" style="flex:none; padding:0; border:none; background:none;">
+                        <input type="checkbox" id="settingToasts" onchange="onSettingsToggle()">
+                        <span class="switch-track"><span class="switch-thumb"></span></span>
+                    </label>
+                </div>
+                <div class="settings-row-v2">
+                    <span class="settings-row-icon" id="settingConfettiIcon"></span>
+                    <div class="settings-row-text">
+                        <div class="settings-row-label">Konfeti Efekti</div>
+                        <div class="settings-row-sub">Görev tamamlarken ve rütbe atlarken</div>
+                    </div>
+                    <label class="rune-switch" style="flex:none; padding:0; border:none; background:none;">
+                        <input type="checkbox" id="settingConfetti" onchange="onSettingsToggle()">
+                        <span class="switch-track"><span class="switch-thumb"></span></span>
+                    </label>
+                </div>
+                <div class="settings-row-v2">
+                    <span class="settings-row-icon" id="settingMotionIcon"></span>
+                    <div class="settings-row-text">
+                        <div class="settings-row-label">Hareketi Azalt</div>
+                        <div class="settings-row-sub">Animasyonları ve geçişleri sadeleştirir</div>
+                    </div>
+                    <label class="rune-switch" style="flex:none; padding:0; border:none; background:none;">
+                        <input type="checkbox" id="settingMotion" onchange="onSettingsToggle()">
+                        <span class="switch-track"><span class="switch-thumb"></span></span>
+                    </label>
+                </div>
+            </div>
+            <div class="settings-section">
+                <div class="settings-section-title" id="settingsSectionChat"></div>
+                <div class="settings-row-v2">
+                    <span class="settings-row-icon" id="settingScrollIcon"></span>
+                    <div class="settings-row-text">
+                        <div class="settings-row-label">Otomatik Kaydırma</div>
+                        <div class="settings-row-sub">Yeni mesaj gelince sohbeti en alta kaydır</div>
+                    </div>
+                    <label class="rune-switch" style="flex:none; padding:0; border:none; background:none;">
+                        <input type="checkbox" id="settingAutoScroll" onchange="onSettingsToggle()">
+                        <span class="switch-track"><span class="switch-thumb"></span></span>
+                    </label>
+                </div>
+                <div class="settings-row-v2">
+                    <span class="settings-row-icon" id="settingOnlineIcon"></span>
+                    <div class="settings-row-text">
+                        <div class="settings-row-label">Çevrimiçi Durumumu Gizle</div>
+                        <div class="settings-row-sub">Diğer kullanıcılar seni çevrimiçi göremez</div>
+                    </div>
+                    <label class="rune-switch" style="flex:none; padding:0; border:none; background:none;">
+                        <input type="checkbox" id="settingHideOnline" onchange="onSettingsToggle()">
+                        <span class="switch-track"><span class="switch-thumb"></span></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="settings-foot">
             <button class="btn btn-ghost" style="width:100%;" onclick="closeSettingsPanel()">Kapat</button>
         </div>
     </div>
@@ -3999,6 +4195,7 @@
         inbox: '<path d="M4 12h5l1.5 3h3L15 12h5"/><path d="M4 12l2-7h12l2 7v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/>',
         plus: '<path d="M12 5v14M5 12h14"/>',
         ban: '<circle cx="12" cy="12" r="9"/><path d="M12 2 2 12"/>',
+        userBlock: '<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6 1.1 0 2.2.14 3.2.4"/><circle cx="18" cy="18" r="3.6"/><path d="M15.7 15.7l4.6 4.6"/>',
         lock: '<rect x="4" y="10" width="16" height="10" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/>',
         sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
         moon: '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>',
@@ -4032,7 +4229,8 @@
         snowflake: '<path d="M12 2v20M4 7l16 10M20 7L4 17"/>',
         monitor: '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>',
         botIcon: '<rect x="5" y="8" width="14" height="11" rx="3"/><circle cx="9" cy="13.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="15" cy="13.5" r="1.4" fill="currentColor" stroke="none"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1.3" fill="currentColor" stroke="none"/><path d="M3 12h2M19 12h2"/><path d="M9 18h6"/>',
-        bell: '<path d="M18 8a6 6 0 0 0-12 0c0 4.5-1.2 6.7-2.1 7.8-.4.5 0 1.2.6 1.2h15c.6 0 1-.7.6-1.2-.9-1.1-2.1-3.3-2.1-7.8z"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>'
+        bell: '<path d="M18 8a6 6 0 0 0-12 0c0 4.5-1.2 6.7-2.1 7.8-.4.5 0 1.2.6 1.2h15c.6 0 1-.7.6-1.2-.9-1.1-2.1-3.3-2.1-7.8z"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
+        calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'
     };
     function icon(name, size){
         size = size || 14;
@@ -4295,6 +4493,7 @@
     let portfolio = {};
     let portfolioHistory = [];      // [{date, value}]
     let portfolioLiveHistory = [];  // [{t, v}] — oturum içi anlık takip (kalıcı değil)
+    let _assetTrendRange = 'day';   // 'day' | 'week' | 'month'
     let portfolioCostBasis = {};    // {assetId: {totalCost, qty}}
     let priceAlerts = [];   // [{id, assetId, target, direction, triggered}]
     let _alertTargetAssetId = null;
@@ -4444,6 +4643,10 @@
         if(totalLabel) totalLabel.innerHTML = `${icon('refresh',10)} Anlık Toplam Değer`;
         const histIcon = document.getElementById('portfolioHistoryIcon');
         if(histIcon) histIcon.innerHTML = icon('layers',15);
+        const atpIcon = document.getElementById('atpHeadIcon');
+        if(atpIcon) atpIcon.innerHTML = icon('layers',20);
+        const atpCal = document.getElementById('atpCalendarBtn');
+        if(atpCal) atpCal.innerHTML = icon('calendar',16);
     }
 
     function assetLogoFallback(imgEl, assetId){
@@ -4467,8 +4670,136 @@
     function snapshotLivePoint(){
         const total = computePortfolioTotal();
         portfolioLiveHistory.push({ t: Date.now(), v: total });
-        if(portfolioLiveHistory.length > 40) portfolioLiveHistory = portfolioLiveHistory.slice(-40);
+        if(portfolioLiveHistory.length > 300) portfolioLiveHistory = portfolioLiveHistory.slice(-300);
         renderPortfolioHistoryChart();
+        renderAssetTrendPanel();
+    }
+
+    function computeAssetTrendPoints(){
+        const now = Date.now();
+        if(_assetTrendRange === 'day'){
+            let pts = portfolioLiveHistory.filter(p => now - p.t <= 24*3600000);
+            if(pts.length < 2) pts = portfolioLiveHistory.slice(-60);
+            return pts.map(p => ({ t:p.t, v:p.v }));
+        }
+        const cutoffDays = _assetTrendRange === 'week' ? 7 : 30;
+        const cutoff = now - cutoffDays*86400000;
+        let pts = portfolioHistory.filter(e => new Date(e.date+'T00:00:00').getTime() >= cutoff)
+            .map(e => ({ t:new Date(e.date+'T00:00:00').getTime(), v:e.value }));
+        if(pts.length < 2) pts = portfolioHistory.map(e => ({ t:new Date(e.date+'T00:00:00').getTime(), v:e.value }));
+        return pts;
+    }
+
+    function pickAssetTrendRange(range, el){
+        _assetTrendRange = range;
+        document.querySelectorAll('.atp-tab-btn').forEach(b=>b.classList.remove('active'));
+        if(el) el.classList.add('active');
+        renderAssetTrendPanel();
+    }
+
+    function renderAssetTrendPanel(){
+        const body = document.getElementById('assetTrendBody');
+        if(!body) return;
+        const points = computeAssetTrendPoints();
+        const currentTotal = computePortfolioTotal();
+
+        if(points.length < 2){
+            body.innerHTML = `<div class="empty-state" style="padding:26px 16px;">
+        ${icon('layers',20)}
+        <p><strong>Henüz yeterli veri yok.</strong></p>
+        <p>Portföyüne varlık ekledikçe ya da fiyatlar güncellendikçe grafik burada oluşacak.</p>
+      </div>`;
+            return;
+        }
+
+        const values = points.map(p=>p.v);
+        const first = values[0];
+        const min = Math.min(...values), max = Math.max(...values);
+        const avg = values.reduce((a,b)=>a+b,0) / values.length;
+        const diff = currentTotal - first;
+        const diffPct = first>0 ? (diff/first*100) : 0;
+        const isPos = diff >= 0;
+        const minIdx = values.indexOf(min), maxIdx = values.indexOf(max);
+
+        const W = 900, H = 260, padX = 14, padTop = 18, padBottom = 26;
+        const span = Math.max(1, max-min);
+        const padY = span*0.12;
+        const stepX = (W-padX*2) / (points.length-1);
+        const yFor = v => padTop + (H-padTop-padBottom) - ((v-(min-padY))/(span+padY*2))*(H-padTop-padBottom);
+        const coords = points.map((p,i)=>[padX+i*stepX, yFor(p.v)]);
+        const linePath = coords.map((c,i)=>(i===0?'M':'L')+c[0].toFixed(1)+' '+c[1].toFixed(1)).join(' ');
+        const areaPath = linePath + ` L${coords[coords.length-1][0].toFixed(1)} ${H-padBottom} L${coords[0][0].toFixed(1)} ${H-padBottom} Z`;
+        const lastPoint = coords[coords.length-1];
+        const firstPoint = coords[0];
+
+        const xLabels = [points[0], points[Math.floor(points.length/2)], points[points.length-1]].map(p => {
+            const d = new Date(p.t);
+            return _assetTrendRange === 'day'
+                ? d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})
+                : d.toLocaleDateString('tr-TR',{day:'numeric',month:'short'});
+        });
+
+        const barSlice = points.slice(-30);
+        const barMax = Math.max(1, ...barSlice.map((x,j)=> j>0 ? Math.abs(x.v-barSlice[j-1].v) : 0));
+        const rangeBars = barSlice.map((p,i,arr) => {
+            const prev = arr[i-1] ? arr[i-1].v : p.v;
+            const delta = Math.abs(p.v - prev);
+            const h = Math.max(8, (delta/barMax)*100);
+            return `<div class="atp-range-bar" style="height:${h}%;"></div>`;
+        }).join('');
+
+        const lastTime = new Date(points[points.length-1].t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+        const minTime = new Date(points[minIdx].t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+        const maxTime = new Date(points[maxIdx].t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+        const avgLabel = _assetTrendRange === 'day' ? 'Günlük Ortalama' : 'Dönem Ortalaması';
+
+        body.innerHTML = `
+    <div class="atp-card-top">
+      <div>
+        <p class="atp-card-label">Toplam Varlık Değeri</p>
+        <div class="atp-total-value">${formatTRY(currentTotal)}</div>
+        <div class="atp-change-row ${isPos?'pos':'neg'}">${icon(isPos?'chevUp2':'chevDown',11)} %${Math.abs(diffPct).toFixed(2)} (Başlangıç: ${formatTRY(first)})</div>
+      </div>
+      <span class="atp-live-pill"><span class="atp-live-dot"></span> Canlı</span>
+    </div>
+    <div class="atp-chart-area">
+      <div class="atp-tooltip-bubble" style="left:${(lastPoint[0]/W*100).toFixed(1)}%; top:${(lastPoint[1]/H*100).toFixed(1)}%;">
+        ${formatTRY(currentTotal)}<br>${lastTime}
+      </div>
+      <svg viewBox="0 0 ${W} ${H}" width="100%" height="220" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="atpAreaGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--ink)" stop-opacity="0.32"/>
+            <stop offset="100%" stop-color="var(--ink)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path d="${areaPath}" fill="url(#atpAreaGrad)" stroke="none"></path>
+        <path d="${linePath}" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+        <circle cx="${firstPoint[0].toFixed(1)}" cy="${firstPoint[1].toFixed(1)}" r="4" fill="var(--panel)" stroke="var(--ink)" stroke-width="2"></circle>
+        <circle cx="${lastPoint[0].toFixed(1)}" cy="${lastPoint[1].toFixed(1)}" r="5" fill="var(--ink)" stroke="var(--panel)" stroke-width="2.5"></circle>
+        <line x1="${lastPoint[0].toFixed(1)}" y1="${lastPoint[1].toFixed(1)}" x2="${lastPoint[0].toFixed(1)}" y2="${H-padBottom}" stroke="var(--ink-faint)" stroke-width="1" stroke-dasharray="3,3"></line>
+      </svg>
+      <div class="atp-chart-axis-x"><span>${xLabels[0]}</span><span>${xLabels[1]}</span><span>${xLabels[2]}</span></div>
+    </div>
+    <div class="atp-range-strip">${rangeBars}</div>
+    <div class="atp-stats-grid">
+      <div class="atp-stat-card" style="--atp-color:#2563eb;">
+        <span class="atp-stat-icon">${icon('chevDown',16)}</span>
+        <div><div class="atp-stat-label">En Düşük Değer</div><div class="atp-stat-value">${formatTRY(min)}</div><div class="atp-stat-time"><span class="atp-stat-dot"></span>${minTime}</div></div>
+      </div>
+      <div class="atp-stat-card" style="--atp-color:var(--pos);">
+        <span class="atp-stat-icon">${icon('chevUp2',16)}</span>
+        <div><div class="atp-stat-label">En Yüksek Değer</div><div class="atp-stat-value">${formatTRY(max)}</div><div class="atp-stat-time"><span class="atp-stat-dot"></span>${maxTime}</div></div>
+      </div>
+      <div class="atp-stat-card" style="--atp-color:#a855f7;">
+        <span class="atp-stat-icon">${icon('layers',16)}</span>
+        <div><div class="atp-stat-label">Ortalama Değer</div><div class="atp-stat-value">${formatTRY(avg)}</div><div class="atp-stat-time"><span class="atp-stat-dot"></span>${avgLabel}</div></div>
+      </div>
+      <div class="atp-stat-card" style="--atp-color:${isPos?'var(--pos)':'var(--neg)'};">
+        <span class="atp-stat-icon">${icon(isPos?'chevUp2':'chevDown',16)}</span>
+        <div><div class="atp-stat-label">Değişim</div><div class="atp-stat-value">${isPos?'+':''}${formatTRY(diff)}</div><div class="atp-stat-time"><span class="atp-stat-dot"></span>%${diffPct.toFixed(2)}</div></div>
+      </div>
+    </div>`;
     }
     function renderPortfolioLiveChart(){
         const el = document.getElementById('portfolioLiveChart');
@@ -5031,7 +5362,8 @@
 
         const lastMsg = visibleMsgs[visibleMsgs.length - 1];
         const iJustSent = lastMsg && newIds.has(lastMsg.id) && lastMsg.uid === currentUid;
-        if(!_suppressChatAutoScroll && (!_chatHasRenderedOnce || iJustSent)){
+        const scrollAllowed = siteSettings.autoScroll !== false || iJustSent;
+        if(!_suppressChatAutoScroll && scrollAllowed && (!_chatHasRenderedOnce || iJustSent)){
             wrap.scrollTop = wrap.scrollHeight;
         }
 
@@ -6078,11 +6410,63 @@ ${m.track ? `
     }
     function closeGlobalChat(){ showChatMegaSidebar(); }
 
+    let _showArchivedView = false;
+    function toggleArchivedView(){
+        _showArchivedView = !_showArchivedView;
+        renderChatHub();
+    }
+    async function unarchiveConvo(uid){
+        try{
+            await db.ref('developmentUsers/dmIndex/'+currentUid+'/'+uid+'/archived').set(false);
+            if(dmConversations[uid]) dmConversations[uid].archived = false;
+            showTopToast('Sohbet arşivden çıkarıldı', 'info', 'layers');
+            renderChatHub();
+        }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
+    }
     function renderChatHub(){
         const el = document.getElementById('chatHubList');
         if(!el) return;
         const searchEl = document.getElementById('megaFriendSearch');
         const q = (searchEl ? searchEl.value : '').trim().toLowerCase();
+
+        const archivedUids = Object.keys(friends || {}).filter(uid => {
+            const conv = dmConversations[uid];
+            if(!conv || !conv.archived) return false;
+            if(conv.deletedAt && (!conv.ts || conv.ts <= conv.deletedAt)) return false;
+            return true;
+        });
+
+        const archivedBar = document.getElementById('archivedBar');
+        if(archivedBar){
+            archivedBar.style.display = (archivedUids.length > 0 || _showArchivedView) ? 'inline-flex' : 'none';
+            document.getElementById('archivedBarIcon').innerHTML = icon(_showArchivedView ? 'arrowLeft' : 'layers', 13);
+            document.getElementById('archivedBarTitle').textContent = _showArchivedView ? 'Geri dön' : 'Arşivlenmiş';
+            document.getElementById('archivedBarSub').textContent = _showArchivedView ? '' : `(${archivedUids.length})`;
+        }
+
+        if(_showArchivedView){
+            const filtered = archivedUids.filter(uid => !q || (friends[uid].username||'').toLowerCase().includes(q));
+            if(filtered.length === 0){
+                el.innerHTML = `<div class="empty-state" style="padding:24px 14px;"><p>Arşivlenmiş sohbet yok.</p></div>`;
+                return;
+            }
+            el.innerHTML = filtered.sort((a,b) => ((dmConversations[b]||{}).ts||0) - ((dmConversations[a]||{}).ts||0)).map(uid => {
+                const f = friends[uid];
+                const conv = dmConversations[uid];
+                const sub = conv ? escapeHtml((conv.lastMessage||'').slice(0,40)) : 'Henüz mesaj yok';
+                return `<div class="chat-hub-row${_chatMegaActiveKey===uid?' active':''}" onclick="openDMWithUser('${uid}')" oncontextmenu="openConvoContextMenu(event,'dm','${uid}')">
+        <div class="chat-hub-avatar-wrap">
+          <img class="chat-hub-avatar" src="${f.avatarUrl || 'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'">
+        </div>
+        <div class="chat-hub-info">
+          <div class="chat-hub-name">${escapeHtml(f.username||'Kullanıcı')}</div>
+          <div class="chat-hub-sub">${sub}</div>
+        </div>
+        <button class="icon-btn" title="Arşivden çıkar" onclick="event.stopPropagation(); unarchiveConvo('${uid}')" style="flex:none;">${icon('layers',15)}</button>
+      </div>`;
+            }).join('');
+            return;
+        }
 
         let html = '';
         if(!q){
@@ -6153,9 +6537,7 @@ ${m.track ? `
 
     async function openDMWithUser(uid){
         if(!uid || uid === currentUid) return;
-        if(blocked[uid]){ showTopToast('Bu kullanıcıyı engellediniz', 'warn', 'ban'); return; }
-        const blockedByThemSnap = await db.ref('developmentUsers/'+currentUid+'/blockedBy/'+uid).once('value');
-        if(blockedByThemSnap.exists()){ showTopToast('Bu kullanıcı sizi engellemiş', 'warn', 'ban'); return; }
+        if(blocked[uid]){ showTopToast('Bu kullanıcıyı engellediniz', 'warn', 'userBlock'); return; }
         closeAllAppModals('chatMegaModal');
 
         // ESKİ DM VEYA ESKİ GRUP DİNLEYİCİSİNİ KAPAT — yoksa eski sohbetin mesajları yeni açılan sohbete karışır
@@ -6184,6 +6566,7 @@ ${m.track ? `
         showMegaDmView();
         renderChatHub();
         updateDmHeaderOnlineDot();
+        updateDmComposerLockState();
         document.getElementById('chatMegaModal').classList.add('show');
     }
     let _pendingDmImageDataUrl = null;
@@ -6307,8 +6690,6 @@ ${m.track ? `
         catch(err){ showTopToast('Mesaj düzenlenemedi: '+err.message, 'warn', 'warn'); }
     }
     async function deleteDmMessage(msgId){
-        const ok = await showConfirm('Bu mesajı silmek istediğine emin misin?');
-        if(!ok) return;
         const ref = currentGroupId
             ? db.ref('developmentUsers/groupChats/'+currentGroupId+'/messages/'+msgId)
             : db.ref('developmentUsers/directMessages/'+currentDmPairKey+'/messages/'+msgId);
@@ -6458,9 +6839,10 @@ ${locationCardHtml(m.location)}
         const text = input ? input.value.trim() : '';
         if(!text && !_pendingDmImageDataUrl && !audioDataUrl) return;
         if(!currentDmPairKey || !currentDmTargetUid){ showTopToast('Sohbet seçilmedi', 'warn', 'warn'); return; }
-        if(blocked[currentDmTargetUid]){ showTopToast('Bu kullanıcıyı engellediniz', 'warn', 'ban'); return; }
+        if(blocked[currentDmTargetUid]){ showTopToast('Bu kullanıcıyı engellediniz', 'warn', 'userBlock'); return; }
+        if(hasBlockedMe(currentDmTargetUid)){ showTopToast('Bu kullanıcı sizi engellemiş', 'warn', 'userBlock'); return; }
         const blockedByThemSnap = await db.ref('developmentUsers/'+currentUid+'/blockedBy/'+currentDmTargetUid).once('value');
-        if(blockedByThemSnap.exists()){ showTopToast('Bu kullanıcı sizi engellemiş', 'warn', 'ban'); return; }
+        if(blockedByThemSnap.exists()){ showTopToast('Bu kullanıcı sizi engellemiş', 'warn', 'userBlock'); return; }
         const me = getMyProfileCache();
         const isAdminSelf = currentUid === ADMIN_UID;
         const isModSelf = !!moderators[currentUid];
@@ -6641,8 +7023,6 @@ ${locationCardHtml(m.location)}
         catch(err){ showTopToast('Mesaj düzenlenemedi: '+err.message, 'warn', 'warn'); }
     }
     async function deleteChatMessage(msgId){
-        const ok = await showConfirm('Bu mesajı silmek istediğine emin misin?');
-        if(!ok) return;
         try{ await chatRef.child(msgId).remove(); showTopToast('Mesaj silindi', 'warn', 'trash'); }
         catch(err){ showTopToast('Mesaj silinemedi: '+err.message, 'warn', 'warn'); }
     }
@@ -7398,7 +7778,7 @@ ${locationCardHtml(m.location)}
     };
     let db = null, userRef = null, auth = null;
     let chatRef = null, friendsRef = null, dmIndexRef = null, eventsRef2 = null, modsRef = null;
-    let friends = {}, blocked = {}, moderators = {};
+    let friends = {}, blocked = {}, moderators = {}, blockedByOthers = {};
     let onlinePresence = {};
     let presenceListenerAttached = false;
     let _stableOnlinePresence = {};
@@ -8344,6 +8724,7 @@ ${locationCardHtml(m.location)}
         const myPresenceRef = db.ref('developmentUsers/presence/'+uid);
         db.ref('.info/connected').on('value', snap => {
             if(snap.val() === true){
+                if(siteSettings.hideOnlineStatus){ myPresenceRef.remove(); return; }
                 myPresenceRef.onDisconnect().remove();
                 myPresenceRef.set({ since: Date.now(), username: currentUsername });
             }
@@ -8406,6 +8787,8 @@ ${locationCardHtml(m.location)}
             });
             friends = p.friends || {};
             blocked = p.blocked || {};
+            blockedByOthers = p.blockedBy || {};
+            updateDmComposerLockState();
             attachChatListener();
             attachPresenceListener();
             attachDmIndexListener();
@@ -9083,7 +9466,7 @@ ${locationCardHtml(m.location)}
         return audioCtx;
     }
     function playTone(freq, dur, type, vol, delay){
-        if(!siteSettings.toasts) return;
+        if(!siteSettings.sound) return;
         const ctx = ensureAudio();
         if(!ctx) return;
         const t0 = ctx.currentTime + (delay||0);
@@ -9116,6 +9499,7 @@ ${locationCardHtml(m.location)}
 
     /* ---- mini bildirimler (üstte gelip gider) ---- */
     function showTopToast(message, kind, ic){
+        if(!siteSettings.toasts) return;
         const stack = document.getElementById('topToastStack');
         const el = document.createElement('div');
         el.className = 'top-toast' + (kind==='warn' ? ' warn' : '');
@@ -9406,7 +9790,7 @@ ${locationCardHtml(m.location)}
     }
     /* ===================== SİTE AYARLARI ===================== */
     const SETTINGS_KEY = 'tc_settings_v1';
-    let siteSettings = { sound:true, toasts:true, confetti:true };
+    let siteSettings = { sound:true, toasts:true, confetti:true, reduceMotion:false, autoScroll:true, hideOnlineStatus:false };
     function loadSettings(){
         try{
             const raw = localStorage.getItem(SETTINGS_KEY);
@@ -9416,17 +9800,43 @@ ${locationCardHtml(m.location)}
     function saveSettings(){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(siteSettings)); }
     function openSettingsPanel(){
         closeAllAppModals();
+        document.getElementById('settingsHeadIcon').innerHTML = icon('palette',20);
+        document.getElementById('settingsSectionFx').innerHTML = `${icon('sparkle',10)} Görünüm & Efektler`;
+        document.getElementById('settingsSectionChat').innerHTML = `${icon('inbox',10)} Sohbet & Gizlilik`;
+        document.getElementById('settingSoundIcon').innerHTML = icon('bolt',15);
+        document.getElementById('settingToastsIcon').innerHTML = icon('bell',15);
+        document.getElementById('settingConfettiIcon').innerHTML = icon('sparkle',15);
+        document.getElementById('settingMotionIcon').innerHTML = icon('circleHalf',15);
+        document.getElementById('settingScrollIcon').innerHTML = icon('chevDown',15);
+        document.getElementById('settingOnlineIcon').innerHTML = icon('userBlock',15);
         document.getElementById('settingSound').checked = siteSettings.sound;
         document.getElementById('settingToasts').checked = siteSettings.toasts;
         document.getElementById('settingConfetti').checked = siteSettings.confetti;
+        document.getElementById('settingMotion').checked = siteSettings.reduceMotion;
+        document.getElementById('settingAutoScroll').checked = siteSettings.autoScroll;
+        document.getElementById('settingHideOnline').checked = siteSettings.hideOnlineStatus;
         document.getElementById('settingsModal').classList.add('show');
     }
     function closeSettingsPanel(){ document.getElementById('settingsModal').classList.remove('show'); }
+    function applyReducedMotionSetting(){
+        document.documentElement.classList.toggle('force-reduce-motion', !!siteSettings.reduceMotion);
+    }
+    function updatePresenceVisibility(){
+        if(!currentUid || !db) return;
+        const myPresenceRef = db.ref('developmentUsers/presence/'+currentUid);
+        if(siteSettings.hideOnlineStatus) myPresenceRef.remove().catch(()=>{});
+        else myPresenceRef.set({ since: Date.now(), username: currentUsername }).catch(()=>{});
+    }
     function onSettingsToggle(){
         siteSettings.sound = document.getElementById('settingSound').checked;
         siteSettings.toasts = document.getElementById('settingToasts').checked;
         siteSettings.confetti = document.getElementById('settingConfetti').checked;
+        siteSettings.reduceMotion = document.getElementById('settingMotion').checked;
+        siteSettings.autoScroll = document.getElementById('settingAutoScroll').checked;
+        siteSettings.hideOnlineStatus = document.getElementById('settingHideOnline').checked;
         saveSettings();
+        applyReducedMotionSetting();
+        updatePresenceVisibility();
     }
     function render(){
         renderHero();
@@ -9688,10 +10098,6 @@ ${locationCardHtml(m.location)}
     async function bulkDeleteMessages(scope, forEveryone){
         const ids = [..._selectedIds];
         if(ids.length === 0) return;
-        const ok = await showConfirm(forEveryone
-            ? `${ids.length} mesaj HERKES için kalıcı olarak silinsin mi? Bu işlem geri alınamaz.`
-            : `${ids.length} mesaj senin ekranından gizlensin mi? (Diğer kullanıcılar hâlâ görebilir)`);
-        if(!ok) return;
         const list = scope==='global' ? chatMessages : (currentGroupId ? groupMessages : dmMessages);
 
         let basePath;
@@ -10240,6 +10646,7 @@ ${locationCardHtml(m.location)}
         let html = `
     <button class="ps-nav-item" onclick="closeProfileSidebar(); openProfilePanel();">${icon('user',15)} Profil</button>
     <button class="ps-nav-item" onclick="closeProfileSidebar(); openChatHub();">${icon('inbox',15)} Mesajlarım</button>
+    <button class="ps-nav-item" onclick="closeProfileSidebar(); openBlockedUsersModal();">${icon('userBlock',15)} Engellenenler</button>
     <button class="ps-nav-item" onclick="closeProfileSidebar(); openSettingsPanel();">${icon('palette',15)} Site Ayarları</button>`;
         if(isAdmin){
             html += `<button class="ps-nav-item" onclick="closeProfileSidebar(); openAdminPanel();">${icon('shield',15)} Yönetim Paneli</button>`;
@@ -10272,6 +10679,27 @@ ${locationCardHtml(m.location)}
     }
     function isFriend(uid){ return !!friends[uid]; }
     function isBlockedByMe(uid){ return !!blocked[uid]; }
+    function hasBlockedMe(uid){ return !!blockedByOthers[uid]; }
+    function updateDmComposerLockState(){
+        const inputRow = document.querySelector('#megaDmView .chat-mega-input-row');
+        if(!inputRow) return;
+        let notice = document.getElementById('dmBlockedNotice');
+        const isLocked = !currentGroupId && currentDmTargetUid && hasBlockedMe(currentDmTargetUid);
+        if(isLocked){
+            inputRow.style.display = 'none';
+            if(!notice){
+                notice = document.createElement('div');
+                notice.id = 'dmBlockedNotice';
+                notice.style.cssText = "padding:14px 20px calc(14px + env(safe-area-inset-bottom)); text-align:center; font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--ink-soft); border-top:1px solid var(--line); background:var(--panel); display:flex; align-items:center; justify-content:center; gap:6px;";
+                inputRow.parentElement.appendChild(notice);
+            }
+            notice.innerHTML = `${icon('userBlock',13)} Bu kullanıcı sizi engellediği için mesaj gönderemezsiniz.`;
+            notice.style.display = 'flex';
+        } else {
+            inputRow.style.display = 'flex';
+            if(notice) notice.style.display = 'none';
+        }
+    }
     function roleBadgeForUid(uid){
         if(uid === ADMIN_UID) return `<span class="chat-msg-badge admin" style="margin-left:6px;">${icon('crown',9)} Yönetici</span>`;
         if(moderators[uid]) return `<span class="chat-msg-badge mod" style="margin-left:6px;">${icon('shield',8)} Moderatör</span>`;
@@ -10434,9 +10862,11 @@ ${locationCardHtml(m.location)}
         if(!currentUid || targetUid === currentUid) return;
         if(friends[targetUid]){ showTopToast('Zaten arkadaşsınız', 'info', 'check'); return; }
         if(blocked[targetUid]){ showTopToast('Bu kullanıcıyı engellediniz, önce engeli kaldırın', 'warn', 'ban'); return; }
+        if(hasBlockedMe(targetUid)){ showTopToast('Bu kullanıcı sizi engellemiş, istek gönderemezsiniz', 'warn', 'ban'); return; }
+        const existing = await db.ref('developmentUsers/'+targetUid+'/friendRequests/'+currentUid).once('value');
         const blockedByThemSnap = await db.ref('developmentUsers/'+currentUid+'/blockedBy/'+targetUid).once('value');
         if(blockedByThemSnap.exists()){ showTopToast('Bu kullanıcı sizi engellemiş', 'warn', 'ban'); return; }
-        const existing = await db.ref('developmentUsers/'+targetUid+'/friendRequests/'+currentUid).once('value');
+
         if(existing.exists()){ showTopToast('İstek zaten gönderilmiş', 'info', 'clock'); return; }
         const meSnap = await userRef.child('profile').once('value');
         const meProfile = meSnap.val() || {};
@@ -10509,25 +10939,80 @@ ${locationCardHtml(m.location)}
     async function toggleBlockUser(targetUid, targetUsername, targetAvatarUrl){
         if(isBlockedByMe(targetUid)){
             delete blocked[targetUid];
-            try{ await db.ref('developmentUsers/'+targetUid+'/blockedBy/'+currentUid).remove(); }catch(e){}
+
+            try{
+                await db.ref('developmentUsers/'+currentUid+'/blocked/'+targetUid).remove();
+            }catch(e){
+                console.error('Kendi engel listesi güncellenemedi', e);
+                showTopToast('Engel kaldırılamadı: '+e.message, 'warn', 'warn');
+                blocked[targetUid] = true; // geri al, UI tutarlı kalsın
+                renderProfileSocialActions();
+                renderChatHub();
+                return;
+            }
+            // Karşı tarafın blockedBy kaydını temizlemek best-effort — başarısız olsa da sorun değil
+            db.ref('developmentUsers/'+targetUid+'/blockedBy/'+currentUid).remove().catch(()=>{});
             showTopToast('Engel kaldırıldı', 'info', 'check');
         } else {
+            const wasFriend = !!friends[targetUid];
             blocked[targetUid] = true;
-            try{ await db.ref('developmentUsers/'+targetUid+'/blockedBy/'+currentUid).set(true); }catch(e){}
-            if(friends[targetUid]){
-                await db.ref('developmentUsers/'+currentUid+'/friends/'+targetUid).remove();
-                await db.ref('developmentUsers/'+targetUid+'/friends/'+currentUid).remove();
-                delete friends[targetUid];
+            if(wasFriend) delete friends[targetUid];
+            const updates = {};
+            updates['developmentUsers/'+currentUid+'/blocked/'+targetUid] = true;
+            updates['developmentUsers/'+targetUid+'/blockedBy/'+currentUid] = true;
+            if(wasFriend){
+                updates['developmentUsers/'+currentUid+'/friends/'+targetUid] = null;
+                updates['developmentUsers/'+targetUid+'/friends/'+currentUid] = null;
             }
+            try{ await db.ref().update(updates); }catch(e){}
+
             if(dmConversations[targetUid]){
-                await db.ref('developmentUsers/dmIndex/'+currentUid+'/'+targetUid).remove().catch(()=>{});
-                delete dmConversations[targetUid];
+                await db.ref('developmentUsers/dmIndex/'+currentUid+'/'+targetUid+'/archived').set(true).catch(()=>{});
+                dmConversations[targetUid].archived = true;
             }
-            showTopToast('Kullanıcı engellendi', 'warn', 'ban');
+            if(currentDmTargetUid === targetUid) showMegaGlobalView();
+            showTopToast('Kullanıcı engellendi ve arşivlendi', 'warn', 'userBlock');
         }
-        saveState();
         renderProfileSocialActions();
         renderChatHub();
+    }
+
+    function openBlockedUsersModal(){
+        closeAllAppModals('chatMegaModal');
+        document.getElementById('blockedHeadIcon').innerHTML = icon('userBlock',18);
+        renderBlockedUsersList();
+        document.getElementById('blockedUsersModal').classList.add('show');
+    }
+    function closeBlockedUsersModal(){ document.getElementById('blockedUsersModal').classList.remove('show'); }
+    async function renderBlockedUsersList(){
+        const el = document.getElementById('blockedUsersList');
+        if(!el) return;
+        const uids = Object.keys(blocked);
+        const countPill = document.getElementById('blockedCountPill');
+        if(countPill) countPill.textContent = uids.length;
+        if(uids.length === 0){
+            el.innerHTML = `<div class="empty-state" style="padding:24px; border:none;">${icon('userBlock',22)}<p><strong>Engellediğin kimse yok.</strong></p></div>`;
+            return;
+        }
+        el.innerHTML = `<div class="empty-state" style="padding:16px; border:none;"><p>Yükleniyor…</p></div>`;
+        try{
+            const profiles = await Promise.all(uids.map(async uid => {
+                const snap = await db.ref('developmentUsers/'+uid+'/profile').once('value');
+                return { uid, profile: snap.val() || {} };
+            }));
+            el.innerHTML = profiles.map(({uid, profile}) => `
+        <div class="blocked-user-card">
+          <img class="blocked-user-avatar" src="${profile.avatarUrl || 'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'">
+          <span class="blocked-user-name">${escapeHtml(profile.username||'Kullanıcı')}</span>
+          <button class="blocked-unblock-btn" onclick="unblockFromList('${uid}')">${icon('check',12)} Engeli Kaldır</button>
+        </div>`).join('');
+        }catch(err){
+            el.innerHTML = `<div class="empty-state" style="padding:20px; border:none;"><p>Liste yüklenemedi.</p></div>`;
+        }
+    }
+    async function unblockFromList(uid){
+        await toggleBlockUser(uid);
+        renderBlockedUsersList();
     }
 
     async function renderProfileSocialActions(){
@@ -10554,7 +11039,7 @@ ${locationCardHtml(m.location)}
                 : `<button class="btn" onclick="sendFriendRequest('${uid}','${uname}','${avatar}')">${icon('plus',13)} Arkadaşlık İsteği Gönder</button>`}
     ${friend ? `<button class="btn btn-ghost" onclick="openDMWithUser('${uid}')">${icon('inbox',13)} Mesaj Gönder</button>` : ''}
     <button class="btn btn-ghost" style="color:var(--neg); border-color:var(--neg);" onclick="toggleBlockUser('${uid}','${uname}','${avatar}')">
-      ${icon('ban',13)} ${blockedByMe ? 'Engeli Kaldır' : 'Engelle'}
+      ${icon('userBlock',13)} ${blockedByMe ? 'Engeli Kaldır' : 'Engelle'}
     </button>`;
     }
     function openProfilePanel(){
@@ -10570,6 +11055,7 @@ ${locationCardHtml(m.location)}
     }
     async function openUserSocialProfile(uid){
         if(!uid || uid === currentUid){ openProfilePanel(); return; }
+        if(hasBlockedMe(uid)){ showTopToast('Bu kullanıcı sizi engellediği için profilini göremezsiniz', 'warn', 'userBlock'); return; }
         closeAllAppModals('chatMegaModal');
         const snap = await db.ref('developmentUsers/'+uid).once('value');
         const u = snap.val() || {};
@@ -11759,7 +12245,7 @@ ${locationCardHtml(m.location)}
         _ctxTarget = { type, id };
         const menu = document.getElementById('convoContextMenu');
         document.getElementById('ctxArchiveIcon').innerHTML = icon('layers',15);
-        document.getElementById('ctxBlockIcon').innerHTML = icon('ban',15);
+        document.getElementById('ctxBlockIcon').innerHTML = icon('userBlock',15);
         document.getElementById('ctxClearIcon').innerHTML = icon('trash',15);
         document.getElementById('ctxDeleteIcon').innerHTML = icon('x',15);
         document.getElementById('ctxBlockIcon').parentElement.style.display = type==='dm' ? 'flex' : 'none';
@@ -11791,14 +12277,33 @@ ${locationCardHtml(m.location)}
     }
     async function ctxBlockConvo(){
         if(!_ctxTarget || _ctxTarget.type!=='dm'){ document.getElementById('convoContextMenu').classList.remove('open'); return; }
-        await toggleBlockUser(_ctxTarget.id, '', '');
+        const uid = _ctxTarget.id;
         document.getElementById('convoContextMenu').classList.remove('open');
+        if(isBlockedByMe(uid)){ showTopToast('Bu kullanıcı zaten engelli', 'info', 'userBlock'); return; }
+        try{
+            const wasFriend = !!friends[uid];
+            blocked[uid] = true;
+            if(wasFriend) delete friends[uid];
+
+            const updates = {};
+            updates['developmentUsers/'+currentUid+'/blocked/'+uid] = true;
+            updates['developmentUsers/'+uid+'/blockedBy/'+currentUid] = true;
+            if(wasFriend){
+                updates['developmentUsers/'+currentUid+'/friends/'+uid] = null;
+                updates['developmentUsers/'+uid+'/friends/'+currentUid] = null;
+            }
+            await db.ref().update(updates);
+
+            await db.ref('developmentUsers/dmIndex/'+currentUid+'/'+uid+'/archived').set(true).catch(()=>{});
+            if(dmConversations[uid]) dmConversations[uid].archived = true;
+            if(currentDmTargetUid === uid) showMegaGlobalView();
+            showTopToast('Kullanıcı engellendi ve arşivlendi', 'warn', 'userBlock');
+        }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
         renderChatHub();
     }
     async function ctxClearConvo(){
         if(!_ctxTarget) return;
-        const ok = await showConfirm('Bu sohbetteki tüm mesajlar senin ekranından temizlensin mi? (Karşı taraf hâlâ görebilir)');
-        if(!ok){ document.getElementById('convoContextMenu').classList.remove('open'); return; }
+        document.getElementById('convoContextMenu').classList.remove('open');
         try{
             let path;
             if(_ctxTarget.type==='dm') path = 'developmentUsers/directMessages/'+pairKeyFor(currentUid,_ctxTarget.id)+'/messages';
@@ -11811,12 +12316,10 @@ ${locationCardHtml(m.location)}
             if(_ctxTarget.type==='dm' && currentDmTargetUid===_ctxTarget.id) renderDmMessages();
             if(_ctxTarget.type==='group' && currentGroupId===_ctxTarget.id) renderGroupMessages();
         }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
-        document.getElementById('convoContextMenu').classList.remove('open');
     }
     async function ctxDeleteConvo(){
         if(!_ctxTarget) return;
-        const ok = await showConfirm('Bu sohbet listenden tamamen silinsin mi?');
-        if(!ok){ document.getElementById('convoContextMenu').classList.remove('open'); return; }
+        document.getElementById('convoContextMenu').classList.remove('open');
         try{
             if(_ctxTarget.type==='dm'){
                 const deletedAt = Date.now();
@@ -11832,7 +12335,6 @@ ${locationCardHtml(m.location)}
             }
             showTopToast('Sohbet silindi', 'warn', 'trash');
         }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
-        document.getElementById('convoContextMenu').classList.remove('open');
         renderChatHub();
     }
 
@@ -11858,6 +12360,7 @@ ${locationCardHtml(m.location)}
     setInterval(() => recomputeActiveHoliday(), 20000);
     document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible') recomputeActiveHoliday(); });
     loadSettings();
+    applyReducedMotionSetting();
     initTheme();
     buildStaticUI();
     initAddCardCollapse();

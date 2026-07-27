@@ -263,7 +263,9 @@
         .streak-pill{
             display:inline-flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:11px;
             background:var(--panel-alt); color:var(--ink); padding:3px 10px; border-radius:100px; font-weight:500; border:1px solid var(--line);
+            height:24px; box-sizing:border-box; line-height:1;
         }
+        .prestige-pill{ height:24px; box-sizing:border-box; }
         .streak-pill svg{width:11px; height:11px;}
         .xp-track{height:8px; background:var(--panel-alt); border:1px solid var(--line); border-radius:5px; overflow:hidden; margin:11px 0 5px;}
         .xp-fill{height:100%; background:var(--brand-gradient); border-radius:5px; transition:width .7s cubic-bezier(.4,0,.2,1); box-shadow:0 0 10px var(--glow-mid);}
@@ -579,12 +581,13 @@
         .modal-actions .btn{flex:1;}
 
         #authGate .modal-card{max-width:340px;}
-        #profileModal.show{ z-index:85; }
-        #confirmModal{ z-index:110; }
+        #profileModal.show{ z-index:210; }
+        #customHolidayModal{ z-index:220; }
+        #confirmModal{ z-index:260; }
         .auth-shield{margin:4px auto 16px; width:52px; height:52px; border-radius:50%; background:var(--panel-alt); border:1px solid var(--ink-faint); display:flex; align-items:center; justify-content:center; box-shadow:0 0 22px var(--glow-mid);}
         .auth-shield svg{width:26px; height:26px; color:var(--ink);}
         .auth-fields{width: 50%;
-            display: ;:flex; flex-direction:column; gap:10px; margin-bottom:6px;}
+            display:flex; flex-direction:column; gap:10px; margin-bottom:6px;}
         .auth-error{display:none; color:var(--ink); font-size:11.5px; font-family:'JetBrains Mono',monospace; margin:2px 0 14px; letter-spacing:.02em;}
 
         .confetti-piece{position:fixed; top:0; left:0; width:7px; height:11px; z-index:90; pointer-events:none; border-radius:1px;}
@@ -779,6 +782,26 @@
         .atp-stat-time{ font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-soft); margin-top:2px; display:flex; align-items:center; gap:4px; }
         .atp-stat-dot{ width:6px; height:6px; border-radius:50%; background:var(--atp-color, var(--ink)); flex:none; }
 
+        .borsa-grid{ display:flex; flex-direction:column; gap:22px; width:100%; }
+        .borsa-col{ width:100%; }
+        .borsa-col-title{
+            font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft);
+            margin-bottom:10px; padding-bottom:9px; border-bottom:1px solid var(--line-soft); display:flex; align-items:center; gap:7px;
+        }
+        .borsa-col-title::before{ content:''; width:3px; height:12px; background:var(--brand-gradient); border-radius:2px; box-shadow:0 0 6px var(--glow-mid); }
+        .borsa-row{
+            display:flex; align-items:center; gap:12px; width:100%; padding:11px 12px; border-radius:12px;
+            background:var(--panel-alt); border:1px solid var(--line); margin-bottom:8px;
+            transition:border-color .15s ease, transform .12s ease, box-shadow .2s ease;
+        }
+        .borsa-row:last-child{ margin-bottom:0; }
+        .borsa-row:hover{ border-color:var(--ink-faint); transform:translateX(2px); box-shadow:0 4px 14px rgba(0,0,0,.12); }
+        .borsa-row-logo{ flex:none; width:34px; height:34px; border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:var(--bg); border:1px solid var(--line); color:var(--ink-soft); }
+        .borsa-row-logo img{ width:100%; height:100%; object-fit:contain; padding:4px; }
+        .borsa-row-name{ flex:1; min-width:0; font-size:13px; font-weight:700; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:flex; align-items:baseline; gap:6px; }
+        .borsa-row-unit{ font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); font-weight:600; background:var(--bg); border:1px solid var(--line); padding:2px 6px; border-radius:100px; }
+        .borsa-row-price{ flex:none; font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:800; color:var(--ink); background:var(--panel); border:1px solid var(--line); padding:6px 10px; border-radius:9px; }
+
         /* ---- arşiv butonu: minimal, whatsapp tarzı ---- */
         .archive-toggle-btn{
             display:inline-flex; align-items:center; gap:7px; background:none; border:none; cursor:pointer;
@@ -869,6 +892,17 @@
         .prestige-pill{
             background:var(--brand-gradient); color:#fff; border:none;
             margin-left:6px; vertical-align:middle;
+        }
+        .verified-badge{
+            display:inline-flex; align-items:center; justify-content:center; width:15px; height:15px; border-radius:50%;
+            background:#1d9bf0; color:#fff; margin-left:5px; vertical-align:middle; flex:none;
+            box-shadow:0 0 0 2px var(--panel);
+        }
+        .verified-badge svg{ width:9px; height:9px; }
+        .pv-avatar-verified{
+            position:absolute; right:-2px; bottom:-2px; width:22px; height:22px; border-radius:50%;
+            background:#1d9bf0; color:#fff; display:flex; align-items:center; justify-content:center;
+            border:2.5px solid var(--panel); box-shadow:0 2px 6px rgba(0,0,0,.3); z-index:2;
         }
         .chat-msg-flag{ width:14px; height:10px; border-radius:2px; margin-left:5px; vertical-align:middle; box-shadow:0 0 0 1px rgba(0,0,0,.2); }
         .chat-msg-avatar-flag-wrap{ position:relative; flex:none; }
@@ -1595,6 +1629,14 @@
             .chat-mega-header > div[style*="margin-left:auto"]{ gap:6px !important; }
         }
 
+        @media (max-width:480px){
+            /* Uzun isim + birden fazla rütbe/rol etiketi olan mesaj başlıklarının mobilde dağılmasını önle */
+            .chat-msg-headrow{ justify-content:flex-start; flex-wrap:wrap; row-gap:3px; }
+            .chat-msg.is-mine .chat-msg-headrow{ justify-content:flex-end; }
+            .chat-msg-name{ max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+            .chat-msg-badges{ flex-wrap:wrap; row-gap:3px; max-width:100%; }
+            .chat-msg-badge{ font-size:8px; padding:2px 7px; }
+        }
         @media (max-width:380px){
             /* Çok dar ekranlarda "Etkinlik Başlat" yazısını gizle, ikon kalsın */
             #startEventBtn{ font-size:0; padding:8px !important; }
@@ -1981,40 +2023,251 @@
         .blocked-unblock-btn:hover{ border-color:var(--ink); color:var(--ink); box-shadow:0 0 10px var(--glow-mid); }
         .blocked-foot{ padding:14px 18px calc(14px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); }
 
-        /* ==================== YÖNETİM PANELİ ==================== */
-        .admin-close-btn{ position:absolute; top:14px; right:14px; z-index:3; }
-        .admin-header{
-            display:flex; align-items:center; gap:14px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--line);
-        }
-        .admin-header-icon{
-            width:46px; height:46px; border-radius:12px; background:var(--brand-gradient); color:#fff; flex:none;
-            display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px var(--glow-mid);
-        }
-        .admin-header-text{ flex:1; min-width:0; }
-        .admin-header-title{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:16px; letter-spacing:.03em; text-transform:uppercase; margin:0 0 3px; }
-        .admin-header-sub{ font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); }
+        /* ==================== ÖDÜL MAĞAZASI (E-TİCARET PANELİ) ==================== */
+        .reward-store-card{ max-width:640px; width:100%; text-align:left; padding:0; overflow:hidden; border-radius:22px; box-shadow:0 30px 80px rgba(0,0,0,.55); display:flex; flex-direction:column; max-height:90vh; }
+        .rs-head{ position:relative; padding:28px 26px 22px; overflow:hidden; flex:none;
+            background:linear-gradient(105deg,#7c2d12,#f97316 42%,#facc15 75%,#7c2d12);
+            background-size:250% 250%; animation:holidayCardShimmer 7s ease infinite;
+            box-shadow:0 1px 0 rgba(255,255,255,.15) inset; }
+        .rs-head::before{ content:''; position:absolute; inset:0; opacity:.2; pointer-events:none; background-image:radial-gradient(circle, rgba(255,255,255,.85) 1.4px, transparent 1.4px); background-size:16px 16px; }
+        .rs-head::after{ content:''; position:absolute; left:0; right:0; bottom:0; height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent); }
+        .rs-head-row{ position:relative; z-index:1; display:flex; align-items:center; gap:15px; }
+        .rs-head-icon{ position:relative; flex:none; width:54px; height:54px; border-radius:17px; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.4); display:flex; align-items:center; justify-content:center; color:#fff; box-shadow:0 10px 26px rgba(0,0,0,.3), 0 0 0 7px rgba(255,255,255,.09); animation:botIconFloat 3.4s ease-in-out infinite; }
+        .rs-head-title{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:17px; color:#fff; margin:0 0 3px; text-shadow:0 2px 10px rgba(0,0,0,.35); letter-spacing:.02em; }
+        .rs-head-sub{ font-family:'JetBrains Mono',monospace; font-size:10.5px; color:rgba(255,255,255,.88); }
+        .rs-balance{ position:relative; z-index:1; margin-top:18px; display:flex; align-items:center; justify-content:space-between; background:rgba(0,0,0,.28); border:1px solid rgba(255,255,255,.26); border-radius:100px; padding:11px 18px; backdrop-filter:blur(4px); box-shadow:inset 0 1px 0 rgba(255,255,255,.14); }
+        .rs-balance-label{ font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.85); }
+        .rs-balance-num{ font-family:'Orbitron',sans-serif; font-size:19px; font-weight:800; color:#fff; display:flex; align-items:center; gap:7px; text-shadow:0 2px 8px rgba(0,0,0,.3); }
+        .rs-close-btn{ position:absolute; top:16px; right:16px; z-index:3; background:rgba(0,0,0,.26); color:#fff; transition:transform .25s ease, background .15s ease; }
+        .rs-close-btn:hover{ background:rgba(0,0,0,.42); transform:rotate(90deg); }
 
-        .admin-stat-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:18px; }
-        @media (max-width:560px){ .admin-stat-grid{ grid-template-columns:repeat(2,1fr); } }
-        .admin-stat-card{ position:relative; overflow:hidden; background:var(--panel-alt); border:1px solid var(--line); border-radius:14px; padding:14px 14px 12px; }
-        .admin-stat-card .admin-stat-icon{
-            width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; margin-bottom:8px;
-            background:var(--bg); border:1px solid var(--line); color:var(--stat-color, var(--ink));
+        .rs-tabs{ display:flex; gap:6px; padding:14px 20px; overflow-x:auto; flex:none; border-bottom:1px solid var(--line); background:var(--panel); }
+        .rs-tabs::-webkit-scrollbar{ display:none; }
+        .rs-tab-btn{
+            flex:none; display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
+            letter-spacing:.02em; padding:8px 14px; border-radius:100px; border:1px solid var(--line); background:var(--panel-alt);
+            color:var(--ink-soft); cursor:pointer; transition:all .15s ease; white-space:nowrap;
         }
-        .admin-stat-num{ font-family:'Orbitron',sans-serif; font-size:21px; font-weight:800; display:flex; align-items:center; gap:6px; color:var(--stat-color, var(--ink)); }
-        .admin-stat-label{ font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); margin-top:4px; }
+        .rs-tab-btn:hover{ border-color:var(--ink-soft); color:var(--ink); }
+        .rs-tab-btn.active{ background:var(--brand-gradient); border-color:transparent; color:#fff; box-shadow:0 0 10px var(--glow-mid); }
+
+        .rs-body{ padding:18px 20px; overflow-y:auto; flex:1; min-height:0; background:var(--bg); }
+        .rs-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+        @media (max-width:520px){ .rs-grid{ grid-template-columns:1fr; } }
+
+        .rs-card{
+            position:relative; display:flex; flex-direction:column; border-radius:18px; background:var(--panel);
+            border:1px solid var(--line); overflow:hidden; transition:transform .15s ease, box-shadow .2s ease, border-color .15s ease;
+        }
+        .rs-card:hover{ transform:translateY(-3px); box-shadow:0 12px 28px rgba(0,0,0,.16), 0 0 0 1px var(--glow-soft); border-color:var(--ink-faint); }
+        .rs-card-media{
+            position:relative; height:74px; display:flex; align-items:center; justify-content:center;
+            background:
+                    radial-gradient(circle at 30% 20%, var(--glow-mid), transparent 60%),
+                    linear-gradient(150deg, var(--panel-alt), var(--panel));
+            border-bottom:1px solid var(--line-soft);
+        }
+        .rs-card-icon-wrap{
+            width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+            background:var(--brand-gradient); color:#fff; box-shadow:0 8px 18px var(--glow-mid), inset 0 1px 0 rgba(255,255,255,.25);
+        }
+        .rs-card-badges{ position:absolute; top:8px; left:8px; display:flex; gap:5px; z-index:1; }
+        .rs-card-badge{
+            font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
+            padding:3px 7px; border-radius:100px; color:#fff; box-shadow:0 2px 6px rgba(0,0,0,.25);
+        }
+        .rs-card-badge.popular{ background:linear-gradient(120deg,#f97316,#fb923c); }
+        .rs-card-badge.new{ background:linear-gradient(120deg,#0f9d58,#2fae66); }
+        .rs-card-badge.discount{ background:linear-gradient(120deg,#e11d5e,#ff6a8a); }
+        .rs-card-owned{
+            position:absolute; top:8px; right:8px; z-index:1; font-family:'JetBrains Mono',monospace; font-size:8.5px; font-weight:700;
+            background:rgba(0,0,0,.35); color:#fff; padding:3px 7px; border-radius:100px; backdrop-filter:blur(2px);
+        }
+        .rs-card-body{ padding:12px 13px 13px; display:flex; flex-direction:column; gap:6px; flex:1; }
+        .rs-card-name{ font-size:12.5px; font-weight:800; color:var(--ink); line-height:1.25; }
+        .rs-card-desc{ font-size:10px; color:var(--ink-soft); line-height:1.4; min-height:26px; }
+        .rs-card-price-row{ display:flex; align-items:baseline; gap:6px; margin-top:2px; }
+        .rs-card-price{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:14px; color:var(--ink); display:flex; align-items:center; gap:4px; }
+        .rs-card-price-old{ font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-faint); text-decoration:line-through; }
+        .rs-card-buy-btn{
+            margin-top:6px; width:100%; font-family:'JetBrains Mono',monospace; font-weight:800; font-size:10.5px; letter-spacing:.03em;
+            text-transform:uppercase; padding:10px; border-radius:11px; border:none; cursor:pointer; color:#fff;
+            background:var(--brand-gradient); transition:opacity .15s ease, transform .12s ease, box-shadow .2s ease;
+            display:flex; align-items:center; justify-content:center; gap:6px;
+        }
+        .rs-card-buy-btn:hover{ opacity:.92; box-shadow:0 0 14px var(--glow-mid); }
+        .rs-card-buy-btn:active{ transform:scale(.96); }
+        .rs-card-buy-btn:disabled{ background:var(--panel-alt); color:var(--ink-faint); border:1px solid var(--line); cursor:not-allowed; box-shadow:none; }
+
+        .rs-foot{ padding:14px 20px calc(14px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); flex:none; background:var(--panel); display:flex; align-items:center; gap:10px; }
+        .rs-foot-hint{ font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); flex:1; }
+        @media (max-width:480px){
+            #rewardStoreModal{ align-items:flex-end; padding:0; }
+            .reward-store-card{ max-width:100%; border-radius:20px 20px 0 0; max-height:92vh; }
+            .rs-head{ padding:calc(20px + env(safe-area-inset-top)) 18px 16px; }
+        }
+
+        /* ==================== YÖNETİM PANELİ (tema-uyumlu) ==================== */
+        @keyframes adminHeaderShift{ 0%{background-position:0% 50%;} 100%{background-position:200% 50%;} }
+        @keyframes adminIconFloat{ 0%,100%{ transform:translateY(0) rotate(-3deg); } 50%{ transform:translateY(-4px) rotate(3deg); } }
+        @keyframes adminIconGlow{
+            0%,100%{ box-shadow:0 10px 26px rgba(0,0,0,.3), 0 0 0 7px var(--glow-soft); }
+            50%{ box-shadow:0 10px 30px rgba(0,0,0,.35), 0 0 0 10px var(--glow-mid); }
+        }
+
+        .admin-close-btn{ position:absolute; top:14px; right:14px; z-index:3; }
+
+        #adminModal .modal-card{
+            background:
+                    radial-gradient(circle at 10% 0%, var(--glow-soft), transparent 45%),
+                    radial-gradient(circle at 90% 100%, var(--glow-soft), transparent 50%),
+                    var(--panel);
+            border:1px solid var(--line);
+            box-shadow:0 40px 100px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.03) inset;
+        }
+
+        .admin-header{
+            position:relative; overflow:hidden; display:flex; align-items:center; gap:16px;
+            margin:0 0 22px; padding:22px 24px; border-radius:18px; border-bottom:none;
+            background:linear-gradient(100deg, var(--grad-3), var(--grad-1) 45%, var(--grad-2) 80%, var(--grad-3));
+            background-size:250% 250%; animation:adminHeaderShift 9s ease infinite;
+            box-shadow:0 16px 40px var(--glow-mid), 0 0 0 1px rgba(255,255,255,.08) inset;
+        }
+        .admin-header::before{
+            content:''; position:absolute; inset:0; opacity:.2; pointer-events:none;
+            background-image:radial-gradient(circle, rgba(255,255,255,.85) 1.5px, transparent 1.5px); background-size:18px 18px;
+        }
+        .admin-header::after{ content:''; position:absolute; left:0; right:0; bottom:0; height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent); }
+        .admin-header-icon{
+            position:relative; z-index:1; width:54px; height:54px; border-radius:16px; background:rgba(255,255,255,.16); color:#fff; flex:none;
+            display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,.32);
+            animation:adminIconGlow 2.6s ease-in-out infinite, adminIconFloat 3.4s ease-in-out infinite;
+        }
+        .admin-header-text{ position:relative; z-index:1; flex:1; min-width:0; }
+        .admin-header-title{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:17px; letter-spacing:.03em; text-transform:uppercase; margin:0 0 3px; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,.35); }
+        .admin-header-sub{ font-family:'JetBrains Mono',monospace; font-size:10.5px; color:rgba(255,255,255,.85); }
+
+        .admin-stat-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:22px; }
+        @media (max-width:560px){ .admin-stat-grid{ grid-template-columns:repeat(2,1fr); } }
+        @keyframes adminStatShine{ 0%{background-position:-150% 0;} 100%{background-position:250% 0;} }
+        .admin-stat-card{
+            position:relative; overflow:hidden;
+            backdrop-filter:blur(14px) saturate(160%); -webkit-backdrop-filter:blur(14px) saturate(160%);
+            background:linear-gradient(160deg, color-mix(in srgb, var(--panel) 55%, transparent), color-mix(in srgb, var(--panel-alt) 70%, transparent));
+            border:1px solid color-mix(in srgb, var(--stat-color,var(--ink)) 22%, var(--line));
+            border-radius:20px; padding:18px 18px 16px;
+            box-shadow:0 14px 34px rgba(0,0,0,.16), 0 0 0 1px rgba(255,255,255,.03) inset;
+            transition:transform .22s cubic-bezier(.2,.8,.3,1.2), box-shadow .25s ease, border-color .2s ease;
+        }
+        .admin-stat-card::before{
+            content:''; position:absolute; inset:0; z-index:0; opacity:.5; pointer-events:none;
+            background:linear-gradient(100deg, transparent 20%, color-mix(in srgb, var(--stat-color,var(--ink)) 30%, transparent) 45%, transparent 70%);
+            background-size:250% 100%; animation:adminStatShine 5s linear infinite;
+        }
+        .admin-stat-card::after{
+            content:''; position:absolute; top:0; left:12%; right:12%; height:2px; z-index:1;
+            background:linear-gradient(90deg, transparent, var(--stat-color,var(--ink)), transparent); border-radius:2px; opacity:.85;
+        }
+        .admin-stat-card > *{ position:relative; z-index:2; }
+        .admin-stat-card:hover{ transform:translateY(-4px) scale(1.01); box-shadow:0 22px 46px rgba(0,0,0,.24), 0 0 0 1px color-mix(in srgb, var(--stat-color,var(--ink)) 30%, transparent) inset; }
+        .admin-stat-card::before{
+            content:''; position:absolute; top:0; left:0; right:0; height:2.5px;
+            background:linear-gradient(90deg, transparent, var(--stat-color,var(--ink)), transparent); opacity:.8;
+        }
+        .admin-stat-card::after{
+            content:''; position:absolute; inset:0; border-radius:16px; pointer-events:none;
+            background:radial-gradient(circle at 30% 0%, color-mix(in srgb, var(--stat-color,var(--ink)) 14%, transparent), transparent 60%);
+        }
+        .admin-stat-card:hover{ transform:translateY(-3px); box-shadow:0 14px 30px rgba(0,0,0,.18); border-color:color-mix(in srgb, var(--stat-color,var(--ink)) 45%, var(--line)); }
+        .admin-stat-card .admin-stat-icon{
+            width:36px; height:36px; border-radius:11px; display:flex; align-items:center; justify-content:center; margin-bottom:10px;
+            background:color-mix(in srgb, var(--stat-color, var(--ink)) 16%, var(--bg));
+            box-shadow:0 0 0 1px color-mix(in srgb, var(--stat-color, var(--ink)) 30%, transparent) inset;
+            color:var(--stat-color, var(--ink));
+        }
+        .admin-stat-num{ font-family:'Orbitron',sans-serif; font-size:23px; font-weight:800; display:flex; align-items:center; gap:6px;
+            color:var(--stat-color, var(--ink)); text-shadow:0 0 14px color-mix(in srgb, var(--stat-color,var(--ink)) 35%, transparent); }
+        .admin-stat-label{ font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); margin-top:5px; }
+        .admin-live-dot{ width:7px; height:7px; border-radius:50%; background:var(--pos); box-shadow:0 0 7px var(--pos); flex:none; animation:fxBlip 1.6s ease-in-out infinite; display:inline-block; }
+
+        .admin-search-wrap{ margin-bottom:12px; }
+        .admin-search-wrap .field-icon-input{ width:100%; box-shadow:0 0 0 1px transparent; transition:box-shadow .2s ease, border-color .2s ease; }
+        .admin-search-wrap .field-icon-input:focus-within{ border-color:var(--ink); box-shadow:0 0 0 3px var(--glow-soft); }
+
+        .admin-tabs{
+            display:flex; gap:4px; margin-bottom:18px; border-radius:100px; padding:4px;
+            background:linear-gradient(180deg, var(--panel-alt), var(--bg)); border:1px solid var(--line);
+            box-shadow:inset 0 1px 3px rgba(0,0,0,.15);
+        }
+        .admin-tab-btn{
+            flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
+            font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; letter-spacing:.03em; color:var(--ink-soft);
+            background:none; border:none; border-radius:100px; padding:10px 6px; cursor:pointer; transition:all .18s ease;
+        }
+        .admin-tab-btn:hover{ color:var(--ink); }
+        .admin-tab-btn.active{
+            color:#fff; background:var(--brand-gradient);
+            box-shadow:0 8px 22px var(--glow-mid), 0 0 0 1px rgba(255,255,255,.15) inset;
+            transform:translateY(-1px);
+        }
+        .admin-tab-panel{ display:none; }
+        .admin-tab-panel.active{ display:block; }
+
+        .admin-feed{ display:flex; flex-direction:column; gap:8px; max-height:340px; overflow-y:auto; }
+        .admin-feed-item{
+            display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; font-size:12px;
+            background:linear-gradient(160deg, var(--panel-alt), var(--panel)); border:1px solid var(--line);
+            transition:transform .12s ease, border-color .15s ease;
+        }
+        .admin-feed-item:hover{ transform:translateX(3px); border-color:var(--ink-faint); }
+        .admin-feed-item .admin-feed-icon{
+            width:26px; height:26px; border-radius:7px; background:var(--bg); border:1px solid var(--line); color:var(--ink);
+            display:flex; align-items:center; justify-content:center; flex:none;
+        }
+        .admin-feed-time{ margin-left:auto; font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-faint); flex:none; }
+
+        .admin-user-card{
+            position:relative; overflow:hidden; display:flex; flex-direction:column; gap:10px;
+            background:linear-gradient(160deg, var(--panel-alt), var(--panel));
+            border:1px solid var(--line); border-radius:14px;
+            padding:14px 16px; transition:border-color .15s ease, transform .15s ease, box-shadow .2s ease;
+        }
+        .admin-user-card::before{
+            content:''; position:absolute; top:0; left:0; right:0; height:2px;
+            background:linear-gradient(90deg, transparent, var(--ink), transparent); opacity:0; transition:opacity .2s ease;
+        }
+        .admin-user-card:hover{ border-color:var(--ink-faint); box-shadow:0 10px 26px rgba(0,0,0,.18), 0 0 0 1px var(--glow-soft); transform:translateY(-2px); }
+        .admin-user-card:hover::before{ opacity:.85; }
+        .admin-user-top{ display:flex; align-items:center; gap:12px; }
+        .admin-user-top .asset-logo{ width:46px; height:46px; position:relative; }
+        .admin-user-online-dot{
+            position:absolute; right:-2px; bottom:-2px; width:12px; height:12px; border-radius:50%;
+            background:var(--pos); border:2px solid var(--panel-alt); box-shadow:0 0 6px var(--pos);
+        } left:0; right:0; height:2.5px;
+        background:linear-gradient(90deg, transparent, var(--stat-color,var(--ink)), transparent); opacity:.7;
+        }
+        .admin-stat-card:hover{ transform:translateY(-3px); box-shadow:0 14px 30px rgba(0,0,0,.18); border-color:color-mix(in srgb, var(--stat-color,var(--ink)) 45%, var(--line)); }
+        .admin-stat-card .admin-stat-icon{
+            width:36px; height:36px; border-radius:11px; display:flex; align-items:center; justify-content:center; margin-bottom:10px;
+            background:color-mix(in srgb, var(--stat-color, var(--ink)) 16%, var(--bg));
+            box-shadow:0 0 0 1px color-mix(in srgb, var(--stat-color, var(--ink)) 30%, transparent) inset;
+            color:var(--stat-color, var(--ink));
+        }
+        .admin-stat-num{ font-family:'Orbitron',sans-serif; font-size:23px; font-weight:800; display:flex; align-items:center; gap:6px; color:var(--stat-color, var(--ink)); }
+        .admin-stat-label{ font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); margin-top:5px; }
         .admin-live-dot{ width:7px; height:7px; border-radius:50%; background:var(--pos); box-shadow:0 0 7px var(--pos); flex:none; animation:fxBlip 1.6s ease-in-out infinite; display:inline-block; }
 
         .admin-search-wrap{ margin-bottom:12px; }
         .admin-search-wrap .field-icon-input{ width:100%; }
 
-        .admin-tabs{ display:flex; gap:6px; margin-bottom:16px; background:var(--panel-alt); border:1px solid var(--line); border-radius:10px; padding:4px; }
+        .admin-tabs{ display:flex; gap:4px; margin-bottom:18px; background:var(--panel-alt); border:1px solid var(--line); border-radius:100px; padding:4px; }
         .admin-tab-btn{
             flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
             font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; letter-spacing:.03em; color:var(--ink-soft);
-            background:none; border:none; border-radius:8px; padding:10px 6px; cursor:pointer;
+            background:none; border:none; border-radius:100px; padding:10px 6px; cursor:pointer; transition:all .18s ease;
         }
-        .admin-tab-btn.active{ color:#fff; background:var(--brand-gradient); box-shadow:0 0 10px var(--glow-mid); }
+        .admin-tab-btn:hover{ color:var(--ink); }
+        .admin-tab-btn.active{ color:#fff; background:linear-gradient(135deg,#7c3aed,#a855f7); box-shadow:0 6px 16px rgba(138,92,255,.45); transform:translateY(-1px); }
         .admin-tab-panel{ display:none; }
         .admin-tab-panel.active{ display:block; }
 
@@ -2058,6 +2311,206 @@
         }
         .admin-user-stat svg{ color:var(--ink); flex:none; }
         .admin-user-stat b{ color:var(--ink); font-weight:700; }
+
+        /* Yönetim paneli görünümü artık yukarıdaki tek "tema-uyumlu" blokta — bu ikinci override bloğu kaldırıldı. */
+
+        /* ==================== YÖNETİM PANELİ — KOMUTA MERKEZİ (sohbet paneliyle eş boyut) ==================== */
+        @keyframes adminCardGlow{
+            0%,100%{ box-shadow:0 30px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(255,43,43,.08), 0 0 60px var(--glow-soft); }
+            50%{ box-shadow:0 30px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(255,43,43,.18), 0 0 90px var(--glow-mid); }
+        }
+        #adminModal{
+            position:fixed; inset:0; z-index:200; display:none; align-items:center; justify-content:center;
+            background:rgba(5,2,3,.82); backdrop-filter:blur(4px); padding:20px;
+        }
+        #adminModal.show{ display:flex; }
+        .admin-mega-card{
+            position:relative; width:96vw; max-width:1280px; height:760px; max-height:92vh;
+            padding:0; overflow:hidden; align-items:stretch; text-align:left; border-radius:20px;
+            background:var(--bg); animation:adminCardGlow 6s ease-in-out infinite;
+        }
+        .admin-mega-card::before{
+            content:''; position:absolute; inset:0; pointer-events:none; z-index:0;
+            background-image:
+                    radial-gradient(ellipse 900px 500px at 8% -10%, var(--glow-soft), transparent 60%),
+                    radial-gradient(ellipse 700px 420px at 100% 105%, var(--glow-soft), transparent 55%);
+        }
+        .admin-shell{ position:relative; z-index:1; width:100%; height:100%; display:flex; border-radius:20px; overflow:hidden; }
+        @media (max-width:820px){
+            #adminModal{ padding:0; }
+            .admin-mega-card{ width:100vw; height:calc(var(--app-vh, 1vh) * 100); max-height:calc(var(--app-vh, 1vh) * 100); border-radius:0; }
+            .admin-shell{ border-radius:0; }
+        }
+
+        .admin-side{
+            width:264px; flex:none; height:100%; display:flex; flex-direction:column;
+            background:var(--panel); border-right:1px solid var(--line);
+        }
+        .admin-side-brand{ display:flex; align-items:center; gap:12px; padding:22px 20px 18px; border-bottom:1px solid var(--line); }
+        .admin-side-brand-icon{
+            width:42px; height:42px; border-radius:12px; flex:none; display:flex; align-items:center; justify-content:center;
+            background:var(--brand-gradient); color:#fff; box-shadow:0 6px 16px var(--glow-mid);
+        }
+        .admin-side-brand-title{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:13.5px; letter-spacing:.03em; text-transform:uppercase; }
+        .admin-side-brand-sub{ font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); margin-top:2px; letter-spacing:.04em; }
+
+        .admin-side-nav{ flex:1; overflow-y:auto; padding:16px 12px; display:flex; flex-direction:column; gap:3px; }
+        .admin-nav-item{
+            display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:11px; border:none; background:none;
+            color:var(--ink-soft); font-family:'Inter',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; width:100%;
+            transition:background .15s ease, color .15s ease;
+        }
+        .admin-nav-item svg{ flex:none; opacity:.85; }
+        .admin-nav-item:hover{ background:var(--panel-alt); color:var(--ink); }
+        .admin-nav-item.active{ background:var(--brand-gradient); color:#fff; box-shadow:0 6px 16px var(--glow-mid); }
+        .admin-nav-item.active svg{ opacity:1; }
+        .admin-nav-sep{ height:1px; background:var(--line); margin:10px 6px; }
+        .admin-nav-label{
+            font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.12em; text-transform:uppercase;
+            color:var(--ink-faint); padding:10px 14px 4px;
+        }
+        .admin-side-foot{ padding:16px 20px; border-top:1px solid var(--line); display:flex; align-items:center; gap:10px; }
+        .admin-side-live-dot{ width:7px; height:7px; border-radius:50%; background:var(--pos); box-shadow:0 0 7px var(--pos); animation:fxBlip 1.6s ease-in-out infinite; flex:none; }
+        .admin-side-foot span{ font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-soft); letter-spacing:.04em; }
+
+        .admin-main{ flex:1; min-width:0; height:100%; display:flex; flex-direction:column; overflow:hidden; }
+        .admin-topbar{
+            flex:none; position:relative; display:flex; align-items:center; gap:14px; padding:18px 26px; background:var(--panel);
+            border-bottom:1px solid var(--line);
+        }
+        .admin-topbar::after{
+            content:''; position:absolute; left:0; right:0; bottom:-1px; height:2px;
+            background:var(--brand-gradient); opacity:.7;
+        }
+        .admin-topbar-title{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:15.5px; letter-spacing:.02em; }
+        .admin-topbar-sub{ font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); margin-top:2px; }
+        .admin-topbar-spacer{ flex:1; }
+        .admin-close-fs{
+            width:38px; height:38px; border-radius:11px; border:1px solid var(--line); background:var(--panel-alt); color:var(--ink-soft);
+            display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .15s ease; flex:none;
+        }
+        .admin-close-fs:hover{ color:var(--ink); border-color:var(--ink-soft); }
+        .admin-menu-toggle{ display:none; }
+
+        .admin-content{ flex:1; overflow-y:auto; padding:26px 30px 40px; }
+        .admin-panel-view{ display:none; }
+        .admin-panel-view.active{ display:block; animation:adminFadeIn .25s ease; }
+        @keyframes adminFadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+        .admin-stat-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:22px; }
+        @media (max-width:900px){ .admin-stat-grid{ grid-template-columns:repeat(2,1fr); } }
+        .admin-stat-card{
+            position:relative; display:flex; align-items:center; gap:14px;
+            background:linear-gradient(160deg, var(--panel), var(--panel-alt));
+            border:1px solid var(--line); border-radius:16px;
+            padding:16px 17px; transition:border-color .18s ease, background .18s ease;
+        }
+        .admin-stat-card:hover{ border-color:color-mix(in srgb, var(--stat-color,var(--ink)) 40%, var(--line)); }
+        .admin-stat-icon{
+            flex:none; width:44px; height:44px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+            background:color-mix(in srgb, var(--stat-color, var(--ink)) 13%, var(--bg));
+            border:1px solid color-mix(in srgb, var(--stat-color, var(--ink)) 24%, transparent);
+            color:var(--stat-color, var(--ink));
+        }
+        .admin-stat-body{ min-width:0; }
+        .admin-stat-num{ font-family:'Orbitron',sans-serif; font-size:22px; font-weight:800; color:var(--ink); line-height:1.1; display:flex; align-items:center; gap:6px; }
+        .admin-stat-label{ font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-soft); margin-top:3px; }
+
+        .admin-section-title{
+            display:flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.12em;
+            text-transform:uppercase; color:var(--ink-soft); margin:0 0 14px; padding-bottom:10px; border-bottom:1px solid var(--line-soft);
+        }
+        .admin-section-title::before{ content:''; width:3px; height:12px; background:var(--brand-gradient); border-radius:2px; box-shadow:0 0 6px var(--glow-mid); }
+
+        .admin-search-wrap{ margin-bottom:16px; max-width:420px; }
+        .admin-search-wrap .field-icon-input{ width:100%; background:var(--panel); }
+
+        .admin-feed{ display:flex; flex-direction:column; gap:8px; max-height:420px; overflow-y:auto; }
+        .admin-feed-item{ display:flex; align-items:center; gap:10px; padding:11px 13px; background:var(--panel); border:1px solid var(--line); border-radius:11px; font-size:12.5px; }
+        .admin-feed-item .admin-feed-icon{
+            width:28px; height:28px; border-radius:8px; background:var(--panel-alt); border:1px solid var(--line); color:var(--ink);
+            display:flex; align-items:center; justify-content:center; flex:none;
+        }
+        .admin-feed-time{ margin-left:auto; font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-faint); flex:none; }
+
+        .admin-user-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(340px,1fr)); gap:14px; }
+        .admin-user-card{
+            position:relative; display:flex; flex-direction:column; gap:12px; overflow:hidden;
+            background:linear-gradient(165deg, color-mix(in srgb, var(--panel-alt) 85%, transparent), var(--panel));
+            border:1px solid var(--line);
+            border-radius:18px; padding:16px 17px; transition:transform .18s ease, border-color .18s ease, box-shadow .22s ease;
+            box-shadow:0 6px 16px rgba(0,0,0,.08);
+        }
+        .admin-user-card::before{
+            content:''; position:absolute; inset:0; z-index:0; pointer-events:none; opacity:0;
+            background:radial-gradient(circle at 15% 0%, var(--glow-mid), transparent 60%);
+            transition:opacity .25s ease;
+        }
+        .admin-user-card > *{ position:relative; z-index:1; }
+        .admin-user-card:hover{ border-color:var(--ink-faint); transform:translateY(-3px); box-shadow:0 16px 32px rgba(0,0,0,.18); }
+        .admin-user-card:hover::before{ opacity:1; }
+        .admin-user-card.is-banned{ border-color:color-mix(in srgb, var(--neg) 55%, var(--line)); background:linear-gradient(165deg, color-mix(in srgb, var(--neg) 10%, var(--panel-alt)), var(--panel)); }
+        .admin-user-action-btn{
+            width:34px; height:34px; border-radius:10px; border:1px solid var(--line); background:var(--panel-alt);
+            color:var(--ink-soft); display:flex; align-items:center; justify-content:center; cursor:pointer;
+            transition:all .18s ease;
+        }
+        .admin-user-action-btn:hover{ color:var(--ink); border-color:var(--ink-soft); background:var(--panel); transform:scale(1.07); }
+        .admin-user-action-btn.danger{ color:var(--neg); border-color:color-mix(in srgb, var(--neg) 35%, var(--line)); }
+        .admin-user-action-btn.danger:hover{ background:color-mix(in srgb, var(--neg) 12%, var(--panel-alt)); border-color:var(--neg); }
+        .admin-user-top{ display:flex; align-items:center; gap:11px; }
+        .admin-user-avatar-wrap{ position:relative; flex:none; }
+        .admin-user-avatar{
+            width:44px; height:44px; border-radius:12px; object-fit:cover; display:block;
+            border:1.5px solid var(--line); background:var(--panel-alt);
+        }
+        .admin-user-avatar-fallback{
+            width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+            background:var(--panel-alt); border:1.5px solid var(--line); color:var(--ink-soft);
+        }
+        .admin-user-online-dot{
+            position:absolute; right:-3px; bottom:-3px; width:12px; height:12px; border-radius:50%;
+            background:var(--pos); border:2.5px solid var(--panel);
+        }
+        .admin-user-name-row{ display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+        .admin-user-rank-chip{
+            display:inline-flex; align-items:center; gap:4px; font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700;
+            letter-spacing:.02em; color:var(--ink-soft); background:var(--panel-alt); border:1px solid var(--line);
+            padding:2px 7px; border-radius:100px; margin-top:2px;
+        }
+        .admin-user-email{ font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-soft); margin-top:1px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:180px; }
+        .admin-user-actions{ display:flex; gap:6px; margin-left:auto; flex:none; }
+        .admin-user-action-btn{
+            width:32px; height:32px; border-radius:9px; border:1px solid var(--line); background:var(--panel-alt);
+            color:var(--ink-soft); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .15s ease;
+        }
+        .admin-user-action-btn:hover{ color:var(--ink); border-color:var(--ink-soft); }
+        .admin-user-action-btn.danger:hover{ color:var(--neg); border-color:var(--neg); }
+        .admin-user-stats{ display:flex; gap:6px; flex-wrap:wrap; padding-top:11px; border-top:1px solid var(--line-soft); }
+        .admin-user-stat{
+            display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:10px;
+            color:var(--ink-soft); background:var(--panel-alt); border:1px solid var(--line); border-radius:8px; padding:5px 8px;
+        }
+        .admin-user-stat svg{ flex:none; }
+        .admin-user-stat b{ color:var(--ink); font-weight:700; }
+        .admin-user-badge-banned{
+            display:inline-flex; align-items:center; gap:4px; font-family:'JetBrains Mono',monospace; font-size:8.5px; font-weight:800;
+            letter-spacing:.05em; color:#fff; background:var(--neg); padding:2px 8px; border-radius:100px;
+        }
+
+        .admin-side-backdrop{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:4; }
+        .admin-side-backdrop.show{ display:block; }
+        @media (max-width:820px){
+            .admin-side{
+                position:fixed; left:0; top:0; bottom:0; width:78%; max-width:280px; z-index:5;
+                transform:translateX(-100%); transition:transform .28s ease; box-shadow:20px 0 40px rgba(0,0,0,.3);
+            }
+            .admin-side.open{ transform:translateX(0); }
+            .admin-menu-toggle{ display:flex !important; }
+            .admin-content{ padding:18px 16px 32px; }
+            .admin-topbar{ padding:14px 16px; }
+        }
+
         /* ==================== GİRİŞ EKRANI (yeniden tasarım) ==================== */
         .auth-split-left{ width:100%; background:var(--panel); padding:34px 26px 28px; display:flex; flex-direction:column; align-items:center; position:relative; }
         .auth-split-brand{ font-family:'Orbitron',sans-serif; font-weight:800; color:var(--ink); font-size:17px; letter-spacing:.04em; margin-bottom:20px; }
@@ -2926,8 +3379,8 @@
             background-size:18px 18px;
         }
         .htc-icon{
-            flex:none; width:64px; height:64px; border-radius:18px; display:flex; align-items:center; justify-content:center;
-            font-size:34px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.3);
+            flex:none; width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+            font-size:24px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.3);
             backdrop-filter:blur(3px); animation:holidayIconFloat 3.2s ease-in-out infinite; position:relative; z-index:1;
         }
         .htc-body{ flex:1; min-width:0; position:relative; z-index:1; }
@@ -3036,6 +3489,9 @@
             <button class="theme-toggle" id="accentPickerBtn" onclick="openThemeStudio()" title="Tema & Görünüm Ayarları"></button>
             <input type="color" id="accentColorInput" value="#5b2ec7" oninput="onAccentColorChange(this.value)" style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;">
             <button id="holidayCornerBadge" onclick="openHolidayInfoModal()" title="Özel gün bilgisi"><span class="hcb-dot"></span></button>
+            <button class="theme-toggle" id="rewardStoreBtn" onclick="openRewardStore()" title="Ödül Mağazası"></button>
+            <button class="theme-toggle" id="bugReportBtn" onclick="openBugReportModal()" title="Hata Bildir"></button>
+            <button class="theme-toggle" id="verifyReqBtn" onclick="openVerificationModal()" title="Doğrulama Talep Et"></button>
             <div style="position:relative;" id="notifWrap">
                 <button class="theme-toggle" id="notifBellBtn" onclick="toggleNotifPanel(event)" title="Bildirimler">
                     <span id="notifBellIcon"></span>
@@ -3151,14 +3607,39 @@
             <button class="icon-btn" id="portfolioAddBtn" style="background:var(--brand-gradient); color:#fff; width:46px; height:46px; flex:none;" onclick="addPortfolioQty()"></button>
         </div>
 
+        <div class="atp-head" style="margin-top:22px;">
+            <div class="atp-head-left">
+                <span class="atp-head-icon" id="atpHeadIcon"></span>
+                <div>
+                    <p class="atp-title">Varlık Trendi</p>
+                    <p class="atp-sub">Toplam portföy değerinin aylık takibi</p>
+                </div>
+            </div>
+            <div class="atp-head-right">
+                <span class="atp-live-pill" id="atpRangeLabel" style="color:var(--ink); background:var(--glow-soft); border-color:var(--line);"></span>
+                <button class="atp-calendar-btn" id="atpCalendarBtn" onclick="renderAssetTrendPanel()"></button>
+            </div>
+        </div>
+        <div class="atp-card">
+            <div id="assetTrendBody"></div>
+        </div>
+
+        <div class="atp-head" style="margin-top:22px;">
+            <div class="atp-head-left">
+                <span class="atp-head-icon" id="borsaHeadIcon"></span>
+                <div>
+                    <p class="atp-title">Borsa</p>
+                    <p class="atp-sub">Güncel döviz ve kripto fiyatları</p>
+                </div>
+            </div>
+        </div>
+        <div class="atp-card">
+            <div class="borsa-grid" id="borsaGrid"></div>
+        </div>
+
     </div>
 
-    <div class="panel gallery-panel" id="portfolioHistoryPanel">
-        <h3 style="margin:0 0 14px; font-size:14px; letter-spacing:.08em; text-transform:uppercase; display:flex; align-items:center; gap:8px;">
-            <span id="portfolioHistoryIcon"></span>Portföy Geçmişi
-        </h3>
-        <div id="portfolioHistoryChart"></div>
-    </div>
+
 
     <div class="panel gallery-panel" id="fitnessPanel" style="margin-bottom:14px;">
         <div class="fx-head">
@@ -3350,13 +3831,13 @@
                 <div id="waterJugWrap" style="flex:none;"></div>
                 <div style="flex:1; min-width:200px; display:flex; flex-direction:column; gap:8px;">
                     <div class="add-row" style="margin-bottom:0;">
-                        <button class="aqua-chip" onclick="logWater(250)">+250ml</button>
-                        <button class="aqua-chip" onclick="logWater(500)">+500ml</button>
-                        <button class="aqua-chip" onclick="logWater(750)">+750ml</button>
+                        <button class="aqua-chip" onclick="logWater(250)">-250ml</button>
+                        <button class="aqua-chip" onclick="logWater(500)">-500ml</button>
+                        <button class="aqua-chip" onclick="logWater(750)">-750ml</button>
                     </div>
                     <div class="add-row" style="margin-bottom:0;">
                         <input type="number" id="waterCustomInput" placeholder="Özel miktar (ml)" style="flex:1;">
-                        <button class="btn" onclick="logWaterCustom()">Ekle</button>
+                        <button class="btn" onclick="logWaterCustom()">Düş</button>
                     </div>
                     <button class="btn-text" onclick="resetWaterToday()" style="align-self:flex-start;">Bugünü sıfırla</button>
                 </div>
@@ -3640,6 +4121,96 @@
             <div id="blockedUsersList" class="blocked-body"></div>
             <div class="blocked-foot">
                 <button class="btn btn-ghost" style="width:100%;" onclick="closeBlockedUsersModal()">Kapat</button>
+            </div>
+        </div>
+    </div>
+    <div id="rewardStoreModal" class="modal-overlay">
+        <div class="modal-card reward-store-card">
+            <div class="rs-head">
+                <button class="icon-btn rs-close-btn" onclick="closeRewardStore()"></button>
+                <div class="rs-head-row">
+                    <span class="rs-head-icon" id="rsHeadIcon"></span>
+                    <div>
+                        <p class="rs-head-title">Ödül Mağazası</p>
+                        <p class="rs-head-sub">XP'ni gerçek ödüllere çevir</p>
+                    </div>
+                </div>
+                <div class="rs-balance">
+                    <span class="rs-balance-label">Bakiyen</span>
+                    <span class="rs-balance-num" id="rsBalanceNum"></span>
+                </div>
+            </div>
+            <div class="rs-tabs" id="rsTabs"></div>
+            <div class="rs-body" id="rsBody">
+                <div class="rs-grid" id="rsGrid"></div>
+            </div>
+            <div class="rs-foot">
+                <span class="rs-foot-hint" id="rsFootHint"></span>
+                <button class="btn btn-ghost" onclick="closeRewardStore()">Kapat</button>
+            </div>
+        </div>
+    </div>
+    <div id="bugReportModal" class="modal-overlay">
+        <div class="modal-card" style="max-width:420px; text-align:left;">
+            <p class="modal-eyebrow" style="text-align:center;">Hata Bildir</p>
+            <p class="modal-sub" style="text-align:center; margin-top:4px;">Karşılaştığın sorunu anlat, ekran görüntüsü ekleyebilirsin.</p>
+            <div class="auth-fields" style="width:100%; margin-top:12px;">
+                <textarea id="bugReportDesc" rows="4" placeholder="Ne oldu? Hangi ekrandaydın, ne bekliyordun?"
+                    style="width:100%; resize:vertical; font-family:'Inter',sans-serif; font-size:13px; padding:12px 13px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--ink);"></textarea>
+            </div>
+            <div id="bugImagePreviewWrap" style="display:none; margin-top:10px;"></div>
+            <div class="add-row" style="margin-top:10px; margin-bottom:0;">
+                <button type="button" class="btn btn-ghost" style="flex:1;" onclick="document.getElementById('bugImageInput').click()">
+                    <span id="bugImageBtnIcon"></span> Görsel Ekle
+                </button>
+                <input type="file" id="bugImageInput" accept="image/*" style="display:none;" onchange="handleBugImageSelect(event)">
+            </div>
+            <div class="modal-actions" style="margin-top:18px; width:100%;">
+                <button class="btn btn-ghost" onclick="closeBugReportModal()">Vazgeç</button>
+                <button class="btn" onclick="submitBugReport()">Gönder</button>
+            </div>
+        </div>
+    </div>
+    <div id="bugReportModal" class="modal-overlay">
+        <div class="modal-card" style="max-width:420px; text-align:left;">
+            <p class="modal-eyebrow" style="text-align:center;">Hata Bildir</p>
+            <p class="modal-sub" style="text-align:center; margin-top:4px;">Karşılaştığın sorunu anlat, ekran görüntüsü ekleyebilirsin.</p>
+            <div class="auth-fields" style="width:100%; margin-top:12px;">
+                <textarea id="bugReportDesc" rows="4" placeholder="Ne oldu? Hangi ekrandaydın, ne bekliyordun?"
+                    style="width:100%; resize:vertical; font-family:'Inter',sans-serif; font-size:13px; padding:12px 13px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--ink);"></textarea>
+            </div>
+            <div id="bugImagePreviewWrap" style="display:none; margin-top:10px;"></div>
+            <div class="add-row" style="margin-top:10px; margin-bottom:0;">
+                <button type="button" class="btn btn-ghost" style="flex:1;" onclick="document.getElementById('bugImageInput').click()">
+                    <span id="bugImageBtnIcon"></span> Görsel Ekle
+                </button>
+                <input type="file" id="bugImageInput" accept="image/*" style="display:none;" onchange="handleBugImageSelect(event)">
+            </div>
+            <div class="modal-actions" style="margin-top:18px; width:100%;">
+                <button class="btn btn-ghost" onclick="closeBugReportModal()">Vazgeç</button>
+                <button class="btn" onclick="submitBugReport()">Gönder</button>
+            </div>
+        </div>
+    </div>
+    <div id="verifyRequestModal" class="modal-overlay">
+        <div class="modal-card" style="max-width:440px; text-align:left;">
+            <p class="modal-eyebrow" style="text-align:center;">Doğrulama Talep Et</p>
+            <p class="modal-sub" style="text-align:center; margin-top:4px;">Kanıtlarını paylaş, ekibimiz inceleyip hesabını doğrulasın.</p>
+            <div class="auth-fields" style="width:100%; margin-top:12px;">
+                <textarea id="verifyReqDesc" rows="4" placeholder="Neden doğrulanmayı hak ettiğini anlat…"
+                    style="width:100%; resize:vertical; font-family:'Inter',sans-serif; font-size:13px; padding:12px 13px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--ink);"></textarea>
+            </div>
+            <span class="seg-label" style="margin-top:10px;">Kanıt Görselleri (en fazla 3)</span>
+            <div class="add-row" style="margin-top:6px; margin-bottom:0;">
+                <button type="button" class="btn btn-ghost" style="flex:1;" onclick="document.getElementById('verifyImageInput').click()">
+                    <span id="verifyImageBtnIcon"></span> Görsel Ekle
+                </button>
+                <input type="file" id="verifyImageInput" accept="image/*" style="display:none;" onchange="handleVerifyImageSelect(event)">
+            </div>
+            <div id="verifyImagePreviewWrap" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;"></div>
+            <div class="modal-actions" style="margin-top:18px; width:100%;">
+                <button class="btn btn-ghost" onclick="closeVerificationModal()">Vazgeç</button>
+                <button class="btn" onclick="submitVerificationRequest()">Gönder</button>
             </div>
         </div>
     </div>
@@ -3975,6 +4546,39 @@
         <button class="btn" style="width:100%; margin-top:16px;" onclick="closeHolidayInfoModal()">Kapat</button>
     </div>
 </div>
+<div id="customHolidayModal" class="modal-overlay">
+    <div class="modal-card" style="max-width:440px; text-align:left; max-height:88vh; overflow-y:auto;">
+        <p class="modal-eyebrow" style="text-align:center;">Yeni Özel Gün</p>
+        <div class="auth-fields" style="width:100%; margin-top:10px;">
+            <div class="add-row">
+                <label class="field-icon-input" style="flex:2;"><span id="chNameIcon"></span><input type="text" id="chNameInput" placeholder="Özel gün adı (örn. Kuruluş Yıldönümü)"></label>
+                <label class="field-icon-input" style="flex:1; max-width:90px;"><span id="chEmojiIcon"></span><input type="text" id="chEmojiInput" placeholder="🎉" maxlength="4"></label>
+            </div>
+            <input type="text" id="chDescInput" placeholder="Kısa açıklama (opsiyonel)">
+            <span class="seg-label" style="margin-top:6px;">Tarih Aralığı</span>
+            <div class="add-row" style="margin-bottom:0;">
+                <label class="field-icon-input" style="flex:1;"><span id="chStartIcon"></span><input type="date" id="chStartInput"></label>
+                <label class="field-icon-input" style="flex:1;"><span id="chEndIcon"></span><input type="date" id="chEndInput"></label>
+            </div>
+            <span class="seg-label" style="margin-top:8px;">Tema Renkleri</span>
+            <div class="add-row" style="align-items:center; margin-bottom:0;">
+                <input type="color" id="chColor1" value="#ff8a8a" style="width:40px; height:36px; border:none; border-radius:8px; cursor:pointer;">
+                <input type="color" id="chColor2" value="#ff2b2b" style="width:40px; height:36px; border:none; border-radius:8px; cursor:pointer;">
+                <input type="color" id="chColor3" value="#7a0000" style="width:40px; height:36px; border:none; border-radius:8px; cursor:pointer;">
+            </div>
+            <span class="seg-label" style="margin-top:8px;">Konfeti / Efekt Emoji Seti</span>
+            <input type="text" id="chEmojiSetInput" placeholder="🎉,✨,🎊 (virgülle ayır)">
+            <span class="seg-label" style="margin-top:8px;">Aktifleşince Çalacak Ses (URL, opsiyonel)</span>
+            <input type="text" id="chSoundArrivalInput" placeholder="https://... .mp3">
+            <span class="seg-label" style="margin-top:8px;">Arada Çalacak Ortam Sesi (URL, opsiyonel)</span>
+            <input type="text" id="chSoundAmbientInput" placeholder="https://... .mp3">
+        </div>
+        <div class="modal-actions" style="margin-top:18px; width:100%;">
+            <button class="btn btn-ghost" onclick="closeCustomHolidayModal()">Vazgeç</button>
+            <button class="btn" onclick="createCustomHoliday()">Oluştur</button>
+        </div>
+    </div>
+</div>
 <div id="confirmModal" class="modal-overlay">
     <div class="modal-card">
         <p class="modal-eyebrow">Onay Gerekiyor</p>
@@ -4025,12 +4629,18 @@
 <div id="profileModal" class="modal-overlay">
     <div class="modal-card profile-view-card">
         <button class="icon-btn profile-close-btn" onclick="closeProfileModal()"></button>
+        <div id="adminProfileNavRow" style="display:none; position:absolute; top:14px; left:14px; z-index:3; gap:6px;">
+            <button class="icon-btn" id="adminProfilePrevBtn" style="background:rgba(0,0,0,.22); color:#fff;" onclick="adminProfileNav(-1)"></button>
+            <button class="icon-btn" id="adminProfileNextBtn" style="background:rgba(0,0,0,.22); color:#fff;" onclick="adminProfileNav(1)"></button>
+            <button class="icon-btn" id="adminProfileDeleteBtn" style="background:rgba(224,70,63,.35); color:#fff;" title="Hesabı Sil" onclick="adminDeleteCurrentProfile()"></button>
+        </div>
 
         <div id="profileViewMode">
             <div class="pv-banner">
                 <div class="pv-banner-content">
                     <div class="pv-avatar-wrap">
                         <img id="pvAvatar" class="pv-avatar" src="" alt="">
+                        <span class="pv-avatar-verified" id="pvVerifiedBadge" style="display:none;"></span>
                         <button class="pv-avatar-edit-trigger" id="pvEditBtn" onclick="toggleProfileEdit()" title="Profili düzenle"></button>
                     </div>
                     <div class="pv-header-text">
@@ -4344,38 +4954,99 @@
     </div>
 </div>
 <div id="adminModal" class="modal-overlay">
-    <div class="modal-card" style="max-width:880px; width:94vw; text-align:left; position:relative;">
-        <button class="icon-btn admin-close-btn" id="adminCloseBtn" onclick="closeAdminPanel()"></button>
-        <div class="admin-header">
-            <span class="admin-header-icon" id="adminHeaderIcon"></span>
-            <div class="admin-header-text">
-                <p class="admin-header-title">Yönetim Paneli</p>
-                <p class="admin-header-sub" id="adminHeaderSub">—</p>
+    <div class="modal-card admin-mega-card">
+        <div class="admin-shell">
+            <div class="admin-side-backdrop" id="adminSideBackdrop" onclick="closeAdminSidebarMobile()"></div>
+            <div class="admin-side" id="adminSideNav">
+                <div class="admin-side-brand">
+                    <span class="admin-side-brand-icon" id="adminHeaderIcon"></span>
+                    <div>
+                        <div class="admin-side-brand-title">Komuta Merkezi</div>
+                        <div class="admin-side-brand-sub" id="adminHeaderSub">—</div>
+                    </div>
+                </div>
+                <div class="admin-side-nav">
+                    <div class="admin-nav-label">Genel Bakış</div>
+                    <button class="admin-nav-item active" id="adminTabDashBtn" onclick="switchAdminTab('dash')"></button>
+                    <div class="admin-nav-sep"></div>
+                    <div class="admin-nav-label">Yönetim</div>
+                    <button class="admin-nav-item" id="adminTabUsersBtn" onclick="switchAdminTab('users')"></button>
+                    <button class="admin-nav-item" id="adminTabModsBtn" onclick="switchAdminTab('mods')"></button>
+                    <button class="admin-nav-item" id="adminTabLiveBtn" onclick="switchAdminTab('live')"></button>
+                    <button class="admin-nav-item" id="adminTabHolidayBtn" onclick="switchAdminTab('holiday')"></button>
+                    <button class="admin-nav-item" id="adminTabBugsBtn" onclick="switchAdminTab('bugs')"></button>
+                    <button class="admin-nav-item" id="adminTabVerifyBtn" onclick="switchAdminTab('verify')"></button>
+                </div>
+                <div class="admin-side-foot">
+                    <span class="admin-side-live-dot"></span>
+                    <span>Canlı senkronizasyon aktif</span>
+                </div>
             </div>
-        </div>
-        <div class="admin-stat-grid" id="adminStatGrid"></div>
-        <div class="admin-tabs">
-            <button class="admin-tab-btn" id="adminTabModsBtn" onclick="switchAdminTab('mods')"></button>
-            <button class="admin-tab-btn active" id="adminTabUsersBtn" onclick="switchAdminTab('users')"></button>
-            <button class="admin-tab-btn" id="adminTabLiveBtn" onclick="switchAdminTab('live')"></button>
-            <button class="admin-tab-btn" id="adminTabHolidayBtn" onclick="switchAdminTab('holiday')"></button>
-        </div>
-        <div class="admin-tab-panel active" id="adminTabUsers">
-            <div class="admin-search-wrap">
-                <label class="field-icon-input"><span id="adminSearchIcon"></span><input type="text" id="adminSearch" placeholder="Kullanıcı ara…" oninput="renderAdminUserList()"></label>
+            <div class="admin-main">
+                <div class="admin-topbar">
+                    <button class="admin-close-fs admin-menu-toggle" id="adminMenuToggleBtn" onclick="openAdminSidebarMobile()"></button>
+                    <div>
+                        <div class="admin-topbar-title" id="adminTopbarTitle">Panel</div>
+                        <div class="admin-topbar-sub" id="adminTopbarSub"></div>
+                    </div>
+                    <div class="admin-topbar-spacer"></div>
+                    <button class="admin-close-fs" id="adminCloseBtn" onclick="closeAdminPanel()"></button>
+                </div>
+                <div class="admin-content">
+                    <div class="admin-panel-view active" id="adminTabDash">
+                        <div style="display:flex; align-items:center; justify-content:flex-end; margin-bottom:10px;">
+                            <button class="btn-text" id="adminDashRefreshBtn" onclick="refreshAdminDashboard()" style="display:flex; align-items:center; gap:5px;"></button>
+                        </div>
+                        <div class="admin-stat-grid" id="adminStatGrid"></div>
+                        <div class="admin-section-title" id="adminGrowthTitle"></div>
+                        <div class="atp-card" style="margin-bottom:22px;"><div id="adminGrowthChart"></div></div>
+                        <div class="admin-section-title" id="adminDashFeedTitle"></div>
+                        <div class="admin-feed" id="adminDashFeedPreview"></div>
+                    </div>
+                    <div class="admin-panel-view" id="adminTabUsers">
+                        <div class="admin-search-wrap" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; max-width:none;">
+                            <label class="field-icon-input" style="flex:1; min-width:220px;"><span id="adminSearchIcon"></span><input type="text" id="adminSearch" placeholder="Kullanıcı ara…" oninput="debouncedRenderAdminUserList()"></label>
+                            <select id="adminUserSort" class="sort-select" onchange="_adminUserVisibleCount=_adminUserPageSize; renderAdminUserList()" style="flex:none;">
+                                <option value="xp">XP'ye göre (yüksek)</option>
+                                <option value="name">İsme göre (A-Z)</option>
+                                <option value="streak">Seriye göre</option>
+                                <option value="completed">Tamamlanana göre</option>
+                            </select>
+                            <button class="btn-text" id="adminExportCsvBtn" onclick="exportUsersCSV()" style="display:flex; align-items:center; gap:5px;"></button>
+                        </div>
+                        <div class="filter-row" id="adminUserFilterRow" style="margin-bottom:14px;"></div>
+                        <div class="admin-user-grid" id="adminUserList"></div>
+                        <div style="display:flex; justify-content:center; margin-top:16px;">
+                            <button class="btn btn-ghost" id="adminUsersLoadMoreBtn" onclick="loadMoreAdminUsers()" style="display:none;"></button>
+                        </div>
+                    </div>
+                    <div class="admin-panel-view" id="adminTabMods">
+                        <div class="admin-section-title" id="adminModsTitle"></div>
+                        <div class="admin-search-wrap">
+                            <label class="field-icon-input"><span id="adminModsSearchIcon"></span><input type="text" id="adminModsSearch" placeholder="Kullanıcı ara…" oninput="renderAdminModsList()"></label>
+                        </div>
+                        <div class="admin-user-grid" id="adminModsList"></div>
+                    </div>
+                    <div class="admin-panel-view" id="adminTabLive">
+                        <div class="admin-section-title" id="adminLiveTitle"></div>
+                        <div class="filter-row" id="adminFeedFilterRow" style="margin-bottom:12px;"></div>
+                        <div class="admin-feed" id="adminFeed"></div>
+                    </div>
+                    <div class="admin-panel-view" id="adminTabHoliday">
+                        <div id="adminHolidayContent"></div>
+                    </div>
+                    <div class="admin-panel-view" id="adminTabBugs">
+                        <div class="admin-section-title" id="adminBugsTitle"></div>
+                        <div class="filter-row" id="adminBugsFilterRow" style="margin-bottom:14px;"></div>
+                        <div class="admin-user-grid" id="adminBugsList"></div>
+                    </div>
+                    <div class="admin-panel-view" id="adminTabVerify">
+                        <div class="admin-section-title" id="adminVerifyTitle"></div>
+                        <div class="filter-row" id="adminVerifyFilterRow" style="margin-bottom:14px;"></div>
+                        <div class="admin-user-grid" id="adminVerifyList"></div>
+                    </div>
+                </div>
             </div>
-            <div id="adminUserList" style="max-height:400px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
-        </div>
-        <div class="admin-tab-panel" id="adminTabLive">
-            <p style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-soft); margin:0 0 10px; letter-spacing:.06em; text-transform:uppercase; display:flex; align-items:center; gap:7px;"><span class="admin-live-dot"></span> Canlı akış</p>
-            <div class="admin-feed" id="adminFeed"></div>
-            <div id="adminModsList" style="max-height:400px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
-        </div>
-        <div class="admin-tab-panel" id="adminTabHoliday">
-            <div id="adminHolidayContent"></div>
-        </div>
-        <div class="modal-actions" style="margin-top:16px;">
-            <button class="btn btn-ghost" onclick="closeAdminPanel()">Kapat</button>
         </div>
     </div>
 </div>
@@ -4459,7 +5130,15 @@
         bell: '<path d="M18 8a6 6 0 0 0-12 0c0 4.5-1.2 6.7-2.1 7.8-.4.5 0 1.2.6 1.2h15c.6 0 1-.7.6-1.2-.9-1.1-2.1-3.3-2.1-7.8z"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
         calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
         gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
-        blood: '<path d="M12 2C12 2 5 11.2 5 15.8A7 7 0 0 0 19 15.8C19 11.2 12 2 12 2Z"/><path d="M8.6 15.3a3.4 3.4 0 0 0 3.4 3.4" stroke-linecap="round"/>'
+        blood: '<path d="M12 2C12 2 5 11.2 5 15.8A7 7 0 0 0 19 15.8C19 11.2 12 2 12 2Z"/><path d="M8.6 15.3a3.4 3.4 0 0 0 3.4 3.4" stroke-linecap="round"/>',
+        gift: '<rect x="3" y="8" width="18" height="13" rx="2"/><path d="M3 12h18"/><path d="M12 8v13"/><path d="M12 8c-2 0-3.5-1.5-3.5-3S10 2 12 4c0-2 1.5-3 3.5-2S14 6.5 12 8z"/>',
+        usersGroup: '<circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9.5" r="2.4"/><path d="M3.3 20c0-3.8 2.7-5.8 5.7-5.8s5.7 2 5.7 5.8"/><path d="M15 14.6c2.5.4 4.3 2.1 4.3 5.4"/>',
+        pulse: '<path d="M3 12h4l2-7 4 14 2-9 2 2h4"/>',
+        dashboardIc: '<rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/>',
+        eyeView: '<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3.2"/>',
+        shieldBan: '<path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6z"/><path d="M9 9l6 6M15 9l-6 6"/>',
+        chartBars: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+        trendUp: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>'
     };
     function icon(name, size){
         size = size || 14;
@@ -4696,6 +5375,8 @@
     let tasks = [];
     let xp = 0, streak = 0, lastActiveDate = null, totalCompleted = 0, completionsByDate = {};
     let prestige = 0;
+    let redeemedRewards = {};
+    let taskCompletionLog = [];
     let totalFailed = 0, highPriorityCompleted = 0, timedCompleted = 0, categoryCompletions = {};
     let nightOwlCompletions = 0, morningCompletions = 0, weekendCompletions = 0, totalCreated = 0;
     let duelWins = 0, duelLosses = 0, duelStreak = 0;
@@ -4736,7 +5417,7 @@
     let portfolio = {};
     let portfolioHistory = [];      // [{date, value}]
     let portfolioLiveHistory = [];  // [{t, v}] — oturum içi anlık takip (kalıcı değil)
-    let _assetTrendRange = 'day';   // 'day' | 'week' | 'month'
+    let _assetTrendRange = 'month'; // sabit: aylık görünüm
     let portfolioCostBasis = {};    // {assetId: {totalCost, qty}}
     let priceAlerts = [];   // [{id, assetId, target, direction, triggered}]
     let _alertTargetAssetId = null;
@@ -4809,6 +5490,15 @@
         renderPortfolio();
     }
 
+    function fetchMarketPricesIfNewDay(){
+        const today = todayStr();
+        const lastFetchDay = localStorage.getItem('tc_market_last_fetch_day');
+        if(lastFetchDay !== today){
+            localStorage.setItem('tc_market_last_fetch_day', today);
+            fetchMarketPrices();
+        }
+    }
+
     function addPortfolioQty(){
         const assetId = document.getElementById('portfolioAssetSelect').value;
         const qtyInput = document.getElementById('portfolioQtyInput');
@@ -4878,18 +5568,22 @@
         ).join('');
         document.getElementById('portfolioQtyIcon').innerHTML = icon('coins',14);
         document.getElementById('portfolioAddBtn').innerHTML = icon('plus',16);
-        document.getElementById('portfolioRefreshBtn').innerHTML = `<span class="admin-live-dot"></span> Canlı takip`;
-        document.getElementById('portfolioRefreshBtn').onclick = null;
+        document.getElementById('portfolioRefreshBtn').innerHTML = `${icon('refresh',11)} Fiyatları Güncelle`;
+        document.getElementById('portfolioRefreshBtn').onclick = fetchMarketPrices;
         const headIcon = document.getElementById('portfolioHeadIcon');
         if(headIcon) headIcon.innerHTML = icon('wallet',16);
         const totalLabel = document.getElementById('pf2TotalLabel');
-        if(totalLabel) totalLabel.innerHTML = `${icon('refresh',10)} Anlık Toplam Değer`;
+        if(totalLabel) totalLabel.innerHTML = `${icon('calendar',10)} Toplam Değer`;
+        const atpRangeLabel = document.getElementById('atpRangeLabel');
+        if(atpRangeLabel) atpRangeLabel.innerHTML = `${icon('calendar',10)} Aylık Grafik`;
         const histIcon = document.getElementById('portfolioHistoryIcon');
         if(histIcon) histIcon.innerHTML = icon('layers',15);
         const atpIcon = document.getElementById('atpHeadIcon');
         if(atpIcon) atpIcon.innerHTML = icon('layers',20);
         const atpCal = document.getElementById('atpCalendarBtn');
         if(atpCal) atpCal.innerHTML = icon('calendar',16);
+        const borsaIcon = document.getElementById('borsaHeadIcon');
+        if(borsaIcon) borsaIcon.innerHTML = icon('wallet',20);
     }
 
     function assetLogoFallback(imgEl, assetId){
@@ -4911,22 +5605,13 @@
         saveState();
     }
     function snapshotLivePoint(){
-        const total = computePortfolioTotal();
-        portfolioLiveHistory.push({ t: Date.now(), v: total });
-        if(portfolioLiveHistory.length > 300) portfolioLiveHistory = portfolioLiveHistory.slice(-300);
         renderPortfolioHistoryChart();
         renderAssetTrendPanel();
     }
 
     function computeAssetTrendPoints(){
         const now = Date.now();
-        if(_assetTrendRange === 'day'){
-            let pts = portfolioLiveHistory.filter(p => now - p.t <= 24*3600000);
-            if(pts.length < 2) pts = portfolioLiveHistory.slice(-60);
-            return pts.map(p => ({ t:p.t, v:p.v }));
-        }
-        const cutoffDays = _assetTrendRange === 'week' ? 7 : 30;
-        const cutoff = now - cutoffDays*86400000;
+        const cutoff = now - 30*86400000;
         let pts = portfolioHistory.filter(e => new Date(e.date+'T00:00:00').getTime() >= cutoff)
             .map(e => ({ t:new Date(e.date+'T00:00:00').getTime(), v:e.value }));
         if(pts.length < 2) pts = portfolioHistory.map(e => ({ t:new Date(e.date+'T00:00:00').getTime(), v:e.value }));
@@ -4991,10 +5676,10 @@
             return `<div class="atp-range-bar" style="height:${h}%;"></div>`;
         }).join('');
 
-        const lastTime = new Date(points[points.length-1].t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
-        const minTime = new Date(points[minIdx].t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
-        const maxTime = new Date(points[maxIdx].t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
-        const avgLabel = _assetTrendRange === 'day' ? 'Günlük Ortalama' : 'Dönem Ortalaması';
+        const lastTime = new Date(points[points.length-1].t).toLocaleDateString('tr-TR',{day:'numeric',month:'short'});
+        const minTime = new Date(points[minIdx].t).toLocaleDateString('tr-TR',{day:'numeric',month:'short'});
+        const maxTime = new Date(points[maxIdx].t).toLocaleDateString('tr-TR',{day:'numeric',month:'short'});
+        const avgLabel = 'Aylık Ortalama';
 
         body.innerHTML = `
     <div class="atp-card-top">
@@ -5003,7 +5688,7 @@
         <div class="atp-total-value">${formatTRY(currentTotal)}</div>
         <div class="atp-change-row ${isPos?'pos':'neg'}">${icon(isPos?'chevUp2':'chevDown',11)} %${Math.abs(diffPct).toFixed(2)} (Başlangıç: ${formatTRY(first)})</div>
       </div>
-      <span class="atp-live-pill"><span class="atp-live-dot"></span> Canlı</span>
+      <span class="atp-live-pill" style="background:var(--glow-soft); border-color:var(--line); color:var(--ink);">${icon('calendar',10)} Güncel</span>
     </div>
     <div class="atp-chart-area">
       <div class="atp-tooltip-bubble" style="left:${(lastPoint[0]/W*100).toFixed(1)}%; top:${(lastPoint[1]/H*100).toFixed(1)}%;">
@@ -5043,6 +5728,34 @@
         <div><div class="atp-stat-label">Değişim</div><div class="atp-stat-value">${isPos?'+':''}${formatTRY(diff)}</div><div class="atp-stat-time"><span class="atp-stat-dot"></span>%${diffPct.toFixed(2)}</div></div>
       </div>
     </div>`;
+    }
+    function renderBorsaPanel(){
+        const el = document.getElementById('borsaGrid');
+        if(!el) return;
+        const groups = {};
+        Object.keys(ASSET_DEFS).forEach(id => {
+            if(id === 'try_') return;
+            const def = ASSET_DEFS[id];
+            (groups[def.group] = groups[def.group] || []).push(id);
+        });
+        el.innerHTML = Object.keys(groups).map(g => {
+            const rows = groups[g].map(id => {
+                const def = ASSET_DEFS[id];
+                const price = marketPrices[id];
+                const logoInner = def.logo
+                    ? `<img src="${def.logo}" alt="" onerror="assetLogoFallback(this,'${id}')">`
+                    : icon(def.ic,17);
+                return `<div class="borsa-row">
+          <span class="borsa-row-logo">${logoInner}</span>
+          <span class="borsa-row-name">${def.label}<span class="borsa-row-unit">${def.unit}</span></span>
+          <span class="borsa-row-price">${price ? formatTRY(price) : (marketLoading ? '···' : '—')}</span>
+        </div>`;
+            }).join('');
+            return `<div class="borsa-col">
+        <div class="borsa-col-title">${icon('wallet',11)} ${g}</div>
+        ${rows}
+      </div>`;
+        }).join('');
     }
     function renderPortfolioLiveChart(){
         const el = document.getElementById('portfolioLiveChart');
@@ -5254,6 +5967,7 @@
         }
         renderPriceAlertsList();
         renderPortfolioLiveChart();
+        renderBorsaPanel();
     }
     /* ===================== KÜRESEL SOHBET ===================== */
     let chatListenerAttached = false;
@@ -5544,7 +6258,9 @@
             ts: Date.now(),
             rankIdx: getRankIndex(xp),
             role: isAdmin ? 'admin' : (isMod ? 'mod' : null),
+            alsoMod: (isAdmin && isMod),
             prestige: prestige,
+            verified: isVerifiedUser,
             replyTo: _chatReplyTo,
             country: detectUserCountryCode(),
             likes: {},
@@ -6514,7 +7230,9 @@ ${m.track ? `
             uid: currentUid, username: me.username, avatarUrl: me.avatarUrl,
             text: text || '', imageUrl: _pendingDmImageDataUrl || null,
             audioUrl: audioDataUrl || null, ts: Date.now(), replyTo: _dmReplyTo, likes: {}, reactions: {}, prestige: prestige,
-            role: isAdminSelf ? 'admin' : (isModSelf ? 'mod' : null)
+            role: isAdminSelf ? 'admin' : (isModSelf ? 'mod' : null),
+            alsoMod: (isAdminSelf && isModSelf),
+            verified: isVerifiedUser
         };
         if(input) input.value = '';
         _dmReplyTo = null; renderReplyPreview('dm');
@@ -7092,7 +7810,9 @@ ${locationCardHtml(m.location)}
         const msg = {
             uid: currentUid, text: text || '', imageUrl: _pendingDmImageDataUrl || null,
             audioUrl: audioDataUrl || null, ts: Date.now(), replyTo: _dmReplyTo, likes: {}, reactions: {}, seen:false, prestige: prestige,
-            role: isAdminSelf ? 'admin' : (isModSelf ? 'mod' : null)
+            role: isAdminSelf ? 'admin' : (isModSelf ? 'mod' : null),
+            alsoMod: (isAdminSelf && isModSelf),
+            verified: isVerifiedUser
         };
         if(input) input.value = '';
         _dmReplyTo = null; renderReplyPreview('dm');
@@ -7163,6 +7883,13 @@ ${locationCardHtml(m.location)}
     }
     document.addEventListener('click', e => {
         if(!e.target.closest('.chat-reaction-picker')) closeReactionMenus();
+    });
+    document.addEventListener('keydown', e => {
+        if(e.key !== 'Escape') return;
+        const adminModal = document.getElementById('adminModal');
+        if(adminModal && adminModal.classList.contains('show')){ closeAdminPanel(); return; }
+        const profileModal = document.getElementById('profileModal');
+        if(profileModal && profileModal.classList.contains('show')){ closeProfileModal(); return; }
     });
     function attachLongPressActions(containerId){
         const container = document.getElementById(containerId);
@@ -7951,10 +8678,11 @@ ${locationCardHtml(m.location)}
         checkWaterDayReset();
         const target = dailyWaterTargetMl();
         const consumed = fitness.waterConsumed || 0;
-        const pct = Math.max(0, Math.min(100, (consumed/target)*100));
+        const remaining = Math.max(0, target - consumed);
+        const pct = Math.max(0, Math.min(100, (remaining/target)*100));
         const fillHeight = 150 * (pct/100);
         const fillY = 165 - fillHeight;
-        if(meta) meta.textContent = `${consumed} / ${target} ml`;
+        if(meta) meta.textContent = `${consumed} / ${target} ml içildi · ${remaining} ml kaldı`;
         wrap.innerHTML = `
     <svg width="110" height="190" viewBox="0 0 110 190">
       <defs>
@@ -8007,6 +8735,126 @@ ${locationCardHtml(m.location)}
         renderSupplements();
         renderWaterJug();
         renderStepCounter();
+    }
+
+
+    const RS_CATEGORIES = [
+        { key:'all',         label:'Tümü',          ic:'grid' },
+        { key:'atistirmalik',label:'Atıştırmalık',  ic:'sparkle' },
+        { key:'dinlenme',    label:'Dinlenme',      ic:'moon' },
+        { key:'eglence',     label:'Eğlence',       ic:'monitor' },
+        { key:'ozel',        label:'Özel',          ic:'crown' }
+    ];
+
+    const REWARDS = [
+        { id:'chips',       name:'Cips Paketi',           desc:'Küçük bir atıştırmalık keyfi.',            ic:'sparkle', cost:90,   cat:'atistirmalik' },
+        { id:'chocolate',   name:'Çikolata',               desc:'Tatlı bir ödül molası.',                  ic:'gem',     cost:110,  cat:'atistirmalik', popular:true },
+        { id:'coffee',      name:'Kahve / Enerji İçeceği', desc:'Bir sonraki göreve enerjik başla.',       ic:'bolt',    cost:130,  cat:'atistirmalik' },
+        { id:'soda',        name:'Tatlı İçecek',           desc:'Soğuk bir kutu meşrubat ya da shake.',    ic:'droplet', cost:150,  cat:'atistirmalik' },
+        { id:'snackcombo',  name:'Atıştırmalık Kombo',     desc:'Cips + çikolata bir arada — indirimli!',  ic:'gift',    cost:170,  originalCost:200, cat:'atistirmalik', discount:true },
+
+        { id:'shortbreak',  name:'15dk Ekran Molası',      desc:'Telefon/oyun ile kısa bir mola ver.',     ic:'clock',   cost:180,  cat:'dinlenme' },
+        { id:'cheatmeal',   name:'Bir Öğün Serbestlik',    desc:'Diyet planından bir öğün muaf ol.',       ic:'flame',   cost:320,  cat:'dinlenme', popular:true },
+        { id:'sleepin',     name:'Geç Uyanma İzni',        desc:'Yarın alarmı ertele, uykuna doy.',        ic:'moon',    cost:380,  cat:'dinlenme' },
+        { id:'restday',     name:'Yarım Gün Dinlenme',     desc:'Antrenmanı erteleyip dinlenebilirsin.',   ic:'leaf',    cost:520,  cat:'dinlenme' },
+
+        { id:'movie',       name:'Sinema / Dizi Gecesi',   desc:'Bir film ya da birkaç bölüm izle.',       ic:'monitor', cost:600,  cat:'eglence', popular:true },
+        { id:'gamesession', name:'1 Saat Oyun Seansı',     desc:'Suçluluk duymadan oyun keyfi.',           ic:'terminal',cost:650,  cat:'eglence' },
+        { id:'eatout',      name:'Dışarıda Yemek',         desc:'Sevdiğin bir restorana git.',             ic:'flag',    cost:900,  originalCost:1050, cat:'eglence', discount:true, new:true },
+        { id:'hangout',     name:'Arkadaşlarla Buluşma',   desc:'Bir günü sosyalleşmeye ayır.',            ic:'grid',    cost:950,  cat:'eglence' },
+
+        { id:'shopping',    name:'Küçük Alışveriş',        desc:'Kendine küçük bir hediye al.',            ic:'wallet',  cost:1400, cat:'ozel' },
+        { id:'fullday',     name:'Tam Gün Tatil',          desc:'Bir günü tamamen kendine ayır.',          ic:'sun',     cost:1800, cat:'ozel', popular:true },
+        { id:'bigreward',   name:'Büyük Ödül',             desc:'İstediğin özel bir şeye kendini ödüllendir.', ic:'crown', cost:2600, cat:'ozel' }
+    ];
+
+    let rsActiveCategory = 'all';
+
+    function openRewardStore(){
+        closeAllAppModals('chatMegaModal');
+        document.getElementById('rsHeadIcon').innerHTML = `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="12" rx="2.4"/><path d="M3 13.2h18"/><path d="M12 9v12"/><path d="M12 9c-2.1 0-4-1.5-4-3.3C8 4.2 9.4 3 11 3c1.4 0 2.5 1 2.9 2.5"/><path d="M12 9c2.1 0 4-1.5 4-3.3C16 4.2 14.6 3 13 3c-1.4 0-2.5 1-2.9 2.5"/><path d="M5.5 2.6l.9 1.9M18.5 2.6l-.9 1.9" opacity=".65"/></svg>`;
+        rsActiveCategory = 'all';
+        renderRewardStoreTabs();
+        renderRewardStore();
+        document.getElementById('rewardStoreModal').classList.add('show');
+    }
+    function closeRewardStore(){ document.getElementById('rewardStoreModal').classList.remove('show'); }
+
+    function renderRewardStoreTabs(){
+        const tabsEl = document.getElementById('rsTabs');
+        if(!tabsEl) return;
+        tabsEl.innerHTML = RS_CATEGORIES.map(c =>
+            `<button type="button" class="rs-tab-btn${rsActiveCategory===c.key?' active':''}" onclick="selectRsCategory('${c.key}')">${icon(c.ic,12)} ${c.label}</button>`
+        ).join('');
+    }
+    function selectRsCategory(key){
+        rsActiveCategory = key;
+        renderRewardStoreTabs();
+        renderRewardStore();
+    }
+
+    function renderRewardStore(){
+        const balEl = document.getElementById('rsBalanceNum');
+        if(balEl) balEl.innerHTML = `${icon('bolt',15)} ${xp} XP`;
+        const grid = document.getElementById('rsGrid');
+        if(!grid) return;
+        const list = rsActiveCategory==='all' ? REWARDS : REWARDS.filter(r => r.cat===rsActiveCategory);
+
+        if(list.length === 0){
+            grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1; padding:36px 16px;">${icon('inbox',22)}<p>Bu kategoride ürün yok.</p></div>`;
+        } else {
+            grid.innerHTML = list.map(r => {
+                const affordable = xp >= r.cost;
+                const count = redeemedRewards[r.id] || 0;
+                const badges = [];
+                if(r.popular) badges.push(`<span class="rs-card-badge popular">${icon('flame',8)} Popüler</span>`);
+                if(r.new) badges.push(`<span class="rs-card-badge new">${icon('sparkle',8)} Yeni</span>`);
+                if(r.discount) badges.push(`<span class="rs-card-badge discount">İndirim</span>`);
+                return `<div class="rs-card">
+          <div class="rs-card-media">
+            ${badges.length ? `<div class="rs-card-badges">${badges.join('')}</div>` : ''}
+            ${count>0 ? `<span class="rs-card-owned">${count}x alındı</span>` : ''}
+            <span class="rs-card-icon-wrap">${icon(r.ic,21)}</span>
+          </div>
+          <div class="rs-card-body">
+            <div class="rs-card-name">${r.name}</div>
+            <div class="rs-card-desc">${r.desc}</div>
+            <div class="rs-card-price-row">
+              <span class="rs-card-price">${icon('bolt',12)} ${r.cost} XP</span>
+              ${r.originalCost ? `<span class="rs-card-price-old">${r.originalCost} XP</span>` : ''}
+            </div>
+            <button class="rs-card-buy-btn" ${affordable?'':'disabled'} onclick="redeemReward('${r.id}')">
+              ${affordable ? icon('gift',12)+' Satın Al' : icon('lock',12)+' Yetersiz XP'}
+            </button>
+          </div>
+        </div>`;
+            }).join('');
+        }
+
+        const hint = document.getElementById('rsFootHint');
+        if(hint){
+            const nextAffordable = REWARDS.filter(r => r.cost > xp).sort((a,b)=>a.cost-b.cost)[0];
+            hint.innerHTML = nextAffordable
+                ? `${icon('hourglass',10)} ${nextAffordable.name} için ${nextAffordable.cost - xp} XP daha lazım`
+                : `${icon('check',10)} Tüm ödülleri alabilecek XP'n var!`;
+        }
+    }
+
+    function redeemReward(id){
+        const reward = REWARDS.find(r => r.id === id);
+        if(!reward) return;
+        if(xp < reward.cost){
+            showTopToast('Yeterli XP\'n yok', 'warn', 'warn');
+            return;
+        }
+        xp -= reward.cost;
+        redeemedRewards[id] = (redeemedRewards[id] || 0) + 1;
+        saveState();
+        render();
+        renderRewardStore();
+        spawnConfetti(window.innerWidth/2, 120, 18);
+        playSuccessSound();
+        showTopToast(`${reward.name} satın alındı!`, 'info', 'check');
     }
 
     const firebaseConfig = {
@@ -8078,6 +8926,7 @@ ${locationCardHtml(m.location)}
     ];
     let currentUid = null;
     let currentUsername = 'Kullanıcı';
+    let isVerifiedUser = false;
     let allUsersCache = {};
     const ADMIN_UID = "ACEeWsNxMihTEGOwHcPkkJHpjju1";
 
@@ -8984,7 +9833,9 @@ ${locationCardHtml(m.location)}
             tasks = p.tasks || [];
             xp = p.xp || 0;
             prestige = p.prestige || 0;
+            redeemedRewards = p.redeemedRewards || {};
             streak = p.streak || 0;
+            taskCompletionLog = p.taskCompletionLog || [];
             lastActiveDate = p.lastActiveDate || null;
             totalCompleted = p.totalCompleted || 0;
             completionsByDate = p.completionsByDate || {};
@@ -9072,7 +9923,7 @@ ${locationCardHtml(m.location)}
                 tasks, xp, streak, prestige, lastActiveDate, totalCompleted, completionsByDate,
                 totalFailed, highPriorityCompleted, timedCompleted, categoryCompletions,
                 nightOwlCompletions, morningCompletions, weekendCompletions, totalCreated, portfolio, portfolioHistory, portfolioCostBasis, priceAlerts, fitness,
-                friends, blocked
+                friends, blocked, redeemedRewards, taskCompletionLog
             });
         }catch(e){ console.error('Kaydetme hatası', e); }
     }
@@ -9211,6 +10062,14 @@ ${locationCardHtml(m.location)}
         document.getElementById('adminTabUsersBtn').innerHTML = `${icon('user',13)} Kullanıcılar`;
         document.getElementById('adminTabLiveBtn').innerHTML = `${icon('bolt',13)} Canlı Veri`;
         document.getElementById('adminSearchIcon').innerHTML = icon('search',14);
+        const bugBtn = document.getElementById('bugReportBtn');
+        if(bugBtn) bugBtn.innerHTML = icon('warn',15);
+        const bugImgBtnIcon = document.getElementById('bugImageBtnIcon');
+        if(bugImgBtnIcon) bugImgBtnIcon.innerHTML = icon('camera',13);
+        const verifyBtn = document.getElementById('verifyReqBtn');
+        if(verifyBtn) verifyBtn.innerHTML = icon('check',15);
+        const verifyImgBtnIcon = document.getElementById('verifyImageBtnIcon');
+        if(verifyImgBtnIcon) verifyImgBtnIcon.innerHTML = icon('camera',13);
         document.getElementById('chatHeaderTitle').innerHTML = `${icon('inbox',15)} Küresel Sohbet`;
         document.getElementById('chatImageBtn').innerHTML = icon('camera',15);
         document.getElementById('chatVoiceBtn').innerHTML = icon('bolt',15);
@@ -9777,7 +10636,7 @@ ${locationCardHtml(m.location)}
     function todayStr(){ return new Date().toISOString().slice(0,10); }
     function yesterdayStr(){ const d = new Date(); d.setDate(d.getDate()-1); return d.toISOString().slice(0,10); }
 
-    function registerCompletion(priority, cat, isTimed){
+    function registerCompletion(priority, cat, isTimed, taskCreatedAt, taskType){
         xp += XP_VALUE[priority] || 10;
         totalCompleted += 1;
         contributeToEvents('tasks', 1);
@@ -9785,6 +10644,10 @@ ${locationCardHtml(m.location)}
         if(priority==='Yüksek') highPriorityCompleted += 1;
         if(isTimed) timedCompleted += 1;
         const now = new Date();
+        if(taskCreatedAt && taskType !== 'recurring'){
+            taskCompletionLog.push({ createdAt: taskCreatedAt, completedAt: now.getTime() });
+            if(taskCompletionLog.length > 60) taskCompletionLog = taskCompletionLog.slice(-60);
+        }
         const hourNow = now.getHours();
         const dayNow = now.getDay();
         if(hourNow>=0 && hourNow<5) nightOwlCompletions += 1;
@@ -9852,7 +10715,7 @@ ${locationCardHtml(m.location)}
             if(!t.xpAwarded){
                 const before = getRankIndex(xp);
                 const isTimed = !!t.deadlineAt && t.type !== 'recurring';
-                registerCompletion(t.priority, t.cat, isTimed);
+                registerCompletion(t.priority, t.cat, isTimed, t.createdAt, t.type);
                 t.xpAwarded = true;
                 if(t.type==='recurring') t.missedPending = false;
                 const after = getRankIndex(xp);
@@ -10448,6 +11311,14 @@ ${locationCardHtml(m.location)}
         div.textContent = str;
         return div.innerHTML;
     }
+    function debounce(fn, delay){
+        let t;
+        return function(...args){
+            clearTimeout(t);
+            t = setTimeout(()=> fn.apply(this, args), delay || 250);
+        };
+    }
+    const debouncedRenderAdminUserList = debounce(()=> { _adminUserVisibleCount = _adminUserPageSize; renderAdminUserList(); }, 280);
     function openLightbox(url){
         document.getElementById('lightboxImg').src = url;
         document.getElementById('imgLightbox').classList.add('show');
@@ -10973,6 +11844,7 @@ ${locationCardHtml(m.location)}
         if(profile.avatarUrl) applyAvatar(profile.avatarUrl);
         const uname = profile.username || 'Kullanıcı';
         currentUsername = uname;
+        isVerifiedUser = !!profile.verified;
         const fallback = document.getElementById('avatarFallback');
         if(fallback) fallback.textContent = uname.charAt(0).toUpperCase() || 'R';
         window._isAdminUser = !!(profile.isAdmin || currentUid === ADMIN_UID);
@@ -11030,10 +11902,15 @@ ${locationCardHtml(m.location)}
     function closeProfileModal(){
         document.getElementById('profileModal').classList.remove('show');
         const chatOpen = document.getElementById('chatMegaModal').classList.contains('show');
-        document.body.style.overflow = chatOpen ? 'hidden' : '';
+        const adminOpen = document.getElementById('adminModal').classList.contains('show');
+        document.body.style.overflow = (chatOpen || adminOpen) ? 'hidden' : '';
         _profileViewOverride = null;
         _profileSocialMode = false;
         _profileTargetUid = null;
+        const navRow = document.getElementById('adminProfileNavRow');
+        if(navRow) navRow.style.display = 'none';
+        _adminProfileNavList = [];
+        _adminProfileNavIndex = -1;
     }
     function isFriend(uid){ return !!friends[uid]; }
     function isBlockedByMe(uid){ return !!blocked[uid]; }
@@ -11059,9 +11936,10 @@ ${locationCardHtml(m.location)}
         }
     }
     function roleBadgeForUid(uid){
-        if(uid === ADMIN_UID) return `<span class="chat-msg-badge admin" style="margin-left:6px;">${icon('crown',9)} Yönetici</span>`;
-        if(moderators[uid]) return `<span class="chat-msg-badge mod" style="margin-left:6px;">${icon('shield',8)} Moderatör</span>`;
-        return '';
+        let html = '';
+        if(uid === ADMIN_UID) html += `<span class="chat-msg-badge admin" style="margin-left:6px;">${icon('crown',9)} Yönetici</span>`;
+        if(moderators[uid]) html += `<span class="chat-msg-badge mod" style="margin-left:6px;">${icon('shield',8)} Moderatör</span>`;
+        return html;
     }
     function prestigeBadgeHtml(p, size){
         if(!p) return '';
@@ -11073,13 +11951,17 @@ ${locationCardHtml(m.location)}
     }
     function chatMsgBadgesHtml(m, excludeAdmin){
         const parts = [];
-        if(m.role === 'mod') parts.push(`<span class="chat-msg-badge mod">${icon('shield',9)} Moderatör</span>`);
+        if(m.verified) parts.push(verifiedBadgeHtml(true));
+        if(m.role === 'mod' || m.alsoMod) parts.push(`<span class="chat-msg-badge mod">${icon('shield',9)} Moderatör</span>`);
         if(!excludeAdmin && m.role === 'admin') parts.push(`<span class="chat-msg-badge admin">${icon('crown',9)} Yönetici</span>`);
         if(m.prestige) parts.push(prestigeBadgeHtml(m.prestige, 12));
         return parts.length ? `<span class="chat-msg-badges">${parts.join('')}</span>` : '';
     }
     function msgBadgeRowHtml(m){
-        const roleHtml = m.role === 'admin' ? `<span class="chat-msg-badge admin">${icon('crown',9)} Yönetici</span>` : (m.role === 'mod' ? `<span class="chat-msg-badge mod">${icon('shield',8)} Moderatör</span>` : '');
+        let roleHtml = '';
+        if(m.verified) roleHtml += verifiedBadgeHtml(true);
+        if(m.role === 'admin') roleHtml += `<span class="chat-msg-badge admin">${icon('crown',9)} Yönetici</span>`;
+        if(m.role === 'mod' || m.alsoMod) roleHtml += `<span class="chat-msg-badge mod">${icon('shield',8)} Moderatör</span>`;
         const prestigeHtml = prestigeBadgeHtml(m.prestige);
         if(!roleHtml && !prestigeHtml) return '';
         return `<div class="chat-msg-badge-row">${roleHtml}${prestigeHtml}</div>`;
@@ -11430,6 +12312,8 @@ ${locationCardHtml(m.location)}
         _profileViewOverride = null;
         _profileSocialMode = false;
         _profileTargetUid = null;
+        const navRow = document.getElementById('adminProfileNavRow');
+        if(navRow) navRow.style.display = 'none';
         document.getElementById('profileViewMode').style.display = '';
         document.getElementById('profileEditMode').style.display = 'none';
         document.getElementById('pvEditBtn').style.display = '';
@@ -11450,7 +12334,8 @@ ${locationCardHtml(m.location)}
             categoryCompletions: u.categoryCompletions || {}, completionsByDate: u.completionsByDate || {},
             portfolio: u.portfolio || {}, fitness: u.fitness || {}, tasks: u.tasks || [],
             highPriorityCompleted: u.highPriorityCompleted||0, timedCompleted: u.timedCompleted||0,
-            nightOwlCompletions: u.nightOwlCompletions||0, morningCompletions: u.morningCompletions||0, weekendCompletions: u.weekendCompletions||0
+            nightOwlCompletions: u.nightOwlCompletions||0, morningCompletions: u.morningCompletions||0, weekendCompletions: u.weekendCompletions||0,
+            verified: !!p.verified
         };
         _profileSocialMode = false;
         _profileTargetUid = null;
@@ -11499,6 +12384,12 @@ ${locationCardHtml(m.location)}
 
         document.getElementById('pvAvatar').src = avatarUrl;
         document.getElementById('pvName').textContent = displayName;
+        const pvVerifiedEl = document.getElementById('pvVerifiedBadge');
+        const isVerifiedNow = ov ? !!ov.verified : isVerifiedUser;
+        if(pvVerifiedEl){
+            pvVerifiedEl.style.display = isVerifiedNow ? 'flex' : 'none';
+            pvVerifiedEl.innerHTML = isVerifiedNow ? icon('check',12) : '';
+        }
         const profileUid = ov ? (_profileTargetUid || currentUid) : currentUid;
         const profilePrestige = ov ? (ov.prestige || 0) : prestige;
         document.getElementById('pvRankRow').innerHTML = `${badgeHTML(idx,36,false)}<span>${rank.name}</span>${roleBadgeForUid(profileUid)}${prestigeBadgeHtml(profilePrestige, 9)}`;
@@ -11736,35 +12627,90 @@ ${locationCardHtml(m.location)}
     }
     let adminLiveRefs = [];
     let _lastPresenceSnap = {}, _lastUsersSnap = {};
-
+    const ADMIN_TAB_META = {
+        dash:    { title:'Genel Bakış',   sub:'Sistem durumu ve canlı özet',        navIcon:'dashboardIc', label:'Panel' },
+        users:   { title:'Kullanıcılar',  sub:'Tüm hesapları görüntüle ve yönet',    navIcon:'usersGroup',  label:'Kullanıcılar' },
+        mods:    { title:'Moderatörler',  sub:'Moderatör yetkilerini düzenle',       navIcon:'shield',      label:'Moderatörler' },
+        live:    { title:'Canlı Akış',    sub:'Son sistem olayları ve aktiviteler',  navIcon:'pulse',       label:'Canlı Akış' },
+        holiday: { title:'Özel Günler',   sub:'Sitedeki özel gün temasını yönet',    navIcon:'gift',        label:'Özel Günler' },
+        bugs:    { title:'Hata Bildirimleri', sub:'Kullanıcıların bildirdiği sorunlar', navIcon:'warn',      label:'Hata Bildirimleri' },
+        verify:  { title:'Doğrulama Talepleri', sub:'Mavi tik başvurularını incele',    navIcon:'check',     label:'Doğrulama Talepleri' }
+    };
+    function adminBtnId(key){ return 'adminTab'+key.charAt(0).toUpperCase()+key.slice(1)+'Btn'; }
+    function adminPanelId(key){ return 'adminTab'+key.charAt(0).toUpperCase()+key.slice(1); }
+    function renderAdminNavIcons(){
+        Object.keys(ADMIN_TAB_META).forEach(key => {
+            const btn = document.getElementById(adminBtnId(key));
+            if(btn) btn.innerHTML = `${icon(ADMIN_TAB_META[key].navIcon,16)}<span>${ADMIN_TAB_META[key].label}</span>`;
+        });
+    }
     function switchAdminTab(tab){
-        document.getElementById('adminTabUsersBtn').classList.toggle('active', tab==='users');
-        document.getElementById('adminTabLiveBtn').classList.toggle('active', tab==='live');
-        document.getElementById('adminTabModsBtn').classList.toggle('active', tab==='mods');
-        document.getElementById('adminTabHolidayBtn').classList.toggle('active', tab==='holiday');
-        document.getElementById('adminTabUsers').classList.toggle('active', tab==='users');
-        document.getElementById('adminTabLive').classList.toggle('active', tab==='live');
-        const modsPanelEl = document.getElementById('adminTabMods');
-        if(modsPanelEl) modsPanelEl.classList.toggle('active', tab==='mods');
-        document.getElementById('adminTabHoliday').classList.toggle('active', tab==='holiday');
+        Object.keys(ADMIN_TAB_META).forEach(key => {
+            const btn = document.getElementById(adminBtnId(key));
+            const panel = document.getElementById(adminPanelId(key));
+            if(btn) btn.classList.toggle('active', key===tab);
+            if(panel) panel.classList.toggle('active', key===tab);
+        });
+        const meta = ADMIN_TAB_META[tab];
+        if(meta){
+            document.getElementById('adminTopbarTitle').textContent = meta.title;
+            document.getElementById('adminTopbarSub').textContent = meta.sub;
+        }
         if(tab==='mods') renderAdminModsList();
         if(tab==='holiday') renderHolidayAdminPanel();
+        if(tab==='users') renderAdminUserList();
+        if(tab==='bugs') renderAdminBugsList();
+        if(tab==='verify') renderAdminVerifyList();
+        closeAdminSidebarMobile();
+    }
+    function openAdminSidebarMobile(){
+        document.getElementById('adminSideNav').classList.add('open');
+        document.getElementById('adminSideBackdrop').classList.add('show');
+    }
+    function closeAdminSidebarMobile(){
+        document.getElementById('adminSideNav').classList.remove('open');
+        document.getElementById('adminSideBackdrop').classList.remove('show');
     }
 
     function openAdminPanel(){
         closeAllAppModals();
         document.getElementById('adminModal').classList.add('show');
-        switchAdminTab('users');
+        document.body.style.overflow = 'hidden';
+        setAppVh();
+        document.getElementById('adminHeaderIcon').innerHTML = icon('shield',20);
+        document.getElementById('adminSearchIcon').innerHTML = icon('search',14);
+        document.getElementById('adminCloseBtn').innerHTML = icon('x',16);
+        document.getElementById('adminMenuToggleBtn').innerHTML = icon('grid',16);
+        document.getElementById('adminModsTitle').innerHTML = `${icon('shield',11)} Moderatör Listesi`;
+        document.getElementById('adminBugsTitle').innerHTML = `${icon('warn',11)} Kullanıcı Hata Bildirimleri`;
+        document.getElementById('adminVerifyTitle').innerHTML = `${icon('check',11)} Doğrulama Başvuruları`;
+        document.getElementById('adminLiveTitle').innerHTML = `<span class="admin-live-dot"></span> Canlı akış`;
+        document.getElementById('adminDashFeedTitle').innerHTML = `<span class="admin-live-dot"></span> Son Aktiviteler`;
+        const dashRefreshBtn = document.getElementById('adminDashRefreshBtn');
+        if(dashRefreshBtn) dashRefreshBtn.innerHTML = `${icon('refresh',12)} Paneli Yenile`;
+        renderAdminNavIcons();
+        switchAdminTab('dash');
         db.ref('developmentUsers').once('value').then(snap => {
-            modsRef.once('value').then(snap => { moderators = snap.val() || {}; if(document.getElementById('adminTabMods').classList.contains('active')) renderAdminModsList(); });
+            modsRef.once('value').then(msnap => { moderators = msnap.val() || {}; if(document.getElementById('adminTabMods').classList.contains('active')) renderAdminModsList(); });
             allUsersCache = snap.val() || {};
             renderAdminUserList();
         });
         attachAdminLiveListeners();
     }
+    function refreshAdminDashboard(){
+        db.ref('developmentUsers').once('value').then(snap => {
+            allUsersCache = snap.val() || {};
+            renderAdminStats(null, allUsersCache);
+            renderAdminUserList();
+            showTopToast('Panel yenilendi', 'info', 'refresh');
+        });
+    }
     function closeAdminPanel(){
         document.getElementById('adminModal').classList.remove('show');
+        const chatOpen = document.getElementById('chatMegaModal').classList.contains('show');
+        document.body.style.overflow = chatOpen ? 'hidden' : '';
         detachAdminLiveListeners();
+        closeAdminSidebarMobile();
     }
 
     function attachAdminLiveListeners(){
@@ -11795,6 +12741,7 @@ ${locationCardHtml(m.location)}
     function renderAdminStats(presence, users){
         if(presence) _lastPresenceSnap = presence;
         if(users) _lastUsersSnap = users;
+        renderAdminGrowthChart();
         const grid = document.getElementById('adminStatGrid');
         if(!grid) return;
         const userList = Object.values(_lastUsersSnap);
@@ -11803,21 +12750,29 @@ ${locationCardHtml(m.location)}
         const today = todayStr();
         const newToday = userList.filter(u => u.profile && u.profile.createdAt && new Date(u.profile.createdAt).toISOString().slice(0,10) === today).length;
         const banned = userList.filter(u => u.profile && u.profile.banned).length;
+        const totalCompletedAll = userList.reduce((sum,u)=> sum + (u.totalCompleted||0), 0);
+        const avgStreak = total>0 ? Math.round(userList.reduce((sum,u)=> sum + (u.streak||0), 0) / total) : 0;
+        const maxStreak = Math.max(0, ...userList.map(u => u.streak||0));
         const cards = [
-            { num: online, label:'Çevrimiçi', ic:'bolt', color:'var(--pos)', live:true },
-            { num: total, label:'Toplam Kullanıcı', ic:'user', color:'var(--ink)' },
-            { num: newToday, label:'Bugün Katılan', ic:'sparkle', color:'var(--ink)' },
-            { num: banned, label:'Banlı Hesap', ic:'ban', color:'var(--neg)' }
+            { num: online, label:'Çevrimiçi', ic:'pulse', color:'var(--pos)', live:true },
+            { num: total, label:'Toplam Kullanıcı', ic:'usersGroup', color:'#2563eb' },
+            { num: newToday, label:'Bugün Katılan', ic:'sparkle', color:'#a855f7' },
+            { num: banned, label:'Banlı Hesap', ic:'userBlock', color:'var(--neg)' },
+            { num: totalCompletedAll, label:'Toplam Tamamlanan Görev', ic:'check', color:'#0f9d58' },
+            { num: avgStreak, label:'Ortalama Seri (gün)', ic:'flame', color:'#f97316' },
+            { num: maxStreak, label:'En Uzun Seri (gün)', ic:'crown', color:'#eab308' }
         ];
         grid.innerHTML = cards.map(c => `
       <div class="admin-stat-card" style="--stat-color:${c.color}">
-        <span class="admin-stat-icon">${c.live ? '<span class="admin-live-dot"></span>' : icon(c.ic,14)}</span>
-        <div class="admin-stat-num">${c.num}</div>
-        <div class="admin-stat-label">${c.label}</div>
+        <span class="admin-stat-icon">${icon(c.ic,18)}</span>
+        <div class="admin-stat-body">
+          <div class="admin-stat-num">${c.num}${c.live ? '<span class="admin-live-dot"></span>' : ''}</div>
+          <div class="admin-stat-label">${c.label}</div>
+        </div>
       </div>
     `).join('');
         const sub = document.getElementById('adminHeaderSub');
-        if(sub) sub.textContent = `${total} kayıtlı kullanıcı · ${online} şu anda çevrimiçi`;
+        if(sub) sub.textContent = `${total} kullanıcı · ${online} çevrimiçi`;
     }
 
     const EVENT_ICON = { login:'shield', signup:'plus', ban:'ban', unban:'check' };
@@ -11829,43 +12784,158 @@ ${locationCardHtml(m.location)}
         const h = Math.floor(m/60); if(h<24) return h+'sa önce';
         return Math.floor(h/24)+'gün önce';
     }
-    function renderAdminFeed(events){
-        const el = document.getElementById('adminFeed');
+    function renderAdminGrowthChart(){
+        const el = document.getElementById('adminGrowthChart');
+        const titleEl = document.getElementById('adminGrowthTitle');
+        if(titleEl) titleEl.innerHTML = `${icon('trendUp',11)} Son 14 Gün — Yeni Kayıtlar`;
         if(!el) return;
-        const arr = Object.values(events).sort((a,b) => b.ts - a.ts);
+        const days = [];
+        for(let i=13;i>=0;i--){ const d=new Date(); d.setDate(d.getDate()-i); days.push(d.toISOString().slice(0,10)); }
+        const counts = days.map(() => 0);
+        Object.keys(allUsersCache).forEach(uid => {
+            if(NON_USER_KEYS.has(uid)) return;
+            const p = allUsersCache[uid].profile || {};
+            if(!p.createdAt) return;
+            const key = new Date(p.createdAt).toISOString().slice(0,10);
+            const idx = days.indexOf(key);
+            if(idx >= 0) counts[idx]++;
+        });
+        const max = Math.max(1, ...counts);
+        const total = counts.reduce((a,b)=>a+b,0);
+        const bars = days.map((d,i) => {
+            const h = counts[i]===0 ? 4 : Math.max(8, (counts[i]/max)*70);
+            const label = d.slice(5).replace('-','/');
+            return `<div class="week-bar-col" style="flex:1;">
+        <div class="week-bar ${counts[i]>0?'has-data':''}" style="height:${h}px" title="${label}: ${counts[i]} yeni kayıt"></div>
+        <div class="week-bar-label">${label}</div>
+      </div>`;
+        }).join('');
+        el.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px;">
+        <span style="font-family:'Orbitron',sans-serif; font-size:20px; font-weight:800;">${total}</span>
+        <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft);">son 14 günde yeni kayıt</span>
+      </div>
+      <div class="week-chart" style="height:90px; gap:5px;">${bars}</div>`;
+    }
+    let _adminFeedFilter = 'all';
+    let _lastAdminEvents = {};
+    function setAdminFeedFilter(type, el){
+        _adminFeedFilter = type;
+        if(el){ el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); el.classList.add('active'); }
+        renderAdminFeed(_lastAdminEvents);
+    }
+    function renderAdminFeedFilterRow(){
+        const row = document.getElementById('adminFeedFilterRow');
+        if(!row) return;
+        const types = [
+            { key:'all', label:'Tümü', ic:'grid' },
+            { key:'login', label:'Girişler', ic:'shield' },
+            { key:'signup', label:'Kayıtlar', ic:'plus' },
+            { key:'ban', label:'Banlar', ic:'ban' },
+            { key:'unban', label:'Ban Kaldırma', ic:'check' }
+        ];
+        row.innerHTML = types.map(t => `<button type="button" class="chip${_adminFeedFilter===t.key?' active':''}" onclick="setAdminFeedFilter('${t.key}', this)">${icon(t.ic,11)} ${t.label}</button>`).join('');
+    }
+    function buildAdminFeedHtml(events, limit, filterType){
+        let arr = Object.values(events).sort((a,b) => b.ts - a.ts);
+        if(filterType && filterType !== 'all') arr = arr.filter(e => e.type === filterType);
+        arr = arr.slice(0, limit||100);
         if(arr.length === 0){
-            el.innerHTML = `<div class="empty-state" style="padding:24px;"><p>Henüz kayıtlı bir olay yok.</p></div>`;
-            return;
+            return `<div class="empty-state" style="padding:24px;"><p>Henüz kayıtlı bir olay yok.</p></div>`;
         }
-        el.innerHTML = arr.map(e => `
+        return arr.map(e => `
     <div class="admin-feed-item">
       <span class="admin-feed-icon">${icon(EVENT_ICON[e.type]||'sparkle',13)}</span>
       <span><strong>${escapeHtml((e.meta&&e.meta.username)||'Bir kullanıcı')}</strong> ${EVENT_LABEL[e.type]||e.type}</span>
       <span class="admin-feed-time">${timeAgoTr(e.ts)}</span>
     </div>`).join('');
     }
+    function renderAdminFeed(events){
+        _lastAdminEvents = events || {};
+        renderAdminFeedFilterRow();
+        const el = document.getElementById('adminFeed');
+        if(el) el.innerHTML = buildAdminFeedHtml(events, 100, _adminFeedFilter);
+        const preview = document.getElementById('adminDashFeedPreview');
+        if(preview) preview.innerHTML = buildAdminFeedHtml(events, 6, 'all');
+    }
+    let _adminUserFilter = 'all';
+    let _adminUserPageSize = 24;
+    let _adminUserVisibleCount = 24;
+    function setAdminUserFilter(f, el){
+        _adminUserFilter = f;
+        if(el){ el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); el.classList.add('active'); }
+        _adminUserVisibleCount = _adminUserPageSize;
+        renderAdminUserList();
+    }
+    function renderAdminUserFilterRow(){
+        const row = document.getElementById('adminUserFilterRow');
+        if(!row) return;
+        const filters = [
+            { key:'all', label:'Tümü', ic:'grid' },
+            { key:'online', label:'Çevrimiçi', ic:'pulse' },
+            { key:'banned', label:'Banlı', ic:'ban' },
+            { key:'admin', label:'Yönetici', ic:'crown' },
+            { key:'mod', label:'Moderatör', ic:'shield' }
+        ];
+        row.innerHTML = filters.map(f => `<button type="button" class="chip${_adminUserFilter===f.key?' active':''}" onclick="setAdminUserFilter('${f.key}', this)">${icon(f.ic,11)} ${f.label}</button>`).join('');
+    }
+    function loadMoreAdminUsers(){
+        _adminUserVisibleCount += _adminUserPageSize;
+        renderAdminUserList();
+    }
+    function copyUidToClipboard(uid){
+        navigator.clipboard.writeText(uid).then(()=> showTopToast('Kullanıcı ID kopyalandı', 'info', 'check'))
+            .catch(()=> showTopToast('Kopyalanamadı', 'warn', 'warn'));
+    }
     function renderAdminUserList(){
+        renderAdminUserFilterRow();
         const q = document.getElementById('adminSearch').value.trim().toLowerCase();
+        const sortMode = (document.getElementById('adminUserSort')||{}).value || 'xp';
         const el = document.getElementById('adminUserList');
-        const uids = Object.keys(allUsersCache).filter(k => !NON_USER_KEYS.has(k));
-        const rows = uids.filter(uid => {
-            const p = allUsersCache[uid].profile || {};
-            return !q || (p.username||'').toLowerCase().includes(q) || (p.email||'').toLowerCase().includes(q);
-        }).map(uid => {
+        let uids = Object.keys(allUsersCache).filter(k => !NON_USER_KEYS.has(k));
+
+        uids = uids.filter(uid => {
+            const u = allUsersCache[uid];
+            const p = u.profile || {};
+            const matchesSearch = !q || (p.username||'').toLowerCase().includes(q) || (p.email||'').toLowerCase().includes(q) || uid.toLowerCase().includes(q);
+            if(!matchesSearch) return false;
+            if(_adminUserFilter === 'online') return !!_lastPresenceSnap[uid];
+            if(_adminUserFilter === 'banned') return !!p.banned;
+            if(_adminUserFilter === 'admin') return uid === ADMIN_UID;
+            if(_adminUserFilter === 'mod') return !!moderators[uid];
+            return true;
+        });
+
+        uids.sort((a,b) => {
+            const ua = allUsersCache[a], ub = allUsersCache[b];
+            if(sortMode === 'name') return ((ua.profile||{}).username||'').localeCompare((ub.profile||{}).username||'');
+            if(sortMode === 'streak') return (ub.streak||0) - (ua.streak||0);
+            if(sortMode === 'completed') return (ub.totalCompleted||0) - (ua.totalCompleted||0);
+            return (ub.xp||0) - (ua.xp||0);
+        });
+
+        const total = uids.length;
+        const visibleUids = uids.slice(0, _adminUserVisibleCount);
+
+        const rows = visibleUids.map(uid => {
             const u = allUsersCache[uid];
             const p = u.profile || {};
             const fit = u.fitness || {};
             const idx = getRankIndex(u.xp || 0);
             const banned = !!p.banned;
+            const isMod = !!moderators[uid];
+            const isAdmin = uid === ADMIN_UID;
             const weeklyWater = weeklyWaterTotal(fit);
             const weeklySteps = weeklyStepsTotal(fit);
-            return `<div class="admin-user-card" style="border-left:3px solid ${banned?'var(--ink)':'var(--line)'}">
+            const roleBadge = isAdmin ? `<span class="chat-msg-badge admin">${icon('crown',8)} Yönetici</span>` : (isMod ? `<span class="chat-msg-badge mod">${icon('shield',8)} Moderatör</span>` : '');
+            return `<div class="admin-user-card" style="border-left:3px solid ${banned?'var(--neg)':'var(--line)'}">
         <div class="admin-user-top">
           <div class="asset-logo">${p.avatarUrl ? `<img src="${p.avatarUrl}">` : icon('user',17)}${_lastPresenceSnap[uid] ? '<span class="admin-user-online-dot"></span>' : ''}</div>
           <div class="task-body">
             <div class="admin-user-name-row">
               <span class="task-text">${escapeHtml(p.username||'—')}</span>
-              ${banned?'<span class="tag" style="border-color:var(--ink); color:var(--ink);">BANLI</span>':''}
+              ${roleBadge}
+              ${banned?'<span class="tag" style="border-color:var(--neg); color:var(--neg);">BANLI</span>':''}
             </div>
             <div class="task-meta">
               <span class="tag">${escapeHtml(p.email||'')}</span>
@@ -11873,8 +12943,10 @@ ${locationCardHtml(m.location)}
             </div>
           </div>
           <div class="admin-user-actions">
-            <button class="icon-btn" title="Profili gör" onclick="viewUserProfile('${uid}')">${icon('compass',15)}</button>
-            <button class="icon-btn" title="${banned?'Ban kaldır':'Banla'}" onclick="toggleBan('${uid}', ${!banned})">${icon(banned?'check':'ban',15)}</button>
+            <button class="admin-user-action-btn" title="UID kopyala" onclick="copyUidToClipboard('${uid}')">${icon('layers',15)}</button>
+            <button class="admin-user-action-btn" title="Profili gör" onclick="viewUserProfile('${uid}')">${icon('eyeView',15)}</button>
+            <button class="admin-user-action-btn${banned?'':' danger'}" title="${banned?'Ban kaldır':'Banla'}" onclick="toggleBan('${uid}', ${!banned})">${icon(banned?'check':'shieldBan',15)}</button>
+            ${!isAdmin ? `<button class="admin-user-action-btn danger" title="Hesabı Sil" onclick="adminDeleteUserAccount('${uid}')">${icon('trash',15)}</button>` : ''}
           </div>
         </div>
         <div class="admin-user-stats">
@@ -11886,12 +12958,31 @@ ${locationCardHtml(m.location)}
       </div>`;
         });
         el.innerHTML = rows.join('') || `<div class="empty-state"><p>Kullanıcı bulunamadı.</p></div>`;
+
+        const loadMoreBtn = document.getElementById('adminUsersLoadMoreBtn');
+        if(loadMoreBtn){
+            const remaining = total - visibleUids.length;
+            loadMoreBtn.style.display = remaining > 0 ? 'flex' : 'none';
+            loadMoreBtn.innerHTML = `${icon('chevDown',13)} Daha Fazla Yükle (${remaining} kaldı)`;
+        }
+        const exportBtn = document.getElementById('adminExportCsvBtn');
+        if(exportBtn) exportBtn.innerHTML = `${icon('layers',12)} CSV Dışa Aktar (${total})`;
     }
     function renderAdminModsList(){
         const el = document.getElementById('adminModsList');
         if(!el) return;
-        const uids = Object.keys(allUsersCache).filter(uid => uid !== ADMIN_UID && !NON_USER_KEYS.has(uid));
-        const rows = uids.filter(uid => uid !== ADMIN_UID).map(uid => {
+        const searchInput = document.getElementById('adminModsSearch');
+        const searchIcon = document.getElementById('adminModsSearchIcon');
+        if(searchIcon) searchIcon.innerHTML = icon('search',14);
+        const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
+        let uids = Object.keys(allUsersCache).filter(uid => !NON_USER_KEYS.has(uid));
+        if(q){
+            uids = uids.filter(uid => {
+                const p = allUsersCache[uid].profile || {};
+                return (p.username||'').toLowerCase().includes(q) || (p.email||'').toLowerCase().includes(q);
+            });
+        }
+        const rows = uids.map(uid => {
             const u = allUsersCache[uid];
             const p = u.profile || {};
             const isMod = !!moderators[uid];
@@ -11930,11 +13021,37 @@ ${locationCardHtml(m.location)}
             showTopToast(banned ? 'Kullanıcı banlandı' : 'Ban kaldırıldı', banned?'warn':'info', banned?'ban':'check');
         });
     }
+    function exportUsersCSV(){
+        const uids = Object.keys(allUsersCache).filter(k => !NON_USER_KEYS.has(k));
+        if(uids.length === 0){ showTopToast('Dışa aktarılacak kullanıcı yok', 'warn', 'warn'); return; }
+        const header = ['UID','Kullanıcı Adı','E-posta','XP','Seri','Tamamlanan','Banlı','Yönetici','Moderatör'];
+        const rows = uids.map(uid => {
+            const u = allUsersCache[uid];
+            const p = u.profile || {};
+            return [
+                uid, (p.username||'').replace(/,/g,' '), (p.email||'').replace(/,/g,' '),
+                u.xp||0, u.streak||0, u.totalCompleted||0,
+                p.banned ? 'Evet':'Hayır', uid===ADMIN_UID?'Evet':'Hayır', moderators[uid]?'Evet':'Hayır'
+            ].join(',');
+        });
+        const csv = [header.join(','), ...rows].join('\n');
+        const blob = new Blob(['\uFEFF'+csv], { type:'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `kullanicilar-${todayStr()}.csv`;
+        document.body.appendChild(a); a.click(); a.remove();
+        URL.revokeObjectURL(url);
+        showTopToast('Kullanıcı listesi CSV olarak indirildi', 'info', 'check');
+    }
 
+    let _adminProfileNavList = [];
+    let _adminProfileNavIndex = -1;
     function viewUserProfile(uid){
         const u = allUsersCache[uid];
         if(!u) return;
-        closeAllAppModals('chatMegaModal');
+        closeAllAppModals('adminModal');
+        _profileTargetUid = uid;
+        _profileSocialMode = false;
         const p = u.profile || {};
         _profileViewOverride = {
             username: p.username || 'Kullanıcı',
@@ -11954,13 +13071,65 @@ ${locationCardHtml(m.location)}
             timedCompleted: u.timedCompleted || 0,
             nightOwlCompletions: u.nightOwlCompletions || 0,
             morningCompletions: u.morningCompletions || 0,
-            weekendCompletions: u.weekendCompletions || 0
+            weekendCompletions: u.weekendCompletions || 0,
+            verified: !!p.verified
         };
+        const gridUids = Object.keys(allUsersCache).filter(k => !NON_USER_KEYS.has(k));
+        _adminProfileNavList = gridUids;
+        _adminProfileNavIndex = gridUids.indexOf(uid);
+        const navRow = document.getElementById('adminProfileNavRow');
+        if(navRow){
+            navRow.style.display = 'flex';
+            document.getElementById('adminProfilePrevBtn').innerHTML = icon('arrowLeft',14);
+            document.getElementById('adminProfileNextBtn').innerHTML = icon('arrowLeft',14);
+            document.getElementById('adminProfileNextBtn').style.transform = 'rotate(180deg)';
+            const delBtn = document.getElementById('adminProfileDeleteBtn');
+            if(delBtn){
+                delBtn.style.display = uid === ADMIN_UID ? 'none' : 'flex';
+                delBtn.innerHTML = icon('trash',14);
+            }
+        }
         document.getElementById('profileViewMode').style.display = '';
         document.getElementById('profileEditMode').style.display = 'none';
         document.getElementById('pvEditBtn').style.display = 'none';
         renderProfileView();
         document.getElementById('profileModal').classList.add('show');
+    }
+
+    async function adminDeleteUserAccount(uid){
+        if(!uid || uid === ADMIN_UID){ showTopToast('Yönetici hesabı silinemez', 'warn', 'ban'); return; }
+        const p = (allUsersCache[uid]||{}).profile || {};
+        const ok = await showConfirm(`"${p.username||'Bu kullanıcı'}" hesabını kalıcı olarak silmek istediğine emin misin? Bu işlem geri alınamaz ve kullanıcının tüm verilerini (görevler, sohbetler, arkadaşlıklar) kaldırır.`);
+        if(!ok) return;
+        try{
+            const updates = {};
+            updates['developmentUsers/'+uid] = null;
+            updates['developmentUsers/moderators/'+uid] = null;
+            updates['developmentUsers/presence/'+uid] = null;
+            const friendUids = Object.keys((allUsersCache[uid]||{}).friends || {});
+            friendUids.forEach(fid => {
+                updates['developmentUsers/'+fid+'/friends/'+uid] = null;
+                updates['developmentUsers/dmIndex/'+fid+'/'+uid] = null;
+            });
+            await db.ref().update(updates);
+            delete allUsersCache[uid];
+            delete moderators[uid];
+            showTopToast('Kullanıcı hesabı silindi', 'warn', 'trash');
+            closeProfileModal();
+            renderAdminUserList();
+            renderAdminStats(null, allUsersCache);
+        }catch(err){
+            showTopToast('Silinemedi: '+err.message, 'warn', 'warn');
+        }
+    }
+    function adminDeleteCurrentProfile(){
+        const uid = _adminProfileNavList[_adminProfileNavIndex];
+        if(uid) adminDeleteUserAccount(uid);
+    }
+    function adminProfileNav(dir){
+        if(_adminProfileNavList.length === 0) return;
+        _adminProfileNavIndex = (_adminProfileNavIndex + dir + _adminProfileNavList.length) % _adminProfileNavList.length;
+        viewUserProfile(_adminProfileNavList[_adminProfileNavIndex]);
     }
     /* ===================== BOT ETKİLEŞİM PANELİ (yalnızca yönetici) ===================== */
     let _botTargetMsgId = null, _botTargetScope = 'global';
@@ -12180,28 +13349,28 @@ ${locationCardHtml(m.location)}
         });
     }
 
-    let _holidaySoundTriggerAttached = false;
-    function attachHolidaySoundListener(){
-        if(_holidaySoundTriggerAttached || !db) return;
-        _holidaySoundTriggerAttached = true;
-        Object.keys(HOLIDAY_SOUND_URLS).forEach(key => {
-            let firstSnap = true;
-            db.ref('developmentUsers/siteEvent/soundTriggers/'+key).on('value', snap => {
-                if(firstSnap){ firstSnap = false; return; } // sayfa açılışındaki eski değeri çalma
-                const url = HOLIDAY_SOUND_URLS[key] && HOLIDAY_SOUND_URLS[key].arrival;
-                if(url && activeHolidayKey === key) playHolidaySound(url, 0.6);
-            });
+    let _holidaySoundListenedKeys = new Set();
+    function attachHolidaySoundListenerFor(key){
+        if(!db || !key || _holidaySoundListenedKeys.has(key)) return;
+        _holidaySoundListenedKeys.add(key);
+        let firstSnap = true;
+        db.ref('developmentUsers/siteEvent/soundTriggers/'+key).on('value', snap => {
+            if(firstSnap){ firstSnap = false; return; } // sayfa açılışındaki eski değeri çalma
+            const h = getHolidayDef(key);
+            const url = (h && h.sounds && h.sounds.arrival) || (HOLIDAY_SOUND_URLS[key] && HOLIDAY_SOUND_URLS[key].arrival);
+            if(url && activeHolidayKey === key) playHolidaySound(url, 0.6);
         });
     }
 
     let holidayAmbientSoundTimer = null;
     function scheduleHolidayAmbientSound(key){
         clearTimeout(holidayAmbientSoundTimer);
-        const snd = HOLIDAY_SOUND_URLS[key];
-        if(!snd || !snd.ambient) return;
+        const h = getHolidayDef(key);
+        const ambientUrl = (h && h.sounds && h.sounds.ambient) || (HOLIDAY_SOUND_URLS[key] && HOLIDAY_SOUND_URLS[key].ambient);
+        if(!ambientUrl) return;
         const wait = 45000 + Math.random()*60000; // 45-105sn arası ara ara
         holidayAmbientSoundTimer = setTimeout(() => {
-            if(activeHolidayKey === key && !document.hidden) playHolidaySound(snd.ambient, 0.28);
+            if(activeHolidayKey === key && !document.hidden) playHolidaySound(ambientUrl, 0.28);
             scheduleHolidayAmbientSound(key);
         }, wait);
     }
@@ -12284,11 +13453,37 @@ ${locationCardHtml(m.location)}
         const easter = computeEasterDate(date.getFullYear());
         const diffDays = Math.round((date - easter)/86400000);
         if(diffDays>=-2 && diffDays<=2) return 'easter';
+        const todayKey = date.toISOString().slice(0,10);
+        const customMatch = Object.keys(customHolidays).find(id => {
+            const c = customHolidays[id];
+            return c.startDate && c.endDate && todayKey >= c.startDate && todayKey <= c.endDate;
+        });
+        if(customMatch) return customMatch;
         return null;
     }
 
     let activeHolidayKey = null;
-    let forcedHolidayKey = null; // null = otomatik, 'off' = kapalı, veya bir HOLIDAYS anahtarı
+    let forcedHolidayKey = null; // null = otomatik, 'off' = kapalı, veya bir HOLIDAYS anahtarı / özel gün id'si
+    let customHolidays = {};
+
+    function getHolidayDef(key){
+        if(!key) return null;
+        if(HOLIDAYS[key]) return HOLIDAYS[key];
+        const c = customHolidays[key];
+        if(!c) return null;
+        const emojiSet = (c.emojiSet && c.emojiSet.length) ? c.emojiSet : [c.emoji||'✨','✨','🎉'];
+        return {
+            key, name:c.name, emoji:c.emoji||'✨', likeIcon:c.emoji||'✨',
+            confettiEmojis:emojiSet,
+            ambientEmojis:emojiSet,
+            bannerBg:`linear-gradient(120deg,${c.c3||'#7a0000'},${c.c1||'#ff8a8a'} 55%,${c.c2||'#ff2b2b'})`,
+            bannerText: c.name+' teması aktif',
+            desc: c.desc || 'Yönetici tarafından oluşturulan özel gün teması.',
+            accent:{ c1:c.c1||'#ff8a8a', c2:c.c2||'#ff2b2b', c3:c.c3||'#7a0000' },
+            chime:[440,523,659], isCustom:true, startDate:c.startDate, endDate:c.endDate,
+            sounds:{ arrival:c.soundArrival||'', ambient:c.soundAmbient||'' }
+        };
+    }
     let holidayAmbientInterval = null;
     let holidayListenerAttached = false;
     let holidayTopCardInterval = null;
@@ -12302,7 +13497,11 @@ ${locationCardHtml(m.location)}
             forcedHolidayKey = snap.val();
             recomputeActiveHoliday();
         });
-        attachHolidaySoundListener();
+        db.ref('developmentUsers/siteEvent/customHolidays').on('value', snap => {
+            customHolidays = snap.val() || {};
+            renderHolidayAdminPanel();
+            recomputeActiveHoliday();
+        });
     }
 
     function recomputeActiveHoliday(){
@@ -12332,9 +13531,10 @@ ${locationCardHtml(m.location)}
         } else if(!key){
             document.documentElement.removeAttribute('data-holiday');
         }
-        if(!key || !HOLIDAYS[key]) return;
+        const h = getHolidayDef(key);
+        if(!key || !h) return;
+        attachHolidaySoundListenerFor(key);
         broadcastHolidayArrivalSound(key);
-        const h = HOLIDAYS[key];
         const banner = document.createElement('div');
         banner.id = 'holidayBanner';
         banner.style.cssText = `position:fixed; top:14px; left:50%; transform:translateX(-50%) translateY(-10px); z-index:94;
@@ -12356,6 +13556,8 @@ ${locationCardHtml(m.location)}
     /* ---- Üst kart: geri sayım + kapatma ---- */
     function getHolidayEndDate(key){
         const now = new Date();
+        const c = customHolidays[key];
+        if(c && c.endDate) return new Date(c.endDate+'T23:59:59');
         if(key === 'newyear'){
             let end = new Date(now.getFullYear(), 0, 7, 23,59,59);
             if(end < now) end = new Date(now.getFullYear()+1, 0, 7, 23,59,59);
@@ -12392,8 +13594,8 @@ ${locationCardHtml(m.location)}
         const card = document.getElementById('holidayTopCard');
         if(!card) return;
         clearInterval(holidayTopCardInterval);
-        if(!key || !HOLIDAYS[key] || holidayTopCardDismissed[key]){ card.style.display='none'; return; }
-        const h = HOLIDAYS[key];
+        const h = key ? getHolidayDef(key) : null;
+        if(!key || !h || holidayTopCardDismissed[key]){ card.style.display='none'; return; }
         card.style.display = 'flex';
         card.style.setProperty('--hc1', h.accent.c1);
         card.style.setProperty('--hc2', h.accent.c2);
@@ -12487,7 +13689,7 @@ ${locationCardHtml(m.location)}
 
     function setHolidayAccentVars(key){
         const root = document.documentElement;
-        const h = key ? HOLIDAYS[key] : null;
+        const h = key ? getHolidayDef(key) : null;
         if(h && h.accent){
             root.style.setProperty('--hc1', h.accent.c1);
             root.style.setProperty('--hc2', h.accent.c2);
@@ -12498,10 +13700,11 @@ ${locationCardHtml(m.location)}
     function updateHolidayCornerBadge(key){
         const btn = document.getElementById('holidayCornerBadge');
         if(!btn) return;
-        if(key && HOLIDAYS[key]){
+        const h = key ? getHolidayDef(key) : null;
+        if(h){
             btn.style.display = 'flex';
             btn.querySelector('.hcb-dot').remove && null;
-            btn.innerHTML = `<span style="font-size:16px;">${HOLIDAYS[key].emoji}</span><span class="hcb-dot"></span>`;
+            btn.innerHTML = `<span style="font-size:16px;">${h.emoji}</span><span class="hcb-dot"></span>`;
         } else {
             btn.style.display = 'none';
         }
@@ -12523,8 +13726,8 @@ ${locationCardHtml(m.location)}
     }
 
     function openHolidayInfoModal(){
-        if(!activeHolidayKey || !HOLIDAYS[activeHolidayKey]) return;
-        const h = HOLIDAYS[activeHolidayKey];
+        const h = activeHolidayKey ? getHolidayDef(activeHolidayKey) : null;
+        if(!activeHolidayKey || !h) return;
         closeAllAppModals();
         document.getElementById('holidayInfoEyebrow').textContent = forcedHolidayKey && forcedHolidayKey!=='off' ? 'Özel Gün — Yönetici Tarafından Aktifleştirildi' : 'Özel Gün Aktif';
         document.getElementById('holidayInfoIcon').textContent = h.emoji;
@@ -12574,50 +13777,141 @@ ${locationCardHtml(m.location)}
     }
 
     function likeGlyph(liked, size){
-        if(activeHolidayKey && HOLIDAYS[activeHolidayKey]){
-            return `<span style="font-size:${size+2}px; line-height:1; display:inline-block; vertical-align:middle; filter:${liked?'none':'grayscale(0.7) opacity(.5)'};">${HOLIDAYS[activeHolidayKey].likeIcon}</span>`;
+        const h = activeHolidayKey ? getHolidayDef(activeHolidayKey) : null;
+        if(h){
+            return `<span style="font-size:${size+2}px; line-height:1; display:inline-block; vertical-align:middle; filter:${liked?'none':'grayscale(0.7) opacity(.5)'};">${h.likeIcon}</span>`;
         }
         return icon(liked?'heartFilled':'heart', size);
     }
     function holidayHeartEmoji(){
-        return (activeHolidayKey && HOLIDAYS[activeHolidayKey]) ? HOLIDAYS[activeHolidayKey].likeIcon : '❤';
+        const h = activeHolidayKey ? getHolidayDef(activeHolidayKey) : null;
+        return h ? h.likeIcon : '❤';
     }
 
     function forceHolidayForEveryone(key){
         if(currentUid !== ADMIN_UID){ showTopToast('Bu işlem sadece yönetici içindir', 'warn', 'ban'); return; }
         if(!db) return;
         db.ref('developmentUsers/siteEvent/forcedKey').set(key).then(()=>{
+            const def = key && key!=='off' ? getHolidayDef(key) : null;
             const msg = key==='off' ? 'Özel gün teması herkes için kapatıldı'
-                : key ? `${HOLIDAYS[key].name} herkes için aktifleştirildi`
+                : key ? `${def ? def.name : key} herkes için aktifleştirildi`
                     : 'Otomatik moda dönüldü';
             showTopToast(msg, 'info', 'sparkle');
         }).catch(err=> showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'));
+    }
+
+    function openCustomHolidayModal(){
+        document.getElementById('chNameIcon').innerHTML = icon('edit',13);
+        document.getElementById('chEmojiIcon').innerHTML = icon('sparkle',13);
+        document.getElementById('chStartIcon').innerHTML = icon('calendar',13);
+        document.getElementById('chEndIcon').innerHTML = icon('calendar',13);
+        document.getElementById('chNameInput').value = '';
+        document.getElementById('chEmojiInput').value = '';
+        document.getElementById('chDescInput').value = '';
+        document.getElementById('chStartInput').value = '';
+        document.getElementById('chEndInput').value = '';
+        document.getElementById('chEmojiSetInput').value = '';
+        document.getElementById('chSoundArrivalInput').value = '';
+        document.getElementById('chSoundAmbientInput').value = '';
+        closeAllAppModals('adminModal');
+        document.getElementById('customHolidayModal').classList.add('show');
+    }
+    function closeCustomHolidayModal(){ document.getElementById('customHolidayModal').classList.remove('show'); }
+
+    async function createCustomHoliday(){
+        if(currentUid !== ADMIN_UID){ showTopToast('Bu işlem sadece yönetici içindir', 'warn', 'ban'); return; }
+        const name = document.getElementById('chNameInput').value.trim();
+        const emoji = document.getElementById('chEmojiInput').value.trim() || '✨';
+        const startDate = document.getElementById('chStartInput').value;
+        const endDate = document.getElementById('chEndInput').value;
+        const c1 = document.getElementById('chColor1').value;
+        const c2 = document.getElementById('chColor2').value;
+        const c3 = document.getElementById('chColor3').value;
+        const desc = document.getElementById('chDescInput').value.trim();
+        const emojiSetRaw = document.getElementById('chEmojiSetInput').value.trim();
+        const emojiSet = emojiSetRaw ? emojiSetRaw.split(',').map(e=>e.trim()).filter(Boolean) : [];
+        const soundArrival = document.getElementById('chSoundArrivalInput').value.trim();
+        const soundAmbient = document.getElementById('chSoundAmbientInput').value.trim();
+        if(!name){ showTopToast('Bir isim gir', 'warn', 'warn'); return; }
+        if(!startDate || !endDate){ showTopToast('Başlangıç ve bitiş tarihi seç', 'warn', 'warn'); return; }
+        if(endDate < startDate){ showTopToast('Bitiş tarihi başlangıçtan önce olamaz', 'warn', 'warn'); return; }
+        try{
+            const ref = db.ref('developmentUsers/siteEvent/customHolidays').push();
+            await ref.set({ name, emoji, startDate, endDate, c1, c2, c3, desc, emojiSet, soundArrival, soundAmbient, createdAt: Date.now() });
+            showTopToast('Özel gün oluşturuldu', 'info', 'check');
+            closeCustomHolidayModal();
+        }catch(err){ showTopToast('Oluşturulamadı: '+err.message, 'warn', 'warn'); }
+    }
+    async function deleteCustomHoliday(id){
+        const ok = await showConfirm('Bu özel günü silmek istediğine emin misin?');
+        if(!ok) return;
+        try{
+            await db.ref('developmentUsers/siteEvent/customHolidays/'+id).remove();
+            if(forcedHolidayKey === id) await db.ref('developmentUsers/siteEvent/forcedKey').set(null);
+            showTopToast('Özel gün silindi', 'warn', 'trash');
+        }catch(err){ showTopToast('Silinemedi: '+err.message, 'warn', 'warn'); }
     }
 
     function renderHolidayAdminPanel(){
         const el = document.getElementById('adminHolidayContent');
         if(!el) return;
         const autoKey = getDateBasedHolidayKey();
+        const autoDef = autoKey ? getHolidayDef(autoKey) : null;
         const statusLabel = forcedHolidayKey === 'off' ? 'Manuel olarak kapatıldı'
-            : forcedHolidayKey ? `Manuel olarak "${(HOLIDAYS[forcedHolidayKey]||{}).name||forcedHolidayKey}" herkes için zorlanıyor`
-                : (autoKey ? `Otomatik: ${HOLIDAYS[autoKey].name} (tarih uygun)` : 'Otomatik: şu an aktif özel gün yok');
+            : forcedHolidayKey ? `Manuel olarak "${(getHolidayDef(forcedHolidayKey)||{}).name||forcedHolidayKey}" herkes için zorlanıyor`
+                : (autoDef ? `Otomatik: ${autoDef.name} (tarih uygun)` : 'Otomatik: şu an aktif özel gün yok');
+
+        const customList = Object.keys(customHolidays);
+        const customCardsHtml = customList.length === 0
+            ? `<div class="empty-state" style="padding:20px;"><p>Henüz özel bir gün oluşturmadın.</p></div>`
+            : customList.map(id => {
+                const c = customHolidays[id];
+                const active = forcedHolidayKey === id;
+                return `<div class="admin-user-card" style="border-left:3px solid ${c.c2||'#ff2b2b'};">
+              <div class="admin-user-top">
+                <div class="asset-logo" style="font-size:20px; display:flex; align-items:center; justify-content:center;">${c.emoji||'✨'}</div>
+                <div class="task-body">
+                  <div class="admin-user-name-row"><span class="task-text">${escapeHtml(c.name||'İsimsiz')}</span>${active?`<span class="chat-msg-badge admin">${icon('bolt',8)} AKTİF</span>`:''}</div>
+                  <div class="task-meta"><span class="tag">${icon('calendar',10)} ${c.startDate||'?'} → ${c.endDate||'?'}</span></div>
+                </div>
+                <div class="admin-user-actions">
+                  <button class="admin-user-action-btn" title="Şimdi aktifleştir (herkes için)" onclick="forceHolidayForEveryone('${id}')">${icon('bolt',14)}</button>
+                  <button class="admin-user-action-btn danger" title="Sil" onclick="deleteCustomHoliday('${id}')">${icon('trash',14)}</button>
+                </div>
+              </div>
+            </div>`;
+            }).join('');
+
         el.innerHTML = `
       <div class="fx-panel" style="margin-bottom:16px;">
         <span class="fx-panel-label">${icon('sparkle',11)} Şu Anki Durum</span>
         <p style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--ink); margin:0;">${statusLabel}</p>
       </div>
-      <div class="lift-grid" style="grid-template-columns:repeat(3,1fr);">
+
+      <div class="admin-section-title">${icon('gift',11)} Hazır Özel Günler</div>
+      <div class="lift-grid" style="grid-template-columns:repeat(3,1fr); margin-bottom:22px;">
         ${Object.values(HOLIDAYS).map(h => `
-          <button type="button" class="ts-mode-btn${forcedHolidayKey===h.key?' active':''}" style="text-align:center; align-items:center;" onclick="forceHolidayForEveryone('${h.key}')">
-            <span style="font-size:26px;">${h.emoji}</span>
-            <span class="ts-mode-name">${h.name}</span>
-            <span class="ts-mode-sub">Herkes için aktifleştir</span>
+          <button type="button" onclick="forceHolidayForEveryone('${h.key}')"
+            style="position:relative; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:4px;
+              height:120px; border-radius:16px; border:2px solid ${forcedHolidayKey===h.key?'#fff':'transparent'};
+              background:${h.bannerBg}; box-shadow:${forcedHolidayKey===h.key?'0 0 0 3px '+h.accent.c2+', 0 8px 20px rgba(0,0,0,.3)':'0 4px 14px rgba(0,0,0,.18)'};
+              cursor:pointer; padding:14px 8px 12px; transition:transform .15s ease;">
+            <span style="font-size:40px; filter:drop-shadow(0 4px 8px rgba(0,0,0,.35)); margin-bottom:2px;">${h.emoji}</span>
+            <span style="font-family:'Orbitron',sans-serif; font-weight:800; font-size:12px; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,.4); letter-spacing:.02em;">${h.name}</span>
+            ${forcedHolidayKey===h.key?`<span style="position:absolute; top:8px; right:8px; background:rgba(0,0,0,.32); color:#fff; font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:800; padding:3px 7px; border-radius:100px; letter-spacing:.05em;">${icon('bolt',8)} AKTİF</span>`:''}
           </button>`).join('')}
       </div>
-      <div class="add-row" style="margin-top:14px;">
+      <div class="add-row" style="margin-bottom:22px;">
         <button class="btn btn-ghost" style="flex:1;" onclick="forceHolidayForEveryone(null)">${icon('refresh',13)} Otomatik Moda Dön</button>
         <button class="btn btn-ghost" style="flex:1; color:var(--neg); border-color:var(--neg);" onclick="forceHolidayForEveryone('off')">${icon('ban',13)} Temayı Kapat</button>
-      </div>`;
+      </div>
+
+      <div class="admin-section-title">${icon('palette',11)} Özel Gün Oluştur</div>
+      <button class="btn btn-add" style="margin-bottom:22px;" onclick="openCustomHolidayModal()">${icon('plus',14)} Yeni Özel Gün Oluştur</button>
+
+      <div class="admin-section-title">${icon('layers',11)} Oluşturulan Özel Günler</div>
+      <div style="display:flex; flex-direction:column; gap:8px;">${customCardsHtml}</div>
+    `;
     }
 
     let _ctxTarget = null; // { type:'dm'|'group', id }
@@ -12702,11 +13996,338 @@ ${locationCardHtml(m.location)}
         renderChatHub();
     }
 
+    /* ===================== HATA BİLDİRME SİSTEMİ ===================== */
+    let _pendingBugImageDataUrl = null;
+    let allBugReports = {};
+    let _adminBugsFilter = 'open';
+
+    function openBugReportModal(){
+        closeAllAppModals();
+        document.getElementById('bugReportDesc').value = '';
+        cancelBugImage();
+        document.getElementById('bugReportModal').classList.add('show');
+    }
+    function closeBugReportModal(){ document.getElementById('bugReportModal').classList.remove('show'); }
+
+    function handleBugImageSelect(event){
+        const file = event.target.files[0];
+        if(!file) return;
+        if(!file.type.startsWith('image/')){ showTopToast('Lütfen bir görsel seç', 'warn', 'warn'); return; }
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = new Image();
+            img.onload = () => {
+                const maxDim = 900;
+                const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width*scale; canvas.height = img.height*scale;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                _pendingBugImageDataUrl = canvas.toDataURL('image/jpeg', 0.78);
+                const wrap = document.getElementById('bugImagePreviewWrap');
+                wrap.style.display = 'block';
+                wrap.innerHTML = `<div style="position:relative; display:inline-block;">
+          <img src="${_pendingBugImageDataUrl}" style="max-height:140px; border-radius:10px; border:1px solid var(--line);">
+          <button class="icon-btn" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,.5); color:#fff;" onclick="cancelBugImage()">${icon('x',12)}</button>
+        </div>`;
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+    function cancelBugImage(){
+        _pendingBugImageDataUrl = null;
+        document.getElementById('bugImagePreviewWrap').style.display = 'none';
+        document.getElementById('bugImagePreviewWrap').innerHTML = '';
+        document.getElementById('bugImageInput').value = '';
+    }
+
+    async function submitBugReport(){
+        const desc = document.getElementById('bugReportDesc').value.trim();
+        if(!desc){ showTopToast('Lütfen sorunu kısaca anlat', 'warn', 'warn'); return; }
+        if(!currentUid || !db){ showTopToast('Giriş yapmalısın', 'warn', 'warn'); return; }
+        const me = getMyProfileCache();
+        try{
+            await db.ref('developmentUsers/bugReports').push({
+                uid: currentUid,
+                username: me.username,
+                avatarUrl: me.avatarUrl,
+                desc,
+                imageUrl: _pendingBugImageDataUrl || null,
+                ts: Date.now(),
+                status: 'open',
+                page: location.href
+            });
+            closeBugReportModal();
+            showTopToast('Hata bildirimin gönderildi, teşekkürler!', 'info', 'check');
+        }catch(err){
+            showTopToast('Gönderilemedi: '+err.message, 'warn', 'warn');
+        }
+    }
+
+    function attachBugReportsListener(){
+        if(!db) return;
+        db.ref('developmentUsers/bugReports').on('value', snap => {
+            allBugReports = snap.val() || {};
+            if(document.getElementById('adminTabBugs') && document.getElementById('adminTabBugs').classList.contains('active')){
+                renderAdminBugsList();
+            }
+        });
+    }
+
+    function setAdminBugsFilter(f, el){
+        _adminBugsFilter = f;
+        if(el){ el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); el.classList.add('active'); }
+        renderAdminBugsList();
+    }
+
+    function renderAdminBugsList(){
+        const row = document.getElementById('adminBugsFilterRow');
+        if(row){
+            const filters = [
+                { key:'open', label:'Açık', ic:'warn' },
+                { key:'resolved', label:'Çözüldü', ic:'check' },
+                { key:'all', label:'Tümü', ic:'grid' }
+            ];
+            row.innerHTML = filters.map(f => `<button type="button" class="chip${_adminBugsFilter===f.key?' active':''}" onclick="setAdminBugsFilter('${f.key}', this)">${icon(f.ic,11)} ${f.label}</button>`).join('');
+        }
+        const el = document.getElementById('adminBugsList');
+        if(!el) return;
+        let ids = Object.keys(allBugReports);
+        if(_adminBugsFilter !== 'all') ids = ids.filter(id => (allBugReports[id].status||'open') === _adminBugsFilter);
+        ids.sort((a,b) => (allBugReports[b].ts||0) - (allBugReports[a].ts||0));
+
+        if(ids.length === 0){
+            el.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><p>Bu kategoride hata bildirimi yok.</p></div>`;
+            return;
+        }
+        el.innerHTML = ids.map(id => {
+            const r = allBugReports[id];
+            const resolved = r.status === 'resolved';
+            return `<div class="admin-user-card" style="border-left:3px solid ${resolved?'var(--pos)':'var(--neg)'};">
+        <div class="admin-user-top">
+          <div class="asset-logo">${r.avatarUrl?`<img src="${r.avatarUrl}">`:icon('user',17)}</div>
+          <div class="task-body">
+            <div class="admin-user-name-row">
+              <span class="task-text">${escapeHtml(r.username||'Kullanıcı')}</span>
+              <span class="tag" style="border-color:${resolved?'var(--pos)':'var(--neg)'}; color:${resolved?'var(--pos)':'var(--neg)'};">${resolved?'ÇÖZÜLDÜ':'AÇIK'}</span>
+            </div>
+            <div class="task-meta"><span class="tag">${timeAgoTr(r.ts||Date.now())}</span></div>
+          </div>
+          <div class="admin-user-actions">
+            ${!resolved ? `<button class="admin-user-action-btn" title="Çözüldü işaretle" onclick="resolveBugReport('${id}')">${icon('check',15)}</button>` : ''}
+            <button class="admin-user-action-btn danger" title="Sil" onclick="deleteBugReport('${id}')">${icon('trash',15)}</button>
+          </div>
+        </div>
+        <p style="font-size:12.5px; color:var(--ink); margin:10px 0 0; white-space:pre-wrap;">${escapeHtml(r.desc||'')}</p>
+        ${r.imageUrl ? `<img src="${r.imageUrl}" style="max-width:100%; border-radius:10px; margin-top:10px; cursor:pointer; border:1px solid var(--line);" onclick="openLightbox('${r.imageUrl}')">` : ''}
+      </div>`;
+        }).join('');
+    }
+
+    async function resolveBugReport(id){
+        try{
+            await db.ref('developmentUsers/bugReports/'+id+'/status').set('resolved');
+            showTopToast('Hata çözüldü olarak işaretlendi', 'info', 'check');
+        }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
+    }
+    async function deleteBugReport(id){
+        const ok = await showConfirm('Bu hata bildirimini silmek istediğine emin misin?');
+        if(!ok) return;
+        try{
+            await db.ref('developmentUsers/bugReports/'+id).remove();
+            showTopToast('Bildirim silindi', 'warn', 'trash');
+        }catch(err){ showTopToast('Silinemedi: '+err.message, 'warn', 'warn'); }
+    }
+
+    /* ===================== DOĞRULAMA (MAVİ TİK) SİSTEMİ ===================== */
+    let _pendingVerifyImages = [];
+    let allVerifyRequests = {};
+    let _adminVerifyFilter = 'pending';
+
+    function verifiedBadgeHtml(verified){
+        if(!verified) return '';
+        return `<span class="verified-badge" title="Doğrulanmış Kullanıcı">${icon('check',9)}</span>`;
+    }
+
+    function computeTrustScore(log){
+        const data = (log || taskCompletionLog || []).slice(-50);
+        if(data.length < 5) return null;
+        let suspicious = 0;
+        data.forEach(e => {
+            const dur = (e.completedAt||0) - (e.createdAt||0);
+            if(dur < 90000) suspicious++;
+        });
+        const ratio = suspicious / data.length;
+        return { score: Math.round((1-ratio)*100), total: data.length, suspicious };
+    }
+
+    function openVerificationModal(){
+        if(isVerifiedUser){ showTopToast('Zaten doğrulanmış bir hesabın var', 'info', 'check'); return; }
+        closeAllAppModals();
+        document.getElementById('verifyReqDesc').value = '';
+        _pendingVerifyImages = [];
+        renderVerifyImagePreviews();
+        document.getElementById('verifyRequestModal').classList.add('show');
+    }
+    function closeVerificationModal(){ document.getElementById('verifyRequestModal').classList.remove('show'); }
+
+    function handleVerifyImageSelect(event){
+        const file = event.target.files[0];
+        if(!file) return;
+        if(_pendingVerifyImages.length >= 3){ showTopToast('En fazla 3 görsel ekleyebilirsin', 'warn', 'warn'); return; }
+        if(!file.type.startsWith('image/')){ showTopToast('Lütfen bir görsel seç', 'warn', 'warn'); return; }
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = new Image();
+            img.onload = () => {
+                const maxDim = 800;
+                const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width*scale; canvas.height = img.height*scale;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                _pendingVerifyImages.push(canvas.toDataURL('image/jpeg', 0.76));
+                renderVerifyImagePreviews();
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+        event.target.value = '';
+    }
+    function removeVerifyImage(idx){
+        _pendingVerifyImages.splice(idx, 1);
+        renderVerifyImagePreviews();
+    }
+    function renderVerifyImagePreviews(){
+        const wrap = document.getElementById('verifyImagePreviewWrap');
+        wrap.innerHTML = _pendingVerifyImages.map((src, i) => `
+      <div style="position:relative;">
+        <img src="${src}" style="width:76px; height:76px; object-fit:cover; border-radius:10px; border:1px solid var(--line);">
+        <button class="icon-btn" style="position:absolute; top:2px; right:2px; width:22px; height:22px; padding:0; background:rgba(0,0,0,.5); color:#fff;" onclick="removeVerifyImage(${i})">${icon('x',11)}</button>
+      </div>`).join('');
+    }
+
+    async function submitVerificationRequest(){
+        const desc = document.getElementById('verifyReqDesc').value.trim();
+        if(!desc){ showTopToast('Lütfen kısa bir açıklama yaz', 'warn', 'warn'); return; }
+        if(_pendingVerifyImages.length === 0){ showTopToast('En az bir kanıt görseli ekle', 'warn', 'warn'); return; }
+        if(!currentUid || !db){ showTopToast('Giriş yapmalısın', 'warn', 'warn'); return; }
+        const existing = await db.ref('developmentUsers/verificationRequests/'+currentUid).once('value');
+        if(existing.exists() && existing.val().status === 'pending'){
+            showTopToast('Zaten bekleyen bir talebin var', 'info', 'clock');
+            closeVerificationModal();
+            return;
+        }
+        const me = getMyProfileCache();
+        const trust = computeTrustScore();
+        try{
+            await db.ref('developmentUsers/verificationRequests/'+currentUid).set({
+                uid: currentUid, username: me.username, avatarUrl: me.avatarUrl,
+                desc, images: _pendingVerifyImages, ts: Date.now(), status: 'pending',
+                trustScore: trust ? trust.score : null, trustSampleSize: trust ? trust.total : 0
+            });
+            closeVerificationModal();
+            showTopToast('Doğrulama talebin gönderildi', 'info', 'check');
+        }catch(err){ showTopToast('Gönderilemedi: '+err.message, 'warn', 'warn'); }
+    }
+
+    function attachVerificationListener(){
+        if(!db) return;
+        db.ref('developmentUsers/verificationRequests').on('value', snap => {
+            allVerifyRequests = snap.val() || {};
+            if(document.getElementById('adminTabVerify') && document.getElementById('adminTabVerify').classList.contains('active')){
+                renderAdminVerifyList();
+            }
+        });
+    }
+
+    function setAdminVerifyFilter(f, el){
+        _adminVerifyFilter = f;
+        if(el){ el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); el.classList.add('active'); }
+        renderAdminVerifyList();
+    }
+
+    function renderAdminVerifyList(){
+        const row = document.getElementById('adminVerifyFilterRow');
+        if(row){
+            const filters = [
+                { key:'pending', label:'Bekleyen', ic:'clock' },
+                { key:'approved', label:'Onaylı', ic:'check' },
+                { key:'rejected', label:'Reddedilen', ic:'x' },
+                { key:'all', label:'Tümü', ic:'grid' }
+            ];
+            row.innerHTML = filters.map(f => `<button type="button" class="chip${_adminVerifyFilter===f.key?' active':''}" onclick="setAdminVerifyFilter('${f.key}', this)">${icon(f.ic,11)} ${f.label}</button>`).join('');
+        }
+        const el = document.getElementById('adminVerifyList');
+        if(!el) return;
+        let uids = Object.keys(allVerifyRequests);
+        if(_adminVerifyFilter !== 'all') uids = uids.filter(uid => (allVerifyRequests[uid].status||'pending') === _adminVerifyFilter);
+        uids.sort((a,b) => (allVerifyRequests[b].ts||0) - (allVerifyRequests[a].ts||0));
+
+        if(uids.length === 0){
+            el.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><p>Bu kategoride başvuru yok.</p></div>`;
+            return;
+        }
+        el.innerHTML = uids.map(uid => {
+            const r = allVerifyRequests[uid];
+            const status = r.status || 'pending';
+            const statusColor = status==='approved' ? 'var(--pos)' : (status==='rejected' ? 'var(--neg)' : 'var(--ink-soft)');
+            const trustLabel = r.trustScore==null ? 'Yetersiz veri' : `%${r.trustScore} güven (${r.trustSampleSize} görevden)`;
+            const imgs = (r.images||[]).map(src => `<img src="${src}" style="width:64px; height:64px; object-fit:cover; border-radius:8px; border:1px solid var(--line); cursor:pointer;" onclick="openLightbox('${src}')">`).join('');
+            return `<div class="admin-user-card" style="border-left:3px solid ${statusColor};">
+        <div class="admin-user-top">
+          <div class="asset-logo">${r.avatarUrl?`<img src="${r.avatarUrl}">`:icon('user',17)}</div>
+          <div class="task-body">
+            <div class="admin-user-name-row">
+              <span class="task-text">${escapeHtml(r.username||'Kullanıcı')}</span>
+              <span class="tag" style="border-color:${statusColor}; color:${statusColor};">${status.toUpperCase()}</span>
+            </div>
+            <div class="task-meta"><span class="tag">${timeAgoTr(r.ts||Date.now())}</span><span class="tag">${icon('bolt',9)} ${trustLabel}</span></div>
+          </div>
+          <div class="admin-user-actions">
+            ${status==='pending' ? `
+              <button class="admin-user-action-btn" title="Onayla" onclick="approveVerification('${uid}')">${icon('check',15)}</button>
+              <button class="admin-user-action-btn danger" title="Reddet" onclick="rejectVerification('${uid}')">${icon('x',15)}</button>
+            ` : ''}
+            <button class="admin-user-action-btn danger" title="Başvuruyu Sil" onclick="deleteVerification('${uid}')">${icon('trash',15)}</button>
+          </div>
+        </div>
+        <p style="font-size:12.5px; color:var(--ink); margin:10px 0 0; white-space:pre-wrap;">${escapeHtml(r.desc||'')}</p>
+        <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">${imgs}</div>
+      </div>`;
+        }).join('');
+    }
+
+    async function approveVerification(uid){
+        try{
+            await db.ref('developmentUsers/'+uid+'/profile/verified').set(true);
+            await db.ref('developmentUsers/verificationRequests/'+uid+'/status').set('approved');
+            showTopToast('Kullanıcı doğrulandı', 'info', 'check');
+        }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
+    }
+    async function rejectVerification(uid){
+        try{
+            await db.ref('developmentUsers/verificationRequests/'+uid+'/status').set('rejected');
+            showTopToast('Başvuru reddedildi', 'warn', 'x');
+        }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
+    }
+    async function deleteVerification(uid){
+        const ok = await showConfirm('Bu başvuruyu silmek istediğine emin misin?');
+        if(!ok) return;
+        try{
+            await db.ref('developmentUsers/verificationRequests/'+uid).remove();
+            showTopToast('Başvuru silindi', 'warn', 'trash');
+        }catch(err){ showTopToast('Silinemedi: '+err.message, 'warn', 'warn'); }
+    }
+
     function checkAuthOnLoad(){
         initFirebase();
-        fetchMarketPrices();
+        fetchMarketPricesIfNewDay();
         attachHolidayListener();
         recomputeActiveHoliday();
+        attachBugReportsListener();
+        attachVerificationListener();
     }
 
     setInterval(() => {
@@ -12720,7 +14341,7 @@ ${locationCardHtml(m.location)}
     }, 1000);
     setInterval(() => autoFailExpired(false), 15000);
     setInterval(checkRecurringReset, 60000);
-    setInterval(() => fetchMarketPrices(), 12000);
+    setInterval(() => fetchMarketPricesIfNewDay(), 60*60*1000);
     setInterval(() => recomputeActiveHoliday(), 20000);
     document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible') recomputeActiveHoliday(); });
     loadSettings();

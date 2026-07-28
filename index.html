@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
-    <title>SYS // Görev Paneli</title>
+    <title>SYS // System-137</title>
     <script>
         (function(){
             try{
@@ -126,7 +126,7 @@
             line-height:1; z-index:2;
         }
         .notif-panel{
-            display:none; position:fixed; z-index:97; width:360px; max-width:92vw;
+            display:none; position:fixed; z-index:97; width:360px; max-width:calc(100vw - 20px);
             background:transparent; border:none; border-radius:23px; padding:2px; overflow:visible; flex-direction:column;
             box-shadow:0 30px 70px rgba(0,0,0,.5), 0 0 44px var(--glow-soft);
         }
@@ -584,6 +584,7 @@
         #profileModal.show{ z-index:210; }
         #customHolidayModal{ z-index:220; }
         #confirmModal{ z-index:260; }
+        #imgLightbox{ z-index:500; }
         .auth-shield{margin:4px auto 16px; width:52px; height:52px; border-radius:50%; background:var(--panel-alt); border:1px solid var(--ink-faint); display:flex; align-items:center; justify-content:center; box-shadow:0 0 22px var(--glow-mid);}
         .auth-shield svg{width:26px; height:26px; color:var(--ink);}
         .auth-fields{width: 50%;
@@ -860,12 +861,20 @@
         .chat-msg-footer{ opacity:1; }
         .chat-msg-avatar{ width:40px; height:40px; border-radius:50%; object-fit:cover; border:1.5px solid var(--line); flex:none; cursor:pointer; }
         .chat-msg-body{ flex:0 1 auto; min-width:0; max-width:78%; }
-        .chat-msg-headrow{ display:flex; align-items:center; justify-content:center; gap:7px; flex-wrap:wrap; margin-bottom:2px; }
+        @media (max-width:480px){
+            /* Uzun isim + birden fazla rütbe/rol etiketi olan mesaj başlıklarının mobilde dağılmasını önle */
+            .chat-msg-headrow{width: 100%; row-gap:4px; }
+            .chat-msg-name{ max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+            .chat-msg-badges{ flex-wrap:wrap; row-gap:4px; }
+            .chat-msg-badge{ font-size:8px; padding:2px 7px; }
+        }
         .chat-msg-name{ font-size:12.5px; font-weight:700; cursor:pointer; }
         .chat-msg-name:hover{ text-decoration:underline; }
         .chat-msg-rankicon{ width:16px; flex:none; }
+        .chat-msg-headrow{ display:flex; justify-content: center; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+        .chat-msg-name-group{ display:flex; flex-direction: row; align-items:center; gap:6px; flex:none; white-space:nowrap; }
 
-        .chat-msg-badge-row{ display:flex; justify-content:center; margin-bottom:5px; }
+        .chat-msg-badge-row{ display:flex; flex-direction: row-reverse; align-items: center; justify-content:center; margin-bottom:5px; }
 
         .chat-msg-badge{
             font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.08em; text-transform:uppercase;
@@ -874,7 +883,7 @@
         }
         .chat-msg-name .chat-msg-badge{ margin-left:7px; vertical-align:middle; }
         .chat-msg-badges{
-            display:inline-flex; align-items:center; gap:6px; flex-wrap:wrap; vertical-align:middle;
+            display:inline-flex; justify-content: center; align-items:center; gap:6px; flex-wrap:wrap; vertical-align:middle;
         }
         .chat-msg-badge.mod{
             background:linear-gradient(120deg, #0a2d6b, #2f6fed 55%, #6ec1ff);
@@ -894,16 +903,35 @@
             margin-left:6px; vertical-align:middle;
         }
         .verified-badge{
-            display:inline-flex; align-items:center; justify-content:center; width:15px; height:15px; border-radius:50%;
-            background:#1d9bf0; color:#fff; margin-left:5px; vertical-align:middle; flex:none;
-            box-shadow:0 0 0 2px var(--panel);
+            display:inline-flex; align-items:center; justify-content:center; width:14px; height:14px;
+            color:#9c1a1a; margin-left:5px; vertical-align:middle; flex:none;
+            filter:drop-shadow(0 0 2px rgba(156,26,26,.35));
         }
-        .verified-badge svg{ width:9px; height:9px; }
+        .verified-badge svg{ width:13px; height:13px; }
         .pv-avatar-verified{
-            position:absolute; right:-2px; bottom:-2px; width:22px; height:22px; border-radius:50%;
-            background:#1d9bf0; color:#fff; display:flex; align-items:center; justify-content:center;
-            border:2.5px solid var(--panel); box-shadow:0 2px 6px rgba(0,0,0,.3); z-index:2;
+            position:absolute; right:-2px; bottom:-2px; width:24px; height:24px; border-radius:50%;
+            background:var(--panel); color:#9c1a1a; display:flex; align-items:center; justify-content:center;
+            border:2px solid var(--panel); box-shadow:0 3px 10px rgba(0,0,0,.3); z-index:2;
         }
+        .pv-verified-corner{
+            position:absolute; top:14px; left:14px; z-index:4;
+            display:none; align-items:center; gap:5px;
+            background:rgba(0,0,0,.28); backdrop-filter:blur(5px); -webkit-backdrop-filter:blur(5px);
+            border:1px solid rgba(255,255,255,.3); border-radius:100px;
+            padding:4px 10px 4px 6px; box-shadow:0 4px 12px rgba(0,0,0,.25);
+            animation:pvVerifiedCornerIn .3s cubic-bezier(.34,1.4,.64,1);
+        }
+        .pv-verified-corner.show{ display:flex; }
+        @keyframes pvVerifiedCornerIn{ from{ opacity:0; transform:translateY(-6px) scale(.9); } to{ opacity:1; transform:translateY(0) scale(1); } }
+        .pv-verified-corner-icon{
+            width:15px; height:15px; border-radius:50%; background:none; color:#9c1a1a; flex:none;
+            display:flex; align-items:center; justify-content:center;
+        }
+        .pv-verified-corner-label{
+            font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:800; letter-spacing:.04em;
+            color:#fff; text-transform:uppercase; text-shadow:0 1px 3px rgba(0,0,0,.45); white-space:nowrap;
+        }
+        .pv-avatar-verified svg{ width:17px; height:17px; }
         .chat-msg-flag{ width:14px; height:10px; border-radius:2px; margin-left:5px; vertical-align:middle; box-shadow:0 0 0 1px rgba(0,0,0,.2); }
         .chat-msg-avatar-flag-wrap{ position:relative; flex:none; }
         .chat-msg-avatar-flag{
@@ -950,7 +978,6 @@
         /* ---- kendi mesajların: sağa yaslı, gradyanlı balon ---- */
         .chat-msg.is-mine{ flex-direction:row-reverse; }
         .chat-msg.is-mine .chat-msg-body{ display:flex; flex-direction:column; align-items:flex-end; }
-        .chat-msg.is-mine .chat-msg-headrow{ flex-direction:row-reverse; }
         .chat-msg.is-mine .chat-msg-footer{ flex-direction:row-reverse; }
         /* ---- karşı taraftan gelen mesajlar: gerçek içerik genişliğine göre sola yaslı ---- */
         .chat-msg:not(.is-mine) .chat-msg-body{ display:flex; flex-direction:column; align-items:flex-start; }
@@ -1632,11 +1659,14 @@
         @media (max-width:480px){
             /* Uzun isim + birden fazla rütbe/rol etiketi olan mesaj başlıklarının mobilde dağılmasını önle */
             .chat-msg-headrow{ justify-content:flex-start; flex-wrap:wrap; row-gap:3px; }
-            .chat-msg.is-mine .chat-msg-headrow{ justify-content:flex-end; }
+
             .chat-msg-name{ max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-            .chat-msg-badges{ flex-wrap:wrap; row-gap:3px; max-width:100%; }
+            .chat-msg-badges{ row-gap:3px; }
             .chat-msg-badge{ font-size:8px; padding:2px 7px; }
         }
+        .is-mine .chat-msg-headrow{flex-direction: row-reverse; justify-content:flex-start; }
+        .is-mine .chat-msg-badges{ flex-direction: row-reverse }
+        .is-mine .chat-msg-name-group{ flex-direction: row-reverse }
         @media (max-width:380px){
             /* Çok dar ekranlarda "Etkinlik Başlat" yazısını gizle, ikon kalsın */
             #startEventBtn{ font-size:0; padding:8px !important; }
@@ -1952,9 +1982,13 @@
             flex:1; display:flex; align-items:center; gap:8px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22);
             border-radius:11px; padding:8px 10px; backdrop-filter:blur(3px);
         }
-        .settings-quick-stat-icon{ flex:none; width:26px; height:26px; border-radius:8px; background:rgba(255,255,255,.18); color:#fff; display:flex; align-items:center; justify-content:center; }
+        .settings-quick-stat-icon{ flex:none; align-self:center; width:26px; height:26px; border-radius:8px; background:rgba(255,255,255,.18); color:#fff; display:flex; align-items:center; justify-content:center; }
+        .settings-quick-stat-icon svg{ display:block; margin:0 auto; flex-shrink:0; }
+        .settings-quick-stat-icon svg{ display:block; margin:0 auto; flex-shrink:0; }
+        #shameHeadIcon{ animation:none !important; }
+        #rsHeadIcon{ animation:none !important; }
         .settings-quick-stat b{ display:block; font-family:'Orbitron',sans-serif; font-size:13px; color:#fff; line-height:1.1; }
-        .settings-quick-stat span{ display:block; font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.8); margin-top:1px; }
+        .settings-quick-stat span{ display: flex; flex-direction: row; justify-content: center; align-self:center; font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.8); margin-top:1px; }
         .settings-body{ padding:22px 24px 8px; overflow-y:auto; flex:1; min-height:0; }
         .settings-section{ margin-bottom:22px; }
         .settings-section-title{
@@ -2024,7 +2058,6 @@
         .blocked-foot{ padding:14px 18px calc(14px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); }
 
         /* ==================== ÖDÜL MAĞAZASI (E-TİCARET PANELİ) ==================== */
-        .reward-store-card{ max-width:640px; width:100%; text-align:left; padding:0; overflow:hidden; border-radius:22px; box-shadow:0 30px 80px rgba(0,0,0,.55); display:flex; flex-direction:column; max-height:90vh; }
         .rs-head{ position:relative; padding:28px 26px 22px; overflow:hidden; flex:none;
             background:linear-gradient(105deg,#7c2d12,#f97316 42%,#facc15 75%,#7c2d12);
             background-size:250% 250%; animation:holidayCardShimmer 7s ease infinite;
@@ -2105,6 +2138,50 @@
             #rewardStoreModal{ align-items:flex-end; padding:0; }
             .reward-store-card{ max-width:100%; border-radius:20px 20px 0 0; max-height:92vh; }
             .rs-head{ padding:calc(20px + env(safe-area-inset-top)) 18px 16px; }
+        }
+
+        /* ==================== UTANDIRMA TABLOSU (v4 — tema-uyumlu, sabit yükseklik) ==================== */
+        .shame-quick-strip{ display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; position:relative; z-index:1; }
+        .shame-quick-strip .settings-quick-stat{ min-width:0; flex:1 1 140px; }
+        .shame-tabs-wrap{ margin-bottom:16px; flex:none; }
+        .shame-tab-scroller{ display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; }
+        .shame-tab-scroller::-webkit-scrollbar{ display:none; }
+        .shame-tab-btn{
+            flex:none; display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
+            letter-spacing:.02em; padding:9px 14px; border-radius:100px; border:1px solid var(--line); background:var(--panel-alt);
+            color:var(--ink-soft); cursor:pointer; transition:all .18s ease; white-space:nowrap;
+        }
+        .shame-tab-btn:hover{ border-color:var(--ink-soft); color:var(--ink); }
+        .shame-tab-btn.active{
+            background:var(--brand-gradient); border-color:transparent; color:#fff;
+            box-shadow:0 6px 16px var(--glow-mid);
+        }
+        #shameTabContent{
+            overflow-x:hidden; padding-right:4px; margin-right:-4px; width:100%; box-sizing:border-box;
+        }
+        .shame-row{
+            position:relative; display:flex; align-items:center; gap:10px; padding:11px 13px; border-radius:14px;
+            background:var(--panel-alt); border:1px solid var(--line); margin-bottom:9px; overflow:hidden;
+            transition:transform .16s cubic-bezier(.3,1.2,.4,1), border-color .15s ease, box-shadow .2s ease;
+            width:100%; box-sizing:border-box; max-width:100%;
+        }
+        .shame-row:last-child{ margin-bottom:0; }
+        .shame-row:hover{ transform:translateX(4px) scale(1.012); border-color:var(--ink-faint); box-shadow:0 10px 22px rgba(0,0,0,.16); }
+        .shame-row::before{ content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:linear-gradient(180deg, var(--rank-color,var(--ink)), color-mix(in srgb, var(--rank-color,var(--ink)) 60%, #000)); opacity:0; transition:opacity .15s ease; }
+        .shame-row:hover::before{ opacity:1; }
+        .shame-rank-medal{
+            flex:none; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+            font-family:'Orbitron',sans-serif; font-weight:800; font-size:11.5px; color:#fff;
+            background:linear-gradient(135deg, var(--rank-color,var(--ink)), color-mix(in srgb, var(--rank-color,var(--ink)) 45%, #000));
+            box-shadow:0 5px 12px color-mix(in srgb, var(--rank-color,var(--ink)) 45%, transparent);
+        }
+        .shame-avatar{ width:38px; height:38px; border-radius:50%; object-fit:cover; flex:none; border:2px solid var(--rank-color,var(--ink)); box-shadow:0 0 0 2px var(--panel-alt); }
+        .shame-name{ flex:1 1 auto; min-width:0; font-size:13px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .shame-value{
+            flex:none; font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:800; color:#fff;
+            background:linear-gradient(135deg, var(--rank-color,var(--ink)), color-mix(in srgb, var(--rank-color,var(--ink)) 55%, #000));
+            padding:6px 10px; border-radius:100px; box-shadow:0 5px 12px color-mix(in srgb, var(--rank-color,var(--ink)) 35%, transparent);
+            white-space:nowrap; max-width:38%; overflow:hidden; text-overflow:ellipsis;
         }
 
         /* ==================== YÖNETİM PANELİ (tema-uyumlu) ==================== */
@@ -2382,8 +2459,9 @@
             content:''; position:absolute; left:0; right:0; bottom:-1px; height:2px;
             background:var(--brand-gradient); opacity:.7;
         }
-        .admin-topbar-title{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:15.5px; letter-spacing:.02em; }
-        .admin-topbar-sub{ font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); margin-top:2px; }
+        .admin-topbar-title{ font-family:'Orbitron',sans-serif; font-weight:800; font-size:15.5px; letter-spacing:.02em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .admin-topbar-sub{ font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .admin-topbar > div{ min-width:0; }
         .admin-topbar-spacer{ flex:1; }
         .admin-close-fs{
             width:38px; height:38px; border-radius:11px; border:1px solid var(--line); background:var(--panel-alt); color:var(--ink-soft);
@@ -2433,7 +2511,10 @@
         }
         .admin-feed-time{ margin-left:auto; font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--ink-faint); flex:none; }
 
-        .admin-user-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(340px,1fr)); gap:14px; }
+        .admin-user-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%,320px),1fr)); gap:14px; }
+        @media (max-width:480px){
+            .admin-user-grid{ grid-template-columns:1fr; gap:10px; }
+        }
         .admin-user-card{
             position:relative; display:flex; flex-direction:column; gap:12px; overflow:hidden;
             background:linear-gradient(165deg, color-mix(in srgb, var(--panel-alt) 85%, transparent), var(--panel));
@@ -2506,9 +2587,19 @@
                 transform:translateX(-100%); transition:transform .28s ease; box-shadow:20px 0 40px rgba(0,0,0,.3);
             }
             .admin-side.open{ transform:translateX(0); }
-            .admin-menu-toggle{ display:flex !important; }
-            .admin-content{ padding:18px 16px 32px; }
-            .admin-topbar{ padding:14px 16px; }
+            .admin-menu-toggle{ display:flex !important; flex:none; }
+            .admin-content{ padding:16px 14px 28px; }
+            .admin-topbar{ padding:12px 14px; gap:10px; }
+            .admin-user-card{ padding:13px 14px; }
+            .admin-user-top{ flex-wrap:wrap; gap:8px; }
+            .admin-user-actions{ margin-left:0; }
+            .admin-search-wrap{ gap:8px; }
+            .admin-search-wrap select{ flex:1 1 100%; }
+            .admin-user-stats{ gap:5px; }
+        }
+        @media (max-width:480px){
+            .admin-stat-grid{ grid-template-columns:1fr 1fr; gap:10px; }
+            .admin-stat-num{ font-size:19px; }
         }
 
         /* ==================== GİRİŞ EKRANI (yeniden tasarım) ==================== */
@@ -2544,7 +2635,7 @@
             .auth-split-headline{ font-size:19px; }
         }
         /* ==================== GİRİŞ EKRANI v2 (SeaArt tarzı) ==================== */
-        #authGate{ padding:0; }
+        #authGate{ padding:0; backdrop-filter:blur(16px); background:rgba(5,2,3,.9); }
         #authGate .modal-card{
             max-width:420px; width:100%; padding:0; overflow:hidden;
             flex-direction:column; text-align:left; border-radius:22px;
@@ -2628,6 +2719,8 @@
             overscroll-behavior:contain; touch-action:pan-y;
             max-height:calc(var(--app-vh, 1vh) * 88);
             justify-content:flex-start;
+            background:var(--panel);
+            box-shadow:0 30px 70px rgba(0,0,0,.6), 0 0 50px var(--glow-soft);
         }
         .profile-view-card #profileViewMode,
         .profile-view-card #profileEditMode{ width:100%; }
@@ -2635,7 +2728,7 @@
         .profile-close-btn{ position:absolute; top:14px; right:14px; z-index:3; background:rgba(0,0,0,.22); color:#fff; }
         .profile-close-btn:hover{ background:rgba(0,0,0,.36); }
 
-        .pv-banner{ position:relative; padding:30px 34px 22px; background:var(--brand-gradient); overflow:hidden; }
+        .pv-banner{ position:relative; padding:38px 34px 22px; background:var(--brand-gradient); overflow:hidden; }
         .pv-banner::before{
             content:''; position:absolute; inset:0; opacity:.22; pointer-events:none;
             background-image:radial-gradient(circle, rgba(255,255,255,.6) 1px, transparent 1px);
@@ -2831,6 +2924,19 @@
         .chat-msg-track-name{ font-size:12.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
         .chat-msg-track-artist{ font-size:10.5px; opacity:.8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
         /* ==== ŞU MU, BU MU? (Görsel Anket) ==== */
+        .upload-dropzone{
+            width:100%; min-height:108px; border:1.5px dashed var(--line); border-radius:14px; background:var(--bg);
+            display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer;
+            color:var(--ink-soft); transition:border-color .15s ease, color .15s ease, background .15s ease; overflow:hidden; position:relative;
+        }
+        .upload-dropzone:hover{ border-color:var(--ink); color:var(--ink); background:var(--panel-alt); }
+        .upload-dropzone .udz-label{ font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.03em; }
+        .upload-dropzone.filled{ border-style:solid; padding:0; min-height:0; }
+        .upload-dropzone.filled img{ width:100%; max-height:180px; object-fit:cover; display:block; }
+        .upload-dropzone .udz-remove{
+            position:absolute; top:6px; right:6px; z-index:2; width:26px; height:26px; border-radius:50%;
+            background:rgba(0,0,0,.5); color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer;
+        }
         .vs-poll-upload-slot{
             aspect-ratio:1; border:1.5px dashed var(--line); border-radius:12px; background:var(--bg);
             display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer;
@@ -3447,6 +3553,82 @@
         .chat-select-bar .csb-count{ font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; color:var(--ink); white-space:nowrap; display:flex; align-items:center; gap:6px; }
         .chat-select-bar .csb-spacer{ flex:1; }
         .chat-select-bar .btn{ padding:10px 14px; font-size:11px; white-space:nowrap; }
+        .shame-board-card{
+            width: 100%;
+            max-width:940px;
+            height:760px;
+            max-height:92vh;
+        }
+        @media (max-width:680px){
+            #shameBoardModal{ align-items:flex-end; justify-content:center; padding:0; }
+            .shame-board-card{
+                max-width:100%; width:100%;
+                height:calc(var(--app-vh, 1vh) * 90);
+                max-height:calc(var(--app-vh, 1vh) * 90);
+                border-radius:20px 20px 0 0;
+            }
+            .shame-board-card .settings-head{
+                padding:calc(16px + env(safe-area-inset-top)) 16px 14px;
+                border-radius:20px 20px 0 0;
+                margin:0;
+            }
+            .shame-board-card .settings-body{
+                padding:16px 14px 10px;
+            }
+            .shame-board-card .settings-foot{
+                padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+            }
+            .shame-quick-strip{ gap:8px; margin-top:14px; }
+            .shame-quick-strip .settings-quick-stat{ flex:1 1 calc(50% - 4px); min-width:0; }
+            .shame-quick-strip .settings-quick-stat b{ font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+            .shame-tabs-wrap{ margin-bottom:12px; }
+            .shame-tab-scroller{ gap:5px; }
+            .shame-tab-btn{ padding:8px 12px; font-size:10.5px; }
+            .shame-row{ padding:9px 10px; gap:8px; margin-bottom:7px; }
+            .shame-rank-medal{ width:24px; height:24px; font-size:10px; flex:none; }
+            .shame-avatar{ width:30px; height:30px; flex:none; }
+            .shame-name{ font-size:11.5px; }
+            .shame-value{ font-size:9px; padding:4px 7px; max-width:32%; }
+
+            .shame-board-card .settings-body{
+                overflow-x:hidden;
+                width:100%;
+                box-sizing:border-box;
+            }
+            .shame-tabs-wrap{
+                width:100%;
+                max-width:100%;
+                overflow:hidden;
+            }
+            .shame-tab-scroller{
+                width:100%;
+                max-width:100%;
+                box-sizing:border-box;
+                overflow-x:auto;
+                overflow-y:hidden;
+                -webkit-overflow-scrolling:touch;
+                flex-wrap:nowrap;
+                padding-bottom:4px;
+            }
+            .shame-tab-btn{
+                flex:0 0 auto;
+            }
+            #shameTabContent{
+                width:100%;
+                max-width:100%;
+                box-sizing:border-box;
+                overflow-x:hidden;
+            }
+            .shame-row{
+                width:100%;
+                max-width:100%;
+                box-sizing:border-box;
+                overflow:hidden;
+            }
+        }
+        @media (max-width:380px){
+            .shame-quick-strip .settings-quick-stat{ flex:1 1 100%; }
+        }
     </style>
 </head>
 <body>
@@ -3475,23 +3657,21 @@
         </div>
     </div>
     <div class="ps-nav" id="psNav"></div>
-    <div class="ps-foot">SYS.TASKCHAIN // v3</div>
+    <div class="ps-foot">SYSTEM-137 // v3</div>
 </div>
 
 <div class="wrap">
     <div class="topbar">
         <div>
-            <p class="brand-eyebrow"><span class="caret"></span> SYS.TASKCHAIN // v3</p>
-            <h1>Görev Paneli</h1>
+            <p class="brand-eyebrow"><span class="caret"></span>SYSTEM-137 // v3</p>
+            <h1 id="mainPageH1">Görev Paneli</h1>
         </div>
         <div class="top-actions">
-            <span class="conn-pill"><span class="conn-dot" id="connDot"></span><span id="connLabel">Bağlantı bekleniyor…</span></span>
             <button class="theme-toggle" id="accentPickerBtn" onclick="openThemeStudio()" title="Tema & Görünüm Ayarları"></button>
             <input type="color" id="accentColorInput" value="#5b2ec7" oninput="onAccentColorChange(this.value)" style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;">
             <button id="holidayCornerBadge" onclick="openHolidayInfoModal()" title="Özel gün bilgisi"><span class="hcb-dot"></span></button>
             <button class="theme-toggle" id="rewardStoreBtn" onclick="openRewardStore()" title="Ödül Mağazası"></button>
-            <button class="theme-toggle" id="bugReportBtn" onclick="openBugReportModal()" title="Hata Bildir"></button>
-            <button class="theme-toggle" id="verifyReqBtn" onclick="openVerificationModal()" title="Doğrulama Talep Et"></button>
+            <button class="theme-toggle" id="shameBoardBtn" onclick="openShameBoard()" title="Utanç Tablosu" style="display:none;"></button>
             <div style="position:relative;" id="notifWrap">
                 <button class="theme-toggle" id="notifBellBtn" onclick="toggleNotifPanel(event)" title="Bildirimler">
                     <span id="notifBellIcon"></span>
@@ -3583,16 +3763,24 @@
 
 
     <div class="panel gallery-panel" id="portfolioPanel">
-        <div class="fx-head" style="margin-bottom:14px;">
-            <h3 style="margin:0; font-size:14px; letter-spacing:.08em; text-transform:uppercase; display:flex; align-items:center; gap:8px;">
-                <span id="portfolioHeadIcon"></span>Varlıklarım
-            </h3>
-            <button class="btn-text" id="portfolioRefreshBtn" onclick="fetchMarketPrices()" style="display:flex; align-items:center; gap:5px;"></button>
+        <div class="settings-head" style="border-radius:16px; margin-bottom:16px; padding:18px 20px;">
+            <div class="settings-head-row">
+                <span class="settings-head-icon" id="portfolioHeadIcon" style="animation:none;"></span>
+                <div>
+                    <p class="settings-head-title" style="font-size:15px;">Varlıklarım</p>
+                    <p class="settings-head-sub">Portföyünü canlı takip et</p>
+                </div>
+                <button class="btn-text" id="portfolioRefreshBtn" onclick="fetchMarketPrices()" style="display:flex; align-items:center; gap:5px; color:#fff; margin-left:auto;"></button>
+            </div>
         </div>
 
         <div class="fx-panel" style="text-align:center; padding:22px 16px; margin-bottom:16px;">
             <span class="fx-panel-label" id="pf2TotalLabel" style="justify-content:center; border-bottom:none; margin-bottom:6px;"></span>
             <div id="portfolioTotal" style="font-family:'Orbitron',sans-serif; font-weight:800; font-size:30px; color:var(--ink); text-shadow:0 0 14px var(--glow-mid);">₺0,00</div>
+            <div id="portfolioConvertedTotal" style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--ink-soft); margin-top:4px; display:none;"></div>
+            <div style="display:flex; align-items:center; justify-content:center; gap:6px; margin-top:10px;">
+                <select id="portfolioDisplayCurrency" onchange="onPortfolioCurrencyChange(this.value)" style="font-family:'JetBrains Mono',monospace; font-size:10.5px; padding:6px 10px; border-radius:8px; border:1px solid var(--line); background:var(--panel-alt); color:var(--ink);"></select>
+            </div>
             <div id="portfolioMeta" style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-soft); margin-top:6px; display:flex; align-items:center; justify-content:center; gap:6px;"></div>
         </div>
 
@@ -4125,28 +4313,48 @@
         </div>
     </div>
     <div id="rewardStoreModal" class="modal-overlay">
-        <div class="modal-card reward-store-card">
-            <div class="rs-head">
-                <button class="icon-btn rs-close-btn" onclick="closeRewardStore()"></button>
-                <div class="rs-head-row">
-                    <span class="rs-head-icon" id="rsHeadIcon"></span>
+        <div class="modal-card settings-card shame-board-card reward-store-card">
+            <div class="settings-head">
+                <div class="settings-head-row">
+                    <span class="settings-head-icon" id="rsHeadIcon"></span>
                     <div>
-                        <p class="rs-head-title">Ödül Mağazası</p>
-                        <p class="rs-head-sub">XP'ni gerçek ödüllere çevir</p>
+                        <p class="settings-head-title">Ödül Mağazası</p>
+                        <p class="settings-head-sub">XP'ni gerçek ödüllere çevir</p>
                     </div>
                 </div>
-                <div class="rs-balance">
-                    <span class="rs-balance-label">Bakiyen</span>
-                    <span class="rs-balance-num" id="rsBalanceNum"></span>
-                </div>
+                <div class="shame-quick-strip" id="rsQuickStatsRow"></div>
             </div>
-            <div class="rs-tabs" id="rsTabs"></div>
-            <div class="rs-body" id="rsBody">
+            <div class="settings-body">
+                <div class="shame-tabs-wrap">
+                    <div class="shame-tab-scroller" id="rsTabs"></div>
+                </div>
                 <div class="rs-grid" id="rsGrid"></div>
             </div>
-            <div class="rs-foot">
-                <span class="rs-foot-hint" id="rsFootHint"></span>
-                <button class="btn btn-ghost" onclick="closeRewardStore()">Kapat</button>
+            <div class="settings-foot">
+                <button class="btn btn-ghost" style="width:100%;" onclick="closeRewardStore()">Kapat</button>
+            </div>
+        </div>
+    </div>
+    <div id="shameBoardModal" class="modal-overlay">
+        <div class="modal-card settings-card shame-board-card">
+            <div class="settings-head">
+                <div class="settings-head-row">
+                    <span class="settings-head-icon" id="shameHeadIcon"></span>
+                    <div>
+                        <p class="settings-head-title">Utandırma Tablosu</p>
+                        <p class="settings-head-sub">Topluluğun en düşük performansları burada sergileniyor</p>
+                    </div>
+                </div>
+                <div class="shame-quick-strip" id="shameQuickStatsRow"></div>
+            </div>
+            <div class="settings-body">
+                <div class="shame-tabs-wrap">
+                    <div class="shame-tab-scroller" id="shameTabs"></div>
+                </div>
+                <div id="shameTabContent"></div>
+            </div>
+            <div class="settings-foot">
+                <button class="btn btn-ghost" style="width:100%;" onclick="closeShameBoard()">Kapat</button>
             </div>
         </div>
     </div>
@@ -4156,15 +4364,13 @@
             <p class="modal-sub" style="text-align:center; margin-top:4px;">Karşılaştığın sorunu anlat, ekran görüntüsü ekleyebilirsin.</p>
             <div class="auth-fields" style="width:100%; margin-top:12px;">
                 <textarea id="bugReportDesc" rows="4" placeholder="Ne oldu? Hangi ekrandaydın, ne bekliyordun?"
-                    style="width:100%; resize:vertical; font-family:'Inter',sans-serif; font-size:13px; padding:12px 13px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--ink);"></textarea>
+                          style="width:100%; resize:vertical; font-family:'Inter',sans-serif; font-size:13px; padding:12px 13px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--ink);"></textarea>
             </div>
-            <div id="bugImagePreviewWrap" style="display:none; margin-top:10px;"></div>
-            <div class="add-row" style="margin-top:10px; margin-bottom:0;">
-                <button type="button" class="btn btn-ghost" style="flex:1;" onclick="document.getElementById('bugImageInput').click()">
-                    <span id="bugImageBtnIcon"></span> Görsel Ekle
-                </button>
-                <input type="file" id="bugImageInput" accept="image/*" style="display:none;" onchange="handleBugImageSelect(event)">
+            <div id="bugImageDropzone" class="upload-dropzone" onclick="document.getElementById('bugImageInput').click()">
+                <span id="bugImageBtnIcon"></span>
+                <span class="udz-label">Resim Ekle</span>
             </div>
+            <input type="file" id="bugImageInput" accept="image/*" style="display:none;" onchange="handleBugImageSelect(event)">
             <div class="modal-actions" style="margin-top:18px; width:100%;">
                 <button class="btn btn-ghost" onclick="closeBugReportModal()">Vazgeç</button>
                 <button class="btn" onclick="submitBugReport()">Gönder</button>
@@ -4177,7 +4383,7 @@
             <p class="modal-sub" style="text-align:center; margin-top:4px;">Karşılaştığın sorunu anlat, ekran görüntüsü ekleyebilirsin.</p>
             <div class="auth-fields" style="width:100%; margin-top:12px;">
                 <textarea id="bugReportDesc" rows="4" placeholder="Ne oldu? Hangi ekrandaydın, ne bekliyordun?"
-                    style="width:100%; resize:vertical; font-family:'Inter',sans-serif; font-size:13px; padding:12px 13px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--ink);"></textarea>
+                          style="width:100%; resize:vertical; font-family:'Inter',sans-serif; font-size:13px; padding:12px 13px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--ink);"></textarea>
             </div>
             <div id="bugImagePreviewWrap" style="display:none; margin-top:10px;"></div>
             <div class="add-row" style="margin-top:10px; margin-bottom:0;">
@@ -4198,15 +4404,14 @@
             <p class="modal-sub" style="text-align:center; margin-top:4px;">Kanıtlarını paylaş, ekibimiz inceleyip hesabını doğrulasın.</p>
             <div class="auth-fields" style="width:100%; margin-top:12px;">
                 <textarea id="verifyReqDesc" rows="4" placeholder="Neden doğrulanmayı hak ettiğini anlat…"
-                    style="width:100%; resize:vertical; font-family:'Inter',sans-serif; font-size:13px; padding:12px 13px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--ink);"></textarea>
+                          style="width:100%; resize:vertical; font-family:'Inter',sans-serif; font-size:13px; padding:12px 13px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--ink);"></textarea>
             </div>
             <span class="seg-label" style="margin-top:10px;">Kanıt Görselleri (en fazla 3)</span>
-            <div class="add-row" style="margin-top:6px; margin-bottom:0;">
-                <button type="button" class="btn btn-ghost" style="flex:1;" onclick="document.getElementById('verifyImageInput').click()">
-                    <span id="verifyImageBtnIcon"></span> Görsel Ekle
-                </button>
-                <input type="file" id="verifyImageInput" accept="image/*" style="display:none;" onchange="handleVerifyImageSelect(event)">
+            <div id="verifyImageDropzone" class="upload-dropzone" style="margin-top:6px;" onclick="document.getElementById('verifyImageInput').click()">
+                <span id="verifyImageBtnIcon"></span>
+                <span class="udz-label">Resim Ekle</span>
             </div>
+            <input type="file" id="verifyImageInput" accept="image/*" style="display:none;" onchange="handleVerifyImageSelect(event)">
             <div id="verifyImagePreviewWrap" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;"></div>
             <div class="modal-actions" style="margin-top:18px; width:100%;">
                 <button class="btn btn-ghost" onclick="closeVerificationModal()">Vazgeç</button>
@@ -4593,7 +4798,7 @@
 <div id="authGate" class="modal-overlay">
     <div class="modal-card">
         <div class="auth-split-left">
-            <p class="auth-split-brand">SYS.TASKCHAIN</p>
+            <p class="auth-split-brand">SYSTEM-137</p>
             <div class="seg-group" style="margin-bottom:16px;">
                 <button type="button" class="seg-btn active" id="authTabLogin" onclick="setAuthTab('login')">Giriş Yap</button>
                 <button type="button" class="seg-btn" id="authTabRegister" onclick="setAuthTab('register')">Kayıt Ol</button>
@@ -4627,7 +4832,11 @@
 </div>
 
 <div id="profileModal" class="modal-overlay">
-    <div class="modal-card profile-view-card">
+    <div class="profile-view-card">
+        <div class="pv-verified-corner" id="pvVerifiedCorner">
+            <span class="pv-verified-corner-icon" id="pvVerifiedCornerIcon"></span>
+            <span class="pv-verified-corner-label">Doğrulanmış</span>
+        </div>
         <button class="icon-btn profile-close-btn" onclick="closeProfileModal()"></button>
         <div id="adminProfileNavRow" style="display:none; position:absolute; top:14px; left:14px; z-index:3; gap:6px;">
             <button class="icon-btn" id="adminProfilePrevBtn" style="background:rgba(0,0,0,.22); color:#fff;" onclick="adminProfileNav(-1)"></button>
@@ -4640,7 +4849,6 @@
                 <div class="pv-banner-content">
                     <div class="pv-avatar-wrap">
                         <img id="pvAvatar" class="pv-avatar" src="" alt="">
-                        <span class="pv-avatar-verified" id="pvVerifiedBadge" style="display:none;"></span>
                         <button class="pv-avatar-edit-trigger" id="pvEditBtn" onclick="toggleProfileEdit()" title="Profili düzenle"></button>
                     </div>
                     <div class="pv-header-text">
@@ -5057,6 +5265,13 @@
 <script>
     /* ===================== SVG ICON SET (no emoji anywhere) ===================== */
     const ICONS = {
+        friendsMeet: '<circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M2 20c0-3.3 2.7-5 6-5s6 1.7 6 5"/><path d="M10 20c0-3.3 2.7-5 6-5s6 1.7 6 5"/>',
+        dineOut: '<path d="M6 2v7a2 2 0 0 0 4 0V2M8 2v20M16 2c-2 1.5-3 4-3 7s1 4 3 4v9"/>',
+        sleepIn: '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/><path d="M4 4l1.5 1.5"/>',
+        gameHour: '<rect x="2" y="7" width="20" height="11" rx="4"/><path d="M7 11v4M5 13h4"/><circle cx="16" cy="11.5" r="1" fill="currentColor" stroke="none"/><circle cx="18.5" cy="14" r="1" fill="currentColor" stroke="none"/><path d="M2 4v2M22 4v2"/>',
+        snackBag: '<path d="M7 3h10l1 4H6z"/><path d="M6 7h12l-1.5 13a1.5 1.5 0 0 1-1.5 1.3H9a1.5 1.5 0 0 1-1.5-1.3z"/><path d="M9 11h6M9 15h6"/>',
+        ticketPass: '<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M9 6v12" stroke-dasharray="2,2"/><circle cx="9" cy="9" r=".6" fill="currentColor" stroke="none"/><circle cx="9" cy="15" r=".6" fill="currentColor" stroke="none"/>',
+        cookieStack: '<circle cx="12" cy="9" r="6"/><circle cx="9" cy="8" r="1" fill="currentColor" stroke="none"/><circle cx="14" cy="7" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="11" r="1" fill="currentColor" stroke="none"/><path d="M4 16c2 2 5 3 8 3s6-1 8-3"/>',
         chevDown: '<path d="M6 9l6 6 6-6"/>',
         check: '<path d="M20 6 9 17l-5-5"/>',
         checkDouble: '<path d="M1 13l4 4L14 7"/><path d="M7 13l4 4L20 8"/>',
@@ -5131,6 +5346,7 @@
         calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
         gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
         blood: '<path d="M12 2C12 2 5 11.2 5 15.8A7 7 0 0 0 19 15.8C19 11.2 12 2 12 2Z"/><path d="M8.6 15.3a3.4 3.4 0 0 0 3.4 3.4" stroke-linecap="round"/>',
+        skull: '<path d="M12 2a7 7 0 0 0-7 7c0 2.4 1.2 4.1 2 5.3.5.8.8 1.4.8 2.2v1a1 1 0 0 0 1 1h1v1.3a.7.7 0 0 0 .7.7h1a.7.7 0 0 0 .7-.7V18.5h1.6V19.3a.7.7 0 0 0 .7.7h1a.7.7 0 0 0 .7-.7V18.5h1a1 1 0 0 0 1-1v-1c0-.8.3-1.4.8-2.2.8-1.2 2-2.9 2-5.3a7 7 0 0 0-7-7z"/><circle cx="9" cy="10" r="1.4" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1.4" fill="currentColor" stroke="none"/>',
         gift: '<rect x="3" y="8" width="18" height="13" rx="2"/><path d="M3 12h18"/><path d="M12 8v13"/><path d="M12 8c-2 0-3.5-1.5-3.5-3S10 2 12 4c0-2 1.5-3 3.5-2S14 6.5 12 8z"/>',
         usersGroup: '<circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9.5" r="2.4"/><path d="M3.3 20c0-3.8 2.7-5.8 5.7-5.8s5.7 2 5.7 5.8"/><path d="M15 14.6c2.5.4 4.3 2.1 4.3 5.4"/>',
         pulse: '<path d="M3 12h4l2-7 4 14 2-9 2 2h4"/>',
@@ -5146,6 +5362,10 @@
     }
     function iconLabel(name, size, text){
         return `<span style="display:inline-flex; align-items:center; vertical-align:middle;">${icon(name,size)}</span><span style="margin-left:7px; vertical-align:middle;">${text}</span>`;
+    }
+    function verifiedGlyphSVG(size){
+        size = size || 15;
+        return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M21.007 8.27C22.194 9.125 23 10.45 23 12c0 1.55-.806 2.876-1.993 3.73.24 1.442-.134 2.958-1.227 4.05-1.095 1.095-2.61 1.459-4.046 1.225C14.883 22.196 13.546 23 12 23c-1.55 0-2.878-.807-3.731-1.996-1.438.235-2.954-.128-4.05-1.224-1.095-1.095-1.459-2.611-1.217-4.05C1.816 14.877 1 13.551 1 12s.816-2.878 2.002-3.73c-.242-1.439.122-2.955 1.218-4.05 1.093-1.094 2.61-1.467 4.057-1.227C9.125 1.804 10.453 1 12 1c1.545 0 2.88.803 3.732 1.993 1.442-.24 2.956.135 4.048 1.227 1.093 1.092 1.468 2.608 1.227 4.05Zm-4.426-.084a1 1 0 0 1 .233 1.395l-5 7a1 1 0 0 1-1.521.126l-3-3a1 1 0 0 1 1.414-1.414l2.165 2.165 4.314-6.04a1 1 0 0 1 1.395-.232Z"></path></svg>`;
     }
     function detectUserCountryCode(){
         try{
@@ -5427,22 +5647,78 @@
     let marketError = false;
     let marketLastUpdated = null;
 
+    const DISPLAY_CURRENCIES = {
+        try_: { label:'Türk Lirası', code:'TRY', symbol:'TL' },
+        usd:  { label:'Amerikan Doları', code:'USD', symbol:'$' },
+        eur:  { label:'Euro', code:'EUR', symbol:'€' },
+        gbp:  { label:'İngiliz Sterlini', code:'GBP', symbol:'£' },
+        jpy:  { label:'Japon Yeni', code:'JPY', symbol:'¥' },
+        afn:  { label:'Afgan Afganisi', code:'AFN', symbol:'؋' },
+        chf:  { label:'İsviçre Frangı', code:'CHF', symbol:'Fr' },
+        cny:  { label:'Çin Yuanı', code:'CNY', symbol:'¥' },
+        rub:  { label:'Rus Rublesi', code:'RUB', symbol:'₽' },
+        sar:  { label:'Suudi Riyali', code:'SAR', symbol:'﷼' },
+        aed:  { label:'BAE Dirhemi', code:'AED', symbol:'د.إ' },
+        aud:  { label:'Avustralya Doları', code:'AUD', symbol:'A$' },
+        cad:  { label:'Kanada Doları', code:'CAD', symbol:'C$' },
+        inr:  { label:'Hindistan Rupisi', code:'INR', symbol:'₹' },
+        krw:  { label:'Güney Kore Wonu', code:'KRW', symbol:'₩' }
+    };
+    let otherCurrencyRates = {};
+    let displayCurrency = localStorage.getItem('tc_portfolio_display_currency') || 'try_';
+
+    async function fetchOtherCurrencyRates(){
+        try{
+            const res = await fetch('https://open.er-api.com/v6/latest/TRY');
+            const data = await res.json();
+            if(data && data.rates) otherCurrencyRates = data.rates;
+        }catch(e){ console.warn('Döviz kurları çekilemedi', e); }
+    }
+    function formatInDisplayCurrency(tryAmount){
+        const def = DISPLAY_CURRENCIES[displayCurrency] || DISPLAY_CURRENCIES.try_;
+        if(displayCurrency === 'try_') return formatTRY(tryAmount);
+        const rate = otherCurrencyRates[def.code];
+        if(!rate) return formatTRY(tryAmount) + ' (kur bekleniyor)';
+        const converted = tryAmount * rate;
+        return converted.toLocaleString('tr-TR', { maximumFractionDigits: 2 }) + ' ' + def.symbol;
+    }
+    function onPortfolioCurrencyChange(val){
+        displayCurrency = val;
+        localStorage.setItem('tc_portfolio_display_currency', val);
+        renderPortfolio();
+    }
+
     async function fetchMarketPrices(){
         marketLoading = true;
         renderPortfolio();
         try{
             const cgIds = 'bitcoin,ethereum,tether,binancecoin,ripple,solana,dogecoin,cardano,polkadot,litecoin,avalanche-2,chainlink,tron,matic-network,shiba-inu,uniswap,pax-gold,kinesis-silver';
-            const [cgRes, usdRes, eurRes, gbpRes] = await Promise.all([
-                fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${cgIds}&vs_currencies=try,usd`),
-                fetch('https://api.frankfurter.dev/v1/latest?base=USD&symbols=TRY'),
-                fetch('https://api.frankfurter.dev/v1/latest?base=EUR&symbols=TRY'),
-                fetch('https://api.frankfurter.dev/v1/latest?base=GBP&symbols=TRY')
+            // Promise.all yerine allSettled kullanıyoruz: eskiden tek bir istek (örn. CoinGecko)
+            // başarısız olduğunda TÜM veriler (döviz dahil) iptal oluyordu. Artık her kaynak bağımsız.
+            const results = await Promise.allSettled([
+                fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${cgIds}&vs_currencies=try,usd`).then(r => r.ok ? r.json() : Promise.reject(new Error('coingecko'))),
+                fetch('https://api.frankfurter.dev/v1/latest?base=USD&symbols=TRY').then(r => r.ok ? r.json() : Promise.reject(new Error('usd'))),
+                fetch('https://api.frankfurter.dev/v1/latest?base=EUR&symbols=TRY').then(r => r.ok ? r.json() : Promise.reject(new Error('eur'))),
+                fetch('https://api.frankfurter.dev/v1/latest?base=GBP&symbols=TRY').then(r => r.ok ? r.json() : Promise.reject(new Error('gbp')))
             ]);
-            if(!cgRes.ok || !usdRes.ok || !eurRes.ok) throw new Error('Fiyat servisi yanıt vermedi');
-            const cg = await cgRes.json();
-            const usdData = await usdRes.json();
-            const eurData = await eurRes.json();
-            const gbpData = gbpRes.ok ? await gbpRes.json() : null;
+            const [cgRes, usdRes, eurRes, gbpRes] = results;
+            const cg = cgRes.status === 'fulfilled' ? cgRes.value : null;
+            let usdData = usdRes.status === 'fulfilled' ? usdRes.value : null;
+            let eurData = eurRes.status === 'fulfilled' ? eurRes.value : null;
+            let gbpData = gbpRes.status === 'fulfilled' ? gbpRes.value : null;
+
+            // Frankfurter tamamen erişilemezse yedek bir kur servisi deniyoruz
+            if(!usdData || !eurData){
+                try{
+                    const fb = await fetch('https://open.er-api.com/v6/latest/USD').then(r => r.json());
+                    if(fb && fb.rates && fb.rates.TRY){
+                        if(!usdData) usdData = { rates: { TRY: fb.rates.TRY } };
+                        if(!eurData && fb.rates.EUR) eurData = { rates: { TRY: fb.rates.TRY / fb.rates.EUR } };
+                        if(!gbpData && fb.rates.GBP) gbpData = { rates: { TRY: fb.rates.TRY / fb.rates.GBP } };
+                    }
+                }catch(fbErr){ console.warn('Yedek kur servisi de başarısız oldu', fbErr); }
+            }
+
             const usdToTry = usdData?.rates?.TRY;
             // Bazı kripto paralar CoinGecko'dan doğrudan TRY dönmeyebilir — bu durumda USD fiyatını TRY kuruyla çeviriyoruz.
             const cgTry = (id) => {
@@ -5476,27 +5752,26 @@
                 'shiba-inu': cgTry('shiba-inu'),
                 uniswap: cgTry('uniswap')
             };
-            marketError = false;
-            marketLastUpdated = Date.now();
-            snapshotPortfolioHistory();
-            checkPriceAlerts();
+            marketError = !cg && !usdData;
+            if(!marketError){
+                marketLastUpdated = Date.now();
+                snapshotPortfolioHistory();
+                checkPriceAlerts();
+            }
         }catch(e){
             console.error('Piyasa verisi çekilemedi', e);
             marketError = true;
             marketPrices.try_ = 1;
         }
+        await fetchOtherCurrencyRates();
         marketLoading = false;
         snapshotLivePoint();
         renderPortfolio();
     }
 
     function fetchMarketPricesIfNewDay(){
-        const today = todayStr();
-        const lastFetchDay = localStorage.getItem('tc_market_last_fetch_day');
-        if(lastFetchDay !== today){
-            localStorage.setItem('tc_market_last_fetch_day', today);
-            fetchMarketPrices();
-        }
+        localStorage.setItem('tc_market_last_fetch_day', todayStr());
+        fetchMarketPrices();
     }
 
     function addPortfolioQty(){
@@ -5566,6 +5841,13 @@
                 `<option value="${id}">${ASSET_DEFS[id].label} (${ASSET_DEFS[id].unit})</option>`
             ).join('')}</optgroup>`
         ).join('');
+        const curSelect = document.getElementById('portfolioDisplayCurrency');
+        if(curSelect){
+            curSelect.innerHTML = Object.keys(DISPLAY_CURRENCIES).map(id =>
+                `<option value="${id}">${DISPLAY_CURRENCIES[id].label} (${DISPLAY_CURRENCIES[id].symbol})</option>`
+            ).join('');
+            curSelect.value = displayCurrency;
+        }
         document.getElementById('portfolioQtyIcon').innerHTML = icon('coins',14);
         document.getElementById('portfolioAddBtn').innerHTML = icon('plus',16);
         document.getElementById('portfolioRefreshBtn').innerHTML = `${icon('refresh',11)} Fiyatları Güncelle`;
@@ -5953,7 +6235,14 @@
             }).join('');
         }
 
-        document.getElementById('portfolioTotal').textContent = formatTRY(total);
+        const portfolioTotalEl = document.getElementById('portfolioTotal');
+        const convertedEl = document.getElementById('portfolioConvertedTotal');
+        if(displayCurrency === 'try_'){
+            portfolioTotalEl.textContent = formatTRY(total);
+        } else {
+            portfolioTotalEl.textContent = formatInDisplayCurrency(total);
+        }
+        if(convertedEl) convertedEl.style.display = 'none';
 
         const metaEl = document.getElementById('portfolioMeta');
         if(marketError && !marketLastUpdated){
@@ -6242,6 +6531,7 @@
     }
 
     async function sendChatMessage(_unused, audioDataUrl){
+        if(window._hasAccess === false){ showTopToast('Küresel sohbete erişimin yok', 'warn', 'lock'); return; }
         const input = document.getElementById('chatInput');
         const text = input ? input.value.trim() : '';
         if(!text && !_pendingChatImageDataUrl && !audioDataUrl) return;
@@ -6364,8 +6654,10 @@
     </div>
     <div class="chat-msg-body">
       <div class="chat-msg-headrow">
-        <span class="chat-msg-rankicon">${badgeHTML(rankIdx, 16, false)}</span>
-        <span class="chat-msg-name" onclick="${isSelMode?'':`openUserSocialProfile('${m.uid}')`}">${escapeHtml(m.username||'Kullanıcı')}</span>
+        <span class="chat-msg-name-group">
+          ${window._hasAccess !== false ? `<span class="chat-msg-rankicon">${badgeHTML(rankIdx, 16, false)}</span>` : ''}
+          <span class="chat-msg-name" onclick="${isSelMode?'':`openUserSocialProfile('${m.uid}')`}">${escapeHtml(m.username||'Kullanıcı')}</span>
+        </span>
         ${chatMsgBadgesHtml(m)}
       </div>
 <div class="chat-msg-bubble" id="bubble-${m.id}" ondblclick="${isSelMode?'':`handleBubbleDoubleLike(event,'${m.id}', false)`}">
@@ -7168,8 +7460,7 @@ ${m.track ? `
       ${isSelMode ? `<div class="chat-msg-select-check">${icon('check',12)}</div>` : ''}
       <img class="chat-msg-avatar" src="${m.avatarUrl||'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" onclick="${isSelMode?'':`openUserSocialProfile('${m.uid}')`}" style="cursor:pointer;" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'">
 <div class="chat-msg-body">
-<div class="chat-msg-headrow"><span class="chat-msg-name" onclick="${isSelMode?'':`openUserSocialProfile('${m.uid}')`}">${escapeHtml(m.username||'Kullanıcı')}</span>${chatMsgBadgesHtml(m)}</div><div class="chat-msg-bubble" id="dmbubble-${m.id}" ondblclick="${isSelMode?'':`handleBubbleDoubleLike(event,'${m.id}', true)`}">
-          ${m.replyTo ? `<div class="reply-quote" onclick="scrollToMessage('${m.replyTo.id}', true)"><b>${escapeHtml(m.replyTo.username)}</b><span>${escapeHtml(m.replyTo.text)}</span></div>` : ''}
+<div class="chat-msg-headrow"><span class="chat-msg-name-group">${window._hasAccess !== false ? `<span class="chat-msg-rankicon">${badgeHTML(dmRankIdx, 16, false)}</span>` : ''}<span class="chat-msg-name" onclick="${isSelMode?'':`openUserSocialProfile('${m.uid}')`}">${escapeHtml(dmDisplayName)}</span></span>${chatMsgBadgesHtml(m)}</div>          ${m.replyTo ? `<div class="reply-quote" onclick="scrollToMessage('${m.replyTo.id}', true)"><b>${escapeHtml(m.replyTo.username)}</b><span>${escapeHtml(m.replyTo.text)}</span></div>` : ''}
           <div class="chat-msg-text">${m.text?escapeHtml(m.text):''}</div>
           ${m.imageUrl ? `<img class="chat-msg-img" src="${m.imageUrl}" onclick="openLightbox('${m.imageUrl}')">` : ''}
           ${m.audioUrl ? `
@@ -7232,7 +7523,8 @@ ${m.track ? `
             audioUrl: audioDataUrl || null, ts: Date.now(), replyTo: _dmReplyTo, likes: {}, reactions: {}, prestige: prestige,
             role: isAdminSelf ? 'admin' : (isModSelf ? 'mod' : null),
             alsoMod: (isAdminSelf && isModSelf),
-            verified: isVerifiedUser
+            verified: isVerifiedUser,
+            rankIdx: getRankIndex(xp)
         };
         if(input) input.value = '';
         _dmReplyTo = null; renderReplyPreview('dm');
@@ -7246,6 +7538,8 @@ ${m.track ? `
             if(groupsCache[currentGroupId]){ groupsCache[currentGroupId].lastMessageTs = msg.ts; groupsCache[currentGroupId].lastMessagePreview = preview; groupsCache[currentGroupId].lastMessageUid = currentUid; }
             await db.ref('developmentUsers/'+currentUid+'/groupReads/'+currentGroupId).set(msg.ts);
             groupReadsCache[currentGroupId] = msg.ts;
+            const gMembers = (groupsCache[currentGroupId] && groupsCache[currentGroupId].members) || {};
+            Object.keys(gMembers).forEach(uid => { if(uid !== currentUid) sendUserNotification(uid, 'group_message', me.username, preview || 'Yeni mesaj'); });
         }catch(err){
             showTopToast('Mesaj gönderilemedi: ' + (err && err.message ? err.message : 'bilinmeyen hata'), 'warn', 'warn');
             if(input && !input.value) input.value = text;
@@ -7285,6 +7579,10 @@ ${m.track ? `
     }
 
     function showMegaGlobalView(){
+        if(window._hasAccess === false){
+            showTopToast('Küresel sohbete erişimin yok', 'warn', 'lock');
+            return;
+        }
         exitSelectMode();
         _chatMegaActiveKey = 'global';
         detachCurrentConversationListeners();
@@ -7311,9 +7609,10 @@ ${m.track ? `
     function openChatHub(){
         closeAllAppModals();
         const isMobile = window.innerWidth <= 720;
+        const restricted = window._hasAccess === false;
 
-        if(isMobile){
-            // Mobilde önce sadece sohbet listesini göster — küresel sohbeti arkada render etmeyerek performans koru
+        if(isMobile || restricted){
+            // Mobilde ya da kısıtlı erişimde önce sadece sohbet listesini göster
             exitSelectMode();
             closeGroupInfoPanel();
             detachCurrentConversationListeners();
@@ -7338,7 +7637,7 @@ ${m.track ? `
         document.getElementById('chatFab').style.display = 'none';
         setAppVh();
 
-        if(isMobile){
+        if(isMobile || restricted){
             openChatSidebarMobile();
         } else {
             _chatHasRenderedOnce = false;
@@ -7430,7 +7729,7 @@ ${m.track ? `
         }
 
         let html = '';
-        if(!q){
+        if(!q && window._hasAccess !== false){
             html += `<div class="chat-hub-row pinned${_chatMegaActiveKey==='global'?' active':''}" onclick="openGlobalChat()">
         <div class="chat-hub-icon-circle">${icon('inbox',20)}</div>
         <div class="chat-hub-info">
@@ -7440,7 +7739,7 @@ ${m.track ? `
       </div>`;
         }
         const groupIds = Object.keys(myGroups).filter(gid => !q || (groupsCache[gid] && groupsCache[gid].name.toLowerCase().includes(q)));
-        if(groupIds.length > 0){
+        if(groupIds.length > 0 && window._hasAccess !== false){
             html += groupIds.map(gid => {
                 const g = groupsCache[gid];
                 if(!g) return '';
@@ -7741,11 +8040,12 @@ ${m.track ? `
 
             const isSelMode = _selectMode.active && _selectMode.scope === 'dm' && !currentGroupId;
             const isSelected = _selectedIds.has(m.id);
+            const dmDisplayName = mine ? 'Sen' : (document.getElementById('dmTargetName').textContent || 'Kullanıcı');
+            const dmRankIdx = m.rankIdx != null ? m.rankIdx : 0;
             return `${sep}<div class="chat-msg${m.role==='admin'?' is-admin':''}${mine?' is-mine':''}${grouped?' grouped':''}${_pinnedOpenMsgIds.has(m.id)?' pinned-open':''}${isSelMode?' select-mode':''}${isSelected?' selected':''}" data-msgid="${m.id}" onclick="${isSelMode?`toggleMsgSelected('${m.id}')`:''}">
         ${isSelMode ? `<div class="chat-msg-select-check">${icon('check',12)}</div>` : ''}
         <img class="chat-msg-avatar" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'" src="${mine?myAvatar:theirAvatar}" style="cursor:pointer;">
         <div class="chat-msg-body">
-${msgBadgeRowHtml(m)}
 <div class="chat-msg-bubble" id="dmbubble-${m.id}" ondblclick="${isSelMode?'':`handleBubbleDoubleLike(event,'${m.id}', true)`}">
             ${m.replyTo ? `<div class="reply-quote" onclick="scrollToMessage('${m.replyTo.id}', true)"><b>${escapeHtml(m.replyTo.username)}</b><span>${escapeHtml(m.replyTo.text)}</span></div>` : ''}
             <div class="chat-msg-text">${m.text ? escapeHtml(m.text) : ''}</div>
@@ -7812,7 +8112,8 @@ ${locationCardHtml(m.location)}
             audioUrl: audioDataUrl || null, ts: Date.now(), replyTo: _dmReplyTo, likes: {}, reactions: {}, seen:false, prestige: prestige,
             role: isAdminSelf ? 'admin' : (isModSelf ? 'mod' : null),
             alsoMod: (isAdminSelf && isModSelf),
-            verified: isVerifiedUser
+            verified: isVerifiedUser,
+            rankIdx: getRankIndex(xp)
         };
         if(input) input.value = '';
         _dmReplyTo = null; renderReplyPreview('dm');
@@ -7836,6 +8137,7 @@ ${locationCardHtml(m.location)}
                 otherUsername: me.username, otherAvatar: me.avatarUrl,
                 lastMessage: lastMsgPreview, ts: Date.now(), unread:true
             });
+            sendUserNotification(currentDmTargetUid, 'dm_message', me.username, lastMsgPreview || 'Yeni mesaj');
         }catch(err){
             showTopToast('Mesaj gönderilemedi: ' + (err && err.message ? err.message : 'bilinmeyen hata'), 'warn', 'warn');
             if(input && !input.value) input.value = text;
@@ -8747,28 +9049,198 @@ ${locationCardHtml(m.location)}
     ];
 
     const REWARDS = [
-        { id:'chips',       name:'Cips Paketi',           desc:'Küçük bir atıştırmalık keyfi.',            ic:'sparkle', cost:90,   cat:'atistirmalik' },
-        { id:'chocolate',   name:'Çikolata',               desc:'Tatlı bir ödül molası.',                  ic:'gem',     cost:110,  cat:'atistirmalik', popular:true },
-        { id:'coffee',      name:'Kahve / Enerji İçeceği', desc:'Bir sonraki göreve enerjik başla.',       ic:'bolt',    cost:130,  cat:'atistirmalik' },
-        { id:'soda',        name:'Tatlı İçecek',           desc:'Soğuk bir kutu meşrubat ya da shake.',    ic:'droplet', cost:150,  cat:'atistirmalik' },
-        { id:'snackcombo',  name:'Atıştırmalık Kombo',     desc:'Cips + çikolata bir arada — indirimli!',  ic:'gift',    cost:170,  originalCost:200, cat:'atistirmalik', discount:true },
-
-        { id:'shortbreak',  name:'15dk Ekran Molası',      desc:'Telefon/oyun ile kısa bir mola ver.',     ic:'clock',   cost:180,  cat:'dinlenme' },
-        { id:'cheatmeal',   name:'Bir Öğün Serbestlik',    desc:'Diyet planından bir öğün muaf ol.',       ic:'flame',   cost:320,  cat:'dinlenme', popular:true },
-        { id:'sleepin',     name:'Geç Uyanma İzni',        desc:'Yarın alarmı ertele, uykuna doy.',        ic:'moon',    cost:380,  cat:'dinlenme' },
-        { id:'restday',     name:'Yarım Gün Dinlenme',     desc:'Antrenmanı erteleyip dinlenebilirsin.',   ic:'leaf',    cost:520,  cat:'dinlenme' },
-
-        { id:'movie',       name:'Sinema / Dizi Gecesi',   desc:'Bir film ya da birkaç bölüm izle.',       ic:'monitor', cost:600,  cat:'eglence', popular:true },
-        { id:'gamesession', name:'1 Saat Oyun Seansı',     desc:'Suçluluk duymadan oyun keyfi.',           ic:'terminal',cost:650,  cat:'eglence' },
-        { id:'eatout',      name:'Dışarıda Yemek',         desc:'Sevdiğin bir restorana git.',             ic:'flag',    cost:900,  originalCost:1050, cat:'eglence', discount:true, new:true },
-        { id:'hangout',     name:'Arkadaşlarla Buluşma',   desc:'Bir günü sosyalleşmeye ayır.',            ic:'grid',    cost:950,  cat:'eglence' },
-
-        { id:'shopping',    name:'Küçük Alışveriş',        desc:'Kendine küçük bir hediye al.',            ic:'wallet',  cost:1400, cat:'ozel' },
-        { id:'fullday',     name:'Tam Gün Tatil',          desc:'Bir günü tamamen kendine ayır.',          ic:'sun',     cost:1800, cat:'ozel', popular:true },
-        { id:'bigreward',   name:'Büyük Ödül',             desc:'İstediğin özel bir şeye kendini ödüllendir.', ic:'crown', cost:2600, cat:'ozel' }
+        { id:'friendsmeet', name:'Arkadaşlarla Buluşma',   desc:'Arkadaşlarınla dışarıda vakit geçir.',     ic:'friendsMeet', cost:600, cat:'eglence' },
+        { id:'dineout',     name:'Dışarıda Yemek',          desc:'Güzel bir restoranda yemek keyfi.',        ic:'dineOut',      cost:700, cat:'eglence' },
+        { id:'latewake',    name:'Geç Uyanma İzni',         desc:'Alarm kurma, istediğin kadar uyu.',        ic:'sleepIn',      cost:400, cat:'dinlenme' },
+        { id:'gamehour',    name:'1 Saat Oyun Seansı',      desc:'Kesintisiz bir saatlik oyun keyfi.',       ic:'gameHour',     cost:350, cat:'eglence' },
+        { id:'energydrink', name:'Enerji İçeceği',         desc:'Bir sonraki göreve enerjik başla.',       ic:'bolt',    cost:200,  cat:'atistirmalik' },
+        { id:'masturbation',name:'Kişisel Zaman',          desc:'Kendine ayırdığın özel bir mola.',        ic:'moon',    cost:300,  cat:'ozel' },
+        { id:'chocolate',   name:'Çikolata',                desc:'Tatlı bir ödül molası.',                  ic:'gem',     cost:300,  cat:'atistirmalik' },
+        { id:'popcorn',     name:'Patlamış Mısır',          desc:'Klasik bir atıştırmalık keyfi.',          ic:'sparkle', cost:300,  cat:'atistirmalik' },
+        { id:'cookies',     name:'Kurabiye Türevleri',      desc:'Sevdiğin kurabiyelerden birini seç.',     ic:'cookieStack', cost:400,  cat:'atistirmalik' },
+        { id:'passright',   name:'Bir Geçiş Hakkı',         desc:'Spor ya da kitap okuma gibi disiplin görevini bugün pas geç.', ic:'ticketPass', cost:400, cat:'dinlenme' },
+        { id:'chips',       name:'Cips Paketi',             desc:'Küçük bir atıştırmalık keyfi.',           ic:'snackBag', cost:500,  cat:'atistirmalik' },
+        { id:'movie',       name:'Film',                    desc:'Bir film izleme keyfi.',                  ic:'monitor', cost:500,  cat:'eglence' },
+        { id:'fastfood',    name:'Fastfood / Ev Yemeği',    desc:'Canının çektiği bir yemek siparişi.',     ic:'flame',   cost:500,  cat:'eglence' },
+        { id:'fullday',     name:'Tüm Gün Tatil',           desc:'Bir günü tamamen kendine ayır.',          ic:'sun',     cost:1000, cat:'ozel', popular:true },
+        { id:'popeyes',     name:'Popeyes',                 desc:'Özel bir fast-food molası.',              ic:'flag',    cost:1000, cat:'eglence' },
+        { id:'megaday',     name:'Tüm Gün Tatil + Sınırsız Yemek + Film', desc:'Kendine tam bir keyif günü ayır.', ic:'crown', cost:5000, cat:'ozel', popular:true },
+        { id:'weekbinge',   name:'Tüm Hafta Dizi - Oyun',   desc:'Bir haftalık dizi ve oyun serbestliği.',  ic:'terminal',cost:10000, cat:'ozel' },
+        { id:'ultimateweek',name:'Tüm Hafta Dizi, Oyun, Sınırsız Yiyecek & Kişisel Zaman', desc:'Haftalık tam serbestlik paketi.', ic:'gift', cost:15000, cat:'ozel', popular:true }
     ];
 
     let rsActiveCategory = 'all';
+
+    const SHAME_RANK_COLORS = ['#ffd700','#c9c9d1','#cd7f32','#ff6b6b','#ff4d4d','#ff4d4d','#ff4d4d','#ff4d4d','#ff4d4d','#ff4d4d'];
+
+    const SHAME_TABS = [
+        { key:'kacirilan', label:'Görev Kaçıranlar', ic:'x', suffix:'görev kaçırdı', getVal: u => u.totalFailed || 0, fmt: v => v },
+        { key:'yag', label:'Yağ Oranı', ic:'blood', suffix:'% yağ oranı', getVal: u => (u.fitness||{}).bodyFat, fmt: v => v.toFixed(1) },
+        { key:'dusukxp', label:'Düşük XP', ic:'circleEmpty', suffix:'XP', getVal: u => u.xp, fmt: v => v, sortAsc:true, minActivity:true },
+        { key:'hayalet', label:'Hayalet Üyeler', ic:'moon', suffix:'gündür yok', getVal: u => u.lastActiveDate ? Math.max(0, Math.floor((Date.now()-new Date(u.lastActiveDate).getTime())/86400000)) : null, fmt: v => v },
+        { key:'duello', label:'Düello Kaybı', ic:'x', suffix:'düello kaybetti', getVal: u => u.duelLosses || 0, fmt: v => v },
+        { key:'tembel', label:'En Tembel', ic:'hourglass', suffix:'görev tamamladı', getVal: u => u.totalCompleted, fmt: v => v, sortAsc:true, minActivity:true }
+    ];
+    let _shameActiveTab = 'kacirilan';
+
+    function buildShameListHtml(list, suffix, fmt){
+        if(list.length===0) return `<div class="empty-state" style="padding:26px; border:none;">${icon('warn',20)}<p style="font-size:12px; margin-top:6px;">Bu kategoride veri yok.</p></div>`;
+        return list.map((item,i) => {
+            const color = SHAME_RANK_COLORS[i]||'#ff6b6b';
+            const medalContent = i<3 ? icon('trophy',13) : (i+1);
+            return `
+      <div class="shame-row" style="--rank-color:${color};">
+        <span class="shame-rank-medal">${medalContent}</span>
+        <img class="shame-avatar" src="${item.avatarUrl||'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" onerror="this.src='https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'">
+        <span class="shame-name">${escapeHtml(item.username)}</span>
+        <span class="shame-value">${fmt(item.value)} ${suffix}</span>
+      </div>`;
+        }).join('');
+    }
+
+    function renderShameTabs(){
+        const el = document.getElementById('shameTabs');
+        if(!el) return;
+        el.innerHTML = SHAME_TABS.map(t => `<button type="button" class="shame-tab-btn${_shameActiveTab===t.key?' active':''}" onclick="selectShameTab('${t.key}')">${icon(t.ic,12)} ${t.label}</button>`).join('');
+    }
+    function selectShameTab(key){
+        _shameActiveTab = key;
+        renderShameTabs();
+        renderShameTabContent();
+    }
+
+    function renderShameQuickStats(source){
+        const wrap = document.getElementById('shameQuickStatsRow');
+        if(!wrap) return;
+        const uids = Object.keys(source).filter(k => !NON_USER_KEYS.has(k));
+        const totalFails = uids.reduce((s,uid)=> s + (source[uid].totalFailed||0), 0);
+        const worst = uids.map(uid=>({uid, v:source[uid].totalFailed||0})).sort((a,b)=>b.v-a.v)[0];
+        const worstName = (worst && worst.v>0) ? ((source[worst.uid].profile||{}).username || 'Kullanıcı') : '—';
+        wrap.innerHTML = `
+      <div class="settings-quick-stat">
+        <span class="settings-quick-stat-icon">${icon('warn',14)}</span>
+        <div><b>${totalFails}</b><span>Toplam Kaçırılan</span></div>
+      </div>
+      <div class="settings-quick-stat">
+        <span class="settings-quick-stat-icon">${icon('x',14)}</span>
+        <div><b>${escapeHtml(worstName)}</b><span>En Kötü Performans</span></div>
+      </div>
+      <div class="settings-quick-stat">
+        <span class="settings-quick-stat-icon">${icon('user',14)}</span>
+        <div><b>${uids.length}</b><span>Toplam Kullanıcı</span></div>
+      </div>`;
+    }
+
+    function renderShameTabContent(){
+        const el = document.getElementById('shameTabContent');
+        if(!el) return;
+        const tab = SHAME_TABS.find(t=>t.key===_shameActiveTab);
+        if(!tab){ el.innerHTML=''; return; }
+        const uids = Object.keys(allUsersCache).filter(k => !NON_USER_KEYS.has(k));
+        let list = uids.map(uid => {
+            const u = allUsersCache[uid];
+            const val = tab.getVal(u);
+            return { uid, username:(u.profile||{}).username || 'Kullanıcı', avatarUrl:(u.profile||{}).avatarUrl || '', value: val };
+        }).filter(x => {
+            if(x.value == null) return false;
+            if(tab.minActivity && !(allUsersCache[x.uid].totalCreated>0)) return false;
+            if(!tab.sortAsc && x.value <= 0) return false;
+            return true;
+        });
+        list.sort((a,b) => tab.sortAsc ? a.value - b.value : b.value - a.value);
+        list = list.slice(0, 10);
+
+        el.innerHTML = `
+      <div class="settings-section-title">${icon(tab.ic,11)} ${tab.label} — İlk 10</div>
+      <div>${buildShameListHtml(list, tab.suffix, tab.fmt)}</div>`;
+    }
+
+    async function renderShameBoard(){
+        try{
+            let source = allUsersCache;
+            if(!source || Object.keys(source).length===0){
+                const snap = await db.ref('developmentUsers').once('value');
+                source = snap.val() || {};
+                allUsersCache = source;
+            }
+            computeShameUidSet(source);
+            renderShameQuickStats(source);
+            renderShameTabs();
+            renderShameTabContent();
+            renderChatMessages();
+            if(currentGroupId) renderGroupMessages(); else if(currentDmTargetUid) renderDmMessages();
+        }catch(err){
+            document.getElementById('shameTabContent').innerHTML = `<div class="empty-state" style="padding:20px; border:none;"><p>Yüklenemedi.</p></div>`;
+        }
+    }
+
+    let shameUidSet = new Set();
+    let _shamePreloaded = false;
+    function updateShameBoardButtonState(source){
+        const btn = document.getElementById('shameBoardBtn');
+        if(!btn) return;
+        const count = Object.keys(source||{}).filter(k => !NON_USER_KEYS.has(k)).length;
+        const enough = count >= 10;
+        btn.style.display = enough ? 'flex' : 'none';
+        btn.disabled = !enough;
+        btn.title = 'Utanç Tablosu';
+        if(enough) btn.innerHTML = icon('skull',15);
+    }
+    function preloadShameData(){
+        if(_shamePreloaded || !db) return;
+        _shamePreloaded = true;
+        const refresh = () => {
+            db.ref('developmentUsers').once('value').then(snap => {
+                allUsersCache = snap.val() || {};
+                computeShameUidSet(allUsersCache);
+                updateShameBoardButtonState(allUsersCache);
+                renderChatMessages();
+                if(currentGroupId) renderGroupMessages(); else if(currentDmTargetUid) renderDmMessages();
+            }).catch(()=>{});
+        };
+        refresh();
+        setInterval(refresh, 5*60000);
+    }
+    function computeShameUidSet(source){
+        shameUidSet = new Set();
+        const uids = Object.keys(source).filter(k => !NON_USER_KEYS.has(k));
+        if(uids.length < 10) return;
+        SHAME_TABS.forEach(tab => {
+            let list = uids.map(uid => {
+                const u = source[uid];
+                const val = tab.getVal(u);
+                return { uid, value: val, hasActivity: u.totalCreated>0 };
+            }).filter(x => {
+                if(x.value == null) return false;
+                if(tab.minActivity && !x.hasActivity) return false;
+                if(!tab.sortAsc && x.value <= 0) return false;
+                return true;
+            });
+            list.sort((a,b) => tab.sortAsc ? a.value - b.value : b.value - a.value);
+            list.slice(0,3).forEach(x => shameUidSet.add(x.uid));
+        });
+    }
+    function shameEmojiHtml(uid){
+        return shameUidSet.has(uid) ? `<span title="Utanç Tablosunda — görmek için tıkla" style="margin-left:4px; font-size:13px; cursor:pointer;" onclick="event.stopPropagation(); openShameBoard();">💩</span>` : '';
+    }
+    async function openShameBoard(){
+        let source = allUsersCache;
+        if(!source || Object.keys(source).length===0){
+            try{ const snap = await db.ref('developmentUsers').once('value'); source = snap.val() || {}; allUsersCache = source; }catch(e){}
+        }
+        const realUserCount = Object.keys(source).filter(k => !NON_USER_KEYS.has(k)).length;
+        if(realUserCount < 10){
+            showTopToast('Utanç tablosu için en az 10 kullanıcı gerekiyor', 'warn', 'warn');
+            return;
+        }
+        closeAllAppModals('chatMegaModal');
+        document.getElementById('shameHeadIcon').innerHTML = icon('skull',20);
+        document.getElementById('shameHeadIcon').style.animation = 'none';
+        document.getElementById('shameTabContent').innerHTML = `<div class="empty-state" style="padding:22px; border:none;"><p>Yükleniyor…</p></div>`;
+        document.getElementById('shameBoardModal').classList.add('show');
+        renderShameBoard();
+    }
+    function closeShameBoard(){ document.getElementById('shameBoardModal').classList.remove('show'); }
 
     function openRewardStore(){
         closeAllAppModals('chatMegaModal');
@@ -8784,7 +9256,7 @@ ${locationCardHtml(m.location)}
         const tabsEl = document.getElementById('rsTabs');
         if(!tabsEl) return;
         tabsEl.innerHTML = RS_CATEGORIES.map(c =>
-            `<button type="button" class="rs-tab-btn${rsActiveCategory===c.key?' active':''}" onclick="selectRsCategory('${c.key}')">${icon(c.ic,12)} ${c.label}</button>`
+            `<button type="button" class="shame-tab-btn${rsActiveCategory===c.key?' active':''}" onclick="selectRsCategory('${c.key}')">${icon(c.ic,12)} ${c.label}</button>`
         ).join('');
     }
     function selectRsCategory(key){
@@ -8794,8 +9266,24 @@ ${locationCardHtml(m.location)}
     }
 
     function renderRewardStore(){
-        const balEl = document.getElementById('rsBalanceNum');
-        if(balEl) balEl.innerHTML = `${icon('bolt',15)} ${xp} XP`;
+        const quickWrap = document.getElementById('rsQuickStatsRow');
+        if(quickWrap){
+            const nextAffordable = REWARDS.filter(r => r.cost > xp).sort((a,b)=>a.cost-b.cost)[0];
+            const redeemedTotal = Object.values(redeemedRewards).reduce((a,b)=>a+b,0);
+            quickWrap.innerHTML = `
+        <div class="settings-quick-stat">
+          <span class="settings-quick-stat-icon">${icon('bolt',14)}</span>
+          <div><b>${xp} XP</b><span>Bakiyen</span></div>
+        </div>
+        <div class="settings-quick-stat">
+          <span class="settings-quick-stat-icon">${icon('gift',14)}</span>
+          <div><b>${redeemedTotal}</b><span>Alınan Ödül</span></div>
+        </div>
+        <div class="settings-quick-stat">
+          <span class="settings-quick-stat-icon">${icon('hourglass',14)}</span>
+          <div><b style="font-size:11px;">${nextAffordable ? (nextAffordable.cost - xp) + ' XP kaldı' : 'Hepsi alınabilir'}</b><span>${nextAffordable ? escapeHtml(nextAffordable.name) : 'Tebrikler'}</span></div>
+        </div>`;
+        }
         const grid = document.getElementById('rsGrid');
         if(!grid) return;
         const list = rsActiveCategory==='all' ? REWARDS : REWARDS.filter(r => r.cat===rsActiveCategory);
@@ -8805,7 +9293,6 @@ ${locationCardHtml(m.location)}
         } else {
             grid.innerHTML = list.map(r => {
                 const affordable = xp >= r.cost;
-                const count = redeemedRewards[r.id] || 0;
                 const badges = [];
                 if(r.popular) badges.push(`<span class="rs-card-badge popular">${icon('flame',8)} Popüler</span>`);
                 if(r.new) badges.push(`<span class="rs-card-badge new">${icon('sparkle',8)} Yeni</span>`);
@@ -8813,7 +9300,6 @@ ${locationCardHtml(m.location)}
                 return `<div class="rs-card">
           <div class="rs-card-media">
             ${badges.length ? `<div class="rs-card-badges">${badges.join('')}</div>` : ''}
-            ${count>0 ? `<span class="rs-card-owned">${count}x alındı</span>` : ''}
             <span class="rs-card-icon-wrap">${icon(r.ic,21)}</span>
           </div>
           <div class="rs-card-body">
@@ -8829,14 +9315,6 @@ ${locationCardHtml(m.location)}
           </div>
         </div>`;
             }).join('');
-        }
-
-        const hint = document.getElementById('rsFootHint');
-        if(hint){
-            const nextAffordable = REWARDS.filter(r => r.cost > xp).sort((a,b)=>a.cost-b.cost)[0];
-            hint.innerHTML = nextAffordable
-                ? `${icon('hourglass',10)} ${nextAffordable.name} için ${nextAffordable.cost - xp} XP daha lazım`
-                : `${icon('check',10)} Tüm ödülleri alabilecek XP'n var!`;
         }
     }
 
@@ -8973,6 +9451,7 @@ ${locationCardHtml(m.location)}
     }
 
     function openStepDuelCreator(){
+        if(window._hasAccess === false){ showTopToast('Bu özellik için erişimin şu an kapalı', 'warn', 'lock'); return; }
         if(!currentDmTargetUid || currentGroupId){ showTopToast('Düello sadece özel sohbette gönderilebilir', 'warn', 'warn'); return; }
         document.getElementById('dmAttachMenu').classList.remove('open');
         closeAllAppModals('chatMegaModal');
@@ -9020,6 +9499,7 @@ ${locationCardHtml(m.location)}
             const targetProfile = targetProfileSnap.val() || {};
             await db.ref('developmentUsers/dmIndex/'+currentUid+'/'+currentDmTargetUid).update({ otherUsername: targetProfile.username||'Kullanıcı', otherAvatar: targetProfile.avatarUrl||'', lastMessage:'⚔️ '+d.label, ts: now });
             await db.ref('developmentUsers/dmIndex/'+currentDmTargetUid+'/'+currentUid).update({ otherUsername: me.username, otherAvatar: me.avatarUrl, lastMessage:'⚔️ '+d.label, ts: now });
+            sendUserNotification(currentDmTargetUid, 'step_duel', me.username, d.label+' daveti gönderdi');
             showTopToast(d.label+' gönderildi', 'info', d.ic);
         }catch(err){ showTopToast('Gönderilemedi: '+err.message, 'warn', 'warn'); }
     }
@@ -9535,6 +10015,7 @@ ${locationCardHtml(m.location)}
     let _giSelectedGame = null;
 
     function openGameInviteCreator(target){
+        if(window._hasAccess === false){ showTopToast('Bu özellik için erişimin şu an kapalı', 'warn', 'lock'); return; }
         _giTarget = target;
         _giMode = 'invite';
         _giSelectedGame = null;
@@ -9606,6 +10087,7 @@ ${locationCardHtml(m.location)}
                 const preview = (gameInvite.isDuel?'⚔️ Düello: ':'🎮 Oyun daveti: ') + g.name;
                 await db.ref('developmentUsers/dmIndex/'+currentUid+'/'+currentDmTargetUid).update({ otherUsername: targetProfile.username||'Kullanıcı', otherAvatar: targetProfile.avatarUrl||'', lastMessage: preview, ts: Date.now() });
                 await db.ref('developmentUsers/dmIndex/'+currentDmTargetUid+'/'+currentUid).update({ otherUsername: me.username, otherAvatar: me.avatarUrl, lastMessage: preview, ts: Date.now() });
+                sendUserNotification(currentDmTargetUid, 'game_invite', me.username, preview);
             } else {
                 const isAdmin = currentUid === ADMIN_UID, isMod = !!moderators[currentUid];
                 await chatRef.push({
@@ -9791,6 +10273,7 @@ ${locationCardHtml(m.location)}
                             email: user.email || '',
                             avatarUrl: user.photoURL || '',
                             isAdmin: user.uid === ADMIN_UID,
+                            hasAccess: user.uid === ADMIN_UID,
                             banned: false,
                             createdAt: Date.now()
                         });
@@ -9893,6 +10376,7 @@ ${locationCardHtml(m.location)}
             attachPresenceListener();
             attachDmIndexListener();
             attachEventsListener();
+            preloadShameData();
             checkRecurringReset();
             autoFailExpired(true);
             render();
@@ -9912,6 +10396,7 @@ ${locationCardHtml(m.location)}
         });
         attachPresenceListener();
         attachFriendRequestsListener();
+        attachGeneralNotificationsListener();
         attachGroupIndexListener();
         attachMyDuelsListener();
     }
@@ -10040,11 +10525,8 @@ ${locationCardHtml(m.location)}
         document.getElementById('fSaveLiftsBtn').innerHTML = `${icon('bolt',14)} Rekorları Kaydet`;
         document.getElementById('authUserIcon').innerHTML = icon('user',14);
         document.getElementById('authPassIcon').innerHTML = icon('lock',14);
-        document.getElementById('authFeatureList').innerHTML = [
-            ['shield','Görevlerin ve XP\'n bulutta güvenle saklanır'],
-            ['trophy','36 rütbe, başarımlar ve sıralama tablosu'],
-            ['dumbbell','Spor takibi, portföy ve daha fazlası']
-        ].map(([ic,txt]) => `<div class="auth-feature-item">${icon(ic,15)}<span>${txt}</span></div>`).join('');
+        const authFeatureListEl = document.getElementById('authFeatureList');
+        if(authFeatureListEl) authFeatureListEl.innerHTML = '';
         document.getElementById('psCloseBtn').innerHTML = icon('x',16);
         document.querySelector('.profile-close-btn').innerHTML = icon('x',15);
         document.querySelector('.pv-avatar-edit-badge') && (document.querySelector('.pv-avatar-edit-badge').innerHTML = icon('camera',13));
@@ -10062,12 +10544,12 @@ ${locationCardHtml(m.location)}
         document.getElementById('adminTabUsersBtn').innerHTML = `${icon('user',13)} Kullanıcılar`;
         document.getElementById('adminTabLiveBtn').innerHTML = `${icon('bolt',13)} Canlı Veri`;
         document.getElementById('adminSearchIcon').innerHTML = icon('search',14);
-        const bugBtn = document.getElementById('bugReportBtn');
-        if(bugBtn) bugBtn.innerHTML = icon('warn',15);
+        const shameBoardBtn = document.getElementById('shameBoardBtn');
+        if(shameBoardBtn) shameBoardBtn.innerHTML = icon('skull',15);
+        const rewardStoreBtn = document.getElementById('rewardStoreBtn');
+        if(rewardStoreBtn) rewardStoreBtn.innerHTML = icon('gift',15);
         const bugImgBtnIcon = document.getElementById('bugImageBtnIcon');
         if(bugImgBtnIcon) bugImgBtnIcon.innerHTML = icon('camera',13);
-        const verifyBtn = document.getElementById('verifyReqBtn');
-        if(verifyBtn) verifyBtn.innerHTML = icon('check',15);
         const verifyImgBtnIcon = document.getElementById('verifyImageBtnIcon');
         if(verifyImgBtnIcon) verifyImgBtnIcon.innerHTML = icon('camera',13);
         document.getElementById('chatHeaderTitle').innerHTML = `${icon('inbox',15)} Küresel Sohbet`;
@@ -10454,7 +10936,7 @@ ${locationCardHtml(m.location)}
         html += `</div>`;
         el.innerHTML = html;
     }
-    const APP_MODAL_IDS = ['rankModal','achvModal','profileModal','settingsModal','adminModal','createEventModal','chatMegaModal','themeStudioModal','botEngagementModal'];
+    const APP_MODAL_IDS = ['rankModal','achvModal','profileModal','settingsModal','adminModal','createEventModal','chatMegaModal','themeStudioModal','botEngagementModal','shameBoardModal'];
     function closeAllAppModals(exclude){
         APP_MODAL_IDS.forEach(id => {
             if(exclude && id === exclude) return;
@@ -11015,7 +11497,71 @@ ${locationCardHtml(m.location)}
         applyCompactModeSetting();
         updatePresenceVisibility();
     }
+    let _accessLockObserver = null;
+    const ACCESS_GATED_PANEL_IDS = ['targetPanel','quickIconsRow','rankGalleryPanel','achvPanel','lbPanel'];
+    const ACCESS_GATED_DATA_IDS = ['taskList','rankGallery','achvGallery','lbList','weekChart','categoryChart','monthCalendar'];
+    function applyAccessGate(){
+        const locked = window._hasAccess === false;
+        const titleH1 = document.getElementById('mainPageH1'); if(titleH1) titleH1.style.display = locked ? 'none' : '';
+        ACCESS_GATED_PANEL_IDS.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.style.display = locked ? 'none' : '';
+        });
+        const pf = document.getElementById('portfolioPanel'); if(pf) pf.classList.remove('open');
+        const ft = document.getElementById('fitnessPanel'); if(ft) ft.classList.remove('open');
+        const heroLinks = document.querySelector('.hero-links'); if(heroLinks) heroLinks.style.display = locked ? 'none' : '';
+        const rewardBtn = document.getElementById('rewardStoreBtn'); if(rewardBtn) rewardBtn.style.display = locked ? 'none' : 'flex';
+        const createGroupBtnEl = document.getElementById('createGroupBtn'); if(createGroupBtnEl) createGroupBtnEl.style.display = locked ? 'none' : '';
+        const streakPillEl = document.getElementById('streakPill'); if(streakPillEl) streakPillEl.style.display = locked ? 'none' : '';
+        if(locked){
+            ACCESS_GATED_DATA_IDS.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = ''; });
+            renderLockedHero();
+            enforceAccessLock();
+        } else if(_accessLockObserver){
+            _accessLockObserver.disconnect();
+            _accessLockObserver = null;
+        }
+    }
+    function enforceAccessLock(){
+        if(_accessLockObserver) _accessLockObserver.disconnect();
+        _accessLockObserver = new MutationObserver(() => {
+            if(window._hasAccess !== false) return;
+            ACCESS_GATED_PANEL_IDS.forEach(id => {
+                const el = document.getElementById(id);
+                if(el && el.style.display !== 'none') el.style.display = 'none';
+            });
+            const heroLinks = document.querySelector('.hero-links');
+            if(heroLinks && heroLinks.style.display !== 'none') heroLinks.style.display = 'none';
+            const rewardBtn = document.getElementById('rewardStoreBtn');
+            if(rewardBtn && rewardBtn.style.display !== 'none') rewardBtn.style.display = 'none';
+            const createGroupBtnEl = document.getElementById('createGroupBtn');
+            if(createGroupBtnEl && createGroupBtnEl.style.display !== 'none') createGroupBtnEl.style.display = 'none';
+            const streakPillEl = document.getElementById('streakPill');
+            if(streakPillEl && streakPillEl.style.display !== 'none') streakPillEl.style.display = 'none';
+            ACCESS_GATED_DATA_IDS.forEach(id => {
+                const el = document.getElementById(id);
+                if(el && el.innerHTML.trim() !== '') el.innerHTML = '';
+            });
+        });
+        const watchTargets = ACCESS_GATED_PANEL_IDS.concat(['rewardStoreBtn','createGroupBtn','streakPill']);
+        watchTargets.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) _accessLockObserver.observe(el, { attributes:true, attributeFilter:['style','class'] });
+        });
+        const heroLinks = document.querySelector('.hero-links');
+        if(heroLinks) _accessLockObserver.observe(heroLinks, { attributes:true, attributeFilter:['style','class'] });
+    }
+    function renderLockedHero(){
+        const badgeSlot = document.getElementById('rankBadgeSlot'); if(badgeSlot) badgeSlot.innerHTML = icon('lock', 56);
+        const rn = document.getElementById('rankName'); if(rn) rn.textContent = 'Erişim Kısıtlı';
+        const rt = document.getElementById('rankTierLabel'); if(rt) rt.textContent = 'Yönetici onayı bekleniyor';
+        const sp = document.getElementById('streakPill'); if(sp) sp.innerHTML = '';
+        const xf = document.getElementById('xpFill'); if(xf) xf.style.width = '0%';
+        const xn = document.getElementById('xpNow'); if(xn) xn.textContent = '';
+        const xx = document.getElementById('xpNext'); if(xx) xx.textContent = '';
+    }
     function render(){
+        if(window._hasAccess === false){ applyAccessGate(); return; }
         renderHero();
         renderWeekChart();
         buildCategoryChart();
@@ -11262,7 +11808,7 @@ ${locationCardHtml(m.location)}
       <span class="csb-count">${icon('check',13)} ${_selectedIds.size} seçili</span>
       <span class="csb-spacer"></span>
       <button class="btn btn-ghost" onclick="bulkDeleteMessages('${scope}', false)">${icon('trash',12)} Benden Sil</button>
-      ${canDeleteAllForEveryone ? `<button class="btn" style="background:var(--neg); color:#fff;" onclick="bulkDeleteMessages('${scope}', true)">${icon('ban',12)} Herkesten Sil</button>` : ''}
+      ${canDeleteAllForEveryone ? `<button class="btn" style="background:var(--neg); color:#fff;" onclick="bulkDeleteMessages('${scope}', true)">${icon('trash',12)} Herkesten Sil</button>` : ''}
       <button class="icon-btn" title="Vazgeç" onclick="exitSelectMode()">${icon('x',15)}</button>
     `;
         bar.classList.add('show');
@@ -11320,8 +11866,11 @@ ${locationCardHtml(m.location)}
     }
     const debouncedRenderAdminUserList = debounce(()=> { _adminUserVisibleCount = _adminUserPageSize; renderAdminUserList(); }, 280);
     function openLightbox(url){
+        const lb = document.getElementById('imgLightbox');
+        if(lb.parentElement !== document.body) document.body.appendChild(lb);
+        lb.style.zIndex = 9999;
         document.getElementById('lightboxImg').src = url;
-        document.getElementById('imgLightbox').classList.add('show');
+        lb.classList.add('show');
     }
     function closeLightbox(){
         document.getElementById('imgLightbox').classList.remove('show');
@@ -11848,6 +12397,8 @@ ${locationCardHtml(m.location)}
         const fallback = document.getElementById('avatarFallback');
         if(fallback) fallback.textContent = uname.charAt(0).toUpperCase() || 'R';
         window._isAdminUser = !!(profile.isAdmin || currentUid === ADMIN_UID);
+        window._hasAccess = window._isAdminUser ? true : (profile.hasAccess !== false);
+        applyAccessGate();
         const startEventBtnEl = document.getElementById('startEventBtn');
         if(startEventBtnEl) startEventBtnEl.style.display = window._isAdminUser ? '' : 'none';
         const psAvatar = document.getElementById('psAvatar');
@@ -11876,8 +12427,11 @@ ${locationCardHtml(m.location)}
         let html = `
     <button class="ps-nav-item" onclick="closeProfileSidebar(); openProfilePanel();">${icon('user',15)} Profil</button>
     <button class="ps-nav-item" onclick="closeProfileSidebar(); openChatHub();">${icon('inbox',15)} Mesajlarım</button>
-    <button class="ps-nav-item" onclick="closeProfileSidebar(); openBlockedUsersModal();">${icon('userBlock',15)} Engellenenler</button>
-    <button class="ps-nav-item" onclick="closeProfileSidebar(); openSettingsPanel();">${icon('gear',15)} Site Ayarları</button>`;
+        <button class="ps-nav-item" onclick="closeProfileSidebar(); openBlockedUsersModal();">${icon('userBlock',15)} Engellenenler</button>
+    <button class="ps-nav-item" onclick="closeProfileSidebar(); openSettingsPanel();">${icon('gear',15)} Site Ayarları</button>
+    <button class="ps-nav-item" onclick="closeProfileSidebar(); openVerificationModal();">${verifiedGlyphSVG(15)} Doğrulama Talep Et</button>
+    <button class="ps-nav-item" onclick="closeProfileSidebar(); openBugReportModal();">${icon('warn',15)} Hata Bildir</button>
+`;
         if(isAdmin){
             html += `<button class="ps-nav-item" onclick="closeProfileSidebar(); openAdminPanel();">${icon('shield',15)} Yönetim Paneli</button>`;
         }
@@ -11943,28 +12497,25 @@ ${locationCardHtml(m.location)}
     }
     function prestigeBadgeHtml(p, size){
         if(!p) return '';
-        return `<span class="streak-pill prestige-pill" title="Prestij ${p}">${icon('prestigeStar',11)} Prestij ${p}</span>`;
-    }
-    function prestigeBadgeHtml(p, size){
-        if(!p) return '';
-        return `<span class="streak-pill prestige-pill" title="Prestij ${p}">${icon('prestigeStar',11)} Prestij ${p}</span>`;
+        return `<span class="chat-msg-badge prestige-pill" title="Prestij ${p}">${icon('prestigeStar',9)} Prestij ${p}</span>`;
     }
     function chatMsgBadgesHtml(m, excludeAdmin){
         const parts = [];
-        if(m.verified) parts.push(verifiedBadgeHtml(true));
         if(m.role === 'mod' || m.alsoMod) parts.push(`<span class="chat-msg-badge mod">${icon('shield',9)} Moderatör</span>`);
         if(!excludeAdmin && m.role === 'admin') parts.push(`<span class="chat-msg-badge admin">${icon('crown',9)} Yönetici</span>`);
         if(m.prestige) parts.push(prestigeBadgeHtml(m.prestige, 12));
+        if(m.verified) parts.push(verifiedBadgeHtml(true));
+        if(shameUidSet.has(m.uid)) parts.push(shameEmojiHtml(m.uid));
         return parts.length ? `<span class="chat-msg-badges">${parts.join('')}</span>` : '';
     }
     function msgBadgeRowHtml(m){
         let roleHtml = '';
-        if(m.verified) roleHtml += verifiedBadgeHtml(true);
         if(m.role === 'admin') roleHtml += `<span class="chat-msg-badge admin">${icon('crown',9)} Yönetici</span>`;
         if(m.role === 'mod' || m.alsoMod) roleHtml += `<span class="chat-msg-badge mod">${icon('shield',8)} Moderatör</span>`;
         const prestigeHtml = prestigeBadgeHtml(m.prestige);
-        if(!roleHtml && !prestigeHtml) return '';
-        return `<div class="chat-msg-badge-row">${roleHtml}${prestigeHtml}</div>`;
+        const verifiedHtml = m.verified ? verifiedBadgeHtml(true) : '';
+        if(!roleHtml && !prestigeHtml && !verifiedHtml) return '';
+        return `<div class="chat-msg-badge-row">${roleHtml}${prestigeHtml}${verifiedHtml}</div>`;
     }
     function locationCardHtml(location){
         if(!location) return '';
@@ -11982,6 +12533,35 @@ ${locationCardHtml(m.location)}
         setTimeout(() => el.classList.remove('msg-highlight-flash'), 1200);
     }
     let incomingFriendRequests = {};
+    let incomingNotifications = {};
+
+    function sendUserNotification(uid, type, title, body){
+        if(!db || !uid) return;
+        db.ref('developmentUsers/'+uid+'/notifications').push({ type, title, body, ts: Date.now(), read:false }).catch(()=>{});
+    }
+    function notifIconFor(type){
+        if(type==='verify_approved') return 'check';
+        if(type==='verify_revoked') return 'x';
+        if(type==='bug_resolved') return 'check';
+        return 'bell';
+    }
+    async function dismissNotification(id){
+        if(!currentUid) return;
+        try{ await db.ref('developmentUsers/'+currentUid+'/notifications/'+id).remove(); }catch(e){}
+    }
+    function attachGeneralNotificationsListener(){
+        if(!currentUid) return;
+        db.ref('developmentUsers/'+currentUid+'/notifications').limitToLast(30).on('value', snap => {
+            incomingNotifications = snap.val() || {};
+            updateFriendRequestsBadge();
+            renderNotifPanel();
+        });
+        db.ref('developmentUsers/'+currentUid+'/notifications').on('child_added', snap => {
+            if(!window._notifFirstLoadDone) return;
+            const n = snap.val() || {};
+            fireBrowserNotification(n.title||'Bildirim', n.body||'');
+        });
+    }
 
     function attachFriendRequestsListener(){
         if(!currentUid) return;
@@ -11996,7 +12576,10 @@ ${locationCardHtml(m.location)}
             fireBrowserNotification('Yeni arkadaşlık isteği', (r.username||'Biri') + ' sana arkadaşlık isteği gönderdi');
         });
         setTimeout(()=>{ window._notifFirstLoadDone = true; }, 1500);
-        if('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+        if('Notification' in window && Notification.permission === 'default' && !localStorage.getItem('tc_notif_asked_v1')){
+            localStorage.setItem('tc_notif_asked_v1', '1');
+            Notification.requestPermission();
+        }
     }
     function updateFriendRequestsBadge(){
         const count = Object.keys(incomingFriendRequests).length;
@@ -12022,9 +12605,14 @@ ${locationCardHtml(m.location)}
         if(willOpen) renderNotifPanel();
     }
     document.addEventListener('click', e => {
-        if(!e.target.closest('#notifPanel') && !e.target.closest('#notifBellBtn')){
-            closeNotifPanel();
-        }
+        const panel = document.getElementById('notifPanel');
+        const bellBtn = document.getElementById('notifBellBtn');
+        if(!panel || !panel.classList.contains('open')) return;
+        // Panel içindeki bir düğmeye basılınca DOM yeniden çizildiği için e.target artık DOM'dan
+        // kopmuş olabiliyor — bu yüzden closest() yerine tıklanan koordinattaki elemente bakıyoruz.
+        const elAtPoint = document.elementFromPoint(e.clientX, e.clientY);
+        if(panel.contains(elAtPoint) || (bellBtn && bellBtn.contains(elAtPoint))) return;
+        closeNotifPanel();
     });
     window.addEventListener('resize', () => { if(document.getElementById('notifPanel').classList.contains('open')) positionNotifPanel(); });
     if(window.visualViewport){
@@ -12041,17 +12629,22 @@ ${locationCardHtml(m.location)}
         const vvOffsetTop = vv ? vv.offsetTop : 0;
         const vvOffsetLeft = vv ? vv.offsetLeft : 0;
         const viewportWidth = vv ? vv.width : window.innerWidth;
-        const panelWidth = Math.min(340, viewportWidth*0.92);
+        const margin = 10;
+        const panelWidth = Math.min(360, viewportWidth - margin*2);
         const bellCenter = r.left + vvOffsetLeft + r.width/2;
         let left = bellCenter - panelWidth/2;
-        left = Math.max(10, Math.min(left, viewportWidth + vvOffsetLeft - panelWidth - 10));
+        const minLeft = vvOffsetLeft + margin;
+        const maxLeft = vvOffsetLeft + viewportWidth - panelWidth - margin;
+        left = Math.max(minLeft, Math.min(left, maxLeft));
         const top = r.bottom + vvOffsetTop + 10;
-        panel.style.left = left+'px';
-        panel.style.top = top+'px';
+        panel.style.width = panelWidth + 'px';
+        panel.style.maxWidth = panelWidth + 'px';
+        panel.style.left = left + 'px';
+        panel.style.top = top + 'px';
         const arrow = panel.querySelector('.notif-panel-arrow');
         if(arrow){
-            const arrowLeft = Math.max(16, Math.min(panelWidth-30, bellCenter - left - 7));
-            arrow.style.left = arrowLeft+'px';
+            const arrowLeft = Math.max(16, Math.min(panelWidth - 30, bellCenter - left - 7));
+            arrow.style.left = arrowLeft + 'px';
         }
     }
     function toggleNotifPanel(e){
@@ -12074,21 +12667,37 @@ ${locationCardHtml(m.location)}
     function renderNotifPanel(){
         const panel = document.getElementById('notifPanel');
         if(!panel) return;
-        const uids = Object.keys(incomingFriendRequests);
-        const countPill = uids.length ? `<span class="notif-panel-count">${uids.length}</span>` : '';
-        const body = uids.length===0
+        const frUids = Object.keys(incomingFriendRequests);
+        const notifIds = Object.keys(incomingNotifications).sort((a,b)=>(incomingNotifications[b].ts||0)-(incomingNotifications[a].ts||0));
+        const totalCount = frUids.length + notifIds.length;
+        const countPill = totalCount ? `<span class="notif-panel-count">${totalCount}</span>` : '';
+
+        let itemsHtml = '';
+        frUids.forEach(uid => {
+            const r = incomingFriendRequests[uid];
+            itemsHtml += `<div class="notif-item">
+        <img class="notif-item-avatar" src="${r.avatarUrl||'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" alt="">
+        <div class="notif-item-text"><b>${escapeHtml(r.username)}</b> sana arkadaşlık isteği gönderdi</div>
+        <div class="notif-item-actions">
+          <button class="icon-btn" title="Kabul et" onclick="acceptFriendRequest('${uid}')">${icon('check',14)}</button>
+          <button class="icon-btn" title="Reddet" onclick="rejectFriendRequest('${uid}')">${icon('x',14)}</button>
+        </div>
+      </div>`;
+        });
+        notifIds.forEach(id => {
+            const n = incomingNotifications[id];
+            itemsHtml += `<div class="notif-item">
+        <span class="notif-item-avatar" style="display:flex; align-items:center; justify-content:center; background:var(--panel-alt); color:var(--ink);">${icon(notifIconFor(n.type),16)}</span>
+        <div class="notif-item-text"><b>${escapeHtml(n.title||'Bildirim')}</b><br><span style="opacity:.75;">${escapeHtml(n.body||'')}</span></div>
+        <div class="notif-item-actions">
+          <button class="icon-btn" title="Kapat" onclick="dismissNotification('${id}')">${icon('x',14)}</button>
+        </div>
+      </div>`;
+        });
+
+        const body = totalCount===0
             ? `<div class="notif-empty">${icon('inbox',26)}<p style="margin-top:4px; font-size:12px;">Henüz bildirimin yok</p></div>`
-            : uids.map(uid => {
-                const r = incomingFriendRequests[uid];
-                return `<div class="notif-item">
-            <img class="notif-item-avatar" src="${r.avatarUrl||'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif'}" alt="">
-            <div class="notif-item-text"><b>${escapeHtml(r.username)}</b> sana arkadaşlık isteği gönderdi</div>
-            <div class="notif-item-actions">
-              <button class="icon-btn" title="Kabul et" onclick="acceptFriendRequest('${uid}')">${icon('check',14)}</button>
-              <button class="icon-btn" title="Reddet" onclick="rejectFriendRequest('${uid}')">${icon('x',14)}</button>
-            </div>
-          </div>`;
-            }).join('');
+            : itemsHtml;
         panel.innerHTML = `
       <div class="notif-panel-arrow"></div>
       <div class="notif-panel-inner">
@@ -12335,7 +12944,8 @@ ${locationCardHtml(m.location)}
             portfolio: u.portfolio || {}, fitness: u.fitness || {}, tasks: u.tasks || [],
             highPriorityCompleted: u.highPriorityCompleted||0, timedCompleted: u.timedCompleted||0,
             nightOwlCompletions: u.nightOwlCompletions||0, morningCompletions: u.morningCompletions||0, weekendCompletions: u.weekendCompletions||0,
-            verified: !!p.verified
+            verified: !!p.verified,
+            hasAccess: p.hasAccess !== false
         };
         _profileSocialMode = false;
         _profileTargetUid = null;
@@ -12374,8 +12984,39 @@ ${locationCardHtml(m.location)}
       </div>
     </div>`;
     }
+    function renderLockedProfileView(ov){
+        document.getElementById('pvAvatar').src = ov.avatarUrl || 'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif';
+        document.getElementById('pvName').textContent = ov.username || 'Kullanıcı';
+        document.getElementById('pvVerifiedCorner').classList.toggle('show', !!ov.verified);
+        document.getElementById('pvRankRow').innerHTML = '';
+        document.getElementById('pvXpFill').style.width = '0%';
+        document.getElementById('pvXpLabel').innerHTML = '';
+        document.getElementById('pvStatsGrid').innerHTML = `
+      <div style="grid-column:1/-1; display:flex; flex-direction:column; align-items:center; gap:10px;
+        padding:34px 18px; border:1px dashed var(--line); border-radius:14px; background:var(--panel-alt); text-align:center;">
+        <span style="color:var(--ink-soft);">${icon('lock',26)}</span>
+        <div style="font-family:'Orbitron',sans-serif; font-weight:800; font-size:13.5px; letter-spacing:.03em; text-transform:uppercase;">Erişim Kısıtlı</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); max-width:260px;">Bu hesabın erişimi şu an kapalı — yönetici onayı bekleniyor.</div>
+      </div>`;
+        document.getElementById('pvDuelLabel').textContent = '';
+        document.getElementById('pvDuelRecord').innerHTML = '';
+        document.getElementById('pvHealthLabel').textContent = '';
+        document.getElementById('pvHealthGrid').innerHTML = '';
+        document.getElementById('pvCatLabel').textContent = '';
+        document.getElementById('pvCatChart').innerHTML = '';
+        document.getElementById('pvAchvLabel').textContent = '';
+        document.getElementById('pvAchvRow').innerHTML = '';
+        document.getElementById('pvChartLabel').textContent = '';
+        document.getElementById('pvWeekChart').innerHTML = '';
+        renderProfileSocialActions();
+    }
     function renderProfileView(){
         const ov = _profileViewOverride;
+        if(ov && !ov.isAdminView && ov.hasAccess === false){ renderLockedProfileView(ov); return; }
+        if(!ov && window._hasAccess === false){
+            renderLockedProfileView({ username: currentUsername, avatarUrl: document.getElementById('avatarImg').src, verified: isVerifiedUser });
+            return;
+        }
         const idx = ov ? getRankIndex(ov.xp) : getRankIndex(xp);
         const rank = RANKS[idx];
         const avatarUrl = ov ? (ov.avatarUrl || 'https://i.pinimg.com/originals/36/6d/94/366d94f67e9cff8c4d02f7e4367ef6b1.gif') : document.getElementById('avatarImg').src;
@@ -12384,15 +13025,16 @@ ${locationCardHtml(m.location)}
 
         document.getElementById('pvAvatar').src = avatarUrl;
         document.getElementById('pvName').textContent = displayName;
-        const pvVerifiedEl = document.getElementById('pvVerifiedBadge');
-        const isVerifiedNow = ov ? !!ov.verified : isVerifiedUser;
-        if(pvVerifiedEl){
-            pvVerifiedEl.style.display = isVerifiedNow ? 'flex' : 'none';
-            pvVerifiedEl.innerHTML = isVerifiedNow ? icon('check',12) : '';
+        const pvVerifiedCornerEl = document.getElementById('pvVerifiedCorner');
+        const isVerifiedNow = (ov && !ov.isAdminView) ? !!ov.verified : (ov ? false : isVerifiedUser);
+        if(pvVerifiedCornerEl){
+            pvVerifiedCornerEl.classList.toggle('show', isVerifiedNow);
+            const cornerIconEl = document.getElementById('pvVerifiedCornerIcon');
+            if(cornerIconEl) cornerIconEl.innerHTML = isVerifiedNow ? verifiedGlyphSVG(11) : '';
         }
         const profileUid = ov ? (_profileTargetUid || currentUid) : currentUid;
         const profilePrestige = ov ? (ov.prestige || 0) : prestige;
-        document.getElementById('pvRankRow').innerHTML = `${badgeHTML(idx,36,false)}<span>${rank.name}</span>${roleBadgeForUid(profileUid)}${prestigeBadgeHtml(profilePrestige, 9)}`;
+        document.getElementById('pvRankRow').innerHTML = `${badgeHTML(idx,36,false)}<span>${rank.name}</span>${roleBadgeForUid(profileUid)}${prestigeBadgeHtml(profilePrestige, 9)}${shameEmojiHtml(profileUid)}`;
 
         const next = RANKS[idx+1];
         const fill = document.getElementById('pvXpFill');
@@ -12925,15 +13567,18 @@ ${locationCardHtml(m.location)}
             const banned = !!p.banned;
             const isMod = !!moderators[uid];
             const isAdmin = uid === ADMIN_UID;
+            const hasAcc = p.hasAccess !== false;
             const weeklyWater = weeklyWaterTotal(fit);
             const weeklySteps = weeklyStepsTotal(fit);
             const roleBadge = isAdmin ? `<span class="chat-msg-badge admin">${icon('crown',8)} Yönetici</span>` : (isMod ? `<span class="chat-msg-badge mod">${icon('shield',8)} Moderatör</span>` : '');
+            const verifiedTag = p.verified ? verifiedBadgeHtml(true) : '';
             return `<div class="admin-user-card" style="border-left:3px solid ${banned?'var(--neg)':'var(--line)'}">
         <div class="admin-user-top">
           <div class="asset-logo">${p.avatarUrl ? `<img src="${p.avatarUrl}">` : icon('user',17)}${_lastPresenceSnap[uid] ? '<span class="admin-user-online-dot"></span>' : ''}</div>
           <div class="task-body">
             <div class="admin-user-name-row">
               <span class="task-text">${escapeHtml(p.username||'—')}</span>
+              ${verifiedTag}
               ${roleBadge}
               ${banned?'<span class="tag" style="border-color:var(--neg); color:var(--neg);">BANLI</span>':''}
             </div>
@@ -12945,7 +13590,9 @@ ${locationCardHtml(m.location)}
           <div class="admin-user-actions">
             <button class="admin-user-action-btn" title="UID kopyala" onclick="copyUidToClipboard('${uid}')">${icon('layers',15)}</button>
             <button class="admin-user-action-btn" title="Profili gör" onclick="viewUserProfile('${uid}')">${icon('eyeView',15)}</button>
+            <button class="admin-user-action-btn${hasAcc?' danger':''}" title="${hasAcc?'Erişimi Kaldır':'Erişim Ver'}" onclick="toggleUserAccess('${uid}', ${!hasAcc})">${icon(hasAcc?'lock':'check',15)}</button>
             <button class="admin-user-action-btn${banned?'':' danger'}" title="${banned?'Ban kaldır':'Banla'}" onclick="toggleBan('${uid}', ${!banned})">${icon(banned?'check':'shieldBan',15)}</button>
+            ${p.verified ? `<button class="admin-user-action-btn danger" title="Doğrulamayı Geri Al" onclick="revokeVerification('${uid}')">${icon('userBlock',15)}</button>` : ''}
             ${!isAdmin ? `<button class="admin-user-action-btn danger" title="Hesabı Sil" onclick="adminDeleteUserAccount('${uid}')">${icon('trash',15)}</button>` : ''}
           </div>
         </div>
@@ -13013,6 +13660,22 @@ ${locationCardHtml(m.location)}
             showTopToast(makeMod ? 'Kullanıcı moderatör yapıldı' : 'Moderatörlük kaldırıldı', 'info', 'shield');
         }).catch(err => showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'));
     }
+    async function toggleUserAccess(uid, grant){
+        try{
+            await db.ref('developmentUsers/'+uid+'/profile/hasAccess').set(grant);
+            if(allUsersCache[uid]){
+                allUsersCache[uid].profile = allUsersCache[uid].profile || {};
+                allUsersCache[uid].profile.hasAccess = grant;
+            }
+            if(uid === currentUid){
+                window._hasAccess = grant;
+                applyAccessGate();
+                if(grant) render();
+            }
+            renderAdminUserList();
+            showTopToast(grant?'Erişim verildi':'Erişim kaldırıldı', grant?'info':'warn', grant?'check':'lock');
+        }catch(err){ showTopToast('İşlem başarısız: '+err.message,'warn','warn'); }
+    }
     function toggleBan(uid, banned){
         db.ref('developmentUsers/'+uid+'/profile/banned').set(banned).then(() => {
             allUsersCache[uid].profile.banned = banned;
@@ -13072,7 +13735,9 @@ ${locationCardHtml(m.location)}
             nightOwlCompletions: u.nightOwlCompletions || 0,
             morningCompletions: u.morningCompletions || 0,
             weekendCompletions: u.weekendCompletions || 0,
-            verified: !!p.verified
+            verified: !!p.verified,
+            hasAccess: p.hasAccess !== false,
+            isAdminView: true
         };
         const gridUids = Object.keys(allUsersCache).filter(k => !NON_USER_KEYS.has(k));
         _adminProfileNavList = gridUids;
@@ -14024,12 +14689,11 @@ ${locationCardHtml(m.location)}
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 _pendingBugImageDataUrl = canvas.toDataURL('image/jpeg', 0.78);
-                const wrap = document.getElementById('bugImagePreviewWrap');
-                wrap.style.display = 'block';
-                wrap.innerHTML = `<div style="position:relative; display:inline-block;">
-          <img src="${_pendingBugImageDataUrl}" style="max-height:140px; border-radius:10px; border:1px solid var(--line);">
-          <button class="icon-btn" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,.5); color:#fff;" onclick="cancelBugImage()">${icon('x',12)}</button>
-        </div>`;
+                const dz = document.getElementById('bugImageDropzone');
+                if(dz){
+                    dz.classList.add('filled');
+                    dz.innerHTML = `<img src="${_pendingBugImageDataUrl}"><button type="button" class="udz-remove" onclick="event.stopPropagation(); cancelBugImage()">${icon('x',13)}</button>`;
+                }
             };
             img.src = e.target.result;
         };
@@ -14037,9 +14701,12 @@ ${locationCardHtml(m.location)}
     }
     function cancelBugImage(){
         _pendingBugImageDataUrl = null;
-        document.getElementById('bugImagePreviewWrap').style.display = 'none';
-        document.getElementById('bugImagePreviewWrap').innerHTML = '';
         document.getElementById('bugImageInput').value = '';
+        const dz = document.getElementById('bugImageDropzone');
+        if(dz){
+            dz.classList.remove('filled');
+            dz.innerHTML = `<span id="bugImageBtnIcon">${icon('camera',20)}</span><span class="udz-label">Resim Ekle</span>`;
+        }
     }
 
     async function submitBugReport(){
@@ -14128,6 +14795,10 @@ ${locationCardHtml(m.location)}
     async function resolveBugReport(id){
         try{
             await db.ref('developmentUsers/bugReports/'+id+'/status').set('resolved');
+            const report = allBugReports[id];
+            if(report && report.uid){
+                sendUserNotification(report.uid, 'bug_resolved', 'Hata Bildirimin Çözüldü', 'Bildirdiğin sorun ekibimiz tarafından çözüldü, teşekkürler!');
+            }
             showTopToast('Hata çözüldü olarak işaretlendi', 'info', 'check');
         }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
     }
@@ -14147,7 +14818,7 @@ ${locationCardHtml(m.location)}
 
     function verifiedBadgeHtml(verified){
         if(!verified) return '';
-        return `<span class="verified-badge" title="Doğrulanmış Kullanıcı">${icon('check',9)}</span>`;
+        return `<span class="verified-badge" title="Doğrulanmış Kullanıcı">${verifiedGlyphSVG(11)}</span>`;
     }
 
     function computeTrustScore(log){
@@ -14168,6 +14839,11 @@ ${locationCardHtml(m.location)}
         document.getElementById('verifyReqDesc').value = '';
         _pendingVerifyImages = [];
         renderVerifyImagePreviews();
+        const dz = document.getElementById('verifyImageDropzone');
+        if(dz){
+            dz.style.opacity = ''; dz.style.pointerEvents = '';
+            dz.innerHTML = `<span id="verifyImageBtnIcon">${icon('camera',20)}</span><span class="udz-label">Resim Ekle</span>`;
+        }
         document.getElementById('verifyRequestModal').classList.add('show');
     }
     function closeVerificationModal(){ document.getElementById('verifyRequestModal').classList.remove('show'); }
@@ -14189,6 +14865,10 @@ ${locationCardHtml(m.location)}
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 _pendingVerifyImages.push(canvas.toDataURL('image/jpeg', 0.76));
                 renderVerifyImagePreviews();
+                const dz = document.getElementById('verifyImageDropzone');
+                if(dz && _pendingVerifyImages.length >= 3){
+                    dz.style.opacity = '.45'; dz.style.pointerEvents = 'none';
+                }
             };
             img.src = e.target.result;
         };
@@ -14198,6 +14878,8 @@ ${locationCardHtml(m.location)}
     function removeVerifyImage(idx){
         _pendingVerifyImages.splice(idx, 1);
         renderVerifyImagePreviews();
+        const dz = document.getElementById('verifyImageDropzone');
+        if(dz){ dz.style.opacity = ''; dz.style.pointerEvents = ''; }
     }
     function renderVerifyImagePreviews(){
         const wrap = document.getElementById('verifyImagePreviewWrap');
@@ -14290,6 +14972,9 @@ ${locationCardHtml(m.location)}
               <button class="admin-user-action-btn" title="Onayla" onclick="approveVerification('${uid}')">${icon('check',15)}</button>
               <button class="admin-user-action-btn danger" title="Reddet" onclick="rejectVerification('${uid}')">${icon('x',15)}</button>
             ` : ''}
+            ${status==='approved' ? `
+              <button class="admin-user-action-btn danger" title="Doğrulamayı Geri Al" onclick="revokeVerification('${uid}')">${icon('userBlock',15)}</button>
+            ` : ''}
             <button class="admin-user-action-btn danger" title="Başvuruyu Sil" onclick="deleteVerification('${uid}')">${icon('trash',15)}</button>
           </div>
         </div>
@@ -14303,6 +14988,7 @@ ${locationCardHtml(m.location)}
         try{
             await db.ref('developmentUsers/'+uid+'/profile/verified').set(true);
             await db.ref('developmentUsers/verificationRequests/'+uid+'/status').set('approved');
+            sendUserNotification(uid, 'verify_approved', 'Hesabın Doğrulandı', 'Tebrikler! Doğrulama başvurun onaylandı ve hesabına mavi tik eklendi.');
             showTopToast('Kullanıcı doğrulandı', 'info', 'check');
         }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
     }
@@ -14310,6 +14996,18 @@ ${locationCardHtml(m.location)}
         try{
             await db.ref('developmentUsers/verificationRequests/'+uid+'/status').set('rejected');
             showTopToast('Başvuru reddedildi', 'warn', 'x');
+        }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
+    }
+    async function revokeVerification(uid){
+        const ok = await showConfirm('Bu kullanıcının doğrulama rozetini geri almak istediğine emin misin?');
+        if(!ok) return;
+        try{
+            await db.ref('developmentUsers/'+uid+'/profile/verified').set(false);
+            await db.ref('developmentUsers/verificationRequests/'+uid+'/status').set('revoked');
+            sendUserNotification(uid, 'verify_revoked', 'Doğrulama Rozeti Kaldırıldı', 'Hesabındaki doğrulama rozeti yönetici tarafından geri alındı.');
+            showTopToast('Doğrulama geri alındı', 'warn', 'x');
+            renderAdminVerifyList();
+            renderAdminUserList();
         }catch(err){ showTopToast('İşlem başarısız: '+err.message, 'warn', 'warn'); }
     }
     async function deleteVerification(uid){
